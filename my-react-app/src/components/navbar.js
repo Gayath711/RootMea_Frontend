@@ -45,8 +45,11 @@ const Navbar = () => {
           <ul className="navbar-nav ml-auto">
             <li className="nav-item dropdown">
              
-              <img src="./test.jpg" alt="Profile" className="profile-img" style={{ width: '50px', height: '50px', borderRadius: '50%' }} />
-              
+
+
+              <a href="/UserProfile">
+  <img src="./test.jpg" alt="Profile" className="profile-img" style={{ width: '50px', height: '50px', borderRadius: '50%' }} />
+</a>
       
             </li>
           </ul>
