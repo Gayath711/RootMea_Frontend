@@ -15,18 +15,12 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="container">
-      <div className="row">
-        <div className="col-md-3"></div>
-        <div className="col-md-9">
-
+    <div className="container-fluid">
           <div>
             {iframeUrl && (
               <iframe title="Metabase Dashboard" src={iframeUrl} width="100%" height="600" frameBorder="0"></iframe>
             )}
           </div>
-        </div>
-      </div>
     </div>
   );
 }

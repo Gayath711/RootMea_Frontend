@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css'; 
 import './css/Sidebar.css';
 import { Button } from 'react-bootstrap'; 
@@ -9,13 +10,22 @@ import {faInfoCircle, faUserCircle, faChartBar, faMapMarker, faPen, faPrescripti
 
 function ClientProfile() {
   const [activeForm, setActiveForm] = useState(null);
+  const [clientData, setSetClientData] = useState('');
+
+  useEffect(() => {
+    axios.get('http://127.0.0.1:8000/clientinfo-api/1')
+      .then(response => {
+        setSetClientData(response.data);
+        console.log(response.data.first_name)
+      })
+      .catch(error => {
+        console.error('Error fetching Client Data:', error);
+      });
+  }, []);
 
   const showForm = (formId) => {
     setActiveForm(formId);
   };
-
-
-
 
   return (
     <div className="container-fluid">
@@ -74,15 +84,15 @@ function ClientProfile() {
         <div className="col-md-9">
           {activeForm && (
             <div className="p-3">
-              {activeForm === 'general' && <GeneralForm showForm={showForm} />}
-              {activeForm === 'contact' && <ContactForm />}
-              {activeForm === 'demographics' && <DemographicsForm />}
-              {activeForm === 'address' && <AddressForm />}
-              {activeForm === 'custom' && <CustomFieldsForm />}
-              {activeForm === 'pharmacy' && <PreferredPharmacyForm />}
-              {activeForm === 'insurance' && <InsuranceInformationForm />}
-              {activeForm === 'system' && <SystemInformationForm />}
-              {activeForm === 'export' && <ExportInformationForm />}
+              {activeForm === 'general' && <GeneralForm showForm={showForm} clientData={clientData} />}
+              {activeForm === 'contact' && <ContactForm showForm={showForm} clientData={clientData} />}
+              {activeForm === 'demographics' && <DemographicsForm clientData={clientData} />}
+              {activeForm === 'address' && <AddressForm clientData={clientData} />}
+              {activeForm === 'custom' && <CustomFieldsForm clientData={clientData} />}
+              {activeForm === 'pharmacy' && <PreferredPharmacyForm clientData={clientData} />}
+              {activeForm === 'insurance' && <InsuranceInformationForm clientData={clientData} />}
+              {activeForm === 'system' && <SystemInformationForm clientData={clientData} />}
+              {activeForm === 'export' && <ExportInformationForm clientData={clientData} />}
             </div>
           )}
         </div>
@@ -95,7 +105,8 @@ function ClientProfile() {
 
 
 
-function GeneralForm({ showForm }) {
+function GeneralForm({ showForm , clientData}) {
+
   return (
     <div className="container">
       <hr /> {/* Line across the entire row */}
@@ -118,28 +129,28 @@ function GeneralForm({ showForm }) {
             <div className="row g-3">
               {/* First Name */}
               <div className="col-md-6">
-                <label className="form-label">First Name *</label>
-                <input type="text" className="form-control" placeholder="" aria-label="First name" value="Scaralet" />
+                <label className="form-label">Client Status *</label>
+                <input type="text" className="form-control" placeholder="" aria-label="First name" value={'Pending'} />
               </div>
               {/* Last name */}
               <div className="col-md-6">
-                <label className="form-label">Last Name *</label>
-                <input type="text" className="form-control" placeholder="" aria-label="Last name" value="Doe" />
+                <label className="form-label">Client Status Date *</label>
+                <input type="text" className="form-control" placeholder="" aria-label="Last name" value={'22/12/2023'} />
               </div>
               {/* Mobile number */}
               <div className="col-md-12">
-                <label className="form-label">Mobile number *</label>
-                <input type="text" className="form-control" placeholder="" aria-label="Phone number" value="+91 9852 8855 252" />
+                <label className="form-label">Client Programs *</label>
+                <input type="text" className="form-control" placeholder="" aria-label="Phone number" value={''} />
               </div>
               {/* Email */}
               <div className="col-md-6">
-                <label htmlFor="inputEmail4" className="form-label">Email *</label>
-                <input type="email" className="form-control" id="inputEmail4" value="example@homerealty.com" />
+                <label htmlFor="inputEmail4" className="form-label">Client Navigator Name *</label>
+                <input type="email" className="form-control" id="inputEmail4" value="Scaralet D" />
               </div>
               {/* Skype */}
               <div className="col-md-6">
-                <label className="form-label">Skype *</label>
-                <input type="text" className="form-control" placeholder="" aria-label="Phone number" value="Scaralet D" />
+                <label className="form-label">Client System ID *</label>
+                <input type="text" className="form-control" placeholder="" aria-label="Phone number" value="12345" />
               </div>
             </div> {/* Row END */}
           </div>
@@ -158,7 +169,8 @@ function GeneralForm({ showForm }) {
 
 
 
-function ContactForm() {
+function ContactForm({ showForm , clientData }) {
+  console.log(clientData.id,"contact")
   return (
     <Accordion>
     <Accordion.Item eventKey="0">
@@ -169,36 +181,50 @@ function ContactForm() {
   <div className="row g-3">
     {/* First Name */}
     <div className="col-md-4">
-      <label className="form-label">First Name *</label>
-      <input type="text" className="form-control" placeholder="" aria-label="First name" value="Scaralet" />
+      <label className="form-label">First Name*</label>
+      <input type="text" className="form-control" placeholder="" aria-label="First name" value={clientData.first_name || ""} />
     </div>
     {/* Last name */}
     <div className="col-md-4">
-      <label className="form-label">Last Name *</label>
-      <input type="text" className="form-control" placeholder="" aria-label="Last name" value="Doe" />
+      <label className="form-label">Middle Name *</label>
+      <input type="text" className="form-control" placeholder="" aria-label="Last name" value={clientData.middle_name || ""}  />
     </div>
     <div className="col-md-4">
       <label className="form-label">Last Name *</label>
-      <input type="text" className="form-control" placeholder="" aria-label="Last name" value="Doe" />
+      <input type="text" className="form-control" placeholder="" aria-label="Last name" value={clientData.last_name || ""}  />
     </div>
 
     <div className="col-md-4">
-      <label className="form-label">First Name *</label>
-      <input type="text" className="form-control" placeholder="" aria-label="First name" value="Scaralet" />
+      <label className="form-label">Nick name/Preferred name*</label>
+      <input type="text" className="form-control" placeholder="" aria-label="First name" value={clientData.last_name || ""} />
     </div>
     {/* Last name */}
     <div className="col-md-4">
-      <label className="form-label">Last Name *</label>
-      <input type="text" className="form-control" placeholder="" aria-label="Last name" value="Doe" />
+      <label className="form-label">Preferred Pronouns*</label>
+      <input type="text" className="form-control" placeholder="" aria-label="Last name" value={clientData.last_name || ""} />
     </div>
     <div className="col-md-4">
-      <label className="form-label">Last Name *</label>
-      <input type="text" className="form-control" placeholder="" aria-label="Last name" value="Doe" />
+      <label className="form-label">Email Address*</label>
+      <input type="text" className="form-control" placeholder="" aria-label="Last name" value={clientData.last_name || ""} />
+    </div>
+
+    <div className="col-md-4">
+      <label className="form-label">Mobile Number*</label>
+      <input type="text" className="form-control" placeholder="" aria-label="First name" value={clientData.last_name || ""} />
+    </div>
+    {/* Last name */}
+    <div className="col-md-4">
+      <label className="form-label">Home Phone Number *</label>
+      <input type="text" className="form-control" placeholder="" aria-label="Last name" value={clientData.last_name || ""}/>
+    </div>
+    <div className="col-md-4">
+      <label className="form-label">Work Phone Number *</label>
+      <input type="text" className="form-control" placeholder="" aria-label="Last name" value={clientData.last_name || ""} />
     </div>
 
     {/* Email */}
     <div className="col-md-6">
-      <label htmlFor="contactMethod" className="form-label">Contact Method *</label>
+      <label htmlFor="contactMethod" className="form-label">Select best way to contact you *</label>
       <select className="form-select" id="contactMethod">
         <option value="email">Email</option>
         <option value="skype">Skype</option>
@@ -206,7 +232,7 @@ function ContactForm() {
     </div>
 
     <div className="col-md-6">
-      <label htmlFor="contactMethod" className="form-label">Contact Method *</label>
+      <label htmlFor="contactMethod" className="form-label">Select primary phone number *</label>
       <select className="form-select" id="contactMethod">
         <option value="email">Email</option>
         <option value="skype">Skype</option>
@@ -214,7 +240,7 @@ function ContactForm() {
     </div>
 
     <div className="col-md-6">
-      <label htmlFor="contactMethod" className="form-label">Contact Method *</label>
+      <label htmlFor="contactMethod" className="form-label">Select Preferred language *</label>
       <select className="form-select" id="contactMethod">
         <option value="email">Email</option>
         <option value="skype">Skype</option>
@@ -222,7 +248,7 @@ function ContactForm() {
     </div>
 
     <div className="col-md-6">
-      <label htmlFor="contactMethod" className="form-label">Contact Method *</label>
+      <label htmlFor="contactMethod" className="form-label">Select other languages *</label>
       <select className="form-select" id="contactMethod">
         <option value="email">Email</option>
         <option value="skype">Skype</option>

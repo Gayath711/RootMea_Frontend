@@ -18,7 +18,7 @@ function App() {
             <div className="col-md-1">
               <Sidebar />
             </div>
-            <div className="col-md-10">
+            <div className="col-md-11">
               <Routes>
                 <Route path="/clientprofile" element={<ClientProfile />} />
                 <Route path="/Home" element={<Home />} />
