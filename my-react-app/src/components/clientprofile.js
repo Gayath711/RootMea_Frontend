@@ -9,7 +9,7 @@ import {faInfoCircle, faUserCircle, faChartBar, faMapMarker, faPen, faPrescripti
 
 
 function ClientProfile() {
-  const [activeForm, setActiveForm] = useState(null);
+  const [activeForm, setActiveForm] = useState('general');
   const [clientData, setSetClientData] = useState('');
 
   useEffect(() => {
@@ -22,59 +22,58 @@ function ClientProfile() {
         console.error('Error fetching Client Data:', error);
       });
   }, []);
-
   const showForm = (formId) => {
     setActiveForm(formId);
   };
-
   return (
     <div className="container-fluid">
       <div className="row">
         <div className="col-md-3" style={{ boxShadow: 'rgb(24 17 17 / 49%) 0px 2px 20px' }}>
           <div className="d-flex flex-column align-items-start p-3">
-            <ul className="nav flex-column nav-tabs">
+            <ul className="nav flex-column nav-pills">
               <li className="nav-item my-3">
-                <a className="nav-link active" onClick={() => showForm('general')}>
+                <a className={`nav-link ${activeForm === 'general' ? 'active' : ''}`} id={`${activeForm === 'general' ? 'active-link' : 'in-active-link'}`} onClick={() => showForm('general')}>
                   <FontAwesomeIcon icon={faInfoCircle} style={{ color: '#474648' }} size="1x" /> General Information
                 </a>
               </li>
               <li className="nav-item my-3">
-                <a className="nav-link" onClick={() => showForm('contact')}>
+                <a className={`nav-link ${activeForm === 'contact' ? 'active' : ''}`} id={`${activeForm === 'contact' ? 'active-link' : 'in-active-link'}`} onClick={() => showForm('contact')}>
                   <FontAwesomeIcon icon={faUserCircle} style={{ color: '#474648' }} size="1x" /> Contact Information
                 </a>
               </li>
+
               <li className="nav-item my-3">
-                <a className="nav-link" onClick={() => showForm('demographics')}>
+                <a className={`nav-link ${activeForm === 'demographics' ? 'active' : ''}`} id={`${activeForm === 'demographics' ? 'active-link' : 'in-active-link'}`} onClick={() => showForm('demographics')}>
                   <FontAwesomeIcon icon={faChartBar} style={{ color: '#474648' }} size="1x" /> Demographics
                 </a>
               </li>
               <li className="nav-item my-3">
-                <a className="nav-link " onClick={() => showForm('address')}>
+                <a className={`nav-link ${activeForm === 'address' ? 'active' : ''}`} id={`${activeForm === 'address' ? 'active-link' : 'in-active-link'}`} onClick={() => showForm('address')}>
                   <FontAwesomeIcon icon={faMapMarker} style={{ color: '#474648' }} size="1x" /> Address/Usual Location
                 </a>
               </li>
               <li className="nav-item my-3">
-                <a className="nav-link " onClick={() => showForm('custom')}>
+                <a className={`nav-link ${activeForm === 'custom' ? 'active' : ''}`} id={`${activeForm === 'custom' ? 'active-link' : 'in-active-link'}`} onClick={() => showForm('custom')}>
                   <FontAwesomeIcon icon={faPen} style={{ color: '#474648' }} size="1x" /> Custom Fields
                 </a>
               </li>
               <li className="nav-item my-3">
-                <a className="nav-link " onClick={() => showForm('pharmacy')}>
+                <a className={`nav-link ${activeForm === 'pharmacy' ? 'active' : ''}`} id={`${activeForm === 'pharmacy' ? 'active-link' : 'in-active-link'}`} onClick={() => showForm('pharmacy')}>
                   <FontAwesomeIcon icon={faPrescriptionBottle} style={{ color: '#474648' }} size="1x" /> Preferred Pharmacy
                 </a>
               </li>
               <li className="nav-item my-3">
-                <a className="nav-link " onClick={() => showForm('insurance')}>
+                <a className={`nav-link ${activeForm === 'insurance' ? 'active' : ''}`} id={`${activeForm === 'insurance' ? 'active-link' : 'in-active-link'}`} onClick={() => showForm('insurance')}>
                   <FontAwesomeIcon icon={faFileShield} style={{ color: '#474648' }} size="1x" /> Insurance Information
                 </a>
               </li>
               <li className="nav-item my-3">
-                <a className="nav-link " onClick={() => showForm('system')}>
+                <a className={`nav-link ${activeForm === 'system' ? 'active' : ''}`} id={`${activeForm === 'system' ? 'active-link' : 'in-active-link'}`} onClick={() => showForm('system')}>
                   <FontAwesomeIcon icon={faCog} style={{ color: '#474648' }} size="1x" /> System Information
                 </a>
               </li>
               <li className="nav-item my-3">
-                <a className="nav-link " onClick={() => showForm('export')}>
+                <a className={`nav-link ${activeForm === 'export' ? 'active' : ''}`} id={`${activeForm === 'export' ? 'active-link' : 'in-active-link'}`} onClick={() => showForm('export')}>
                   <FontAwesomeIcon icon={faDownload} style={{ color: '#474648' }} size="1x" /> Export
                 </a>
               </li>
