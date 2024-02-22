@@ -8,20 +8,20 @@ import encounterNotes from './images/encounter_notes.png';
 
 const Sidebar = () => {
   return (
-    <div className="sidebar p-4" style={{ boxShadow: 'rgb(24 17 17 / 49%) 0px 2px 20px' }}>
+    <div className="sidebar p-4" style={{boxShadow: 'rgb(24 17 17 / 49%) 0px 2px 20px' }}>
       <div className="row">
-        <div className="col-sm-6 col-md-12 text-center my-4 ">
+        <div className="col-6 col-md-12 text-center my-4 ">
           <a href="/" className="text-decoration-none"><img src={clientProfile} class="img-thumbnail" alt="..." size="2x" /></a>
         </div>
-        <div className="col-sm-6 col-md-12 text-center my-4">
+        <div className="col-6 col-md-12 text-center my-4">
           <a href="/" className="text-decoration-none"><img src={clientChart} class="img-thumbnail" alt="..." size="2x" /></a>
         </div>
       </div>
       <div className="row">
-        <div className="col-sm-6 col-md-12 text-center my-4 ">
+        <div className="col-6 col-md-12 text-center my-4 ">
           <a href="/" className="text-decoration-none"><img src={encounterNotes} class="img-thumbnail" alt="..." size="2x" /></a>
         </div>
-        <div className="col-sm-6 col-md-12 text-center my-4">
+        <div className="col-6 col-md-12 text-center my-4">
           <a href="/" className="text-decoration-none"><img src={clientChart} class="img-thumbnail" alt="..." size="2x" /></a>
         </div>
       </div>
