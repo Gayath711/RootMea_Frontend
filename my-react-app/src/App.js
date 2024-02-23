@@ -12,6 +12,8 @@ import SignupPage from './components/Signup';
 import PasswordReset from './components/ForgotPasswordForm';
 import UserProfile from './components/UserProfile';
 import ClientChart from './components/clientchart';
+import MedicationTable from './components/medicationTable';
+import DiagnosisTable from './components/diagnosisTable';
 
 function App() {
   // Retrieve isLoggedIn state from localStorage on initial render
@@ -49,6 +51,8 @@ function App() {
                     <Route path="/clientprofile" element={<ClientProfile />} />
                     <Route path="/home" element={<Home />} />
                     <Route path="/clientchart" element={<ClientChart />} />
+                    <Route path="/medication-details" element={<MedicationTable />} />
+                    <Route path="/diagnosis_details" element={<DiagnosisTable />} />
                     <Route path="/UserProfile" element={<UserProfile onLogout={() => setIsLoggedIn(false)} />} />
                     
                   </Routes>

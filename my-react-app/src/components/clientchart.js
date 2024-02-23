@@ -5,6 +5,8 @@ import './css/clientchart.css'
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
+import { useNavigate } from 'react-router-dom';
+import MedicationTable from './medicationTable'; // Import the new component
 
 function ClientChart() {
   const [client ,setClient] = useState([]);  
@@ -15,6 +17,9 @@ function ClientChart() {
     home_data: {},
   });
   const [showModal, setShowModal] = useState(false);
+
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     axios.get('http://127.0.0.1:8000/clientinfo-api/1')
@@ -69,6 +74,16 @@ function ClientChart() {
     setShowModal(false);
   };
 
+  const handleViewEditClick = (page) => {
+    // Redirect to the new page with the medication data
+    if (page ==='medication'){
+    navigate('/medication-details');
+    }
+    else if (page === 'diagnosis'){
+    navigate('/diagnosis_details');
+    }
+  };
+
   return (
     <>
     <div className="container-fluid mt-3">
@@ -100,19 +115,22 @@ function ClientChart() {
               <Accordion.Body>
               <Card>
             <Card.Body>
-              <Card.Title>Medication Details</Card.Title>
+              <Card.Title style={{ display: 'flex', justifyContent: 'space-between' }}>Medication Details
+      <button className='view-edit' onClick={() => handleViewEditClick("medication")}>
+        View/Edit
+      </button>              </Card.Title>
               <table className="table">
                 <tbody>
                   {clientMedicationData.map((medication, index) => (
                     <tr key={index}>
-                      <td style={{ width: '70%' }}>
+                      <td style={{ width: '70%' ,borderBottom: '2px solid #000' }}>
                         <strong>Medication:</strong> <br /> {medication.medication}
                         <br /><br />
                         <strong>Comment:</strong> <br /> {medication.comments}
                         <br /><br />
                         <strong>Last Updated By:</strong> <br /> {medication.last_updated_by}
                       </td>
-                      <td style={{ width: '30%' }}>
+                      <td style={{ width: '30%', borderBottom: '2px solid #000'  }}>
                         <strong>Start Date:</strong> <br /> {medication.start_date}
                         <br /><br />
                         <strong>Stop Date:</strong> <br /> {medication.stop_date}
@@ -141,12 +159,14 @@ function ClientChart() {
               <Accordion.Body>
               <Card>
             <Card.Body>
-              <Card.Title>Diagnosis Details</Card.Title>
+              <Card.Title style={{ display: 'flex', justifyContent: 'space-between' }}>Diagnosis Details
+              <button className='view-edit' onClick={() => handleViewEditClick("diagnosis")}>View/Edit</button>
+              </Card.Title>
               <table className="table">
                 <tbody>
                   {clientDiagnosesData.map((diagnoses, index) => (
                     <tr key={index}>
-                      <td style={{ width: '70%' }}>
+                      <td style={{ width: '70%', borderBottom: '2px solid #000'   }}>
                         <strong>Diagnoses Name:</strong> <br /> {diagnoses.diagnosis_name}
                         <br /><br />
                         <strong>ICD10 Code:</strong> <br /> {diagnoses.icd10_code}
@@ -155,7 +175,7 @@ function ClientChart() {
                         <br /><br />
                         <strong>Last Updated By:</strong> <br /> {diagnoses.last_updated_by}
                       </td>
-                      <td style={{ width: '30%' }}>
+                      <td style={{ width: '30%', borderBottom: '2px solid #000'   }}>
                         <strong>Diagnosis Start Date:</strong> <br /> {diagnoses.start_date}
                         <br /><br />
                         <strong>Diagnosis Stop Date:</strong> <br /> {diagnoses.stop_date}
