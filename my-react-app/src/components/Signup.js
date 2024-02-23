@@ -1,6 +1,57 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const SignupPage = () => {
+
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirm_password, setConfirmPassword] = useState('');
+
+  const handleUsernameChange = (event) => {
+    setUsername(event.target.value);
+  };
+
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+  };
+
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value); // Corrected to update password state
+  };
+
+  const handleConfirmPasswordChange = (event) => {
+    setConfirmPassword(event.target.value);
+  };
+
+
+  const handlesignup = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/signup/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username, email, password, confirm_password })
+      });
+  
+      const data = await response.json(); // Parse response JSON
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      window.location.href = '/';
+  
+   
+    } catch (error) {
+      console.error('There was a problem with the fetch operation:', error);
+    }
+  };
+
+
+
+
+
   return (
     <section className="vh-100" style={{ backgroundColor: '#eee' }}>
       <div className="container-fluid h-100">
@@ -20,7 +71,7 @@ const SignupPage = () => {
                         <div className="col-sm-9">
                           <div className="d-flex flex-row align-items-center">
                             <i className="fas fa-user fa-lg me-3 fa-fw"></i>
-                            <input type="text" id="form3Example1c" className="form-control" />
+                            <input type="text" id="form3Example1c" className="form-control"  value={username} onChange={handleUsernameChange}/>
                           </div>
                         </div>
                       </div>
@@ -30,7 +81,7 @@ const SignupPage = () => {
                         <div className="col-sm-9">
                           <div className="d-flex flex-row align-items-center">
                             <i className="fas fa-envelope fa-lg me-3 fa-fw"></i>
-                            <input type="email" id="form3Example3c" className="form-control" />
+                            <input type="email" id="form3Example3c" className="form-control"   value={email} onChange={handleEmailChange}/>
                           </div>
                         </div>
                       </div>
@@ -40,7 +91,8 @@ const SignupPage = () => {
                         <div className="col-sm-9">
                           <div className="d-flex flex-row align-items-center">
                             <i className="fas fa-lock fa-lg me-3 fa-fw"></i>
-                            <input type="password" id="form3Example4c" className="form-control" />
+                            <input type="password" id="form3Example4c" className="form-control"  value={password} onChange={handlePasswordChange} />
+                            
                           </div>
                         </div>
                       </div>
@@ -50,7 +102,7 @@ const SignupPage = () => {
                         <div className="col-sm-9">
                           <div className="d-flex flex-row align-items-center">
                             <i className="fas fa-key fa-lg me-3 fa-fw"></i>
-                            <input type="password" id="form3Example4cd" className="form-control" />
+                            <input type="password" id="form3Example4cd" className="form-control" value={confirm_password} onChange={handleConfirmPasswordChange} />
                           </div>
                         </div>
                       </div>
@@ -63,7 +115,7 @@ const SignupPage = () => {
                       </div>
 
                       <div className="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                        <button type="button" className="btn btn-primary btn-lg">Register</button>
+                        <button type="button" className="btn btn-primary btn-lg" onClick={handlesignup}>Register</button>
                       </div>
 
                     </form>
@@ -86,4 +138,3 @@ const SignupPage = () => {
 }
 
 export default SignupPage;
-
