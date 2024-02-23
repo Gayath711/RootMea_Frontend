@@ -12,14 +12,34 @@ const LoginForm = ({ onLogin }) => {
     setPassword(event.target.value);
   };
 
-  const handleLogin = () => {
-    if (username === 'username' && password === 'password') {
-      // Call the onLogin callback with true to indicate successful login
-      onLogin(true);
-      console.log('Login successful', username, password);
-      
-    } else {
-      console.log('Invalid username or password');
+
+
+
+
+  const handleLogin = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/login/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username, password })
+      });
+  
+      const data = await response.json(); // Parse response JSON
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      if (data && data.message === 'Login successful') { // Correct message comparison
+        onLogin(true);
+        console.log('Login successful', username, password);
+      } else {
+        console.log('Invalid username or password');
+      }
+    } catch (error) {
+      console.error('There was a problem with the fetch operation:', error);
     }
   };
 
@@ -27,7 +47,8 @@ const LoginForm = ({ onLogin }) => {
     <section className="vh-100">
       <div className="container h-100">
         <div className="row d-flex justify-content-center align-items-center h-100">
-          <div className="col-md-9 col-lg-6 col-xl-5">
+
+        <div className="col-md-9 col-lg-6 col-xl-5">
             <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
               className="img-fluid" alt="Sample image" />
           </div>
