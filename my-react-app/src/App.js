@@ -51,7 +51,7 @@ function App() {
                     <Route path="/clientprofile" element={<ClientProfile />} />
                     <Route path="/home" element={<Home />} />
                     <Route path="/clientchart" element={<ClientChart />} />
-                    <Route path="/medication-details" element={<MedicationTable />} />
+                    <Route path="/medication-details/:itemId" element={<MedicationTable />} />
                     <Route path="/diagnosis_details" element={<DiagnosisTable />} />
                     <Route path="/UserProfile" element={<UserProfile onLogout={() => setIsLoggedIn(false)} />} />
                     

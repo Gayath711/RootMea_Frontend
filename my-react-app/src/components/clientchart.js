@@ -74,16 +74,30 @@ function ClientChart() {
     setShowModal(false);
   };
 
-  const handleViewEditClick = (page) => {
+  const handleViewEditClick = (page, clientID) => {
     // Redirect to the new page with the medication data
     if (page ==='medication'){
-    navigate('/medication-details');
+    navigate(`/medication-details/${clientID}`);
     }
     else if (page === 'diagnosis'){
     navigate('/diagnosis_details');
     }
   };
 
+  const getColorByRisk = (risk) => {
+    switch (risk) {
+      case 'Low':
+        return 'green';
+      case 'Medium':
+        return 'yellow';
+      case 'High':
+        return 'red';
+      default:
+        return 'white'; // or any default color
+    }
+  };
+
+  
   return (
     <>
     <div className="container-fluid mt-3">
@@ -116,7 +130,7 @@ function ClientChart() {
               <Card>
             <Card.Body>
               <Card.Title style={{ display: 'flex', justifyContent: 'space-between' }}>Medication Details
-      <button className='view-edit' onClick={() => handleViewEditClick("medication")}>
+      <button className='view-edit' onClick={() => handleViewEditClick("medication", 1)}>
         View/Edit
       </button>              </Card.Title>
               <table className="table">
@@ -208,31 +222,26 @@ function ClientChart() {
                       </tr>
                     </thead>
                     <tbody>
-                        {/*
+                        
                     {Object.entries(clientSVSData).map(([key, value], outerIndex) => (
                       <React.Fragment key={outerIndex}>
                         <tr>
                           <td>{key}</td>
-                          <td>{value.housing_risk}</td>
+                          <td style={{ backgroundColor: getColorByRisk(value.risk) }}>{value.risk}</td>
                         </tr>
+                        {/*
                         {Object.entries(value).map(([nestedKey, nestedValue], innerIndex) => (
                           <tr key={innerIndex}>
                             <td>{nestedKey}</td>
                             <td>{nestedValue}</td>
                           </tr>
                         ))}
+                        */}
                       </React.Fragment>
                     ))}
 
-                        */}
-                        <tr>
-                            <td>Housing</td>
-                            <td id={clientSVSData.home_data.housing_risk === 'Low' ? 'highlight-red' : clientSVSData.home_data.housing_risk === 'Medium' ? 'highlight-yellow' : 'hightlight-green'}>{clientSVSData.home_data.housing_risk}</td>
-                        </tr>
-                        <tr>
-                            <td>Food</td>
-                            <td id={clientSVSData.home_data.housing_risk === 'Low' ? 'highlight-red' : ''}>{clientSVSData.food_data.food_access_risk}</td>
-                        </tr>                        
+                        
+                       
                   </tbody>
                   </table>
             </Accordion.Body>
