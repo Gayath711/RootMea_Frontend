@@ -13,8 +13,7 @@ function ClientChart() {
   const [clientMedicationData, setClientMedicationData] = useState([]);
   const [clientDiagnosesData, setClientDiagnosesData] = useState([]);
   const [clientSVSData, setClientSVSData] = useState({
-    food_data: {},
-    home_data: {},
+
   });
   const [showModal, setShowModal] = useState(false);
 
@@ -80,7 +79,7 @@ function ClientChart() {
     navigate(`/medication-details/${clientID}`);
     }
     else if (page === 'diagnosis'){
-    navigate('/diagnosis_details');
+    navigate(`/diagnosis_details/${clientID}`);
     }
   };
 
@@ -174,7 +173,7 @@ function ClientChart() {
               <Card>
             <Card.Body>
               <Card.Title style={{ display: 'flex', justifyContent: 'space-between' }}>Diagnosis Details
-              <button className='view-edit' onClick={() => handleViewEditClick("diagnosis")}>View/Edit</button>
+              <button className='view-edit' onClick={() => handleViewEditClick("diagnosis",1)}>View/Edit</button>
               </Card.Title>
               <table className="table">
                 <tbody>

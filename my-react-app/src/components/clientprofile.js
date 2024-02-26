@@ -6,14 +6,18 @@ import { Button } from 'react-bootstrap';
 import Accordion from 'react-bootstrap/Accordion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faInfoCircle, faUserCircle, faChartBar, faMapMarker, faPen, faPrescriptionBottle, faFileShield, faCog, faDownload} from '@fortawesome/free-solid-svg-icons'; 
-
+import { useParams } from 'react-router-dom';
+import image from '../test.jpg';
 
 function ClientProfile() {
+  const { clientId } = useParams();
+
   const [activeForm, setActiveForm] = useState('general');
   const [clientData, setSetClientData] = useState('');
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/clientinfo-api/1')
+    console.log(clientId,"clientId")
+    axios.get(`http://127.0.0.1:8000/clientinfo-api/${clientId}`)
       .then(response => {
         setSetClientData(response.data);
         console.log(response.data.first_name)
@@ -117,7 +121,7 @@ function GeneralForm({ showForm , clientData}) {
             <div className="bg-secondary-soft px-4 py-5 rounded text-center">
               <div className="row g-3">
                 <div className="col">
-                  <img src="./test.jpg" alt="..." className="img-fluid" />
+                  <img src={image} alt="..." className="img-fluid" />
                 </div>
               </div>
             </div>

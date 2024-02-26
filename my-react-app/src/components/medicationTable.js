@@ -3,14 +3,17 @@ import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import { useParams } from 'react-router-dom';
 
 function MedicationTable() {
+  const { clientId } = useParams();
+
   const [clientMedicationData, setClientMedicationData] = useState([]);
   const [selectedMedication, setSelectedMedication] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/clientmedication-api/1')
+    axios.get(`http://127.0.0.1:8000/clientmedication-api/${clientId}`)
       .then(response => {
         setClientMedicationData(response.data);
         console.log(response.data);
