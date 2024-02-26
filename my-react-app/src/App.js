@@ -15,6 +15,7 @@ import UserProfile from './components/UserProfile';
 import ClientChart from './components/clientchart';
 import MedicationTable from './components/medicationTable';
 import DiagnosisTable from './components/diagnosisTable';
+import EncounterNote from './components/encounternote'
 
 
 function App() {
@@ -57,7 +58,7 @@ function App() {
                     <Route path="/medication-details/:clientId" element={<MedicationTable />} />
                     <Route path="/diagnosis_details/:clientId" element={<DiagnosisTable />} />
                     <Route path="/UserProfile" element={<UserProfile onLogout={() => setIsLoggedIn(false)} />} />
-                    
+                    <Route path="/encounter_note" element={<EncounterNote />} />
                   </Routes>
        
                   <Footer />
