@@ -24,6 +24,11 @@ const Navbar = () => {
               <a className="nav-link" href="/clientprofile">clientprofile</a>
             </li>
           </ul>
+          <ul className="navbar-nav mr-auto">
+            <li className="nav-item active">
+              <a className="nav-link" href="/clientprofilefull">clientprofilefull</a>
+            </li>
+          </ul>
 
           <ul className="navbar-nav mr-auto">
             <li className="nav-item active">
