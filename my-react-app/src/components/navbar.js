@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; 
+import { Link, useNavigate } from 'react-router-dom'; 
 
 const Navbar = ({ onLogout }) => {
   const navigate = useNavigate(); // Initialize navigate function
@@ -42,7 +42,7 @@ const Navbar = ({ onLogout }) => {
 
           <ul className="navbar-nav mr-auto">
             <li className="nav-item active">
-              <a className="nav-link" href="/clientprofile/2">Client Profile 2</a>
+            <Link to="/clientprofile/2" className="nav-link">Client Profile 2 </Link>
             </li>
           </ul>
 
