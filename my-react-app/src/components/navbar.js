@@ -1,16 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; 
 
-
-
 const Navbar = ({ onLogout }) => {
-
   const navigate = useNavigate(); // Initialize navigate function
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const handleDropdownToggle = (e) => {
+    e.preventDefault();
+    setDropdownOpen(!dropdownOpen);
+  };
 
   const logout = () => {
     onLogout(); // Call the onLogout function passed as prop
     localStorage.removeItem('isLoggedIn');
-    navigate('/'); // Navigate to the login page after logout
+    navigate('/'); 
   };
 
   return (
@@ -36,6 +39,13 @@ const Navbar = ({ onLogout }) => {
               <a className="nav-link" href="/clientprofile">Client Profile</a>
             </li>
           </ul>
+
+          <ul className="navbar-nav mr-auto">
+            <li className="nav-item active">
+              <a className="nav-link" href="/clientprofile/2">Client Profile 2</a>
+            </li>
+          </ul>
+
           {/*
           <ul className="navbar-nav mr-auto">
             <li className="nav-item active">
@@ -68,16 +78,19 @@ const Navbar = ({ onLogout }) => {
 
           <ul className="navbar-nav ml-auto">
             <li className="nav-item dropdown">
-             
-
-            <button onClick={logout}>Logout</button>
-
-              <a href="/UserProfile">
-  <img src="./test.jpg" alt="Profile" className="profile-img" style={{ width: '50px', height: '50px', borderRadius: '50%' }} />
-</a>
-      
+              <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" aria-haspopup="true" aria-expanded={dropdownOpen} onClick={handleDropdownToggle}>
+                <img src="./test.jpg" alt="Profile" className="profile-img" style={{ width: '50px', height: '50px', borderRadius: '50%' }} />
+              </a>
+              <div className={`dropdown-menu${dropdownOpen ? ' show' : ''}`} aria-labelledby="navbarDropdown">
+                <a className="dropdown-item" href="/UserProfile"><i className="fas fa-sliders-h fa-fw"></i> Account</a>
+                <a className="dropdown-item" href="#"><i className="fas fa-cog fa-fw"></i> Settings</a>
+                <div className="dropdown-divider"></div>
+                <a className="dropdown-item" href="#" onClick={logout}><i className="fas fa-sign-out-alt fa-fw"></i> Log Out</a>
+              </div>
             </li>
           </ul>
+
+        
         </div>
       </div>
     </nav>
@@ -85,7 +98,3 @@ const Navbar = ({ onLogout }) => {
 }
 
 export default Navbar;
-
-
-
-
