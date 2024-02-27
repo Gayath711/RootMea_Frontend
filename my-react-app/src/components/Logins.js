@@ -48,14 +48,14 @@ const LoginForm = ({ onLogin }) => {
       <div className="container h-100">
         <div className="row d-flex justify-content-center align-items-center h-100">
 
-        <div className="col-md-9 col-lg-6 col-xl-5">
-            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
+        <div className="col-md-9 col-lg-6 col-xl-5 text-center">
+            <img src="./root.png"
               className="img-fluid" alt="Sample image" />
           </div>
           <div className="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
             <form>
               <div className="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
-                <p className="lead fw-normal mb-0 me-3">Page Sign in</p>
+                <p className="lead fw-normal mb-0 me-3 fw-bolder">  Welcome to Roots</p>
                 {/* Add buttons for social sign-in */}
               </div>
 

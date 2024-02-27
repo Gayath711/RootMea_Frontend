@@ -40,7 +40,7 @@ function App() {
       <div className="App">
         {isLoggedIn ? (
           <>
-            <Navbar />
+            <Navbar onLogout={() => setIsLoggedIn(false)} />
 
                   
             <div className="container-fluid">
@@ -52,6 +52,7 @@ function App() {
 
                   
             <Routes>
+                    <Route path="/" element={<ClientProfileLandingPage />} />
                     <Route path="/clientprofile" element={<ClientProfileLandingPage />} />
                     <Route path="/clientprofile/:clientId" element={<ClientProfile />} />
                     <Route path="/home" element={<Home />} />

@@ -1,8 +1,18 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom'; 
 
 
 
-const Navbar = () => {
+const Navbar = ({ onLogout }) => {
+
+  const navigate = useNavigate(); // Initialize navigate function
+
+  const logout = () => {
+    onLogout(); // Call the onLogout function passed as prop
+    localStorage.removeItem('isLoggedIn');
+    navigate('/'); // Navigate to the login page after logout
+  };
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light" style={{ padding: '40px', boxShadow: 'rgb(24 17 17 / 49%) 0px 2px 20px' }}>
 
@@ -13,20 +23,22 @@ const Navbar = () => {
         </button>
         
         <div className="collapse navbar-collapse" id="navbarNav">
+          {/*
           <ul className="navbar-nav mr-auto">
             <li className="nav-item active">
               <a className="nav-link" href="/Home">Organization Dashboard </a>
             </li>
           </ul>
+  */}
 
           <ul className="navbar-nav mr-auto">
             <li className="nav-item active">
-              <a className="nav-link" href="/clientprofile">clientprofile</a>
+              <a className="nav-link" href="/clientprofile">Client Profile</a>
             </li>
           </ul>
           <ul className="navbar-nav mr-auto">
             <li className="nav-item active">
-              <a className="nav-link" href="/clientprofilefull">clientprofilefull</a>
+              <a className="nav-link" href="/clientprofilefull">Client Profilefull</a>
             </li>
           </ul>
 
@@ -57,6 +69,7 @@ const Navbar = () => {
             <li className="nav-item dropdown">
              
 
+            <button onClick={logout}>Logout</button>
 
               <a href="/UserProfile">
   <img src="./test.jpg" alt="Profile" className="profile-img" style={{ width: '50px', height: '50px', borderRadius: '50%' }} />
