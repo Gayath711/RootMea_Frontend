@@ -36,24 +36,25 @@ const Navbar = ({ onLogout }) => {
               <a className="nav-link" href="/clientprofile">Client Profile</a>
             </li>
           </ul>
+          {/*
           <ul className="navbar-nav mr-auto">
             <li className="nav-item active">
               <a className="nav-link" href="/clientprofilefull">Client Profilefull</a>
             </li>
           </ul>
-
+*/}
           <ul className="navbar-nav mr-auto">
             <li className="nav-item active">
               <a className="nav-link" href="/encounter_note">Encounter Notes</a>
             </li>
           </ul>
 
-          <ul className="navbar-nav mr-auto">
+ {/*}         <ul className="navbar-nav mr-auto">
             <li className="nav-item active">
               <a className="nav-link" href="/clientprofile">Export Items</a>
             </li>
           </ul>
-
+*/}
           <ul className="navbar-nav mr-auto">
             <li className="nav-item active">
               <a className="nav-link" href="/clientchart">Client Chart</a>

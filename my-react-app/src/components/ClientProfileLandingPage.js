@@ -19,7 +19,7 @@ function ClientProfileLandingPage() {
 
   return (
     <div>
-      <h2>Client Profile Landing Page</h2>
+      <h2>Your Clients</h2>
       <Table striped bordered hover>
         <thead>
           <tr>
@@ -34,7 +34,8 @@ function ClientProfileLandingPage() {
             <tr key={client.id}>
               <td>{client.id}</td>
               <td>
-                <Link to={`/clientprofile/${client.id}`}>{client.first_name}</Link>
+                {/*<Link to={`/clientprofile/${client.id}`}>{client.first_name}</Link>*/}
+                <Link to={`/clientprofilefull/${client.id}`}>{client.first_name}</Link>
               </td>
               <td>{client.last_name}</td>
               {/* Add more cells based on your data structure */}
