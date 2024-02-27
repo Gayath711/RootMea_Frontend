@@ -19,7 +19,7 @@ function ClientProfileLandingPage() {
 
   return (
     <div>
-      <h2>Your Clients</h2>
+      <h2>Clients</h2>
       <Table striped bordered hover>
         <thead>
           <tr>

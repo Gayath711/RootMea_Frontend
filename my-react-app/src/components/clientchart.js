@@ -106,12 +106,18 @@ function ClientChart() {
           <Card.Body>
             <Card.Title>{client.first_name}</Card.Title>
             <Card.Subtitle className="mb-2 text-muted">
-              Age: {client.age} | Sex: {client.sex}
+              {/*Age: {client.age} | Sex: {client.sex}*/}
             </Card.Subtitle>
             <Card.Text>
-              <strong>Address:</strong> {client.address}
+              <strong>Age:</strong> {client.age}
               <br />
-              <strong>Phone:</strong> {client.mobile_phone}
+              <strong>Sex:</strong> {client.sex}
+              <br />
+              <strong>Address:</strong> 27/19 3rd circular road, Perambur Chennai-82
+              <br />
+              <strong>Phone:</strong> 987456321
+              <br />
+
             </Card.Text>
           </Card.Body>
         </Card>
