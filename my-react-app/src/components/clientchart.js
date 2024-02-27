@@ -21,7 +21,7 @@ function ClientChart() {
 
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/clientinfo-api/1')
+    axios.get('http://192.168.3.24:8000/clientinfo-api/1')
       .then(response => {
         setClient(response.data);
         console.log(response.data);
@@ -33,7 +33,7 @@ function ClientChart() {
 
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/clientsvs-api/1')
+    axios.get('http://192.168.3.24:8000/clientsvs-api/1')
       .then(response => {
         setClientSVSData(response.data);
         console.log(response.data);
@@ -44,7 +44,7 @@ function ClientChart() {
   }, []);
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/clientmedication-api/1')
+    axios.get('http://192.168.3.24:8000/clientmedication-api/1')
       .then(response => {
         setClientMedicationData(response.data);
         console.log(response.data);
@@ -55,7 +55,7 @@ function ClientChart() {
   }, []);
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/clientdiagnoses-api/1')
+    axios.get('http://192.168.3.24:8000/clientdiagnoses-api/1')
       .then(response => {
         setClientDiagnosesData(response.data);
         console.log(response.data);

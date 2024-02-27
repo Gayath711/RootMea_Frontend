@@ -7,7 +7,7 @@ function ClientProfileLandingPage() {
   const [clientData, setClientData] = useState([]);
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/clientinfo-api')
+    axios.get('http://192.168.3.24:8000/clientinfo-api')
       .then(response => {
         setClientData(response.data);
         console.log(response.data);

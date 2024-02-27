@@ -5,7 +5,7 @@ const Home = () => {
   const [iframeUrl, setIframeUrl] = useState('');
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/metabase_dashboard_react/')
+    axios.get('http://192.168.3.24:8000/metabase_dashboard_react/')
       .then(response => {
         setIframeUrl(response.data.iframe_url);
       })

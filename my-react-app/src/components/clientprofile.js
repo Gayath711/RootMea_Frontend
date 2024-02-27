@@ -17,7 +17,7 @@ function ClientProfile() {
 
   useEffect(() => {
     console.log(clientId,"clientId")
-    axios.get(`http://127.0.0.1:8000/clientinfo-api/${clientId}`)
+    axios.get(`http://192.168.3.24:8000/clientinfo-api/${clientId}`)
       .then(response => {
         setSetClientData(response.data);
         console.log(response.data.first_name)
