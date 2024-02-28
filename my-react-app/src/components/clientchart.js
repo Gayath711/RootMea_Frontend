@@ -130,7 +130,7 @@ function ClientChart() {
         <div className='col-6'>
           <Accordion>
             <Accordion.Item eventKey="0">
-              <Accordion.Header>Medications</Accordion.Header>
+              <Accordion.Header className='fw-bold'>Medications</Accordion.Header>
               <Accordion.Body>
               <Card>
             <Card.Body>
@@ -174,7 +174,7 @@ function ClientChart() {
         <div className='col-6'>
           <Accordion>
             <Accordion.Item eventKey="0">
-              <Accordion.Header>Diagnosis</Accordion.Header>
+              <Accordion.Header className='fw-bold'>Diagnosis</Accordion.Header>
               <Accordion.Body>
               <Card>
             <Card.Body>

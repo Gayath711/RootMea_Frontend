@@ -26,14 +26,7 @@ const Navbar = ({ onLogout }) => {
         </button>
         
         <div className="collapse navbar-collapse" id="navbarNav">
-          {/*
-          <ul className="navbar-nav mr-auto">
-            <li className="nav-item active">
-              <a className="nav-link" href="/Home">Organization Dashboard </a>
-            </li>
-          </ul>
-  */}
-
+          
           <ul className="navbar-nav mr-auto">
             <li className="nav-item active">
               <a className="nav-link" href="/clientprofile">Client Profile</a>
@@ -46,6 +39,12 @@ const Navbar = ({ onLogout }) => {
             </li>
           </ul>
 
+          <ul className="navbar-nav mr-auto">
+            <li className="nav-item active">
+              <a className="nav-link" href="/Home">Organization Dashboard </a>
+            </li>
+          </ul>
+          
           {/*
           <ul className="navbar-nav mr-auto">
             <li className="nav-item active">

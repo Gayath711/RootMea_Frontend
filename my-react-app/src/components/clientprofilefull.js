@@ -112,7 +112,7 @@ function ContactForm({clientData}) {
       </div>
       {/* Last name */}
       <div className="col-md-4">
-        <label className="form-label fw-bold">Last Name *</label>
+        <label className="form-label fw-bold">Middle Name *</label>
         <input type="text" className="form-control" placeholder="" aria-label="Last name" value={clientData.last_name || ""} />
       </div>
       <div className="col-md-4">
@@ -121,16 +121,30 @@ function ContactForm({clientData}) {
       </div>
   
       <div className="col-md-4">
-        <label className="form-label fw-bold">First Name *</label>
+        <label className="form-label fw-bold">Nick Name/Preferred Name *</label>
         <input type="text" className="form-control" placeholder="" aria-label="First name" value={clientData.last_name || ""} />
       </div>
       {/* Last name */}
       <div className="col-md-4">
-        <label className="form-label fw-bold">Last Name *</label>
+        <label className="form-label fw-bold">Select Preferred Pronouns *</label>
         <input type="text" className="form-control" placeholder="" aria-label="Last name" value={clientData.first_name || ""} />
       </div>
       <div className="col-md-4">
-        <label className="form-label fw-bold">Last Name *</label>
+        <label className="form-label fw-bold">Enter Email Address *</label>
+        <input type="text" className="form-control" placeholder="" aria-label="Last name" value={clientData.last_name || ""} />
+      </div>
+
+      <div className="col-md-4">
+        <label className="form-label fw-bold">Enter Mobile Number *</label>
+        <input type="text" className="form-control" placeholder="" aria-label="First name" value={clientData.last_name || ""} />
+      </div>
+      {/* Last name */}
+      <div className="col-md-4">
+        <label className="form-label fw-bold">Enter Home Phone Number *</label>
+        <input type="text" className="form-control" placeholder="" aria-label="Last name" value={clientData.first_name || ""} />
+      </div>
+      <div className="col-md-4">
+        <label className="form-label fw-bold">Enter Work Phone Number *</label>
         <input type="text" className="form-control" placeholder="" aria-label="Last name" value={clientData.last_name || ""} />
       </div>
   

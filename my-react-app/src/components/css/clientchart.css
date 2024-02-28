@@ -19,3 +19,15 @@
 .ab{
     background-color: red !important;
 }
+
+.accordion-button {
+    font-weight: bold;
+}
+
+.accordion-button:focus {
+  box-shadow: none;
+}
+
+.accordion-button:not(.collapsed) {
+  color: #212529;
+}
