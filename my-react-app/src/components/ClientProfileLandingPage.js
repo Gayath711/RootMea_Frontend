@@ -98,7 +98,7 @@ function ClientProfileLandingPage() {
                 </Link>
               </td>
               <td className="text-center">
-                <Link to={`/clientchart/`}>
+                <Link to={`/clientchart/${client.id}`}>
                   <FontAwesomeIcon icon={faChartLine} style={{ color: 'red' }} />
                 </Link>
               </td>

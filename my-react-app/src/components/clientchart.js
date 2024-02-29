@@ -7,8 +7,12 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import { useNavigate } from 'react-router-dom';
 import MedicationTable from './medicationTable'; // Import the new component
+import { useParams } from 'react-router-dom';
 
 function ClientChart() {
+
+  const { clientId } = useParams();
+
   const [client ,setClient] = useState([]);  
   const [clientMedicationData, setClientMedicationData] = useState([]);
   const [clientDiagnosesData, setClientDiagnosesData] = useState([]);
@@ -21,7 +25,7 @@ function ClientChart() {
 
 
   useEffect(() => {
-    axios.get('http://192.168.3.24:8000/clientinfo-api/1')
+    axios.get(`http://192.168.3.24:8000/clientinfo-api/${clientId}`)
       .then(response => {
         setClient(response.data);
         console.log(response.data);
@@ -33,7 +37,7 @@ function ClientChart() {
 
 
   useEffect(() => {
-    axios.get('http://192.168.3.24:8000/clientsvs-api/1')
+    axios.get(`http://192.168.3.24:8000/clientsvs-api/${clientId}`)
       .then(response => {
         setClientSVSData(response.data);
         console.log(response.data);
@@ -44,7 +48,7 @@ function ClientChart() {
   }, []);
 
   useEffect(() => {
-    axios.get('http://192.168.3.24:8000/clientmedication-api/1')
+    axios.get(`http://192.168.3.24:8000/clientmedication-api/${clientId}`)
       .then(response => {
         setClientMedicationData(response.data);
         console.log(response.data);
@@ -55,7 +59,7 @@ function ClientChart() {
   }, []);
 
   useEffect(() => {
-    axios.get('http://192.168.3.24:8000/clientdiagnoses-api/1')
+    axios.get(`http://192.168.3.24:8000/clientdiagnoses-api/${clientId}`)
       .then(response => {
         setClientDiagnosesData(response.data);
         console.log(response.data);
