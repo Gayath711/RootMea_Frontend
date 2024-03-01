@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { serverAddress } from './constants';
 
 const LoginForm = ({ onLogin }) => {
   const [username, setUsername] = useState('');
@@ -18,7 +19,8 @@ const LoginForm = ({ onLogin }) => {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('http://192.168.3.24:8000/api/login/', {
+      // const response = await fetch('http://192.168.3.24:8000/api/login/', {
+      const response = await fetch(serverAddress+"api/login/", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
