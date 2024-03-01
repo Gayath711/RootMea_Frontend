@@ -37,7 +37,7 @@ function ClientChart() {
 
 
   useEffect(() => {
-    axios.get(`http://192.168.3.24:8000/clientsvs-api/${clientId}`)
+    axios.get(`http://127.0.0.1:8000/clientsvs-api/${clientId}`)
       .then(response => {
         setClientSVSData(response.data);
         console.log(response.data);
@@ -139,7 +139,7 @@ function ClientChart() {
               <Card>
             <Card.Body>
               <Card.Title style={{ display: 'flex', justifyContent: 'space-between' }}>Medication Details
-      <button className='view-edit' onClick={() => handleViewEditClick("medication", 1)}>
+      <button className='view-edit' onClick={() => handleViewEditClick("medication", clientId)}>
         View/Edit
       </button>              </Card.Title>
               <table className="table">
@@ -183,7 +183,7 @@ function ClientChart() {
               <Card>
             <Card.Body>
               <Card.Title style={{ display: 'flex', justifyContent: 'space-between' }}>Diagnosis Details
-              <button className='view-edit' onClick={() => handleViewEditClick("diagnosis",1)}>View/Edit</button>
+              <button className='view-edit' onClick={() => handleViewEditClick("diagnosis",clientId)}>View/Edit</button>
               </Card.Title>
               <table className="table">
                 <tbody>

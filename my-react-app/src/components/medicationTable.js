@@ -41,7 +41,7 @@ function MedicationTable() {
       .then(response => {
         console.log('Updated Successfully:', response.data);
         // Refresh data after successful update
-        axios.get('http://192.168.3.24:8000/clientmedication-api')
+        axios.get(`http://192.168.3.24:8000/clientmedication-api/${clientId}`)
           .then(response => {
             setClientMedicationData(response.data);
           })

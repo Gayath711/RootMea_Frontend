@@ -3,14 +3,17 @@ import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import { useParams } from 'react-router-dom';
 
 function DiagnosisTable() {
+  const { clientId } = useParams();
+
   const [clientDiagnosisData, setClientDiagnosisData] = useState([]);
   const [selectedDiagnosis, setSelectedDiagnosis] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
 
   useEffect(() => {
-    axios.get('http://192.168.3.24:8000/clientdiagnoses-api/1')
+    axios.get(`http://192.168.3.24:8000/clientdiagnoses-api/${clientId}`)
       .then(response => {
         setClientDiagnosisData(response.data);
         console.log(response.data);
@@ -38,7 +41,7 @@ function DiagnosisTable() {
       .then(response => {
         console.log('Updated Successfully:', response.data);
         // Refresh data after successful update
-        axios.get('http://192.168.3.24:8000/clientdiagnoses-api')
+        axios.get(`http://192.168.3.24:8000/clientdiagnoses-api/${clientId}`)
           .then(response => {
             setClientDiagnosisData(response.data);
           })
