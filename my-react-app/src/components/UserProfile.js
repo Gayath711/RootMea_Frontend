@@ -1,16 +1,35 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom'; 
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 
-const UserProfile = ({ onLogout }) => {
+const UserProfile = () => {
 
-  const navigate = useNavigate(); // Initialize navigate function
+  const [data, setData] = useState('');
 
-  const logout = () => {
-    onLogout(); // Call the onLogout function passed as prop
-    localStorage.removeItem('isLoggedIn');
-    navigate('/'); // Navigate to the login page after logout
-  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem('access_token');
+
+        const response = await axios.get('http://192.168.3.24/:8000/staffprofile/', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        setData(response.data.username);
+        console.log(response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+
+
 
 
   return (
@@ -23,8 +42,8 @@ const UserProfile = ({ onLogout }) => {
                 <li className="breadcrumb-item"><a href="#">Home</a></li>
                 <li className="breadcrumb-item"><a href="#">User</a></li>
                 <li className="breadcrumb-item active" aria-current="page">User Profile</li>
-
-                <button onClick={logout}>Logout</button>
+                {data}
+                
               </ol>
             </nav>
           </div>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'; 
+import axios from "axios";
 
 const Navbar = ({ onLogout }) => {
   const navigate = useNavigate(); // Initialize navigate function
@@ -11,9 +12,12 @@ const Navbar = ({ onLogout }) => {
   };
 
   const logout = () => {
-    onLogout(); // Call the onLogout function passed as prop
-    localStorage.removeItem('isLoggedIn');
-    navigate('/'); 
+    onLogout();
+    // localStorage.removeItem('isLoggedIn');
+    localStorage.clear();
+    axios.defaults.headers.common['Authorization'] = null;
+    window.location.href = '/login';
+    // navigate('/'); 
   };
 
   return (
