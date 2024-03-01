@@ -95,6 +95,10 @@ function ClientChart() {
         return 'yellow';
       case 'High':
         return 'red';
+      case 'No':
+        return 'green';
+      case 'Yes':
+        return 'red';
       default:
         return 'white'; // or any default color
     }
@@ -108,20 +112,31 @@ function ClientChart() {
       <div className="col-4">
         <Card>
           <Card.Body>
-            <Card.Title>{client.first_name}</Card.Title>
+            <Card.Title>Name: {client.first_name}</Card.Title>
             <Card.Subtitle className="mb-2 text-muted">
               {/*Age: {client.age} | Sex: {client.sex}*/}
             </Card.Subtitle>
             <Card.Text>
-              <strong>Age:</strong> {client.age}
+              <strong>Preferred Name:</strong> {client.nickname_preferred_name}
               <br />
-              <strong>Sex:</strong> {client.sex}
+              <strong>Pronouns:</strong> {client.preferred_pronouns}
               <br />
-              <strong>Address:</strong> 27/19 3rd circular road, Perambur Chennai-82
+              <strong>Date of birth:</strong> {client.date_of_birth}
               <br />
-              <strong>Phone:</strong> 987456321
+              <strong>Language:</strong> {client.comfortable_language}
               <br />
-
+              <strong>Primary Phone:</strong> {client.primary_phone}
+              <br />
+              <strong>Email:</strong> {client.emergency_contact_1_email_address}
+              <br />
+              <strong>Insurance:</strong> {client.insurance}
+              <br />
+              <strong>Insurance ID:</strong> {client.insurance_primary_carrier_name}
+              <br />
+              <strong>Navigator & Program:</strong> {client.navigator_program}
+              <br />
+              <strong>Other Programs:</strong> {client.other_programs}
+              <br />
             </Card.Text>
           </Card.Body>
         </Card>
