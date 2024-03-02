@@ -78,7 +78,7 @@ function ClientProfileLandingPage() {
             <tr key={client.id}>
               <td className="text-center">{client.id}</td>
               <td className="text-center">
-                <Link to={`/clientprofilefull/${client.id}`}>{client.first_name}</Link>
+                <Link to={`/clientprofile/${client.id}`}>{client.first_name}</Link>
               </td>
               <td className="text-center">{client.last_name}</td>
               <td className="text-center">{client.date_of_birth}</td>
@@ -94,7 +94,7 @@ function ClientProfileLandingPage() {
               <td className="text-center">{client.mobile_number}</td>
               <td className="text-center">Engaged</td>
               <td className="text-center">
-                <Link to={`/clientprofilefull/${client.id}`}>
+                <Link to={`/clientprofile/${client.id}`}>
                   <FontAwesomeIcon icon={faUser} style={{ color: 'black' }} />
                 </Link>
               </td>

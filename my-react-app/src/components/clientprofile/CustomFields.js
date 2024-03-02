@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import TextBox from "../common/TextBox";
 
-const CustomFields = () => {
+const CustomFields = ({clientData}) => {
     const [isOpen, setIsOpen] = useState(true);
 
     const toggleAccordion = () => {
@@ -34,17 +34,17 @@ const CustomFields = () => {
                             <div className="flex flex-col justify-between space-y-6">
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <TextBox placeholder="Custom Field 1" />
+                                        <TextBox placeholder="Custom Field 1" value={clientData.first_name}/>
                                     </div>
                                 </div>
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <TextBox placeholder="Custom Field 2" />
+                                        <TextBox placeholder="Custom Field 2" value={clientData.first_name}/>
                                     </div>
                                 </div>
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <TextBox placeholder="Custom Field 3" />
+                                        <TextBox placeholder="Custom Field 3" value={clientData.first_name}/>
                                     </div>
                                 </div>
                             </div>

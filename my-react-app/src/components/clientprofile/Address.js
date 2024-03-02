@@ -4,7 +4,7 @@ import TextBox from "../common/TextBox";
 import DropDown from "../common/Dropdown";
 import TextArea from "../common/TextArea";
 
-const AddressInformation = () => {
+const AddressInformation = ({clientData}) => {
     const [isOpen, setIsOpen] = useState(true);
 
     const toggleAccordion = () => {
@@ -36,30 +36,30 @@ const AddressInformation = () => {
                             <div className="flex flex-col justify-between space-y-6">
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <TextBox placeholder="Mailing Address Line 1" />
+                                        <TextBox placeholder="Mailing Address Line 1" value={clientData.mailing_address_line_1_address_n_usual_location}/>
                                     </div>
                                 </div>
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <TextBox placeholder="Mailing Address Line 2" />
+                                        <TextBox placeholder="Mailing Address Line 2" value={clientData.mailing_address_line_2_address_n_usual_location}/>
                                     </div>
                                 </div>
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <DropDown placeholder="Select City" />
+                                        <DropDown placeholder="Select City" value={clientData.city_address_n_usual_location}/>
                                     </div>
                                     <div className="flex-1">
-                                        <DropDown placeholder="Select State" />
+                                        <DropDown placeholder="Select State" value={clientData.state_address_n_usual_location}/>
                                     </div>
                                     <div className="flex-1">
-                                        <TextBox placeholder="Enter Valid Zip Code" />
+                                        <TextBox placeholder="Enter Valid Zip Code" value={clientData.zip_address_n_usual_location}/>
                                     </div>
                                 </div>
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
                                         <TextArea placeholder={`"Where can we usually find you, If different from your mailing address.\n[Add Address or, If unsheltered, specify cross street, encampment address, description of dwelling, etc. ]`}
                                             height={150}
-                                        />
+                                            value={clientData.where_can_we_usually_find_you_if_different_from_mailing_address}/>
                                     </div>
                                 </div>
                             </div>

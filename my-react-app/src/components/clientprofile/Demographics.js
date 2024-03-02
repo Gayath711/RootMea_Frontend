@@ -4,7 +4,7 @@ import TextBox from "../common/TextBox";
 import DropDown from "../common/Dropdown";
 import DateInput from "../common/DateInput";
 
-const Demographics = () => {
+const Demographics = ({clientData}) => {
     const [isOpen, setIsOpen] = useState(true);
 
     const toggleAccordion = () => {
@@ -36,52 +36,52 @@ const Demographics = () => {
                             <div className="flex flex-col justify-between space-y-6">
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <DateInput placeholder="Enter Date of Birth" />
+                                        <DateInput placeholder="Enter Date of Birth" value={clientData.date_of_birth}/>
                                     </div>
                                     <div className="flex-1">
-                                        <TextBox placeholder="Enter Age" />
+                                        <TextBox placeholder="Enter Age" value={clientData.age}/>
                                     </div>
                                     <div className="flex-1">
-                                        <DropDown placeholder="Enter Sex" />
-                                    </div>
-                                </div>
-                                <div className="flex space-x-6">
-                                    <div className="flex-1">
-                                        <TextBox placeholder="Enter Social Security Number" />
-                                    </div>
-                                    <div className="flex-1">
-                                        <TextBox placeholder="US Armed Forces" />
-                                    </div>
-                                    <div className="flex-1">
-                                        <DropDown placeholder="Select Ethinicity" />
+                                        <DropDown placeholder="Enter Sex" value={clientData.sex}/>
                                     </div>
                                 </div>
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <DropDown placeholder="Which Best describes the place you live now?" />
+                                        <TextBox placeholder="Enter Social Security Number" value={clientData.social_security_number}/>
+                                    </div>
+                                    <div className="flex-1">
+                                        <TextBox placeholder="US Armed Forces" value={clientData.us_armed_forces}/>
+                                    </div>
+                                    <div className="flex-1">
+                                        <DropDown placeholder="Select Ethinicity" value={clientData.ethnicity}/>
+                                    </div>
+                                </div>
+                                <div className="flex space-x-6">
+                                    <div className="flex-1">
+                                        <DropDown placeholder="Which Best describes the place you live now?" value={clientData.describe_the_place_you_live}/>
                                     </div>
 
                                 </div>
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <DropDown placeholder="Select Race" />
+                                        <DropDown placeholder="Select Race" value={clientData.race}/>
                                     </div>
                                     <div className="flex-1">
-                                        <DropDown placeholder="Select Other Race" />
+                                        <DropDown placeholder="Select Other Race" value={clientData.other_race}/>
                                     </div>
                                     <div className="flex-1">
-                                        <DropDown placeholder="Select Gender Identity" />
+                                        <DropDown placeholder="Select Gender Identity" value={clientData.gender_identity}/>
                                     </div>
                                 </div>
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <DropDown placeholder="Select Other Gender Identity" />
+                                        <DropDown placeholder="Select Other Gender Identity" value={clientData.other_gender_identity}/>
                                     </div>
                                     <div className="flex-1">
-                                        <DropDown placeholder="Select Sexual Orientation" />
+                                        <DropDown placeholder="Select Sexual Orientation" value={clientData.sexual_orientation }/>
                                     </div>
                                     <div className="flex-1">
-                                        <DropDown placeholder="Select Other Sexual Orientation" />
+                                        <DropDown placeholder="Select Other Sexual Orientation" value={clientData.other_sexual_orientation}/>
                                     </div>
                                 </div>
                             </div>

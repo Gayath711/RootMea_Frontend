@@ -3,7 +3,7 @@ import { useState } from "react";
 import TextBox from "../common/TextBox";
 import DropDown from "../common/Dropdown";
 
-const EmergencyContact = ({ heading }) => {
+const EmergencyContact = ({ heading,clientData }) => {
     const [isOpen, setIsOpen] = useState(true);
 
     const toggleAccordion = () => {
@@ -19,36 +19,36 @@ const EmergencyContact = ({ heading }) => {
                     <div className="flex flex-col justify-between space-y-6">
                         <div className="flex space-x-6">
                             <div className="flex-1">
-                                <TextBox placeholder="Enter Name" />
+                                <TextBox placeholder="Enter Name" value={clientData.emergency_contact_1_name}/>
                             </div>
                             <div className="flex-1">
-                                <TextBox placeholder="Enter Email Address" />
+                                <TextBox placeholder="Enter Email Address" value={clientData.emergency_contact_1_email_address}/>
                             </div>
                             <div className="flex-1">
-                                <DropDown placeholder="Select Relationship" />
+                                <DropDown placeholder="Select Relationship" value={clientData.emergency_contact_1_relationship}/>
                             </div>
                         </div>
                         <div className="flex space-x-6">
                             <div className="flex-1">
-                                <TextBox placeholder="Enter Address Line #1" />
+                                <TextBox placeholder="Enter Address Line #1" value={clientData.emergency_contact_1_address_line_1}/>
                             </div>
                             <div className="flex-1">
-                                <TextBox placeholder="Enter Address Line #2" />
+                                <TextBox placeholder="Enter Address Line #2" value={clientData.emergency_contact_1_address_line_2}/>
                             </div>
                             <div className="flex-1">
-                                <DropDown placeholder="Select City" />
+                                <DropDown placeholder="Select City" value={clientData.emergency_contact_1_city}/>
                             </div>
 
                         </div>
                         <div className="flex space-x-6">
                             <div className="flex-1">
-                                <DropDown placeholder="Select State" />
+                                <DropDown placeholder="Select State" value={clientData.emergency_contact_1_state}/>
                             </div>
                             <div className="flex-1">
-                                <TextBox placeholder="Enter Zip Code" />
+                                <TextBox placeholder="Enter Zip Code" value={clientData.emergency_contact_1_zip}/>
                             </div>
                             <div className="flex-1">
-                                <TextBox placeholder="Enter Phone Number" />
+                                <TextBox placeholder="Enter Phone Number" value={clientData.emergency_contact_1_phone}/>
                             </div>
                         </div>
                     </div>
