@@ -1,50 +1,50 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
 import Table from 'react-bootstrap/Table';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStickyNote, faChartLine, faUser } from '@fortawesome/free-solid-svg-icons';
 
-function ClientProfileLandingPage() {
+function ClientProfileLandingPage({ onLogout }) {
   const [clientData, setClientData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate(); // Initialize navigate function
 
   useEffect(() => {
     fetchData();
-  }, [searchQuery]); // Fetch data whenever searchQuery changes
+  }, [searchQuery]); 
 
-  const fetchData = () => {
-    axios.get(`http://192.168.3.24:8000/clientinfo-api?search=${searchQuery}`)
-      .then(response => {
-        setClientData(response.data);
-        console.log(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching Client Data:', error);
+  const fetchData = async () => {
+    const token = localStorage.getItem('access_token');
+
+    if (!token) {
+      return;
+    }
+
+    try {
+      const response = await axios.get(`http://192.168.3.24:8000/clientinfo-api?search=${searchQuery}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       });
+      setClientData(response.data);
+      console.log(clientData)
+    } catch (error) {
+      console.error('Error fetching Client Data:', error);
+    }
   };
+
+  
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
   };
 
-  // Function to determine the background color class based on social risk score
-  const getRiskColor = (score) => {
-    if (score === "low") {
-      return "green-bg";
-    } else if (score === "medium") {
-      return "yellow-bg";
-    } else if (score === "high") {
-      return "red-bg";
-    } else {
-      return ""; // Default color or handle edge cases
-    }
-  };
-
   return (
-
     <div className="container">
       <h2>Clients</h2>
+     
       <div className="row justify-content-end mb-3">
         <div className="col-md-4">
           <input
@@ -83,14 +83,7 @@ function ClientProfileLandingPage() {
               <td className="text-center">{client.last_name}</td>
               <td className="text-center">{client.date_of_birth}</td>
               <td className="text-center">{client.sex}</td>
-              {/* <td className={`text-center ${getRiskColor(client.social_risk_score)}`}>
-                {client.social_risk_score}
-              </td> */}
-
-              <td className={`text-center ${getRiskColor(client.social_risk_score)}`}>
-                red
-              </td>
-
+              <td className="text-center">{client.social_risk_score}</td>
               <td className="text-center">{client.mobile_number}</td>
               <td className="text-center">Engaged</td>
               <td className="text-center">
