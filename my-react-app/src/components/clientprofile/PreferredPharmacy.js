@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import TextBox from "../common/TextBox";
 
-const PreferredPharmacy = () => {
+const PreferredPharmacy = ({clientData}) => {
     const [isOpen, setIsOpen] = useState(true);
 
     const toggleAccordion = () => {
@@ -34,15 +34,15 @@ const PreferredPharmacy = () => {
                             <div className="flex flex-col justify-between space-y-6">
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <TextBox placeholder="Pharmacy Name" />
+                                        <TextBox placeholder="Pharmacy Name" value={clientData.preferred_pharmacy_name}/>
                                     </div>
                                     <div className="flex-1">
-                                        <TextBox placeholder="Enter Pharmacy Phone Number" />
+                                        <TextBox placeholder="Enter Pharmacy Phone Number" value={clientData.preferred_pharmacy_phone}/>
                                     </div>
                                 </div>
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <TextBox placeholder="Pharmacy Address and Location" />
+                                        <TextBox placeholder="Pharmacy Address and Location" value={clientData.preferred_pharmacy_location}/>
                                     </div>
                                 </div>
                             </div>

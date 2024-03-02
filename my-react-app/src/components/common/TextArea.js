@@ -1,4 +1,4 @@
-const TextArea = ({ name, id = { name }, placeholder, width = 480, height = 75, className }) => {
+const TextArea = ({ name, id = { name }, placeholder, width = 480, height = 75, className, value }) => {
     return (
         <textarea
             name={name}
@@ -11,6 +11,7 @@ const TextArea = ({ name, id = { name }, placeholder, width = 480, height = 75, 
                 placeholder-opacity-50 
                 rounded-md
                 text-lg"
+            value = {value}
         />
     );
 }

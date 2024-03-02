@@ -1,8 +1,11 @@
 import { useState } from "react";
 
-import Insurance from "./Insurance";
+import Insurance1 from "./Insurance1";
+import Insurance2 from "./Insurance2";
+import Insurance3 from "./Insurance3";
 
-const InsuranceInformation = () => {
+
+const InsuranceInformation = ({clientData}) => {
     const [isOpen, setIsOpen] = useState(true);
 
     const toggleAccordion = () => {
@@ -31,9 +34,9 @@ const InsuranceInformation = () => {
                 isOpen && (
                     <>
                         <div className="p-4 border-t border-gray-300"></div>
-                        <Insurance heading={"Primary - Insurance"} />
-                        <Insurance heading={"Secondary - Insurance"} />
-                        <Insurance heading={"Tertiary - Insurance"} />
+                        <Insurance1 heading={"Primary - Insurance"} clientData={clientData}/>
+                        <Insurance2 heading={"Secondary - Insurance"} clientData={clientData}/>
+                        <Insurance3 heading={"Tertiary - Insurance"} clientData={clientData}/>
                     </>
                 )
             }

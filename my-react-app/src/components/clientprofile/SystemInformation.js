@@ -3,7 +3,7 @@ import { useState } from "react";
 import TextBox from "../common/TextBox";
 import DateInput from "../common/DateInput";
 
-const SystemInformation = () => {
+const SystemInformation = ({clientData}) => {
     const [isOpen, setIsOpen] = useState(true);
 
     const toggleAccordion = () => {
@@ -35,24 +35,24 @@ const SystemInformation = () => {
                             <div className="flex flex-col justify-between space-y-6">
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <TextBox placeholder="Select Original Data Source" />
+                                        <TextBox placeholder="Select Original Data Source" value={clientData.system_information_original_data_source}/>
                                     </div>
                                     <div className="flex-1">
-                                        <TextBox placeholder="Enter Import Notes" />
+                                        <TextBox placeholder="Enter Import Notes" value={clientData.system_information_import_notes}/>
                                     </div>
                                     <div className="flex-1">
-                                        <DateInput placeholder="Select Import Date and Time" />
+                                        <DateInput placeholder="Select Import Date and Time" value={clientData.system_information_import_date}/>
                                     </div>
                                 </div>
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <TextBox placeholder="Enter PRN Practice Fusion" />
+                                        <TextBox placeholder="Enter PRN Practice Fusion" value={clientData.system_information_prn}/>
                                     </div>
                                     <div className="flex-1">
-                                        <TextBox placeholder="#" />
+                                        <TextBox placeholder="#" value={clientData.system_information_chart_number}/>
                                     </div>
                                     <div className="flex-1">
-                                        <TextBox placeholder="#" />
+                                        <TextBox placeholder="#" value={clientData.system_information_system_id}/>
                                     </div>
                                 </div>
                             </div>

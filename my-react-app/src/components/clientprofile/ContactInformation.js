@@ -2,9 +2,9 @@ import { useState } from "react";
 
 import TextBox from "../common/TextBox";
 import DropDown from "../common/Dropdown";
-import EmergencyContact from "./EmergencyContact";
+//import EmergencyContact from "./EmergencyContact1";
 
-const ContactInformation = () => {
+const ContactInformation = ({clientData}) => {
     const [isOpen, setIsOpen] = useState(true);
 
     const toggleAccordion = () => {
@@ -41,59 +41,57 @@ const ContactInformation = () => {
                                 <div className="flex flex-col justify-between space-y-6">
                                     <div className="flex space-x-6">
                                         <div className="flex-1">
-                                            <TextBox placeholder="Enter First Name" />
+                                            <TextBox placeholder="Enter First Name" value={clientData.first_name}/>
                                         </div>
                                         <div className="flex-1">
-                                            <TextBox placeholder="Enter Middle Name" />
+                                            <TextBox placeholder="Enter Middle Name" value={clientData.middle_name}/>
                                         </div>
                                         <div className="flex-1">
-                                            <TextBox placeholder="Enter Last Name" />
+                                            <TextBox placeholder="Enter Last Name" value={clientData.last_name}/>
                                         </div>
                                     </div>
                                     <div className="flex space-x-6">
                                         <div className="flex-1">
-                                            <TextBox placeholder="Enter Nick Name/Preferred Name" />
+                                            <TextBox placeholder="Enter Nick Name/Preferred Name" value={clientData.nickname_preferred_name}/>
                                         </div>
                                         <div className="flex-1">
-                                            <TextBox placeholder="Select Preferred Pronouns" />
+                                            <TextBox placeholder="Select Preferred Pronouns" value={clientData.preferred_pronouns}/>
                                         </div>
                                         <div className="flex-1">
-                                            <TextBox placeholder="Enter Email Address" />
+                                            <TextBox placeholder="Enter Email Address" value={clientData.email_address}/>
                                         </div>
 
                                     </div>
                                     <div className="flex space-x-6">
                                         <div className="flex-1">
-                                            <TextBox placeholder="Enter Mobile Number" />
+                                            <TextBox placeholder="Enter Mobile Number" value={clientData.mobile_number}/>
                                         </div>
                                         <div className="flex-1">
-                                            <TextBox placeholder="Enter Home Phone Number" />
+                                            <TextBox placeholder="Enter Home Phone Number" value={clientData.home_phone}/>
                                         </div>
                                         <div className="flex-1">
-                                            <TextBox placeholder="Enter Work Phone Number" />
-                                        </div>
-                                    </div>
-                                    <div className="flex space-x-6">
-                                        <div className="flex-1">
-                                            <DropDown placeholder="Select Best Way to Contact You" />
-                                        </div>
-                                        <div className="flex-1">
-                                            <DropDown placeholder="Select Primary Phone Number" />
+                                            <TextBox placeholder="Enter Work Phone Number" value={clientData.work_phone}/>
                                         </div>
                                     </div>
                                     <div className="flex space-x-6">
                                         <div className="flex-1">
-                                            <DropDown placeholder="Select Preferred Language" />
+                                            <DropDown placeholder="Select Best Way to Contact You" value={clientData.best_way_to_contact}/>
                                         </div>
                                         <div className="flex-1">
-                                            <DropDown placeholder="Select Other Language" />
+                                            <DropDown placeholder="Select Primary Phone Number" value={clientData.best_way_to_contact}/>
+                                        </div>
+                                    </div>
+                                    <div className="flex space-x-6">
+                                        <div className="flex-1">
+                                            <DropDown placeholder="Select Preferred Language" value={clientData.primary_phone}/>
+                                        </div>
+                                        <div className="flex-1">
+                                            <DropDown placeholder="Select Other Language" value={clientData.other_language}/>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <EmergencyContact heading={"Emergency Contact #1 Information"} />
-                        <EmergencyContact heading={"Emergency Contact #2 Information"} />
                     </>
                 )
             }

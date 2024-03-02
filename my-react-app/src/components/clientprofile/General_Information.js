@@ -3,7 +3,7 @@ import { useState } from "react";
 import TextBox from "../common/TextBox";
 import DateInput from "../common/DateInput";
 
-const GeneralInformation = () => {
+const GeneralInformation = ({clientData}) => {
     const [isOpen, setIsOpen] = useState(true);
 
     const toggleAccordion = () => {
@@ -40,19 +40,19 @@ const GeneralInformation = () => {
                             <div className="flex flex-col justify-between flex-1">
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <TextBox placeholder="Enter Client Status" />
+                                        <TextBox placeholder="Enter Client Status" value={"Pending"}/>
                                     </div>
                                     <div className="flex-1">
-                                        <DateInput placeholder="Enter Client Date" />
+                                        <DateInput placeholder="Enter Client Date" value={"2022-10-01"}/>
                                     </div>
                                 </div>
-                                <TextBox placeholder="Enter Client Programs" />
+                                <TextBox placeholder="Enter Client Programs" value={"STOMP"}/>
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <TextBox placeholder="Enter Client Navigator Name" />
+                                        <TextBox placeholder="Enter Client Navigator Name" value={"Laura"}/>
                                     </div>
                                     <div className="flex-1">
-                                        <TextBox placeholder="Enter Client System ID" />
+                                        <TextBox placeholder="Enter Client System ID" value={"5432"}/>
                                     </div>
                                 </div>
                             </div>

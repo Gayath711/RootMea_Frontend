@@ -1,4 +1,4 @@
-const TextBox = ({ name, id = { name }, placeholder, width = 480, height = 75, className }) => {
+const TextBox = ({ name, id = { name }, placeholder, width = 480, height = 75, className, value }) => {
     return (
         <input
             name={name}
@@ -11,6 +11,7 @@ const TextBox = ({ name, id = { name }, placeholder, width = 480, height = 75, c
                 placeholder-opacity-50 
                 rounded-md
                 text-lg"
+            value={value}
         />
     );
 }

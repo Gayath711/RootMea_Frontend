@@ -11,8 +11,29 @@ import CustomFields from './clientprofile/CustomFields';
 import PreferredPharmacy from './clientprofile/PreferredPharmacy';
 import InsuranceInformation from './clientprofile/InsuranceInformation';
 import SystemInformation from './clientprofile/SystemInformation';
+import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import EmergencyContact1 from './clientprofile/EmergencyContact1';
+import EmergencyContact2 from './clientprofile/EmergencyContact2';
 
 const ClientProfile = () => {
+
+  const { clientId } = useParams();
+
+  const [clientData, setSetClientData] = useState('');
+
+  useEffect(() => {
+    console.log(clientId,"clientId")
+    axios.get(`http://192.168.3.24:8000/clientinfo-api/${clientId}`)
+      .then(response => {
+        setSetClientData(response.data);
+        console.log(response.data.first_name)
+      })
+      .catch(error => {
+        console.error('Error fetching Client Data:', error);
+      });
+  }, []);
 
   return (
     <div className="w-full h-full p-4 bg-gray-50">
@@ -32,28 +53,34 @@ const ClientProfile = () => {
 
           <div class="w-full p-4 space-y-6">
             <div>
-              <GeneralInformation />
+              <GeneralInformation clientData= {clientData} />
             </div>
             <div>
-              <ContactInformation />
+              <ContactInformation clientData= {clientData}/>
             </div>
             <div>
-              <Demographics />
+              <EmergencyContact1 clientData= {clientData} heading={"Emergency Contact #1 Information"}/>
             </div>
             <div>
-              <AddressInformation />
+              <EmergencyContact2 clientData= {clientData}heading={"Emergency Contact #2 Information"}/>
             </div>
             <div>
-              <CustomFields />
+              <Demographics clientData= {clientData}/>
             </div>
             <div>
-              <PreferredPharmacy />
+              <AddressInformation clientData= {clientData} />
             </div>
             <div>
-              <InsuranceInformation />
+              <CustomFields clientData= {clientData} />
             </div>
             <div>
-              <SystemInformation />
+              <PreferredPharmacy clientData= {clientData} />
+            </div>
+            <div>
+              <InsuranceInformation clientData= {clientData} />
+            </div>
+            <div>
+              <SystemInformation clientData= {clientData}/>
             </div>
           </div>
         </div>

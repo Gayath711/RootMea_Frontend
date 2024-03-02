@@ -3,7 +3,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 // import { BsCalendar } from 'react-icons/bs';
 
-const DateInput = ({ name, id = { name }, placeholder, height = 75 }) => {
+const DateInput = ({ name, id = { name }, placeholder, height = 75, value }) => {
     const [startDate, setStartDate] = useState(null);
     return (
         <DatePicker
@@ -11,6 +11,7 @@ const DateInput = ({ name, id = { name }, placeholder, height = 75 }) => {
             id={id}
             selected={startDate}
             onChange={(date) => setStartDate(date)}
+            value={value}
             className={`w-full
             px-2 border-1
                 border-gray-600/50
