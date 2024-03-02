@@ -25,7 +25,7 @@ const LoginForm = ({ onLogin }) => {
     try {
       // Create the POST request
       const { data } = await axios.post(
-        'http://192.168.3.24:8000/api/login',
+        'http://192.168.3.24:8000/token/',
         user,
         {
           headers: {

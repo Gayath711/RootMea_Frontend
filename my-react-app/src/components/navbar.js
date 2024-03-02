@@ -1,10 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom'; 
 import SearchBar from './SearchBar';
 
 const Navbar = ({ onLogout, isMinimized, toggleSidebar }) => {
   const navigate = useNavigate(); // Initialize navigate function
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [profileType, setProfileType] = useState(null);
+
+  useEffect(() => {
+    const fetchProfileType = async () => {
+      try {
+        const response = await fetch('http://192.168.3.24:8000/profile-type/', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          },
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch profile type');
+        }
+        const data = await response.json();
+        console.log(data)
+        setProfileType(data.user_type);
+
+      } catch (error) {
+        console.error('Error fetching profile type:', error);
+      }
+    };
+
+    fetchProfileType();
+  }, []);
+
 
   const handleDropdownToggle = (e) => {
     e.preventDefault();
@@ -31,8 +56,28 @@ const Navbar = ({ onLogout, isMinimized, toggleSidebar }) => {
         </div>
       </div>
       <div className="flex items-center">
+
+      <div className="flex items-center justify-between border-b py-4">
+  {profileType === 'admin' && (
+    <div className="flex items-center">
+      {/* <p className="text-gray-700">User Profile Type: {profileType}</p> */}
+    </div>
+  )}
+  {profileType === 'admin' && (
+    <div>
+      <button className="bg-green-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        <a href="http://localhost:8000/admin/">Admin</a>
+      </button>
+    </div>
+  )}
+</div>
+
+
+
         <img src="./message.png" className="h-[25px] w-[25px] mr-20" alt="messages" />
         <img src="./notification.png" className="h-[25px] w-[25px] mr-20" alt="notifications" />
+
+
         <div className="dropdown">
           <a href="#" role="button" id="navbarDropdown" onClick={handleDropdownToggle}>
             <img src="./profile.png" alt="Profile" className="h-[50px] w-[50px] rounded-full" />
@@ -43,6 +88,8 @@ const Navbar = ({ onLogout, isMinimized, toggleSidebar }) => {
             <div className="dropdown-divider"></div>
             <a className="dropdown-item" href="#" onClick={logout}><i className="fas fa-sign-out-alt fa-fw"></i> Log Out</a>
           </div>
+
+    
         </div>
       </div>
     </nav>
