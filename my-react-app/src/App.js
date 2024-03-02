@@ -47,7 +47,7 @@ function App() {
         {isLoggedIn ? (
           <>
             <Navbar onLogout={() => setIsLoggedIn(false)} isMinimized={isMinimized} toggleSidebar={toggleSidebar} />
-            <div className='flex'>
+            <div className='flex min-h-screen'>
               <Sidebar isMinimized={isMinimized} toggleSidebar={toggleSidebar} />
               <div className='flex-1'>
                 <Routes>
