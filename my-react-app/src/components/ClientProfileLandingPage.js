@@ -42,6 +42,7 @@ function ClientProfileLandingPage() {
   };
 
   return (
+
     <div className="container">
       <h2>Clients</h2>
       <div className="row justify-content-end mb-3">
@@ -86,10 +87,10 @@ function ClientProfileLandingPage() {
                 {client.social_risk_score}
               </td> */}
 
-                            <td className={`text-center ${getRiskColor(client.social_risk_score)}`}>
+              <td className={`text-center ${getRiskColor(client.social_risk_score)}`}>
                 red
               </td>
-              
+
               <td className="text-center">{client.mobile_number}</td>
               <td className="text-center">Engaged</td>
               <td className="text-center">
