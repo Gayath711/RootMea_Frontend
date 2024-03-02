@@ -4,7 +4,7 @@ import TextBox from "../common/TextBox";
 import DropDown from "../common/Dropdown";
 import DateInput from "../common/DateInput";
 
-const Insurance = ({ heading }) => {
+const Insurance = ({ heading, isEdittable }) => {
     const [isOpen, setIsOpen] = useState(true);
 
     const toggleAccordion = () => {
@@ -20,26 +20,26 @@ const Insurance = ({ heading }) => {
                     <div className="flex flex-col justify-between space-y-6">
                         <div className="flex space-x-6">
                             <div className="flex-1">
-                                <TextBox placeholder="Enter Carrier Name" />
+                                <TextBox placeholder="Enter Carrier Name" isEdittable={isEdittable} />
                             </div>
                         </div>
                         <div className="flex space-x-6">
                             <div className="flex-1">
-                                <TextBox placeholder="Enter Subscriber ID" />
+                                <TextBox placeholder="Enter Subscriber ID" isEdittable={isEdittable} />
                             </div>
                             <div className="flex-1">
-                                <TextBox placeholder="Enter Subscriber Name" />
+                                <TextBox placeholder="Enter Subscriber Name" isEdittable={isEdittable} />
                             </div>
                         </div>
                         <div className="flex space-x-6">
                             <div className="flex-1">
-                                <DropDown placeholder="Relation to Insured" />
+                                <DropDown placeholder="Relation to Insured" isEdittable={isEdittable} />
                             </div>
                             <div className="flex-1">
-                                <DateInput placeholder="Effective From Date" />
+                                <DateInput placeholder="Effective From Date" isEdittable={isEdittable} />
                             </div>
                             <div className="flex-1">
-                                <DateInput placeholder="Effective To Date" />
+                                <DateInput placeholder="Effective To Date" isEdittable={isEdittable} />
                             </div>
                         </div>
                     </div>

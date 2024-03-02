@@ -3,7 +3,7 @@ import { useState } from "react";
 import TextBox from "../common/TextBox";
 import DropDown from "../common/Dropdown";
 
-const EmergencyContact = ({ heading }) => {
+const EmergencyContact = ({ heading, isEdittable }) => {
     const [isOpen, setIsOpen] = useState(true);
 
     const toggleAccordion = () => {
@@ -19,36 +19,36 @@ const EmergencyContact = ({ heading }) => {
                     <div className="flex flex-col justify-between space-y-6">
                         <div className="flex space-x-6">
                             <div className="flex-1">
-                                <TextBox placeholder="Enter Name" />
+                                <TextBox placeholder="Enter Name" isEdittable={isEdittable} />
                             </div>
                             <div className="flex-1">
-                                <TextBox placeholder="Enter Email Address" />
+                                <TextBox placeholder="Enter Email Address" isEdittable={isEdittable} />
                             </div>
                             <div className="flex-1">
-                                <DropDown placeholder="Select Relationship" />
+                                <DropDown placeholder="Select Relationship" isEdittable={isEdittable} />
                             </div>
                         </div>
                         <div className="flex space-x-6">
                             <div className="flex-1">
-                                <TextBox placeholder="Enter Address Line #1" />
+                                <TextBox placeholder="Enter Address Line #1" isEdittable={isEdittable} />
                             </div>
                             <div className="flex-1">
-                                <TextBox placeholder="Enter Address Line #2" />
+                                <TextBox placeholder="Enter Address Line #2" isEdittable={isEdittable} />
                             </div>
                             <div className="flex-1">
-                                <DropDown placeholder="Select City" />
+                                <DropDown placeholder="Select City" isEdittable={isEdittable} />
                             </div>
 
                         </div>
                         <div className="flex space-x-6">
                             <div className="flex-1">
-                                <DropDown placeholder="Select State" />
+                                <DropDown placeholder="Select State" isEdittable={isEdittable} />
                             </div>
                             <div className="flex-1">
-                                <TextBox placeholder="Enter Zip Code" />
+                                <TextBox placeholder="Enter Zip Code" isEdittable={isEdittable} />
                             </div>
                             <div className="flex-1">
-                                <TextBox placeholder="Enter Phone Number" />
+                                <TextBox placeholder="Enter Phone Number" isEdittable={isEdittable} />
                             </div>
                         </div>
                     </div>

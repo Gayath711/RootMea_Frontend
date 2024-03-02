@@ -1,17 +1,19 @@
-const DropDown = ({ name, id = { name }, placeholder, height = 75 }) => {
+const DropDown = ({ name, id = { name }, placeholder, height = '7vh', isEdittable }) => {
+    const bgDisabled = isEdittable ? 'bg-transparent' : ''
     return (
         <select
             name={name}
             id={id}
             defaultValue=""
-            style={{ height }}
+            disabled={isEdittable}
+            style={{ height: `${height}` }}
             className={`w-full px-2 border-1
             border-gray-600/50
             placeholder-gray-500 
             placeholder-opacity-50 
             rounded-md
-            text-lg
-            h-[${height}px]
+            text-lg 
+            ${bgDisabled}
             text-gray-500/50`}>
             <option value="" disabled hidden>{placeholder}</option>
             <option value="option1">Option 1</option>

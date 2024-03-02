@@ -37,7 +37,7 @@ const Navbar = ({ onLogout, isMinimized, toggleSidebar }) => {
   //   </div>
   // </nav>
 
-  <nav className="bg-white h-40 w-full shadow flex items-center justify-between px-4">
+  <nav className="bg-white h-[13.88vh] w-full shadow flex items-center justify-between px-4">
   <div className="flex items-center">
     <div className={`flex flex-row w-[250px] place-items-center ${isMinimized?'':'justify-between'} pr-3`}>
       <img src="root.png" className="h-[3.5rem] w-[4.3rem] mr-4" alt="Roots Logo" />

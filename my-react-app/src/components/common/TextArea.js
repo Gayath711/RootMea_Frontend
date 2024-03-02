@@ -1,8 +1,9 @@
-const TextArea = ({ name, id = { name }, placeholder, width = 480, height = 75, className }) => {
+const TextArea = ({ name, id = { name }, placeholder, width = 480, height = 75, isEdittable }) => {
     return (
         <textarea
             name={name}
             id={id}
+            disabled={isEdittable}
             placeholder={placeholder}
             style={{ height }}
             className="w-full px-2 border-1

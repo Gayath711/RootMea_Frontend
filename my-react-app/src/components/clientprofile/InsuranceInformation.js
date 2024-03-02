@@ -2,14 +2,14 @@ import { useState } from "react";
 
 import Insurance from "./Insurance";
 
-const InsuranceInformation = () => {
+const InsuranceInformation = ({ id, isEdittable }) => {
     const [isOpen, setIsOpen] = useState(true);
 
     const toggleAccordion = () => {
         setIsOpen(!isOpen);
     };
     return (
-        <div className="border border-gray-300  bg-gray-50">
+        <div className="border border-gray-300  bg-gray-50" id={`accordian-${id}`}>
             <div
                 className="flex items-center justify-between p-4 cursor-pointer"
                 onClick={toggleAccordion}
@@ -31,9 +31,9 @@ const InsuranceInformation = () => {
                 isOpen && (
                     <>
                         <div className="p-4 border-t border-gray-300"></div>
-                        <Insurance heading={"Primary - Insurance"} />
-                        <Insurance heading={"Secondary - Insurance"} />
-                        <Insurance heading={"Tertiary - Insurance"} />
+                        <Insurance heading={"Primary - Insurance"} isEdittable={isEdittable} />
+                        <Insurance heading={"Secondary - Insurance"} isEdittable={isEdittable} />
+                        <Insurance heading={"Tertiary - Insurance"} isEdittable={isEdittable} />
                     </>
                 )
             }

@@ -2,14 +2,14 @@ import { useState } from "react";
 
 import TextBox from "../common/TextBox";
 
-const PreferredPharmacy = () => {
+const PreferredPharmacy = ({ id, isEdittable }) => {
     const [isOpen, setIsOpen] = useState(true);
 
     const toggleAccordion = () => {
         setIsOpen(!isOpen);
     };
     return (
-        <div className="border border-gray-300  bg-gray-50">
+        <div className="border border-gray-300  bg-gray-50" id={`accordian-${id}`}>
             <div
                 className="flex items-center justify-between p-4 cursor-pointer"
                 onClick={toggleAccordion}
@@ -34,15 +34,15 @@ const PreferredPharmacy = () => {
                             <div className="flex flex-col justify-between space-y-6">
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <TextBox placeholder="Pharmacy Name" />
+                                        <TextBox placeholder="Pharmacy Name" isEdittable={isEdittable} />
                                     </div>
                                     <div className="flex-1">
-                                        <TextBox placeholder="Enter Pharmacy Phone Number" />
+                                        <TextBox placeholder="Enter Pharmacy Phone Number" isEdittable={isEdittable} />
                                     </div>
                                 </div>
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <TextBox placeholder="Pharmacy Address and Location" />
+                                        <TextBox placeholder="Pharmacy Address and Location" isEdittable={isEdittable} />
                                     </div>
                                 </div>
                             </div>

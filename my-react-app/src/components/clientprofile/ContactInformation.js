@@ -4,14 +4,14 @@ import TextBox from "../common/TextBox";
 import DropDown from "../common/Dropdown";
 import EmergencyContact from "./EmergencyContact";
 
-const ContactInformation = () => {
+const ContactInformation = ({ id, isEdittable }) => {
     const [isOpen, setIsOpen] = useState(true);
 
     const toggleAccordion = () => {
         setIsOpen(!isOpen);
     };
     return (
-        <div className="border border-gray-300  bg-gray-50">
+        <div className="border border-gray-300  bg-gray-50" id={`accordian-${id}`}>
             <div
                 className="flex items-center justify-between p-4 cursor-pointer"
                 onClick={toggleAccordion}
@@ -41,59 +41,59 @@ const ContactInformation = () => {
                                 <div className="flex flex-col justify-between space-y-6">
                                     <div className="flex space-x-6">
                                         <div className="flex-1">
-                                            <TextBox placeholder="Enter First Name" />
+                                            <TextBox placeholder="Enter First Name" isEdittable={isEdittable} />
                                         </div>
                                         <div className="flex-1">
-                                            <TextBox placeholder="Enter Middle Name" />
+                                            <TextBox placeholder="Enter Middle Name" isEdittable={isEdittable} />
                                         </div>
                                         <div className="flex-1">
-                                            <TextBox placeholder="Enter Last Name" />
+                                            <TextBox placeholder="Enter Last Name" isEdittable={isEdittable} />
                                         </div>
                                     </div>
                                     <div className="flex space-x-6">
                                         <div className="flex-1">
-                                            <TextBox placeholder="Enter Nick Name/Preferred Name" />
+                                            <TextBox placeholder="Enter Nick Name/Preferred Name" isEdittable={isEdittable} />
                                         </div>
                                         <div className="flex-1">
-                                            <TextBox placeholder="Select Preferred Pronouns" />
+                                            <TextBox placeholder="Select Preferred Pronouns" isEdittable={isEdittable} />
                                         </div>
                                         <div className="flex-1">
-                                            <TextBox placeholder="Enter Email Address" />
+                                            <TextBox placeholder="Enter Email Address" isEdittable={isEdittable} />
                                         </div>
 
                                     </div>
                                     <div className="flex space-x-6">
                                         <div className="flex-1">
-                                            <TextBox placeholder="Enter Mobile Number" />
+                                            <TextBox placeholder="Enter Mobile Number" isEdittable={isEdittable} />
                                         </div>
                                         <div className="flex-1">
-                                            <TextBox placeholder="Enter Home Phone Number" />
+                                            <TextBox placeholder="Enter Home Phone Number" isEdittable={isEdittable} />
                                         </div>
                                         <div className="flex-1">
-                                            <TextBox placeholder="Enter Work Phone Number" />
-                                        </div>
-                                    </div>
-                                    <div className="flex space-x-6">
-                                        <div className="flex-1">
-                                            <DropDown placeholder="Select Best Way to Contact You" />
-                                        </div>
-                                        <div className="flex-1">
-                                            <DropDown placeholder="Select Primary Phone Number" />
+                                            <TextBox placeholder="Enter Work Phone Number" isEdittable={isEdittable} />
                                         </div>
                                     </div>
                                     <div className="flex space-x-6">
                                         <div className="flex-1">
-                                            <DropDown placeholder="Select Preferred Language" />
+                                            <DropDown placeholder="Select Best Way to Contact You" isEdittable={isEdittable} />
                                         </div>
                                         <div className="flex-1">
-                                            <DropDown placeholder="Select Other Language" />
+                                            <DropDown placeholder="Select Primary Phone Number" isEdittable={isEdittable} />
+                                        </div>
+                                    </div>
+                                    <div className="flex space-x-6">
+                                        <div className="flex-1">
+                                            <DropDown placeholder="Select Preferred Language" isEdittable={isEdittable} />
+                                        </div>
+                                        <div className="flex-1">
+                                            <DropDown placeholder="Select Other Language" isEdittable={isEdittable} />
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <EmergencyContact heading={"Emergency Contact #1 Information"} />
-                        <EmergencyContact heading={"Emergency Contact #2 Information"} />
+                        <EmergencyContact heading={"Emergency Contact #1 Information"} isEdittable={isEdittable} />
+                        <EmergencyContact heading={"Emergency Contact #2 Information"} isEdittable={isEdittable} />
                     </>
                 )
             }

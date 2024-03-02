@@ -4,14 +4,14 @@ import TextBox from "../common/TextBox";
 import DropDown from "../common/Dropdown";
 import DateInput from "../common/DateInput";
 
-const Demographics = () => {
+const Demographics = ({ id, isEdittable }) => {
     const [isOpen, setIsOpen] = useState(true);
 
     const toggleAccordion = () => {
         setIsOpen(!isOpen);
     };
     return (
-        <div className="border border-gray-300  bg-gray-50">
+        <div className="border border-gray-300  bg-gray-50" id={`accordian-${id}`}>
             <div
                 className="flex items-center justify-between p-4 cursor-pointer"
                 onClick={toggleAccordion}
@@ -36,52 +36,52 @@ const Demographics = () => {
                             <div className="flex flex-col justify-between space-y-6">
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <DateInput placeholder="Enter Date of Birth" />
+                                        <DateInput placeholder="Enter Date of Birth" isEdittable={isEdittable} />
                                     </div>
                                     <div className="flex-1">
-                                        <TextBox placeholder="Enter Age" />
+                                        <TextBox placeholder="Enter Age" isEdittable={isEdittable} />
                                     </div>
                                     <div className="flex-1">
-                                        <DropDown placeholder="Enter Sex" />
-                                    </div>
-                                </div>
-                                <div className="flex space-x-6">
-                                    <div className="flex-1">
-                                        <TextBox placeholder="Enter Social Security Number" />
-                                    </div>
-                                    <div className="flex-1">
-                                        <TextBox placeholder="US Armed Forces" />
-                                    </div>
-                                    <div className="flex-1">
-                                        <DropDown placeholder="Select Ethinicity" />
+                                        <DropDown placeholder="Enter Sex" isEdittable={isEdittable} />
                                     </div>
                                 </div>
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <DropDown placeholder="Which Best describes the place you live now?" />
+                                        <TextBox placeholder="Enter Social Security Number" isEdittable={isEdittable} />
+                                    </div>
+                                    <div className="flex-1">
+                                        <TextBox placeholder="US Armed Forces" isEdittable={isEdittable} />
+                                    </div>
+                                    <div className="flex-1">
+                                        <DropDown placeholder="Select Ethinicity" isEdittable={isEdittable} />
+                                    </div>
+                                </div>
+                                <div className="flex space-x-6">
+                                    <div className="flex-1">
+                                        <DropDown placeholder="Which Best describes the place you live now?" isEdittable={isEdittable} />
                                     </div>
 
                                 </div>
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <DropDown placeholder="Select Race" />
+                                        <DropDown placeholder="Select Race" isEdittable={isEdittable} />
                                     </div>
                                     <div className="flex-1">
-                                        <DropDown placeholder="Select Other Race" />
+                                        <DropDown placeholder="Select Other Race" isEdittable={isEdittable} />
                                     </div>
                                     <div className="flex-1">
-                                        <DropDown placeholder="Select Gender Identity" />
+                                        <DropDown placeholder="Select Gender Identity" isEdittable={isEdittable} />
                                     </div>
                                 </div>
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <DropDown placeholder="Select Other Gender Identity" />
+                                        <DropDown placeholder="Select Other Gender Identity" isEdittable={isEdittable} />
                                     </div>
                                     <div className="flex-1">
-                                        <DropDown placeholder="Select Sexual Orientation" />
+                                        <DropDown placeholder="Select Sexual Orientation" isEdittable={isEdittable} />
                                     </div>
                                     <div className="flex-1">
-                                        <DropDown placeholder="Select Other Sexual Orientation" />
+                                        <DropDown placeholder="Select Other Sexual Orientation" isEdittable={isEdittable} />
                                     </div>
                                 </div>
                             </div>
