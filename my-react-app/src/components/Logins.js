@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { serverAddress } from './constants';
+import axios from 'axios';
 
 const LoginForm = ({ onLogin }) => {
   const [username, setUsername] = useState('');
@@ -16,7 +17,7 @@ const LoginForm = ({ onLogin }) => {
 
 
 
-
+/*
   const handleLogin = async () => {
     try {
       // const response = await fetch('http://192.168.3.24:8000/api/login/', {
@@ -44,6 +45,45 @@ const LoginForm = ({ onLogin }) => {
       console.error('There was a problem with the fetch operation:', error);
     }
   };
+*/
+
+const handleLogin = async () => {
+  const user = {
+    email: username,
+    password: password
+  };
+
+  // Log request data before sending the request
+  console.log('Login request data:', user);
+
+  try {
+    // Create the POST request
+    const { data } = await axios.post(
+      'http://192.168.3.24:8000/token/',
+      user,
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true
+      }
+    );
+
+
+    console.log('Login response:', data);
+
+    localStorage.clear();
+    localStorage.setItem('access_token', data.access);
+    localStorage.setItem('refresh_token', data.refresh);
+    axios.defaults.headers.common['Authorization'] = `Bearer ${data.access}`;
+    localStorage.setItem('isLoggedIn', 'true');
+    window.location.href = '/';
+  } catch (error) {
+    console.error('Login error:', error);
+
+  }
+};
+
 
   return (
     <section className="vh-100">
