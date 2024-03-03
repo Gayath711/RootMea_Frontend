@@ -106,8 +106,8 @@ const ContactInformation = ({ id, isEdittable, clientData,  handleFieldChange}) 
                                 </div>
                             </div>
                         </div>
-                        <EmergencyContact1 heading={"Emergency Contact #1 Information"} isEdittable={isEdittable}  clientData={clientData} handleChange={handleFieldChange}/>
-                        <EmergencyContact2 heading={"Emergency Contact #2 Information"} isEdittable={isEdittable}  clientData={clientData} handleChange={handleFieldChange}/>
+                        <EmergencyContact1 heading={"Emergency Contact #1 Information"} isEdittable={isEdittable}  clientData={clientData} handleFieldChange={handleFieldChange} />
+                        <EmergencyContact2 heading={"Emergency Contact #2 Information"} isEdittable={isEdittable}  clientData={clientData} handleFieldChange={handleFieldChange} />
                     </>
                 )
             }
