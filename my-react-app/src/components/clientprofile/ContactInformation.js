@@ -2,7 +2,8 @@ import { useState } from "react";
 
 import TextBox from "../common/TextBox";
 import DropDown from "../common/Dropdown";
-import EmergencyContact from "./EmergencyContact";
+import EmergencyContact1 from "./EmergencyContact1";
+import EmergencyContact2 from "./EmergencyContact2";
 
 const ContactInformation = ({ id, isEdittable, clientData,  handleFieldChange}) => {
     const [isOpen, setIsOpen] = useState(true);
@@ -105,8 +106,8 @@ const ContactInformation = ({ id, isEdittable, clientData,  handleFieldChange}) 
                                 </div>
                             </div>
                         </div>
-                        <EmergencyContact heading={"Emergency Contact #1 Information"} isEdittable={isEdittable}  clientData={clientData}/>
-                        <EmergencyContact heading={"Emergency Contact #2 Information"} isEdittable={isEdittable}  clientData={clientData}/>
+                        <EmergencyContact1 heading={"Emergency Contact #1 Information"} isEdittable={isEdittable}  clientData={clientData} handleChange={handleFieldChange}/>
+                        <EmergencyContact2 heading={"Emergency Contact #2 Information"} isEdittable={isEdittable}  clientData={clientData} handleChange={handleFieldChange}/>
                     </>
                 )
             }

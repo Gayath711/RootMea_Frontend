@@ -3,7 +3,7 @@ import { useState } from "react";
 import TextBox from "../common/TextBox";
 import DateInput from "../common/DateInput";
 
-const SystemInformation = ({ id, isEdittable }) => {
+const SystemInformation = ({ id, isEdittable, clientData,  handleFieldChange }) => {
     const [isOpen, setIsOpen] = useState(true);
 
     const toggleAccordion = () => {
@@ -35,24 +35,24 @@ const SystemInformation = ({ id, isEdittable }) => {
                             <div className="flex flex-col justify-between space-y-6">
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <TextBox placeholder="Select Original Data Source" isEdittable={isEdittable} />
+                                        <TextBox placeholder="Select Original Data Source" isEdittable={isEdittable} value={clientData.system_information_original_data_source}/>
                                     </div>
                                     <div className="flex-1">
-                                        <TextBox placeholder="Enter Import Notes" isEdittable={isEdittable} />
+                                        <TextBox placeholder="Enter Import Notes" isEdittable={isEdittable} value={clientData.system_information_import_notes}/>
                                     </div>
                                     <div className="flex-1">
-                                        <DateInput placeholder="Select Import Date and Time" isEdittable={isEdittable} />
+                                        <DateInput placeholder="Select Import Date and Time" isEdittable={isEdittable} value={clientData.system_information_import_date}/>
                                     </div>
                                 </div>
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <TextBox placeholder="Enter PRN Practice Fusion" isEdittable={isEdittable} />
+                                        <TextBox placeholder="Enter PRN Practice Fusion" isEdittable={isEdittable} value={clientData.system_information_prn}/>
                                     </div>
                                     <div className="flex-1">
-                                        <TextBox placeholder="#" isEdittable={isEdittable} />
+                                        <TextBox placeholder="#" isEdittable={isEdittable} value={clientData.system_information_chart_number}/>
                                     </div>
                                     <div className="flex-1">
-                                        <TextBox placeholder="#" isEdittable={isEdittable} />
+                                        <TextBox placeholder="#" isEdittable={isEdittable} value={clientData.system_information_system_id}/>
                                     </div>
                                 </div>
                             </div>

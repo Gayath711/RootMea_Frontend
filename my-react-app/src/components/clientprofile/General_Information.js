@@ -3,7 +3,7 @@ import { useState } from "react";
 import TextBox from "../common/TextBox";
 import DateInput from "../common/DateInput";
 
-const GeneralInformation = ({ id, isEdittable }) => {
+const GeneralInformation = ({ id, isEdittable, clientData,  handleFieldChange }) => {
     const [isOpen, setIsOpen] = useState(true);
 
     const toggleAccordion = () => {

@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import TextBox from "../common/TextBox";
 
-const PreferredPharmacy = ({ id, isEdittable }) => {
+const PreferredPharmacy = ({ id, isEdittable, clientData,  handleFieldChange }) => {
     const [isOpen, setIsOpen] = useState(true);
 
     const toggleAccordion = () => {
@@ -34,15 +34,15 @@ const PreferredPharmacy = ({ id, isEdittable }) => {
                             <div className="flex flex-col justify-between space-y-6">
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <TextBox placeholder="Pharmacy Name" isEdittable={isEdittable} />
+                                        <TextBox placeholder="Pharmacy Name" isEdittable={isEdittable} value={clientData.preferred_pharmacy_name}/>
                                     </div>
                                     <div className="flex-1">
-                                        <TextBox placeholder="Enter Pharmacy Phone Number" isEdittable={isEdittable} />
+                                        <TextBox placeholder="Enter Pharmacy Phone Number" isEdittable={isEdittable} value={clientData.preferred_pharmacy_phone}/>
                                     </div>
                                 </div>
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <TextBox placeholder="Pharmacy Address and Location" isEdittable={isEdittable} />
+                                        <TextBox placeholder="Pharmacy Address and Location" isEdittable={isEdittable} value={clientData.preferred_pharmacy_location}/>
                                     </div>
                                 </div>
                             </div>

@@ -4,7 +4,7 @@ import TextBox from "../common/TextBox";
 import DropDown from "../common/Dropdown";
 import DateInput from "../common/DateInput";
 
-const Demographics = ({ id, isEdittable }) => {
+const Demographics = ({ id, isEdittable, clientData,  handleFieldChange }) => {
     const [isOpen, setIsOpen] = useState(true);
 
     const toggleAccordion = () => {
@@ -36,52 +36,52 @@ const Demographics = ({ id, isEdittable }) => {
                             <div className="flex flex-col justify-between space-y-6">
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <DateInput placeholder="Enter Date of Birth" isEdittable={isEdittable} />
+                                        <DateInput placeholder="Enter Date of Birth" isEdittable={isEdittable} value={clientData.date_of_birth} />
                                     </div>
                                     <div className="flex-1">
-                                        <TextBox placeholder="Enter Age" isEdittable={isEdittable} />
+                                        <TextBox placeholder="Enter Age" isEdittable={isEdittable} value={clientData.age} />
                                     </div>
                                     <div className="flex-1">
-                                        <DropDown placeholder="Enter Sex" isEdittable={isEdittable} />
-                                    </div>
-                                </div>
-                                <div className="flex space-x-6">
-                                    <div className="flex-1">
-                                        <TextBox placeholder="Enter Social Security Number" isEdittable={isEdittable} />
-                                    </div>
-                                    <div className="flex-1">
-                                        <TextBox placeholder="US Armed Forces" isEdittable={isEdittable} />
-                                    </div>
-                                    <div className="flex-1">
-                                        <DropDown placeholder="Select Ethinicity" isEdittable={isEdittable} />
+                                        <DropDown placeholder="Enter Sex" isEdittable={isEdittable} value={clientData.sex} />
                                     </div>
                                 </div>
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <DropDown placeholder="Which Best describes the place you live now?" isEdittable={isEdittable} />
+                                        <TextBox placeholder="Enter Social Security Number" isEdittable={isEdittable} value={clientData.social_security_number} />
+                                    </div>
+                                    <div className="flex-1">
+                                        <TextBox placeholder="US Armed Forces" isEdittable={isEdittable} value={clientData.us_armed_forces}/>
+                                    </div>
+                                    <div className="flex-1">
+                                        <DropDown placeholder="Select Ethinicity" isEdittable={isEdittable} value={clientData.us_armed_forces}/>
+                                    </div>
+                                </div>
+                                <div className="flex space-x-6">
+                                    <div className="flex-1">
+                                        <DropDown placeholder="Which Best describes the place you live now?" isEdittable={isEdittable} value={clientData.describe_the_place_you_live}/>
                                     </div>
 
                                 </div>
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <DropDown placeholder="Select Race" isEdittable={isEdittable} />
+                                        <DropDown placeholder="Select Race" isEdittable={isEdittable} value={clientData.race}/>
                                     </div>
                                     <div className="flex-1">
-                                        <DropDown placeholder="Select Other Race" isEdittable={isEdittable} />
+                                        <DropDown placeholder="Select Other Race" isEdittable={isEdittable} value={clientData.other_race}/>
                                     </div>
                                     <div className="flex-1">
-                                        <DropDown placeholder="Select Gender Identity" isEdittable={isEdittable} />
+                                        <DropDown placeholder="Select Gender Identity" isEdittable={isEdittable} value={clientData.gender_identity}/>
                                     </div>
                                 </div>
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <DropDown placeholder="Select Other Gender Identity" isEdittable={isEdittable} />
+                                        <DropDown placeholder="Select Other Gender Identity" isEdittable={isEdittable} value={clientData.other_gender_identity}/>
                                     </div>
                                     <div className="flex-1">
-                                        <DropDown placeholder="Select Sexual Orientation" isEdittable={isEdittable} />
+                                        <DropDown placeholder="Select Sexual Orientation" isEdittable={isEdittable} value={clientData.sexual_orientation}/>
                                     </div>
                                     <div className="flex-1">
-                                        <DropDown placeholder="Select Other Sexual Orientation" isEdittable={isEdittable} />
+                                        <DropDown placeholder="Select Other Sexual Orientation" isEdittable={isEdittable} value={clientData.other_sexual_orientation}/>
                                     </div>
                                 </div>
                             </div>

@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import TextBox from "../common/TextBox";
 
-const CustomFields = ({ id, isEdittable }) => {
+const CustomFields = ({ id, isEdittable, clientData,  handleFieldChange }) => {
     const [isOpen, setIsOpen] = useState(true);
 
     const toggleAccordion = () => {
