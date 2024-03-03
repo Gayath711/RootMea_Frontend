@@ -21,18 +21,24 @@ const ClientProfile = () => {
 
   const { clientId } = useParams();
 
+  const token = localStorage.getItem('access_token');
+
   const [clientData, setSetClientData] = useState('');
 
   useEffect(() => {
     console.log(clientId,"clientId")
-    axios.get(`http://192.168.3.24:8000/clientinfo-api/${clientId}`)
-      .then(response => {
-        setSetClientData(response.data);
-        console.log(response.data.first_name)
-      })
-      .catch(error => {
-        console.error('Error fetching Client Data:', error);
-      });
+    axios.get(`http://192.168.3.24:8000/clientinfo-api/${clientId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    .then(response => {
+      setSetClientData(response.data);
+      console.log(response.data.first_name)
+    })
+    .catch(error => {
+      console.error('Error fetching Client Data:', error);
+    });
   }, []);
 
   return (
