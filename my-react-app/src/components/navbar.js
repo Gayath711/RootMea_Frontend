@@ -63,7 +63,7 @@ const Navbar = ({ onLogout, isMinimized, toggleSidebar }) => {
       {/* <p className="text-gray-700">User Profile Type: {profileType}</p> */}
     </div>
   )}
-  {profileType === 'admin' && (
+  {profileType === 'admin12' && (
     <div>
       <button className="bg-green-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
         <a href="http://192.168.3.24:8000/admin/">Admin</a>
