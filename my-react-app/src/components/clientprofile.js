@@ -23,18 +23,24 @@ const ClientProfile = () => {
 
   const [isEdittable, setIsEdittable] = useState(true)
 
+  const token = localStorage.getItem('access_token');
+
   const [clientData, setClientData] = useState('');
 
   useEffect(() => {
     console.log(clientId,"clientId")
-    axios.get(`http://192.168.3.24:8000/clientinfo-api/${clientId}`)
-      .then(response => {
-        setClientData(response.data);
-        console.log(response.data.first_name)
-      })
-      .catch(error => {
-        console.error('Error fetching Client Data:', error);
-      });
+    axios.get(`http://192.168.3.24:8000/clientinfo-api/${clientId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    .then(response => {
+      setClientData(response.data);
+      console.log(response.data.first_name)
+    })
+    .catch(error => {
+      console.error('Error fetching Client Data:', error);
+    });
   }, []);
   
   const handleClick = (accordionId) => {
@@ -57,6 +63,23 @@ const ClientProfile = () => {
       ...prevInfo,
       [field]: value,
     }));
+  };
+
+  const handleSave = () => {
+    // Perform API request to update client data
+    axios.put(`http://192.168.3.24:8000/clientinfo-api/${clientId}`, clientData, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    .then(response => {
+      console.log('Client data updated successfully:', response.data);
+      // Optionally, you can set isEditable back to true if needed
+      setIsEdittable(true);
+    })
+    .catch(error => {
+      console.error('Error updating Client Data:', error);
+    });
   };
 
   return (
@@ -105,7 +128,7 @@ const ClientProfile = () => {
             </div>
             <div className='flex justify-center space-x-4'>
               <SecondaryButton text="Cancel" />
-              <PrimaryButton text="Save" />
+              <PrimaryButton text="Save" handleClick={handleSave}/>
             </div>
           </div>
 

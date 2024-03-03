@@ -3,7 +3,7 @@ import { useState } from "react";
 import TextBox from "../common/TextBox";
 import DropDown from "../common/Dropdown";
 
-const EmergencyContact = ({ heading, isEdittable, clientData,  handleFieldChange }) => {
+const EmergencyContact1 = ({ heading, isEdittable, clientData,  handleFieldChange }) => {
     const [isOpen, setIsOpen] = useState(true);
 
     const toggleAccordion = () => {
@@ -22,7 +22,7 @@ const EmergencyContact = ({ heading, isEdittable, clientData,  handleFieldChange
                                 <TextBox placeholder="Enter Name" isEdittable={isEdittable} value={clientData.emergency_contact_1_name}/>
                             </div>
                             <div className="flex-1">
-                                <TextBox placeholder="Enter Email Address" isEdittable={isEdittable} value={clientData.emergency_contact_1_address}/>
+                                <TextBox placeholder="Enter Email Address" isEdittable={isEdittable} value={clientData.emergency_contact_1_email_address}/>
                             </div>
                             <div className="flex-1">
                                 <DropDown placeholder="Select Relationship" isEdittable={isEdittable} value={clientData.emergency_contact_1_relationship}/>
@@ -58,4 +58,4 @@ const EmergencyContact = ({ heading, isEdittable, clientData,  handleFieldChange
     );
 };
 
-export default EmergencyContact;
+export default EmergencyContact1;
