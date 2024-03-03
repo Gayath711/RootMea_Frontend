@@ -17,7 +17,7 @@ const Sidebar = ({ handleClick }) => {
         <div className='flex flex-row justify-center items-center'>
             <div className="flex h-full shadow-lg" style={{ width: sidebarWidth }}>
                 <div className="bg-white">
-                    <div className="py-4 px-6">
+                    <div className="px-6">
                         {showSidebar && (
                             <ul className="mt-6 text-md">
                                 <button onClick={() => handleClick(1)}>

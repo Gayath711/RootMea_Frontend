@@ -61,22 +61,24 @@ const ClientProfile = () => {
 
   return (
     <div className="w-full h-full bg-gray-50">
-      <div class="bg-white p-4 shadow">
-        <h2 className="text-2xl font-semibold">Client Profile</h2>
+      <div className="bg-white p-4 shadow">
+        <div className="flex justify-between">
+          <h2 className="text-2xl font-semibold">Client Profile</h2>
+          <PrimaryButton text="Edit" width={70} height={35} handleClick={handleEdit} />
+        </div>
         <div className='flex justify-between'>
           <p className="mt-2 text-lg">Personalised client hub for managing and updating essential information securely</p>
           <div className='flex space-x-4'>
-            <PrimaryButton text="Edit" width={70} height={35} handleClick={handleEdit} />
             <p className='text-green-600 font-medium'>Client Chart</p>
             <p className='text-green-600 font-medium'>AMD Profile</p>
             <p className='text-green-600 font-medium'>Manage Program</p>
           </div>
         </div>
-        <div class="border-b border-gray-400 mt-4 mb-4"></div>
+        <div class="border-b border-gray-400 mt-2 mb-4"></div>
         <div className='flex'>
           <Sidebar handleClick={handleClick} />
 
-          <div class="w-full p-4 space-y-6" style={{ overflowY: 'auto', height: 'calc(100vh)', scrollbarWidth: 'none' }}>
+          <div class="w-full px-2 space-y-6" style={{ overflowY: 'auto', height: 'calc(100vh)', scrollbarWidth: 'none' }}>
             <div>
               <GeneralInformation id={1} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange}/>
             </div>
