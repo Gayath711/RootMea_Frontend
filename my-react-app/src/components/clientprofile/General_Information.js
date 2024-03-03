@@ -3,14 +3,14 @@ import { useState } from "react";
 import TextBox from "../common/TextBox";
 import DateInput from "../common/DateInput";
 
-const GeneralInformation = ({clientData}) => {
+const GeneralInformation = ({ id, isEdittable, clientData,  handleFieldChange }) => {
     const [isOpen, setIsOpen] = useState(true);
 
     const toggleAccordion = () => {
         setIsOpen(!isOpen);
     };
     return (
-        <div className="border border-gray-300  bg-gray-50">
+        <div className="border border-gray-300  bg-gray-50" id={`accordian-${id}`}>
             <div
                 className="flex items-center justify-between p-4 cursor-pointer"
                 onClick={toggleAccordion}
@@ -33,26 +33,26 @@ const GeneralInformation = ({clientData}) => {
                     <div className="p-4 border-t border-gray-300">
 
                         <div className="flex space-x-6">
-                            <div className="border-1 w-[280px] h-[350px] border-1
+                            <div className="border-1 w-[25.92vh] h-[32.40vh] border-1
                 border-gray-600/50 bg-white rounded-md">
                                 Photo holder
                             </div>
                             <div className="flex flex-col justify-between flex-1">
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <TextBox placeholder="Enter Client Status" value={"Pending"}/>
+                                        <TextBox placeholder="Enter Client Status" isEdittable={isEdittable} value={"Pending"}/>
                                     </div>
                                     <div className="flex-1">
-                                        <DateInput placeholder="Enter Client Date" value={"2022-10-01"}/>
+                                        <DateInput placeholder="Enter Client Date" isEdittable={isEdittable} value={"2022-10-01"}/>
                                     </div>
                                 </div>
-                                <TextBox placeholder="Enter Client Programs" value={"STOMP"}/>
+                                <TextBox placeholder="Enter Client Programs" isEdittable={isEdittable} value={"STOMP"}/>
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <TextBox placeholder="Enter Client Navigator Name" value={"Laura"}/>
+                                        <TextBox placeholder="Enter Client Navigator Name" isEdittable={isEdittable} value={"Laura"}/>
                                     </div>
                                     <div className="flex-1">
-                                        <TextBox placeholder="Enter Client System ID" value={"5432"}/>
+                                        <TextBox placeholder="Enter Client System ID" isEdittable={isEdittable} value={"54321a"}/>
                                     </div>
                                 </div>
                             </div>

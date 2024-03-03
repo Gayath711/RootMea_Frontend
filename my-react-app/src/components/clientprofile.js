@@ -1,3 +1,5 @@
+import React, { useState, useEffect } from 'react';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/Sidebar.css';
 
@@ -11,19 +13,19 @@ import CustomFields from './clientprofile/CustomFields';
 import PreferredPharmacy from './clientprofile/PreferredPharmacy';
 import InsuranceInformation from './clientprofile/InsuranceInformation';
 import SystemInformation from './clientprofile/SystemInformation';
+import PrimaryButton from './common/PrimaryButton'
+import SecondaryButton from './common/SecondaryButton'
 import { useParams } from 'react-router-dom';
-import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import EmergencyContact1 from './clientprofile/EmergencyContact1';
-import EmergencyContact2 from './clientprofile/EmergencyContact2';
 
 const ClientProfile = () => {
-
   const { clientId } = useParams();
+
+  const [isEdittable, setIsEdittable] = useState(true)
 
   const token = localStorage.getItem('access_token');
 
-  const [clientData, setSetClientData] = useState('');
+  const [clientData, setClientData] = useState('');
 
   useEffect(() => {
     console.log(clientId,"clientId")
@@ -33,62 +35,103 @@ const ClientProfile = () => {
       }
     })
     .then(response => {
-      setSetClientData(response.data);
+      setClientData(response.data);
       console.log(response.data.first_name)
     })
     .catch(error => {
       console.error('Error fetching Client Data:', error);
     });
   }, []);
+  
+  const handleClick = (accordionId) => {
+    console.log("Inside handleClick")
+    console.log("accordian id", `accordion-${accordionId}`)
+    const accordionElement = document.getElementById(`accordian-${accordionId}`);
+    console.log("accordionElement", accordionElement)
+    if (accordionElement) {
+      console.log("Inside accordionElement")
+      accordionElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  const handleEdit = () => {
+    setIsEdittable(false)
+  }
+
+  const handleFieldChange = (field, value) => {
+    setClientData((prevInfo) => ({
+      ...prevInfo,
+      [field]: value,
+    }));
+  };
+
+  const handleSave = () => {
+    // Perform API request to update client data
+    axios.put(`http://192.168.3.24:8000/clientinfo-api/${clientId}`, clientData, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    .then(response => {
+      console.log('Client data updated successfully:', response.data);
+      // Optionally, you can set isEditable back to true if needed
+      setIsEdittable(true);
+    })
+    .catch(error => {
+      console.error('Error updating Client Data:', error);
+    });
+  };
 
   return (
-    <div className="w-full h-full p-4 bg-gray-50">
-      <div class="bg-white p-4 shadow">
-        <h2 className="text-2xl font-semibold">Client Profile</h2>
+    <div className="w-full h-full bg-gray-50">
+      <div className="bg-white p-4 shadow">
+        <div className="flex justify-between">
+          <h2 className="text-2xl font-semibold">Client Profile</h2>
+          <PrimaryButton text="Edit" width={70} height={35} handleClick={handleEdit} />
+        </div>
         <div className='flex justify-between'>
           <p className="mt-2 text-lg">Personalised client hub for managing and updating essential information securely</p>
-          <div className='flex space-x-6'>
+          <div className='flex space-x-4'>
             <p className='text-green-600 font-medium'>Client Chart</p>
             <p className='text-green-600 font-medium'>AMD Profile</p>
             <p className='text-green-600 font-medium'>Manage Program</p>
           </div>
         </div>
-        <div class="border-b border-gray-400 mt-4 mb-4"></div>
+        <div class="border-b border-gray-400 mt-2 mb-4"></div>
         <div className='flex'>
-          <Sidebar />
+          <Sidebar handleClick={handleClick} />
 
-          <div class="w-full p-4 space-y-6">
+          <div class="w-full px-2 space-y-6" style={{ overflowY: 'auto', height: 'calc(100vh)', scrollbarWidth: 'none' }}>
             <div>
-              <GeneralInformation clientData= {clientData} />
+              <GeneralInformation id={1} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange}/>
             </div>
             <div>
-              <ContactInformation clientData= {clientData}/>
+              <ContactInformation id={2} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
             </div>
             <div>
-              <EmergencyContact1 clientData= {clientData} heading={"Emergency Contact #1 Information"}/>
+              <Demographics id={3} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
             </div>
             <div>
-              <EmergencyContact2 clientData= {clientData}heading={"Emergency Contact #2 Information"}/>
+              <AddressInformation id={4} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
             </div>
             <div>
-              <Demographics clientData= {clientData}/>
+              <CustomFields id={5} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
             </div>
             <div>
-              <AddressInformation clientData= {clientData} />
+              <PreferredPharmacy id={6} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
             </div>
             <div>
-              <CustomFields clientData= {clientData} />
+              <InsuranceInformation id={7} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
             </div>
             <div>
-              <PreferredPharmacy clientData= {clientData} />
+              <SystemInformation id={8} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
             </div>
-            <div>
-              <InsuranceInformation clientData= {clientData} />
-            </div>
-            <div>
-              <SystemInformation clientData= {clientData}/>
+            <div className='flex justify-center space-x-4'>
+              <SecondaryButton text="Cancel" />
+              <PrimaryButton text="Save" handleClick={handleSave}/>
             </div>
           </div>
+
         </div>
       </div>
     </div>

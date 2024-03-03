@@ -2,14 +2,14 @@ import { useState } from "react";
 
 import TextBox from "../common/TextBox";
 
-const CustomFields = ({clientData}) => {
+const CustomFields = ({ id, isEdittable, clientData,  handleFieldChange }) => {
     const [isOpen, setIsOpen] = useState(true);
 
     const toggleAccordion = () => {
         setIsOpen(!isOpen);
     };
     return (
-        <div className="border border-gray-300  bg-gray-50">
+        <div className="border border-gray-300  bg-gray-50" id={`accordian-${id}`}>
             <div
                 className="flex items-center justify-between p-4 cursor-pointer"
                 onClick={toggleAccordion}
@@ -34,17 +34,17 @@ const CustomFields = ({clientData}) => {
                             <div className="flex flex-col justify-between space-y-6">
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <TextBox placeholder="Custom Field 1" value={clientData.first_name}/>
+                                        <TextBox placeholder="Custom Field 1" isEdittable={isEdittable} />
                                     </div>
                                 </div>
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <TextBox placeholder="Custom Field 2" value={clientData.first_name}/>
+                                        <TextBox placeholder="Custom Field 2" isEdittable={isEdittable} />
                                     </div>
                                 </div>
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <TextBox placeholder="Custom Field 3" value={clientData.first_name}/>
+                                        <TextBox placeholder="Custom Field 3" isEdittable={isEdittable} />
                                     </div>
                                 </div>
                             </div>

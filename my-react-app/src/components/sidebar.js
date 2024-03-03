@@ -6,6 +6,9 @@ import { faBook, faBuilding, faArrowUpAZ, faCheckSquare } from '@fortawesome/fre
 import clientProfile from './images/client_profile.png';
 import clientChart from './images/client_chart.png';
 import encounterNotes from './images/encounter_notes.png';
+import ClientProfilePNG from '../image/client-profile.png';
+import ClientChartPNG from '../image/client-chart.png';
+import EncounterNotesPNG from '../image/encounter-notes.png';
 
 const Sidebar = ({ isMinimized }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,14 +22,14 @@ const Sidebar = ({ isMinimized }) => {
               <ul className="mt-6 text-lg">
                 <li className=" flex items-center content-around mt-10">
                   <a href="/clientprofile">
-                    <img src="./client-profile.png" className="h-[30px] w-[30px]" alt="client-profile" />
+                    <img src={ClientProfilePNG} className="h-[30px] w-[30px]" alt="client-profile" />
                   </a>
                 </li>
                 <li className=" flex items-center mt-10">
-                  <img src="./client-chart.png" className="h-[30px] w-[30px]" alt="client-chart" />
+                  <img src={ClientChartPNG} className="h-[30px] w-[30px]" alt="client-chart" />
                 </li>
                 <li className=" flex items-center mt-10">
-                  <img src="./encounter-notes.png" className="h-[30px] w-[30px]" alt="encounter-notes" />
+                  <img src={EncounterNotesPNG} className="h-[30px] w-[30px]" alt="encounter-notes" />
                 </li>
               </ul>
             </div>

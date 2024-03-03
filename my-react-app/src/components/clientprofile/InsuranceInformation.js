@@ -5,14 +5,14 @@ import Insurance2 from "./Insurance2";
 import Insurance3 from "./Insurance3";
 
 
-const InsuranceInformation = ({clientData}) => {
+const InsuranceInformation = ({ id, isEdittable, clientData,  handleFieldChange }) => {
     const [isOpen, setIsOpen] = useState(true);
 
     const toggleAccordion = () => {
         setIsOpen(!isOpen);
     };
     return (
-        <div className="border border-gray-300  bg-gray-50">
+        <div className="border border-gray-300  bg-gray-50" id={`accordian-${id}`}>
             <div
                 className="flex items-center justify-between p-4 cursor-pointer"
                 onClick={toggleAccordion}
@@ -34,9 +34,9 @@ const InsuranceInformation = ({clientData}) => {
                 isOpen && (
                     <>
                         <div className="p-4 border-t border-gray-300"></div>
-                        <Insurance1 heading={"Primary - Insurance"} clientData={clientData}/>
-                        <Insurance2 heading={"Secondary - Insurance"} clientData={clientData}/>
-                        <Insurance3 heading={"Tertiary - Insurance"} clientData={clientData}/>
+                        <Insurance1 heading={"Primary - Insurance"} isEdittable={isEdittable} clientData={clientData} handleChange={handleFieldChange}/>
+                        <Insurance2 heading={"Secondary - Insurance"} isEdittable={isEdittable} clientData={clientData} handleChange={handleFieldChange}/>
+                        <Insurance3 heading={"Tertiary - Insurance"} isEdittable={isEdittable} clientData={clientData} handleChange={handleFieldChange}/>
                     </>
                 )
             }

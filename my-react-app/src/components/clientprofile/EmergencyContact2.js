@@ -3,7 +3,7 @@ import { useState } from "react";
 import TextBox from "../common/TextBox";
 import DropDown from "../common/Dropdown";
 
-const EmergencyContact2 = ({ heading,clientData }) => {
+const EmergencyContact2 = ({ heading, isEdittable, clientData,  handleFieldChange }) => {
     const [isOpen, setIsOpen] = useState(true);
 
     const toggleAccordion = () => {
@@ -19,36 +19,45 @@ const EmergencyContact2 = ({ heading,clientData }) => {
                     <div className="flex flex-col justify-between space-y-6">
                         <div className="flex space-x-6">
                             <div className="flex-1">
-                                <TextBox placeholder="Enter Name" value={clientData.emergency_contact_2_name}/>
+                                <TextBox placeholder="Enter Name" isEdittable={isEdittable} value={clientData.emergency_contact_2_name}
+                                handleChange={(e) => handleFieldChange('emergency_contact_2_name', e.target.value)}/>
                             </div>
                             <div className="flex-1">
-                                <TextBox placeholder="Enter Email Address" value={clientData.emergency_contact_2_email_address}/>
+                                <TextBox placeholder="Enter Email Address" isEdittable={isEdittable} value={clientData.emergency_contact_2_email_address}
+                                handleChange={(e) => handleFieldChange('emergency_contact_2_email_address', e.target.value)}/>
                             </div>
                             <div className="flex-1">
-                                <DropDown placeholder="Select Relationship" value={clientData.emergency_contact_2_relationship}/>
+                                <DropDown placeholder="Select Relationship" isEdittable={isEdittable} value={clientData.emergency_contact_2_relationship}
+                                handleChange={(e) => handleFieldChange('emergency_contact_2_relationship', e.target.value)}/>
                             </div>
                         </div>
                         <div className="flex space-x-6">
                             <div className="flex-1">
-                                <TextBox placeholder="Enter Address Line #1" value={clientData.emergency_contact_2_address_line_1}/>
+                                <TextBox placeholder="Enter Address Line #1" isEdittable={isEdittable} value={clientData.emergency_contact_2_address_line_1}
+                                handleChange={(e) => handleFieldChange('emergency_contact_2_address_line_1', e.target.value)}/>
                             </div>
                             <div className="flex-1">
-                                <TextBox placeholder="Enter Address Line #2" value={clientData.emergency_contact_2_address_line_2}/>
+                                <TextBox placeholder="Enter Address Line #2" isEdittable={isEdittable} value={clientData.emergency_contact_2_address_line_2}
+                                handleChange={(e) => handleFieldChange('emergency_contact_2_address_line_2', e.target.value)}/>
                             </div>
                             <div className="flex-1">
-                                <DropDown placeholder="Select City" value={clientData.emergency_contact_2_city}/>
+                                <DropDown placeholder="Select City" isEdittable={isEdittable} value={clientData.emergency_contact_2_city}
+                                handleChange={(e) => handleFieldChange('emergency_contact_2_city', e.target.value)}/>
                             </div>
 
                         </div>
                         <div className="flex space-x-6">
                             <div className="flex-1">
-                                <DropDown placeholder="Select State" value={clientData.emergency_contact_2_state}/>
+                                <DropDown placeholder="Select State" isEdittable={isEdittable} value={clientData.emergency_contact_2_state}
+                                handleChange={(e) => handleFieldChange('emergency_contact_2_state', e.target.value)}/>
                             </div>
                             <div className="flex-1">
-                                <TextBox placeholder="Enter Zip Code" value={clientData.emergency_contact_2_zip}/>
+                                <TextBox placeholder="Enter Zip Code" isEdittable={isEdittable} value={clientData.emergency_contact_2_zip}
+                                handleChange={(e) => handleFieldChange('emergency_contact_2_zip', e.target.value)}/>
                             </div>
                             <div className="flex-1">
-                                <TextBox placeholder="Enter Phone Number" value={clientData.emergency_contact_2_phone}/>
+                                <TextBox placeholder="Enter Phone Number" isEdittable={isEdittable} value={clientData.emergency_contact_2_phone}
+                                handleChange={(e) => handleFieldChange('emergency_contact_2_phone', e.target.value)}/>
                             </div>
                         </div>
                     </div>

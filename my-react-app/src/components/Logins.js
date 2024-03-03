@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios'; // Don't forget to import axios if it's not already imported
+import RootsLogo from '../image/root.png';
 
 const LoginForm = ({ onLogin }) => {
   const [username, setUsername] = useState('');
@@ -55,7 +56,7 @@ const LoginForm = ({ onLogin }) => {
       <div className="container h-100">
         <div className="row d-flex justify-content-center align-items-center h-100">
           <div className="col-md-9 col-lg-6 col-xl-5 text-center">
-            <img src="./root.png" className="img-fluid" alt="Sample image" />
+            <img src={RootsLogo} className="img-fluid" alt="Sample image" />
           </div>
           <div className="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
             <form>
