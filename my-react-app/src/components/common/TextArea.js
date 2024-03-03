@@ -1,4 +1,4 @@
-const TextArea = ({ name, id = { name }, placeholder, width = 480, height = 75, isEdittable }) => {
+const TextArea = ({ name, id = { name }, placeholder, width = 480, height = 75, isEdittable, value, handleChange }) => {
     return (
         <textarea
             name={name}
@@ -12,6 +12,8 @@ const TextArea = ({ name, id = { name }, placeholder, width = 480, height = 75, 
                 placeholder-opacity-50 
                 rounded-md
                 text-lg"
+            value={value}
+            onChange={handleChange}
         />
     );
 }

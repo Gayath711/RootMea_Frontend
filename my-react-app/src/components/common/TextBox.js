@@ -1,4 +1,4 @@
-const TextBox = ({ name, id = { name }, placeholder, width = 480, height = '7vh', isEdittable }) => {
+const TextBox = ({ name, id = { name }, placeholder, width = 480, height = '7vh', isEdittable, value, handleChange }) => {
     return (
         <input
             name={name}
@@ -12,6 +12,8 @@ const TextBox = ({ name, id = { name }, placeholder, width = 480, height = '7vh'
                 placeholder-opacity-50 
                 rounded-md
                 text-lg"
+            value = {value}
+            onChange={handleChange}
         />
     );
 }

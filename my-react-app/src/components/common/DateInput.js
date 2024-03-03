@@ -3,7 +3,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 // import { BsCalendar } from 'react-icons/bs';
 
-const DateInput = ({ name, id = { name }, placeholder, height = '7vh', isEdittable }) => {
+const DateInput = ({ name, id = { name }, placeholder, height = '7vh', isEdittable, value, handleChange }) => {
     const [startDate, setStartDate] = useState(null);
     return (
         <DatePicker
@@ -11,7 +11,8 @@ const DateInput = ({ name, id = { name }, placeholder, height = '7vh', isEdittab
             id={id}
             selected={startDate}
             disabled={isEdittable}
-            onChange={(date) => setStartDate(date)}
+            value={value}
+            onChange={handleChange}
             // style={{ height: `${height}` }}
             className={`w-full!
             px-2 border-1

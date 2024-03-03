@@ -1,4 +1,4 @@
-const DropDown = ({ name, id = { name }, placeholder, height = '7vh', isEdittable }) => {
+const DropDown = ({ name, id = { name }, placeholder, height = '7vh', isEdittable, value, handleChange }) => {
     const bgDisabled = isEdittable ? 'bg-transparent' : ''
     return (
         <select
@@ -7,6 +7,8 @@ const DropDown = ({ name, id = { name }, placeholder, height = '7vh', isEdittabl
             defaultValue=""
             disabled={isEdittable}
             style={{ height: `${height}` }}
+            value={value}
+            onChange={handleChange}
             className={`w-full px-2 border-1
             border-gray-600/50
             placeholder-gray-500 
