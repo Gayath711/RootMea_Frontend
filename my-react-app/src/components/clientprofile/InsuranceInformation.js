@@ -34,9 +34,9 @@ const InsuranceInformation = ({ id, isEdittable, clientData,  handleFieldChange 
                 isOpen && (
                     <>
                         <div className="p-4 border-t border-gray-300"></div>
-                        <Insurance1 heading={"Primary - Insurance"} isEdittable={isEdittable} clientData={clientData}/>
-                        <Insurance2 heading={"Secondary - Insurance"} isEdittable={isEdittable} clientData={clientData}/>
-                        <Insurance3 heading={"Tertiary - Insurance"} isEdittable={isEdittable} clientData={clientData}/>
+                        <Insurance1 heading={"Primary - Insurance"} isEdittable={isEdittable} clientData={clientData} handleChange={handleFieldChange}/>
+                        <Insurance2 heading={"Secondary - Insurance"} isEdittable={isEdittable} clientData={clientData} handleChange={handleFieldChange}/>
+                        <Insurance3 heading={"Tertiary - Insurance"} isEdittable={isEdittable} clientData={clientData} handleChange={handleFieldChange}/>
                     </>
                 )
             }
