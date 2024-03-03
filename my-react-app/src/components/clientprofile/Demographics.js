@@ -37,7 +37,7 @@ const Demographics = ({ id, isEdittable, clientData,  handleFieldChange }) => {
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
                                         <DateInput placeholder="Enter Date of Birth" isEdittable={isEdittable} value={clientData.date_of_birth} 
-                                        handleChange={(e) => handleFieldChange('date_of_birth', e.target.value)} />
+                                        handleChange={(selectedDate) => handleFieldChange('date_of_birth', selectedDate)} />
                                     </div>
                                     <div className="flex-1">
                                         <TextBox placeholder="Enter Age" isEdittable={isEdittable} value={clientData.age} 
