@@ -35,7 +35,8 @@ const GeneralInformation = ({ id, isEdittable, clientData,  handleFieldChange })
                         <div className="flex space-x-6">
                             <div className="border-1 w-[25.92vh] h-[32.40vh] border-1
                 border-gray-600/50 bg-white rounded-md">
-                                Photo holder
+                                <img src={require('../images/test.jpg')} alt="Client Photo" className="w-full h-full object-cover" />
+
                             </div>
                             <div className="flex flex-col justify-between flex-1">
                                 <div className="flex space-x-6">
