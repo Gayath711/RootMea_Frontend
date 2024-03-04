@@ -12,7 +12,7 @@ const DateInput = ({ name, id = { name }, placeholder, height = '7vh', isEdittab
         console.log("date",formattedDate)
         setStartDate(selectedDate);
         // Perform any additional actions with the selected date if needed
-        handleChange(selectedDate);
+        handleChange(formattedDate);
     };
 
     return (
