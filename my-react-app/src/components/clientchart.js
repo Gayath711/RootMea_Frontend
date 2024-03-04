@@ -12,6 +12,7 @@ import { useParams } from 'react-router-dom';
 function ClientChart() {
 
   const { clientId } = useParams();
+  const token = localStorage.getItem('access_token');
 
   const [client ,setClient] = useState([]);  
   const [clientMedicationData, setClientMedicationData] = useState([]);
@@ -25,7 +26,11 @@ function ClientChart() {
 
 
   useEffect(() => {
-    axios.get(`http://192.168.3.24:8000/clientinfo-api/${clientId}`)
+    axios.get(`http://127.0.0.1:8000/clientinfo-api/${clientId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
       .then(response => {
         setClient(response.data);
         console.log(response.data);
@@ -37,7 +42,11 @@ function ClientChart() {
 
 
   useEffect(() => {
-    axios.get(`http://192.168.3.24:8000/clientsvs-api/${clientId}`)
+    axios.get(`http://127.0.0.1:8000/clientsvs-api/${clientId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
       .then(response => {
         setClientSVSData(response.data);
         console.log(response.data);
@@ -48,7 +57,11 @@ function ClientChart() {
   }, []);
 
   useEffect(() => {
-    axios.get(`http://192.168.3.24:8000/clientmedication-api/${clientId}`)
+    axios.get(`http://127.0.0.1:8000/clientmedication-api/${clientId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
       .then(response => {
         setClientMedicationData(response.data);
         console.log(response.data);
@@ -59,7 +72,11 @@ function ClientChart() {
   }, []);
 
   useEffect(() => {
-    axios.get(`http://192.168.3.24:8000/clientdiagnoses-api/${clientId}`)
+    axios.get(`http://127.0.0.1:8000/clientdiagnoses-api/${clientId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
       .then(response => {
         setClientDiagnosesData(response.data);
         console.log(response.data);
