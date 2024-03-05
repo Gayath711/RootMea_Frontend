@@ -1,5 +1,5 @@
-import React, { useState,useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; 
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import SearchBar from './SearchBar';
 import CollapseButton1 from '../image/collapse-button-1.png';
 import CollapseButton2 from '../image/collapse-button.png';
@@ -50,33 +50,33 @@ const Navbar = ({ onLogout, isMinimized, toggleSidebar }) => {
     navigate('/'); // Redirect to the login page
   };
 
-  return(
+  return (
     <nav className="bg-white h-40 w-full shadow flex items-center justify-between px-4">
       <div className="flex items-center">
-        <div className={`flex flex-row w-[250px] place-items-center ${isMinimized?'':'justify-between'} pr-3`}>
+        <div className={`flex flex-row w-[250px] place-items-center ${isMinimized ? '' : 'justify-between'} pr-3`}>
           <img src={RootsLogo} className="h-[3.5rem] w-[4.3rem] mr-4" alt="Roots Logo" />
-          <button onClick={toggleSidebar}>
+          {/* <button onClick={toggleSidebar}>
             {isMinimized && (<img src={CollapseButton1} className="h-5 w-5" alt="Collapse button" />)}
             {!isMinimized && (<img src={CollapseButton2} className="h-5 w-5 mr-4" alt="Collapse button" />)}
-          </button>
+          </button> */}
         </div>
       </div>
       <div className="flex items-center">
 
-      <div className="flex items-center justify-between border-b py-4">
-  {profileType === 'admin' && (
-    <div className="flex items-center">
-      {/* <p className="text-gray-700">User Profile Type: {profileType}</p> */}
-    </div>
-  )}
-  {profileType === 'admin12' && (
-    <div>
-      <button className="bg-green-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-        <a href="http://192.168.3.24:8000/admin/">Admin</a>
-      </button>
-    </div>
-  )}
-</div>
+        <div className="flex items-center justify-between border-b py-4">
+          {profileType === 'admin' && (
+            <div className="flex items-center">
+              {/* <p className="text-gray-700">User Profile Type: {profileType}</p> */}
+            </div>
+          )}
+          {profileType === 'admin12' && (
+            <div>
+              <button className="bg-green-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                <a href="http://192.168.3.24:8000/admin/">Admin</a>
+              </button>
+            </div>
+          )}
+        </div>
 
 
 
@@ -97,7 +97,7 @@ const Navbar = ({ onLogout, isMinimized, toggleSidebar }) => {
             <a className="dropdown-item" href="#" onClick={logout}><i className="fas fa-sign-out-alt fa-fw"></i> Log Out</a>
           </div>
 
-    
+
         </div>
       </div>
     </nav>
