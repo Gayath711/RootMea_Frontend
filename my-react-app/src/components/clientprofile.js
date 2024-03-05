@@ -15,6 +15,7 @@ import InsuranceInformation from './clientprofile/InsuranceInformation';
 import SystemInformation from './clientprofile/SystemInformation';
 import PrimaryButton from './common/PrimaryButton'
 import SecondaryButton from './common/SecondaryButton'
+import AlertSuccess from './common/AlertSuccess';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
@@ -28,21 +29,21 @@ const ClientProfile = () => {
   const [clientData, setClientData] = useState('');
 
   useEffect(() => {
-    console.log(clientId,"clientId")
+    console.log(clientId, "clientId")
     axios.get(`http://192.168.3.24:8000/clientinfo-api/${clientId}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     })
-    .then(response => {
-      setClientData(response.data);
-      console.log(response.data.first_name)
-    })
-    .catch(error => {
-      console.error('Error fetching Client Data:', error);
-    });
+      .then(response => {
+        setClientData(response.data);
+        console.log(response.data.first_name)
+      })
+      .catch(error => {
+        console.error('Error fetching Client Data:', error);
+      });
   }, []);
-  
+
   const handleClick = (accordionId) => {
     console.log("Inside handleClick")
     console.log("accordian id", `accordion-${accordionId}`)
@@ -65,25 +66,32 @@ const ClientProfile = () => {
     }));
   };
 
+  const [showAlert, setShowAlert] = useState(false);
+  const closeAlert = () => {
+    setShowAlert(false);
+  }
   const handleSave = () => {
+    setShowAlert(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     // Perform API request to update client data
     axios.put(`http://192.168.3.24:8000/clientinfo-api/${clientId}`, clientData, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     })
-    .then(response => {
-      console.log('Client data updated successfully:', response.data);
-      // Optionally, you can set isEditable back to true if needed
-      setIsEdittable(true);
-    })
-    .catch(error => {
-      console.error('Error updating Client Data:', error);
-    });
+      .then(response => {
+        console.log('Client data updated successfully:', response.data);
+        // Optionally, you can set isEditable back to true if needed
+        setIsEdittable(true);
+      })
+      .catch(error => {
+        console.error('Error updating Client Data:', error);
+      });
   };
 
   return (
     <div className="w-full h-full bg-gray-50">
+      {showAlert && <AlertSuccess message="Saved successfully" handleClose={closeAlert} />}
       <div className="bg-white p-4 shadow">
         <div className="flex justify-between">
           <h2 className="text-2xl font-semibold">Client Profile</h2>
@@ -99,11 +107,12 @@ const ClientProfile = () => {
         </div>
         <div class="border-b border-gray-400 mt-2 mb-4"></div>
         <div className='flex'>
-          <Sidebar handleClick={handleClick} />
-
-          <div class="w-full px-2 space-y-6" style={{ overflowY: 'auto', height: 'calc(100vh)', scrollbarWidth: 'none' }}>
+          <div className=''>
+            <Sidebar handleClick={handleClick} />
+          </div>
+          <div class="w-full px-2 space-y-6" >
             <div>
-              <GeneralInformation id={1} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange}/>
+              <GeneralInformation id={1} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
             </div>
             <div>
               <ContactInformation id={2} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
@@ -128,7 +137,7 @@ const ClientProfile = () => {
             </div>
             <div className='flex justify-center space-x-4'>
               <SecondaryButton text="Cancel" />
-              <PrimaryButton text="Save" handleClick={handleSave}/>
+              <PrimaryButton text="Save" handleClick={handleSave} />
             </div>
           </div>
 

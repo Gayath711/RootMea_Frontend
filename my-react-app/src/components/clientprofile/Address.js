@@ -4,12 +4,17 @@ import TextBox from "../common/TextBox";
 import DropDown from "../common/Dropdown";
 import TextArea from "../common/TextArea";
 
-const AddressInformation = ({ id, isEdittable, clientData, handleFieldChange}) => {
+const AddressInformation = ({ id, isEdittable, clientData, handleFieldChange }) => {
     const [isOpen, setIsOpen] = useState(true);
 
     const toggleAccordion = () => {
         setIsOpen(!isOpen);
     };
+    const options = [
+        { value: 'Option 1', label: 'Option 1' },
+        { value: 'Option 2', label: 'Option 2' },
+        { value: 'Option 3', label: 'Option 3' }
+    ]
     return (
         <div className="border border-gray-300  bg-gray-50" id={`accordian-${id}`}>
             <div
@@ -37,27 +42,27 @@ const AddressInformation = ({ id, isEdittable, clientData, handleFieldChange}) =
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
                                         <TextBox placeholder="Mailing Address Line 1" isEdittable={isEdittable} value={clientData.mailing_address_line_1_address_n_usual_location}
-                                        handleChange={(e) => handleFieldChange('mailing_address_line_1_address_n_usual_location', e.target.value)}/>
+                                            handleChange={(e) => handleFieldChange('mailing_address_line_1_address_n_usual_location', e.target.value)} />
                                     </div>
                                 </div>
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
                                         <TextBox placeholder="Mailing Address Line 2" isEdittable={isEdittable} value={clientData.mailing_address_line_2_address_n_usual_location}
-                                        handleChange={(e) => handleFieldChange('mailing_address_line_2_address_n_usual_location', e.target.value)}/>
+                                            handleChange={(e) => handleFieldChange('mailing_address_line_2_address_n_usual_location', e.target.value)} />
                                     </div>
                                 </div>
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <DropDown placeholder="Select City" isEdittable={isEdittable} value={clientData.city_address_n_usual_location}
-                                        handleChange={(e) => handleFieldChange('city_address_n_usual_location', e.target.value)}/>
+                                        <DropDown placeholder="Select City" isEdittable={isEdittable} options={options} value={clientData.city_address_n_usual_location}
+                                            handleChange={(e) => handleFieldChange('city_address_n_usual_location', e.target.value)} />
                                     </div>
                                     <div className="flex-1">
-                                        <DropDown placeholder="Select State" isEdittable={isEdittable} value={clientData.state_address_n_usual_location}
-                                        handleChange={(e) => handleFieldChange('state_address_n_usual_location', e.target.value)}/>
+                                        <DropDown placeholder="Select State" isEdittable={isEdittable} options={options} value={clientData.state_address_n_usual_location}
+                                            handleChange={(e) => handleFieldChange('state_address_n_usual_location', e.target.value)} />
                                     </div>
                                     <div className="flex-1">
                                         <TextBox placeholder="Enter Valid Zip Code" isEdittable={isEdittable} value={clientData.zip_address_n_usual_location}
-                                        handleChange={(e) => handleFieldChange('zip_address_n_usual_location', e.target.value)}/>
+                                            handleChange={(e) => handleFieldChange('zip_address_n_usual_location', e.target.value)} />
                                     </div>
                                 </div>
                                 <div className="flex space-x-6">
