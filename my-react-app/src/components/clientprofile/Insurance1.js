@@ -20,17 +20,17 @@ const Insurance = ({ heading, isEdittable, clientData,  handleFieldChange }) => 
                     <div className="flex flex-col justify-between space-y-6">
                         <div className="flex space-x-6">
                             <div className="flex-1">
-                                <TextBox placeholder="Enter Carrier Name" isEdittable={isEdittable} value={clientData.insurance_primary_carrier_name}
+                                <TextBox placeholder="Carrier Name" isEdittable={isEdittable} value={clientData.insurance_primary_carrier_name}
                                 handleChange={(e) => handleFieldChange('insurance_primary_carrier_name', e.target.value)}/>
                             </div>
                         </div>
                         <div className="flex space-x-6">
                             <div className="flex-1">
-                                <TextBox placeholder="Enter Subscriber ID" isEdittable={isEdittable} value={clientData.insurance_primary_subscriber_id}
+                                <TextBox placeholder="Subscriber ID" isEdittable={isEdittable} value={clientData.insurance_primary_subscriber_id}
                                 handleChange={(e) => handleFieldChange('insurance_primary_subscriber_id', e.target.value)}/>
                             </div>
                             <div className="flex-1">
-                                <TextBox placeholder="Enter Subscriber Name" isEdittable={isEdittable} value={clientData.insurance_primary_subscriber_name}
+                                <TextBox placeholder="Subscriber Name" isEdittable={isEdittable} value={clientData.insurance_primary_subscriber_name}
                                 handleChange={(e) => handleFieldChange('insurance_primary_subscriber_name', e.target.value)}/>
                             </div>
                         </div>
