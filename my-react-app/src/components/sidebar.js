@@ -42,16 +42,16 @@ const Sidebar = ({ isMinimized }) => {
               <ul className="mt-6 text-lg">
                 <a href="/clientprofile">
                   <li className=" flex items-center mt-10">
-                    <img src="./client-profile.png" className="h-[25px] w-[25px] mr-4" alt="client-profile" />
+                    <img src={ClientProfilePNG} className="h-[25px] w-[25px] mr-4" alt="client-profile" />
                     <p className='text-green-800'>Client Profile</p>
                   </li>
                 </a>
                 <li className=" flex items-center mt-10">
-                  <img src="./client-chart.png" className="h-[25px] w-[25px] mr-4" alt="client-chart" />
+                  <img src={ClientChartPNG} className="h-[25px] w-[25px] mr-4" alt="client-chart" />
                   Client Chart
                 </li>
                 <li className=" flex items-center mt-10">
-                  <img src="./encounter-notes.png" className="h-[25px] w-[25px] mr-4" alt="encounter-notes" />
+                  <img src={EncounterNotesPNG} className="h-[25px] w-[25px] mr-4" alt="encounter-notes" />
                   Encounter Notes
                 </li>
               </ul>

@@ -25,7 +25,7 @@ const Sidebar = ({ handleClick }) => {
 
     return (
         <div className='flex flex-row justify-center items-center'>
-            <div className="flex h-full shadow-lg" style={{ width: sidebarWidth }}>
+            <div className="flex pb-4 shadow-lg" style={{ width: sidebarWidth }}>
                 <div className="bg-white">
                     <div className="px-6">
                         {showSidebar && (
