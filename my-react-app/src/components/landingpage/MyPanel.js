@@ -1,8 +1,10 @@
-import { useState, useMemo } from 'react';
+import { useState,useEffect, useMemo } from 'react';
 import { useTable } from 'react-table';
 
 import { COLUMNS } from '../constants';
 import '../css/mypanel.module.css'
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const MyPanel = (id) => {
     const [isOpen, setIsOpen] = useState(true);
@@ -35,8 +37,35 @@ const MyPanel = (id) => {
     ]);
     const columns = useMemo(() => COLUMNS, []);
 
+
+    const [searchQuery, setSearchQuery] = useState('');
+
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
         useTable({ columns, data });
+
+        useEffect(() => {
+            fetchData();
+          }, [searchQuery]);
+        
+          const fetchData = async () => {
+            const token = localStorage.getItem('access_token');
+        
+            if (!token) {
+              return;
+            }
+        
+            try {
+              const response = await axios.get(`http://192.168.3.24:8000/clientinfo-api?search=${searchQuery}`, {
+                headers: {
+                  Authorization: `Bearer ${token}`
+                }
+              });
+              setData(response.data);
+              console.log(data)
+            } catch (error) {
+              console.error('Error fetching Client Data:', error);
+            }
+          };
 
     return (
         <div className="border border-gray-300  bg-gray-50" id={`accordian-${id}`}>
@@ -71,6 +100,12 @@ const MyPanel = (id) => {
                                                 </th>
                                             ))}
                                             <th style={{ minWidth: '130px' }}>
+                                                Date Assigned
+                                            </th>
+                                            <th style={{ minWidth: '130px' }}>
+                                                Program
+                                            </th>
+                                            <th style={{ minWidth: '130px' }}>
                                                 Client Profile
                                             </th>
                                             <th style={{ minWidth: '130px' }}>
@@ -96,13 +131,25 @@ const MyPanel = (id) => {
                                                     );
                                                 })}
                                                 <td className='text-center'>
+                                                    2023-10-10
+                                                </td>
+                                                <td className='text-center'>
+                                                    STOMP
+                                                </td>
+                                                <td className='text-center'>
+                                                  <Link to={`/clientprofile/${row.original.id}`}>
                                                     <img src="./client-profile.png" className="size-6 rounded-full" style={{ display: 'block', margin: '0 auto' }} />
+                                                  </Link>
                                                 </td>
                                                 <td className='text-center'>
-                                                    <img src="./client-chart.png" className="size-6" alt="client-chart" style={{ display: 'block', margin: '0 auto' }} />
+                                                   <Link to={`/clientchart/${row.original.id}`}>
+                                                      <img src="./client-chart.png" className="size-6" alt="client-chart" style={{ display: 'block', margin: '0 auto' }} />
+                                                   </Link>
                                                 </td>
                                                 <td className='text-center'>
-                                                    <img src="./encounter-notes.png" className="size-6" alt="client-chart" style={{ display: 'block', margin: '0 auto' }} />
+                                                   <Link to={`/encounter_note/`}>
+                                                      <img src="./encounter-notes.png" className="size-6" alt="client-chart" style={{ display: 'block', margin: '0 auto' }} />
+                                                   </Link>
                                                 </td>
                                             </tr>
                                         );

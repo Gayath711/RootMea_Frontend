@@ -41,19 +41,19 @@ const GeneralInformation = ({ id, isEdittable, clientData, handleFieldChange }) 
                             <div className="flex flex-col justify-between flex-1">
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <TextBox placeholder="Enter Client Status" isEdittable={isEdittable} value={"Pending"} />
+                                        <TextBox placeholder="Client Status" isEdittable={isEdittable} value={"Pending"} />
                                     </div>
                                     <div className="flex-1">
-                                        <DateInput placeholder="Enter Client Date" isEdittable={isEdittable} value={"2022-10-01"} />
+                                        <DateInput placeholder="Client Date" isEdittable={isEdittable} value={"2022-10-01"} />
                                     </div>
                                 </div>
-                                <TextBox placeholder="Enter Client Programs" isEdittable={isEdittable} value={"STOMP"} />
+                                <TextBox placeholder="Client Programs" isEdittable={isEdittable} value={"STOMP"} />
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <TextBox placeholder="Enter Client Navigator Name" isEdittable={isEdittable} value={"Laura"} />
+                                        <TextBox placeholder="Client Navigator Name" isEdittable={isEdittable} value={"Laura"} />
                                     </div>
                                     <div className="flex-1">
-                                        <TextBox placeholder="Enter Client System ID" isEdittable={isEdittable} value={"54321a"} />
+                                        <TextBox placeholder="Client System ID" isEdittable={isEdittable} value={"54321a"} />
                                     </div>
                                 </div>
                             </div>

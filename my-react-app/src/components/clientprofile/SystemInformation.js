@@ -35,21 +35,21 @@ const SystemInformation = ({ id, isEdittable, clientData,  handleFieldChange }) 
                             <div className="flex flex-col justify-between space-y-6">
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <TextBox placeholder="Select Original Data Source" isEdittable={isEdittable} value={clientData.system_information_original_data_source}
+                                        <TextBox placeholder="Original Data Source" isEdittable={isEdittable} value={clientData.system_information_original_data_source}
                                         handleChange={(e) => handleFieldChange('system_information_original_data_source', e.target.value)}/>
                                     </div>
                                     <div className="flex-1">
-                                        <TextBox placeholder="Enter Import Notes" isEdittable={isEdittable} value={clientData.system_information_import_notes}
+                                        <TextBox placeholder="Import Notes" isEdittable={isEdittable} value={clientData.system_information_import_notes}
                                         handleChange={(e) => handleFieldChange('system_information_import_notes', e.target.value)}/>
                                     </div>
                                     <div className="flex-1">
-                                        <DateInput placeholder="Select Import Date and Time" isEdittable={isEdittable} value={clientData.system_information_import_date}
+                                        <DateInput placeholder="Import Date and Time" isEdittable={isEdittable} value={clientData.system_information_import_date}
                                         handleChange={(selectedDate) => handleFieldChange('system_information_import_date', selectedDate)}/>
                                     </div>
                                 </div>
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <TextBox placeholder="Enter PRN Practice Fusion" isEdittable={isEdittable} value={clientData.system_information_prn}
+                                        <TextBox placeholder="PRN Practice Fusion" isEdittable={isEdittable} value={clientData.system_information_prn}
                                         handleChange={(e) => handleFieldChange('system_information_prn', e.target.value)}/>
                                     </div>
                                     <div className="flex-1">

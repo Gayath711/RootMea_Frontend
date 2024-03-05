@@ -21,16 +21,16 @@ export const COLUMNS = [
         accessor: 'mobile_number',
         width: 50,
     },
-    {
-        Header: 'Date Assigned',
-        accessor: 'date_assigned',
-        width: 130,
-    },
-    {
-        Header: 'Program',
-        accessor: 'program',
-        width: 50,
-    },
+//    {
+//        Header: 'Date Assigned',
+//        accessor: 'date_assigned',
+//        width: 130,
+//    },
+//    {
+//        Header: 'Program',
+//        accessor: 'program',
+//        width: 50,
+//    },
     // {
     //     Header: 'Status',
     //     accessor: 'status',

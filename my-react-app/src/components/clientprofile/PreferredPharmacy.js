@@ -38,7 +38,7 @@ const PreferredPharmacy = ({ id, isEdittable, clientData,  handleFieldChange }) 
                                         handleChange={(e) => handleFieldChange('preferred_pharmacy_name', e.target.value)}/>
                                     </div>
                                     <div className="flex-1">
-                                        <TextBox placeholder="Enter Pharmacy Phone Number" isEdittable={isEdittable} value={clientData.preferred_pharmacy_phone}
+                                        <TextBox placeholder="Pharmacy Phone Number" isEdittable={isEdittable} value={clientData.preferred_pharmacy_phone}
                                         handleChange={(e) => handleFieldChange('preferred_pharmacy_phone', e.target.value)}/>
                                     </div>
                                 </div>

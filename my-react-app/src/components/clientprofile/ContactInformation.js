@@ -47,64 +47,64 @@ const ContactInformation = ({ id, isEdittable, clientData, handleFieldChange }) 
                                 <div className="flex flex-col justify-between space-y-6">
                                     <div className="flex space-x-6">
                                         <div className="flex-1">
-                                            <TextBox placeholder="Enter First Name" isEdittable={isEdittable} value={clientData.first_name}
+                                            <TextBox placeholder="First Name" isEdittable={isEdittable} value={clientData.first_name}
                                                 handleChange={(e) => handleFieldChange('first_name', e.target.value)} />
                                         </div>
                                         <div className="flex-1">
-                                            <TextBox placeholder="Enter Middle Name" isEdittable={isEdittable} value={clientData.middle_name}
+                                            <TextBox placeholder="Middle Name" isEdittable={isEdittable} value={clientData.middle_name}
                                                 handleChange={(e) => handleFieldChange('middle_name', e.target.value)} />
                                         </div>
                                         <div className="flex-1">
-                                            <TextBox placeholder="Enter Last Name" isEdittable={isEdittable} value={clientData.last_name}
+                                            <TextBox placeholder="Last Name" isEdittable={isEdittable} value={clientData.last_name}
                                                 handleChange={(e) => handleFieldChange('last_name', e.target.value)} />
                                         </div>
                                     </div>
                                     <div className="flex space-x-6">
                                         <div className="flex-1">
-                                            <TextBox placeholder="Enter Nick/Preferred Name" isEdittable={isEdittable} value={clientData.nickname_preferred_name}
+                                            <TextBox placeholder="Nick/Preferred Name" isEdittable={isEdittable} value={clientData.nickname_preferred_name}
                                                 handleChange={(e) => handleFieldChange('nickname_preferred_name', e.target.value)} />
                                         </div>
                                         <div className="flex-1">
-                                            <TextBox placeholder="Select Preferred Pronouns" isEdittable={isEdittable} value={clientData.preferred_pronouns}
+                                            <TextBox placeholder="Preferred Pronouns" isEdittable={isEdittable} value={clientData.preferred_pronouns}
                                                 handleChange={(e) => handleFieldChange('preferred_pronouns', e.target.value)} />
                                         </div>
                                         <div className="flex-1">
-                                            <TextBox placeholder="Enter Email Address" isEdittable={isEdittable} value={clientData.email_address}
+                                            <TextBox placeholder="Email Address" isEdittable={isEdittable} value={clientData.email_address}
                                                 handleChange={(e) => handleFieldChange('email_address', e.target.value)} />
                                         </div>
 
                                     </div>
                                     <div className="flex space-x-6">
                                         <div className="flex-1">
-                                            <TextBox placeholder="Enter Mobile Number" isEdittable={isEdittable} value={clientData.mobile_number}
+                                            <TextBox placeholder="Mobile Number" isEdittable={isEdittable} value={clientData.mobile_number}
                                                 handleChange={(e) => handleFieldChange('mobile_number', e.target.value)} />
                                         </div>
                                         <div className="flex-1">
-                                            <TextBox placeholder="Enter Home Phone Number" isEdittable={isEdittable} value={clientData.home_phone}
+                                            <TextBox placeholder="Home Phone Number" isEdittable={isEdittable} value={clientData.home_phone}
                                                 handleChange={(e) => handleFieldChange('home_phone', e.target.value)} />
                                         </div>
                                         <div className="flex-1">
-                                            <TextBox placeholder="Enter Work Phone Number" isEdittable={isEdittable} value={clientData.work_phone}
+                                            <TextBox placeholder="Work Phone Number" isEdittable={isEdittable} value={clientData.work_phone}
                                                 handleChange={(e) => handleFieldChange('work_phone', e.target.value)} />
                                         </div>
                                     </div>
                                     <div className="flex space-x-6">
                                         <div className="flex-1">
-                                            <DropDown placeholder="Select Best Way to Contact You" options={options} isEdittable={isEdittable} value={clientData.best_way_to_contact}
+                                            <DropDown placeholder="Best Way to Contact You" options={options} isEdittable={isEdittable} value={clientData.best_way_to_contact}
                                                 handleChange={(e) => handleFieldChange('best_way_to_contact', e.target.value)} />
                                         </div>
                                         <div className="flex-1">
-                                            <DropDown placeholder="Select Primary Phone Number" options={options} isEdittable={isEdittable} value={clientData.primary_phone}
+                                            <DropDown placeholder="Primary Phone Number" options={options} isEdittable={isEdittable} value={clientData.primary_phone}
                                                 handleChange={(e) => handleFieldChange('primary_phone', e.target.value)} />
                                         </div>
                                     </div>
                                     <div className="flex space-x-6">
                                         <div className="flex-1">
-                                            <DropDown placeholder="Select Preferred Language" options={options} isEdittable={isEdittable} value={clientData.comfortable_language}
+                                            <DropDown placeholder="Preferred Language" options={options} isEdittable={isEdittable} value={clientData.comfortable_language}
                                                 handleChange={(e) => handleFieldChange('comfortable_language', e.target.value)} />
                                         </div>
                                         <div className="flex-1">
-                                            <DropDown placeholder="Select Other Language" options={options} isEdittable={isEdittable} value={clientData.other_language}
+                                            <DropDown placeholder="Other Language" options={options} isEdittable={isEdittable} value={clientData.other_language}
                                                 handleChange={(e) => handleFieldChange('other_language', e.target.value)} />
                                         </div>
                                     </div>

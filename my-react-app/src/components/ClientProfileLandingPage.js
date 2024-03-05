@@ -41,7 +41,7 @@ function ClientProfileLandingPage({ onLogout }) {
         }
       });
       setClientData(response.data);
-      console.log(clientData)
+      console.log(response.data)
     } catch (error) {
       console.error('Error fetching Client Data:', error);
     }

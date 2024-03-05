@@ -71,7 +71,7 @@ const ClientProfile = () => {
     setShowAlert(false);
   }
   const handleSave = () => {
-    setShowAlert(true);
+   
     window.scrollTo({ top: 0, behavior: 'smooth' });
     // Perform API request to update client data
     axios.put(`http://192.168.3.24:8000/clientinfo-api/${clientId}`, clientData, {
@@ -83,6 +83,7 @@ const ClientProfile = () => {
         console.log('Client data updated successfully:', response.data);
         // Optionally, you can set isEditable back to true if needed
         setIsEdittable(true);
+        setShowAlert(true);
       })
       .catch(error => {
         console.error('Error updating Client Data:', error);
@@ -137,7 +138,7 @@ const ClientProfile = () => {
             </div>
             <div className='flex justify-center space-x-4'>
               <SecondaryButton text="Cancel" />
-              <PrimaryButton text="Save" handleClick={handleSave} />
+              <PrimaryButton text="Save" handleClick={handleSave} isDisabled={isEdittable}/>
             </div>
           </div>
 
