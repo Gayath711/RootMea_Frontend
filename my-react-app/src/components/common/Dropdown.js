@@ -1,28 +1,59 @@
-const DropDown = ({ name, id = { name }, placeholder, height = '7vh', isEdittable, value, handleChange }) => {
-    const bgDisabled = isEdittable ? 'bg-transparent' : ''
+import Select from 'react-select'
+import { useState } from 'react'
+
+const DropDown = ({ name, id = { name }, placeholder, height = '7vh', isEdittable, value, handleChange, options }) => {
+    const bgDisabled = isEdittable ? '#F6F7F7' : 'white'
+    const bgLabelDisabled = isEdittable ? '#F6F7F7' : 'white'
+
+    const [isFocused, setIsFocused] = useState(false);
+    const handleFocus = () => {
+        setIsFocused(true);
+    };
+
+    const handleBlur = () => {
+        setIsFocused(false);
+    };
     return (
-        <select
-            name={name}
-            id={id}
-            defaultValue=""
-            disabled={isEdittable}
-            style={{ height: `${height}` }}
-            value={value}
-            onChange={handleChange}
-            className={`w-full px-2 border-1
-            border-gray-600/50
-            placeholder-gray-500 
-            placeholder-opacity-50 
-            rounded-md
-            text-lg 
-            ${bgDisabled}
-            text-gray-500/50`}>
-            <option value="" disabled hidden>{placeholder}</option>
-            <option value={value}>{value}</option>
-            <option value="option1">Option 1</option>
-            <option value="option2">Option 2</option>
-            <option value="option3">Option 3</option>
-        </select>
+        <div className="relative">
+            <Select
+                name={name}
+                id={id}
+                options={options}
+                placeholder=""
+                value={value}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+                onChange={handleChange}
+                isDisabled={isEdittable}
+                styles={{
+                    control: (styles) => ({
+                        ...styles,
+                        height: `${height}`,
+                        border: '1px solid #E5E7EA',
+                        background: `${bgDisabled}`,
+                        fontSize: '1.125rem',
+                        borderRadius: '0.375rem',
+
+                    }),
+                    menu: (styles) => ({
+                        ...styles,
+                        background: 'white',
+                        zIndex: 9999,
+                    }),
+                }}
+                components={{
+                    IndicatorSeparator: () => null
+                }}
+
+            />
+            <label
+                htmlFor={id}
+                className={`absolute px-2 text-sm text-gray-500 duration-300 transform ${isFocused || value ? '-translate-y-6 scale-75 top-4' : 'translate-y-1/2 scale-100 top-1.5'} z-10 origin-[0] start-2.5 peer-focus:text-gray-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto`}
+                style={{ background: bgLabelDisabled }}
+            >
+                {placeholder}
+            </label>
+        </div>
     );
 }
 
