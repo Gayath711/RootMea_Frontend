@@ -21,7 +21,7 @@ const ClientDetails = ({id}) => {
     };
 
     useEffect(() => {
-        axios.get(`http://127.0.0.1:8000/clientinfo-api/${clientId}`, {
+        axios.get(`http://192.168.3.24:8000/clientinfo-api/${clientId}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }

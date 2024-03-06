@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect} from 'react';
 import axios from 'axios';
 import Accordion from 'react-bootstrap/Accordion';
 import './css/clientchart.css'
@@ -31,7 +31,7 @@ function ClientChart() {
 
 
   useEffect(() => {
-    axios.get(`http://127.0.0.1:8000/clientinfo-api/${clientId}`, {
+    axios.get(`http://192.168.3.24:8000/clientinfo-api/${clientId}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -47,7 +47,7 @@ function ClientChart() {
 
 
   useEffect(() => {
-    axios.get(`http://127.0.0.1:8000/clientsvs-api/${clientId}`, {
+    axios.get(`http://192.168.3.24:8000/clientsvs-api/${clientId}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -62,7 +62,7 @@ function ClientChart() {
   }, []);
 
   useEffect(() => {
-    axios.get(`http://127.0.0.1:8000/clientmedication-api/${clientId}`, {
+    axios.get(`http://192.168.3.24:8000/clientmedication-api/${clientId}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -77,7 +77,7 @@ function ClientChart() {
   }, []);
 
   useEffect(() => {
-    axios.get(`http://127.0.0.1:8000/clientdiagnoses-api/${clientId}`, {
+    axios.get(`http://192.168.3.24:8000/clientdiagnoses-api/${clientId}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
