@@ -58,7 +58,7 @@ const Diagnosis = (id) => {
         useTable({ columns, data });
 
     useEffect(() => {
-        axios.get(`http://127.0.0.1:8000/clientdiagnoses-api/${clientId}`, {
+        axios.get(`http://192.168.3.24:8000/clientdiagnoses-api/${clientId}`, {
         headers: {
             Authorization: `Bearer ${token}`
         }
