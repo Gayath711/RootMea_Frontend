@@ -1,15 +1,39 @@
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useTable } from 'react-table';
 
 import { COLUMNS } from '../constants';
 import '../css/mypanel.module.css'
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
+import TestJPG from '../images/test.jpg';
 
-const ClientDetails = (id) => {
+
+const ClientDetails = ({id}) => {
+
+    const { clientId } = useParams();
+    const token = localStorage.getItem('access_token');
+
     const [isOpen, setIsOpen] = useState(true);
-
+    
+    const [clientData, setClientData] = useState([]);
     const toggleAccordion = () => {
         setIsOpen(!isOpen);
     };
+
+    useEffect(() => {
+        axios.get(`http://127.0.0.1:8000/clientinfo-api/${clientId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+          .then(response => {
+            setClientData(response.data);
+            console.log(response.data);
+          })
+          .catch(error => {
+            console.error('Error fetching Client SVS Data:', error);
+          });
+      }, []);
 
     return (
         <div className="border border-gray-300  bg-green-50/50" id={`accordian-${id}`}>
@@ -38,8 +62,8 @@ const ClientDetails = (id) => {
                         <div className="flex space-x-6">
                             <div className="border-1 w-[16.30vw] h-[35.10vh] border-1
                 border-green-600 bg-white rounded-md flex flex-col items-center justify-center">
-                                <img src={require('../images/test.jpg')} alt="Client Photo" className="w-[9.8vw] h-[17.75vh] object-cover rounded-full" />
-                                <div className="mt-4 text-center text-green-800">John Doe</div>
+                                <img src={TestJPG} alt="Client Photo" className="w-[9.8vw] h-[17.75vh] object-cover rounded-full" />
+                                <div className="mt-4 text-center text-green-800">{clientData.first_name} {clientData.last_name}</div>
                             </div>
                             <div className="border-1 w-full border-1
                 border-gray-600/50 bg-white rounded-md flex flex-col border-green-600">
@@ -53,7 +77,7 @@ const ClientDetails = (id) => {
                                                 Preferred Name:
                                             </div>
                                             <div>
-                                                Clienty
+                                                {clientData.nickname_preferred_name}
                                             </div>
                                         </div>
                                         <div className="flex justify-between">
@@ -61,7 +85,7 @@ const ClientDetails = (id) => {
                                                 Pronouns:
                                             </div>
                                             <div>
-                                                She/Her
+                                                {clientData.preferred_pronouns}
                                             </div>
                                         </div>
                                         <div className="flex justify-between">
@@ -69,7 +93,7 @@ const ClientDetails = (id) => {
                                                 Date of Birth:
                                             </div>
                                             <div>
-                                                02/03/2000
+                                                {clientData.date_of_birth}
                                             </div>
                                         </div>
                                         <div className="flex justify-between">
@@ -77,7 +101,7 @@ const ClientDetails = (id) => {
                                                 Language:
                                             </div>
                                             <div>
-                                                English
+                                                {clientData.comfortable_language}
                                             </div>
                                         </div>
                                         <div className="flex justify-between">
@@ -85,7 +109,7 @@ const ClientDetails = (id) => {
                                                 Primary Phone:
                                             </div>
                                             <div>
-                                                000-000-0000
+                                                {clientData.primary_phone}
                                             </div>
                                         </div>
                                         <div className="flex justify-between">
@@ -93,7 +117,7 @@ const ClientDetails = (id) => {
                                                 Email:
                                             </div>
                                             <div>
-                                                test@rootclinic.org
+                                                {clientData.email_address}
                                             </div>
                                         </div>
                                         <div className="flex justify-between">
@@ -101,7 +125,7 @@ const ClientDetails = (id) => {
                                                 Insurance:
                                             </div>
                                             <div>
-                                                Alameda Alliance
+                                                {clientData.insurance_primary_carrier_name}
                                             </div>
                                         </div>
                                     </div>
@@ -112,7 +136,7 @@ const ClientDetails = (id) => {
                                                 Insurance ID:
                                             </div>
                                             <div>
-                                                #0454512154
+                                                {clientData.insurance_primary_subscriber_id}
                                             </div>
                                         </div>
                                         <div className="flex justify-between">
@@ -120,7 +144,7 @@ const ClientDetails = (id) => {
                                                 Navigator:
                                             </div>
                                             <div>
-                                                Navigator Name
+                                                Mark
                                             </div>
                                         </div>
                                         <div className="flex justify-between">

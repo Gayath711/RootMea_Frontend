@@ -143,16 +143,16 @@ function ClientChart() {
         <div className='flex'>
           <div class="w-full px-2 space-y-6" >
             <div>
-              <ClientDetails />
+              <ClientDetails clientData={client}/>
             </div>
             <div>
-              <SocialVitalSigns />
+              <SocialVitalSigns clientSVSData={clientSVSData}/>
             </div>
             <div>
-              <Diagnosis />
+              <Diagnosis clientDiagnosesData={clientDiagnosesData}/>
             </div>
             <div>
-              <Medications />
+              <Medications clientMedicationData={clientMedicationData}/>
             </div>
           </div>
 

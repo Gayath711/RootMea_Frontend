@@ -1,11 +1,20 @@
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useTable } from 'react-table';
 
 import { MEDICATION_COLUMNS } from '../constants';
 import PrimaryButton from '../common/PrimaryButton'
 import '../css/mypanel.module.css'
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
+import FilterPNG from '../images/filter.png';
+import EditPNG from '../images/edit.png';
+import ViewPNG from '../images/view.png';
 
 const Medications = (id) => {
+
+    const { clientId } = useParams();
+    const token = localStorage.getItem('access_token');
+
     const [isOpen, setIsOpen] = useState(true);
 
     const toggleAccordion = () => {
@@ -48,6 +57,20 @@ const Medications = (id) => {
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
         useTable({ columns, data });
 
+    useEffect(() => {
+        axios.get(`http://127.0.0.1:8000/clientmedication-api/${clientId}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+        })
+        .then(response => {
+            setData(response.data);
+            console.log(response.data);
+        })
+        .catch(error => {
+            console.error('Error fetching Client Medication Data:', error);
+        });
+    }, []);
 
     return (
         <div className="border border-gray-300  bg-green-50/50" id={`accordian-${id}`}>
@@ -88,7 +111,7 @@ const Medications = (id) => {
                                                                 {column.render('Header')}
                                                             </div>
                                                             <div>
-                                                                <img src="./filter.png" className='ml-3 size-4' />
+                                                                <img src={FilterPNG} className='ml-3 size-4' />
                                                             </div>
                                                         </div>
                                                     </th>
@@ -121,8 +144,8 @@ const Medications = (id) => {
                                                     })}
                                                     <td className='' style={{ backgroundColor: 'white', borderTop: '1px solid #E1FBE8' }}>
                                                         <div className='flex flex-row'>
-                                                            <img src="./edit.png" className="w-[1.88vw] h-[2.47vh]" style={{ display: 'block', margin: '0 auto' }} />
-                                                            <img src="./view.png" className="w-[1.88vw] h-[2.47vh]" style={{ display: 'block', margin: '0 auto' }} />
+                                                            <img src={EditPNG} className="w-[1.88vw] h-[2.47vh]" style={{ display: 'block', margin: '0 auto' }} />
+                                                            <img src={ViewPNG} className="w-[1.88vw] h-[2.47vh]" style={{ display: 'block', margin: '0 auto' }} />
                                                         </div>
                                                     </td>
                                                 </tr>
