@@ -84,3 +84,103 @@ export const COLUMNS = [
     //     accessor: 'newEncounterNote',
     // },
 ];
+
+
+export const SOCIAL_VITAL_COLUMNS = [
+    {
+        Header: 'Domain',
+        accessor: 'domain',
+        width: 250,
+    },
+    {
+        Header: 'Risk',
+        accessor: 'risk',
+        width: 250,
+    },
+//    {
+//        Header: 'Date Last Accessed',
+//        accessor: 'date_last_accessed',
+//        width: 250,
+//    },
+];
+
+export const DIAGNOSIS_COLUMNS = [
+    {
+        Header: 'Diagnosis Name',
+        accessor: 'diagnosis_name',
+        width: 250,
+    },
+    {
+        Header: 'ICD10 Code',
+        accessor: 'icd10_code',
+        width: 180,
+    },
+    {
+        Header: 'Comments',
+        accessor: 'comments',
+        width: 180,
+    },
+    {
+        Header: 'Last Updated By',
+        accessor: 'last_updated_by',
+        width: 200,
+    },
+    {
+        Header: 'Last Updated Date',
+        accessor: 'last_updated_date',
+        width: 220,
+    },
+    {
+        Header: 'Start Date',
+        accessor: 'start_date',
+        width: 150,
+    },
+    {
+        Header: 'Stop Date',
+        accessor: 'stop_date',
+        width: 150,
+    },
+    {
+        Header: 'Status',
+        accessor: 'status',
+        width: 100,
+    },
+];
+
+export const MEDICATION_COLUMNS = [
+    {
+        Header: 'Medication',
+        accessor: 'medication',
+        width: 150,
+    },
+    {
+        Header: 'Comments',
+        accessor: 'comments',
+        width: 150,
+    },
+    {
+        Header: 'Last Updated By',
+        accessor: 'last_updated_by',
+        width: 150,
+    },
+    {
+        Header: 'Last Updated Date',
+        accessor: 'last_updated_date',
+        width: 150,
+    },
+    {
+        Header: 'Start Date',
+        accessor: 'start_date',
+        width: 150,
+    },
+    {
+        Header: 'Stop Date',
+        accessor: 'stop_date',
+        width: 150,
+    },
+    {
+        Header: 'Status',
+        accessor: 'status',
+        width: 100,
+    },
+];
