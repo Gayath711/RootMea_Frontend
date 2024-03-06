@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Accordion from 'react-bootstrap/Accordion';
 import './css/clientchart.css'
@@ -128,31 +128,34 @@ function ClientChart() {
 
 
   return (
-    <div className="w-full h-full bg-gray-50">
-      {/* {showAlert && <AlertSuccess message="Saved successfully" handleClose={closeAlert} />} */}
+    <div className="w-screen bg-gray-50">
       <div className="bg-white p-4 shadow">
-        <div className='flex justify-between'>
-          <h2 className="text-2xl font-semibold">Client Chart</h2>
-          <div className='flex space-x-4'>
-            <p className='text-green-600 font-medium'>Dashboard</p>
-            <p className='text-green-600 font-medium'>AMD Profile</p>
-            <p className='text-green-600 font-medium'>Manage Program</p>
+        <div className='flex justify-between mb-4 mt-4 pl-4'>
+          <div className='flex flex-row space-x-12'>
+            <div className="text-gray-800 text-2xl font-medium font-['Poppins']">Client Chart</div>
+            <img src="./edit.png" class="w-6 h-6" />
+            <img src="./save.png" class="w-5 h-6" />
+          </div>
+          <div className='flex space-x-8'>
+            <p className='text-green-700 font-medium'>Dashboard</p>
+            <p className='text-green-700 font-medium'>AMD Profile</p>
+            <p className='text-green-700 font-medium'>Manage Program</p>
           </div>
         </div>
-        <div class="border-b border-gray-400 mt-2 mb-4"></div>
+        <div class="border-b border-green-800 mt-2 mb-4"></div>
         <div className='flex'>
           <div class="w-full px-2 space-y-6" >
             <div>
-              <ClientDetails clientData={client}/>
+              <ClientDetails clientData={client} />
             </div>
             <div>
-              <SocialVitalSigns clientSVSData={clientSVSData}/>
+              <SocialVitalSigns clientSVSData={clientSVSData} />
             </div>
             <div>
-              <Diagnosis clientDiagnosesData={clientDiagnosesData}/>
+              <Diagnosis clientDiagnosesData={clientDiagnosesData} />
             </div>
             <div>
-              <Medications clientMedicationData={clientMedicationData}/>
+              <Medications clientMedicationData={clientMedicationData} />
             </div>
           </div>
 
