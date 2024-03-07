@@ -18,6 +18,11 @@ import SecondaryButton from './common/SecondaryButton'
 import AlertSuccess from './common/AlertSuccess';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+// import DynamicFieldForm from './clientprofile/dynamicfield'
+
+import MyComponent from './clientprofilefull'
+
+
 
 const ClientProfile = () => {
   const { clientId } = useParams();
@@ -136,6 +141,11 @@ const ClientProfile = () => {
             <div>
               <SystemInformation id={8} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
             </div>
+
+            <div>
+              <MyComponent id={9} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
+            </div>
+
             <div className='flex justify-center space-x-4'>
               <SecondaryButton text="Cancel" />
               <PrimaryButton text="Save" handleClick={handleSave} isDisabled={isEdittable} />
