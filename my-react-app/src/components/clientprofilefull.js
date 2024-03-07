@@ -18,7 +18,7 @@ function MyComponent() {
             </div>
             <div className="p-4 border-t border-gray-300 text-left space-x-4">
                 <div className="">
-                    <button onClick={handleClick} className="bg-gray-400 hover:bg-gray-700 text-white font-bold py-2 px-4 space-x-4 rounded mb-3">
+                    <button onClick={handleClick} className="bg-gray-400 hover:bg-gray-600 text-black font py-2 px-4 space-x-4 rounded mb-3">
                         Add CustomFields
                     </button>
                     {isImageClicked && <DynamicFieldForm />}
