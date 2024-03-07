@@ -198,11 +198,14 @@ function DynamicFieldForm() {
                             className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 text-left"
                         />
                     )}
-                    <button type="button" onClick={() => handleRemoveField(index)} className="px-4 py-2 text-white bg-red-500 rounded-md focus:outline-none hover:bg-red-600">Remove</button>
+                    <button type="button" onClick={() => handleRemoveField(index)} className="px-4 py-2 text-white bg-red-400 rounded-md focus:outline-none hover:bg-red-600">Remove</button>
                 </div>
             ))}
-            <button type="button" onClick={handleAddField} className="px-4 py-2 text-white bg-blue-500 rounded-md focus:outline-none hover:bg-blue-600">Add Field</button>
-            <button type="submit" className="px-4 py-2 text-white bg-green-500 rounded-md focus:outline-none hover:bg-green-600">Submit</button>
+
+            <button type="button" onClick={handleAddField} className="px-4 py-2 text-white bg-gray-400 rounded-md focus:outline-none hover:bg-gray-600">Add Field</button>
+
+
+            <button type="submit" className="px-4 py-2 text-white bg-green-300 rounded-md focus:outline-none hover:bg-green-600">Submit</button>
         </form>
     )}
     {/* {submittedData && (

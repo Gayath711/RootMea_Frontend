@@ -11,14 +11,14 @@ function MyComponent() {
     };
 
     return (
-        <div className="border border-gray-300 bg-gray-50">
+        <div className="border border-gray-300 bg-gray-40">
             <div className="bg-gray-500/50 h-16 flex items-center p-2 text-lg font-semibold">
                 <span>{heading}</span> 
                 {/* <img src={pen} alt="Pen Icon" className="ml-2 w-6 h-6" /> */}
             </div>
             <div className="p-4 border-t border-gray-300 text-left space-x-4">
                 <div className="">
-                    <button onClick={handleClick} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 space-x-4 rounded">
+                    <button onClick={handleClick} className="bg-gray-400 hover:bg-gray-700 text-white font-bold py-2 px-4 space-x-4 rounded mb-3">
                         Add CustomFields
                     </button>
                     {isImageClicked && <DynamicFieldForm />}
