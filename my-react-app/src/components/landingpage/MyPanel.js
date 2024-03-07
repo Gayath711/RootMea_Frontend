@@ -1,4 +1,4 @@
-import { useState,useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useTable } from 'react-table';
 
 import { COLUMNS } from '../constants';
@@ -43,29 +43,29 @@ const MyPanel = (id) => {
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
         useTable({ columns, data });
 
-        useEffect(() => {
-            fetchData();
-          }, [searchQuery]);
-        
-          const fetchData = async () => {
-            const token = localStorage.getItem('access_token');
-        
-            if (!token) {
-              return;
-            }
-        
-            try {
-              const response = await axios.get(`http://192.168.3.24:8000/clientinfo-api?search=${searchQuery}`, {
+    useEffect(() => {
+        fetchData();
+    }, [searchQuery]);
+
+    const fetchData = async () => {
+        const token = localStorage.getItem('access_token');
+
+        if (!token) {
+            return;
+        }
+
+        try {
+            const response = await axios.get(`http://192.168.3.24:8000/clientinfo-api?search=${searchQuery}`, {
                 headers: {
-                  Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${token}`
                 }
-              });
-              setData(response.data);
-              console.log(data)
-            } catch (error) {
-              console.error('Error fetching Client Data:', error);
-            }
-          };
+            });
+            setData(response.data);
+            console.log(data)
+        } catch (error) {
+            console.error('Error fetching Client Data:', error);
+        }
+    };
 
     const programOptions = ['ECM', 'Diabetes', 'STOMP', 'Clean360'];
 
@@ -101,10 +101,10 @@ const MyPanel = (id) => {
                                                     {column.render('Header')}
                                                 </th>
                                             ))}
-                                            <th style={{ padding: '20px'}}>
+                                            <th style={{ padding: '20px' }}>
                                                 Date Assigned
                                             </th>
-                                            <th style={{ padding: '20px'}}>
+                                            <th style={{ padding: '20px' }}>
                                                 Program
                                             </th>
                                             <th style={{ minWidth: '130px' }}>
@@ -137,26 +137,26 @@ const MyPanel = (id) => {
                                                         </td>
                                                     );
                                                 })}
-                                                <td  style={{ padding: '15px 20px' }}>
+                                                <td style={{ padding: '15px 20px' }}>
                                                     2023-10-10
                                                 </td>
-                                                <td  style={{ padding: '15px 20px' }}>
+                                                <td style={{ padding: '15px 20px' }}>
                                                     {randomProgram}
                                                 </td>
                                                 <td className='text-center'>
-                                                  <Link to={`/clientprofile/${row.original.id}`}>
-                                                    <img src="./client-profile.png" className="size-6 rounded-full" style={{ display: 'block', margin: '0 auto' }} />
-                                                  </Link>
+                                                    <Link to={`/clientprofile/${row.original.id}`}>
+                                                        <img src="./avatar-man.png" className="size-6 rounded-full" style={{ display: 'block', margin: '0 auto' }} />
+                                                    </Link>
                                                 </td>
                                                 <td className='text-center'>
-                                                   <Link to={`/clientchart/${row.original.id}`}>
-                                                      <img src="./client-chart.png" className="size-6" alt="client-chart" style={{ display: 'block', margin: '0 auto' }} />
-                                                   </Link>
+                                                    <Link to={`/clientchart/${row.original.id}`}>
+                                                        <img src="./client-chart.png" className="size-6" alt="client-chart" style={{ display: 'block', margin: '0 auto' }} />
+                                                    </Link>
                                                 </td>
                                                 <td className='text-center'>
-                                                   <Link to={`/encounter_note/`}>
-                                                      <img src="./encounter-notes.png" className="size-6" alt="client-chart" style={{ display: 'block', margin: '0 auto' }} />
-                                                   </Link>
+                                                    <Link to={`/encounter_note/`}>
+                                                        <img src="./encounter-notes.png" className="size-6" alt="client-chart" style={{ display: 'block', margin: '0 auto' }} />
+                                                    </Link>
                                                 </td>
                                             </tr>
                                         );

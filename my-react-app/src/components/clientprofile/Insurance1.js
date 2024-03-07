@@ -4,7 +4,7 @@ import TextBox from "../common/TextBox";
 import DropDown from "../common/Dropdown";
 import DateInput from "../common/DateInput";
 
-const Insurance = ({ heading, isEdittable, clientData,  handleFieldChange }) => {
+const Insurance = ({ heading, isEdittable, clientData, handleFieldChange }) => {
     const [isOpen, setIsOpen] = useState(true);
 
     const toggleAccordion = () => {
@@ -13,7 +13,7 @@ const Insurance = ({ heading, isEdittable, clientData,  handleFieldChange }) => 
     return (
         <div className="">
             <div className="border-1 border-gray-500/50 mx-4 mb-4">
-                <div className="bg-gray-500/50 h-16 flex items-center p-2 text-lg font-semibold">
+                <div className="bg-gray-500/50 h-16 flex items-center p-2 text-lg font-medium">
                     {heading}
                 </div>
                 <div className="p-4 border-t border-gray-300">
@@ -21,31 +21,31 @@ const Insurance = ({ heading, isEdittable, clientData,  handleFieldChange }) => 
                         <div className="flex space-x-6">
                             <div className="flex-1">
                                 <TextBox placeholder="Carrier Name" isEdittable={isEdittable} value={clientData.insurance_primary_carrier_name}
-                                handleChange={(e) => handleFieldChange('insurance_primary_carrier_name', e.target.value)}/>
+                                    handleChange={(e) => handleFieldChange('insurance_primary_carrier_name', e.target.value)} />
                             </div>
                         </div>
                         <div className="flex space-x-6">
                             <div className="flex-1">
                                 <TextBox placeholder="Subscriber ID" isEdittable={isEdittable} value={clientData.insurance_primary_subscriber_id}
-                                handleChange={(e) => handleFieldChange('insurance_primary_subscriber_id', e.target.value)}/>
+                                    handleChange={(e) => handleFieldChange('insurance_primary_subscriber_id', e.target.value)} />
                             </div>
                             <div className="flex-1">
                                 <TextBox placeholder="Subscriber Name" isEdittable={isEdittable} value={clientData.insurance_primary_subscriber_name}
-                                handleChange={(e) => handleFieldChange('insurance_primary_subscriber_name', e.target.value)}/>
+                                    handleChange={(e) => handleFieldChange('insurance_primary_subscriber_name', e.target.value)} />
                             </div>
                         </div>
                         <div className="flex space-x-6">
                             <div className="flex-1">
                                 <DropDown placeholder="Relation to Insured" isEdittable={isEdittable} value={clientData.insurance_primary_relation_to_insured}
-                                handleChange={(e) => handleFieldChange('insurance_primary_relation_to_insured', e.target.value)}/>
+                                    handleChange={(e) => handleFieldChange('insurance_primary_relation_to_insured', e.target.value)} />
                             </div>
                             <div className="flex-1">
                                 <DateInput placeholder="Effective From Date" isEdittable={isEdittable} value={clientData.insurance_primary_effective_from}
-                                handleChange={(selectedDate) => handleFieldChange('insurance_primary_effective_from', selectedDate)}/>
+                                    handleChange={(selectedDate) => handleFieldChange('insurance_primary_effective_from', selectedDate)} />
                             </div>
                             <div className="flex-1">
                                 <DateInput placeholder="Effective To Date" isEdittable={isEdittable} value={clientData.insurance_primary_effective_to}
-                                handleChange={(selectedDate) => handleFieldChange('insurance_primary_effective_to', selectedDate)}/>
+                                    handleChange={(selectedDate) => handleFieldChange('insurance_primary_effective_to', selectedDate)} />
                             </div>
                         </div>
                     </div>

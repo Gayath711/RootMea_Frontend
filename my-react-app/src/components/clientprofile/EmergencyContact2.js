@@ -12,7 +12,7 @@ const EmergencyContact2 = ({ heading, isEdittable, clientData,  handleFieldChang
     return (
         <div className="">
             <div className="border-1 border-gray-500/50 m-4">
-                <div className="bg-gray-500/50 h-16 flex items-center p-2 text-lg font-semibold">
+                <div className="bg-gray-500/50 h-16 flex items-center p-2 text-lg font-medium">
                     {heading}
                 </div>
                 <div className="p-4 border-t border-gray-300">
