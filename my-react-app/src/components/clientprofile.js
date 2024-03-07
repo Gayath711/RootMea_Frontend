@@ -71,7 +71,7 @@ const ClientProfile = () => {
     setShowAlert(false);
   }
   const handleSave = () => {
-   
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
     // Perform API request to update client data
     axios.put(`http://192.168.3.24:8000/clientinfo-api/${clientId}`, clientData, {
@@ -91,7 +91,7 @@ const ClientProfile = () => {
   };
 
   return (
-    <div className="w-full h-full bg-gray-50">
+    <div className="w-screen h-full bg-gray-50">
       {showAlert && <AlertSuccess message="Saved successfully" handleClose={closeAlert} />}
       <div className="bg-white p-4 shadow">
         <div className="flex justify-between">
@@ -138,7 +138,7 @@ const ClientProfile = () => {
             </div>
             <div className='flex justify-center space-x-4'>
               <SecondaryButton text="Cancel" />
-              <PrimaryButton text="Save" handleClick={handleSave} isDisabled={isEdittable}/>
+              <PrimaryButton text="Save" handleClick={handleSave} isDisabled={isEdittable} />
             </div>
           </div>
 

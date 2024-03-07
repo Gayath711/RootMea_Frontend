@@ -10,6 +10,7 @@ table {
     border-collapse: collapse;
     width: 100%;
     border-color: #0F7235!important;
+    border-radius: 5px !important;
     border: 1px solid ;
     font-style: normal;
 }
