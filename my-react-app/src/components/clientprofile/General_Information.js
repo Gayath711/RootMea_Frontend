@@ -36,7 +36,7 @@ const GeneralInformation = ({ id, isEdittable, clientData, handleFieldChange }) 
                         <div className="flex space-x-6">
                             <div className="border-1 w-[25.92vh] h-[32.40vh] border-1
                 border-gray-600/50 bg-white rounded-md flex flex-col justify-center items-center">
-                                <img src={require('../images/test.jpg')} alt="Client Photo" className="w-28 h-28 object-cover rounded-full" />
+                                <img src={require('../images/client-profile-1.png')} alt="Client Photo" className="w-28 h-28 object-cover" />
                                 <div className="mt-4 text-center text-green-800">John Doe</div>
                             </div>
 

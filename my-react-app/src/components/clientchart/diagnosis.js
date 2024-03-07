@@ -81,7 +81,7 @@ const Diagnosis = (id) => {
                 onClick={toggleAccordion}
             >
                 <div>
-                    <h2 className="text-lg font-medium">Diagnosis</h2>
+                    <h2 className="text-lg font-medium">Diagnoses</h2>
 
                     {/* <p>Kindly provide complete and valid information for the Contact Information section.</p> */}
                 </div>

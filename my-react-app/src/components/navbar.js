@@ -88,7 +88,7 @@ const Navbar = ({ onLogout, isMinimized, toggleSidebar }) => {
 
         <div className="dropdown">
           <a href="#" role="button" id="navbarDropdown" onClick={handleDropdownToggle}>
-            <img src={ProfilePNG} alt="Profile" className="h-[50px] w-[50px] rounded-full" />
+            <img src={require('./images/client-profile.png')} alt="Profile" className="h-[50px] w-[50px] rounded-full" />
           </a>
           <div className={`dropdown-menu${dropdownOpen ? ' show' : ''}`} aria-labelledby="navbarDropdown">
             <a className="dropdown-item" href="/UserProfile"><i className="fas fa-sliders-h fa-fw"></i> Account</a>
