@@ -63,7 +63,7 @@ const ClientDetails = ({ id }) => {
                 border-green-600 bg-white rounded-md flex flex-col items-center justify-center"> */}
                             <div className="w-80 h-96 bg-white rounded border-1 border-green-800 flex flex-col justify-center items-center">
 
-                                <img src={TestJPG} alt="Client Photo" className="w-44 h-44 object-cover rounded-full" />
+                                <img src={require('../images/client-profile.png')} alt="Client Photo" className="w-44 h-44 object-cover" />
                                 <div className="mt-4 text-center text-green-800">{clientData.first_name} {clientData.last_name}</div>
                             </div>
                             <div className="border-1 w-full border-1
