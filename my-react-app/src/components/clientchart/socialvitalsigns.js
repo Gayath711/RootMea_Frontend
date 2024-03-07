@@ -108,6 +108,9 @@ const SocialVitalSigns = ({ id }) => {
                                                     </th>
 
                                                 ))}
+                                                <th className='text-left' style={{ padding: '20px', backgroundColor: 'white', borderBottom: '1px solid #34703C' }}>
+                                                    Date Assigned
+                                                </th>                                                
                                                 <th className='text-center' style={{ minWidth: '130px', backgroundColor: 'white', borderBottom: '1px solid #34703C' }}>
                                                     Action
                                                 </th>
@@ -135,6 +138,9 @@ const SocialVitalSigns = ({ id }) => {
                                                             </td>
                                                         );
                                                     })}
+                                                    <td  style={{ padding: '15px 20px', backgroundColor: 'white', borderTop: '1px solid #E1FBE8' }}>
+                                                        2023-10-01
+                                                    </td>
                                                     <td className='' style={{ backgroundColor: 'white', borderTop: '1px solid #E1FBE8' }}>
                                                         <img src={ViewPNG} className="w-5 h-5" style={{ display: 'block', margin: '0 auto' }} />
                                                     </td>
