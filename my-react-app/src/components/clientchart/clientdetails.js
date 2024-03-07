@@ -5,7 +5,7 @@ import { COLUMNS } from '../constants';
 import '../css/mypanel.module.css'
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import TestJPG from '../images/test.jpg';
+import AvatarPNG from '../images/avatar.png';
 import OpenAccordianPNG from '../images/open-accordion.png';
 import ClosedAccordianPNG from '../images/closed-accordion.png';
 
@@ -63,7 +63,7 @@ const ClientDetails = ({ id }) => {
                 border-green-600 bg-white rounded-md flex flex-col items-center justify-center"> */}
                             <div className="w-80 h-96 bg-white rounded border-1 border-green-800 flex flex-col justify-center items-center">
 
-                                <img src={TestJPG} alt="Client Photo" className="w-44 h-44 object-cover rounded-full" />
+                                <img src={AvatarPNG} alt="Client Photo" className="w-44 h-44 object-cover rounded-full border-1 border-green-800" />
                                 <div className="mt-4 text-center text-green-800">{clientData.first_name} {clientData.last_name}</div>
                             </div>
                             <div className="border-1 w-full border-1

@@ -18,6 +18,10 @@ import SecondaryButton from './common/SecondaryButton'
 import AlertSuccess from './common/AlertSuccess';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import EditPNG from './images/edit.png';
+import SavePNG from './images/save.png';
+import EditGreenPNG from './images/edit-green.png';
+import SaveGreenPNG from './images/save-green.png';
 
 const ClientProfile = () => {
   const { clientId } = useParams();
@@ -27,6 +31,7 @@ const ClientProfile = () => {
   const token = localStorage.getItem('access_token');
 
   const [clientData, setClientData] = useState('');
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     console.log(clientId, "clientId")
@@ -57,6 +62,7 @@ const ClientProfile = () => {
 
   const handleEdit = () => {
     setIsEdittable(false)
+    setIsHovered(false)
   }
 
   const handleFieldChange = (field, value) => {
@@ -71,7 +77,7 @@ const ClientProfile = () => {
     setShowAlert(false);
   }
   const handleSave = () => {
-
+    setIsHovered(false)
     window.scrollTo({ top: 0, behavior: 'smooth' });
     // Perform API request to update client data
     axios.put(`http://192.168.3.24:8000/clientinfo-api/${clientId}`, clientData, {
@@ -89,24 +95,50 @@ const ClientProfile = () => {
         console.error('Error updating Client Data:', error);
       });
   };
+  function handleMouseEnter() {
+    setTimeout(() => {
+      setIsHovered(true);
+    }, 100);
+  }
 
   return (
     <div className="w-screen h-full bg-gray-50">
       {showAlert && <AlertSuccess message="Saved successfully" handleClose={closeAlert} />}
       <div className="bg-white p-4 shadow">
-        <div className="flex justify-between">
-          <h2 className="text-2xl font-semibold">Client Profile</h2>
-          <PrimaryButton text="Edit" width={70} height={35} handleClick={handleEdit} />
-        </div>
-        <div className='flex justify-between'>
-          <p className="mt-2 text-lg">Personalised client hub for managing and updating essential information securely</p>
-          <div className='flex space-x-4'>
-            <p className='text-green-600 font-medium'>Client Chart</p>
-            <p className='text-green-600 font-medium'>AMD Profile</p>
-            <p className='text-green-600 font-medium'>Manage Program</p>
+        <div className="flex justify-between mb-0 mt-4 pl-4">
+          <div className='flex space-x-12'>
+            <h2 className="text-gray-800 text-2xl font-medium">Client: {clientData.first_name} {clientData.last_name}</h2>
+            {isEdittable && (<button onClick={handleEdit}>
+              <div className='flex flex-col items-center'>
+                <img
+                  // src={EditPNG} 
+                  src={isHovered ? EditGreenPNG : EditPNG}
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={() => setIsHovered(false)}
+                  class="w-6 h-6" />
+                {isHovered && <div className="text-green-800 text-base font-medium">Edit</div>}
+              </div>
+            </button>)}
+            {!isEdittable && (<button onClick={handleSave}>
+              <div className='flex flex-col items-center'>
+                <img
+                  // src={SavePNG} 
+                  src={isHovered ? SaveGreenPNG : SavePNG}
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={() => setIsHovered(false)}
+                  class="w-5 h-6" />
+                {isHovered && <div className="text-green-800 text-base font-medium">Save</div>}
+              </div>
+            </button>)}
+          </div>
+          <div className='flex space-x-8'>
+            <p className='text-green-700 font-medium'>Dashboard</p>
+            <p className='text-green-700 font-medium'>Client Chart</p>
+            <p className='text-green-700 font-medium'>AMD Profile</p>
+            <p className='text-green-700 font-medium pr-8'>Manage Program</p>
           </div>
         </div>
-        <div class="border-b border-gray-400 mt-2 mb-4"></div>
+        <div class="border-b border-green-800 mt-2 mb-4"></div>
         <div className='flex'>
           <div className=''>
             <Sidebar handleClick={handleClick} />
@@ -136,15 +168,15 @@ const ClientProfile = () => {
             <div>
               <SystemInformation id={8} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
             </div>
-            <div className='flex justify-center space-x-4'>
+            {/* <div className='flex justify-center space-x-4'>
               <SecondaryButton text="Cancel" />
               <PrimaryButton text="Save" handleClick={handleSave} isDisabled={isEdittable} />
-            </div>
+            </div> */}
           </div>
 
         </div>
       </div>
-    </div>
+    </div >
   );
 }
 

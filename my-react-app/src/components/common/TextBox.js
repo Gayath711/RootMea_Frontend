@@ -9,7 +9,7 @@ const TextBox = ({ name, id = { name }, placeholder, width = 480, height = '7vh'
                 disabled={isEdittable}
                 style={{ height: height, background: bgDisabled }}
                 type="text"
-                className="block px-2.5 pb-2.5 pt-4 w-full text-md rounded-md border-1 focus:outline-none focus:ring-0 peer"
+                className="block px-2.5  w-full text-md rounded-md border-1 focus:outline-none focus:ring-0 peer"
                 placeholder=" "
                 value={value}
                 onChange={handleChange}
