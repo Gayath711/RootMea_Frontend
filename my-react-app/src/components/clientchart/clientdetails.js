@@ -5,7 +5,7 @@ import { COLUMNS } from '../constants';
 import '../css/mypanel.module.css'
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import AvatarPNG from '../images/avatar.png';
+import AvatarPNG from '../images/avatar-man.png';
 import OpenAccordianPNG from '../images/open-accordion.png';
 import ClosedAccordianPNG from '../images/closed-accordion.png';
 

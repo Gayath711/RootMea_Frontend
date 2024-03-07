@@ -22,6 +22,11 @@ import EditPNG from './images/edit.png';
 import SavePNG from './images/save.png';
 import EditGreenPNG from './images/edit-green.png';
 import SaveGreenPNG from './images/save-green.png';
+// import DynamicFieldForm from './clientprofile/dynamicfield'
+
+import MyComponent from './clientprofilefull'
+
+
 
 const ClientProfile = () => {
   const { clientId } = useParams();
@@ -168,6 +173,11 @@ const ClientProfile = () => {
             <div>
               <SystemInformation id={8} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
             </div>
+
+            <div>
+              <MyComponent id={9} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
+            </div>
+
             {/* <div className='flex justify-center space-x-4'>
               <SecondaryButton text="Cancel" />
               <PrimaryButton text="Save" handleClick={handleSave} isDisabled={isEdittable} />

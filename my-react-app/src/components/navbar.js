@@ -6,7 +6,7 @@ import CollapseButton2 from '../image/collapse-button.png';
 import RootsLogo from '../image/root.png';
 import MessagePNG from '../image/message.png';
 import NotificationPNG from '../image/notification.png';
-import ProfilePNG from './images/avatar.png';
+import ProfilePNG from './images/avatar-man.png';
 
 const Navbar = ({ onLogout, isMinimized, toggleSidebar }) => {
   const navigate = useNavigate(); // Initialize navigate function
