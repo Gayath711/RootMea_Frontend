@@ -67,6 +67,8 @@ const MyPanel = (id) => {
             }
           };
 
+    const programOptions = ['ECM', 'Diabetes', 'STOMP', 'Clean360'];
+
     return (
         <div className="border border-gray-300  bg-gray-50" id={`accordian-${id}`}>
             <div
@@ -99,10 +101,10 @@ const MyPanel = (id) => {
                                                     {column.render('Header')}
                                                 </th>
                                             ))}
-                                            <th style={{ minWidth: '130px' }}>
+                                            <th style={{ padding: '20px'}}>
                                                 Date Assigned
                                             </th>
-                                            <th style={{ minWidth: '130px' }}>
+                                            <th style={{ padding: '20px'}}>
                                                 Program
                                             </th>
                                             <th style={{ minWidth: '130px' }}>
@@ -121,6 +123,11 @@ const MyPanel = (id) => {
                                 <tbody {...getTableBodyProps()}>
                                     {rows.map((row) => {
                                         prepareRow(row);
+                                        // random program implementation
+                                        // Use Math.random() to generate a random index for programOptions
+                                        const randomIndex = Math.floor(Math.random() * programOptions.length);
+                                        // Use the random index to get a random program value
+                                        const randomProgram = programOptions[randomIndex];
                                         return (
                                             <tr {...row.getRowProps()}>
                                                 {row.cells.map((cell) => {
@@ -130,11 +137,11 @@ const MyPanel = (id) => {
                                                         </td>
                                                     );
                                                 })}
-                                                <td className='text-center'>
+                                                <td  style={{ padding: '15px 20px' }}>
                                                     2023-10-10
                                                 </td>
-                                                <td className='text-center'>
-                                                    STOMP
+                                                <td  style={{ padding: '15px 20px' }}>
+                                                    {randomProgram}
                                                 </td>
                                                 <td className='text-center'>
                                                   <Link to={`/clientprofile/${row.original.id}`}>
