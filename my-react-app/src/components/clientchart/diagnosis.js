@@ -9,6 +9,8 @@ import { useParams } from 'react-router-dom';
 import FilterPNG from '../images/filter.png';
 import EditPNG from '../images/edit.png';
 import ViewPNG from '../images/view.png';
+import OpenAccordianPNG from '../images/open-accordion.png';
+import ClosedAccordianPNG from '../images/closed-accordion.png';
 
 const Diagnosis = (id) => {
 
@@ -88,7 +90,7 @@ const Diagnosis = (id) => {
                     {isOpen && <div className=' flex items-center'><AddNewButton /></div>}
                     <div className=' flex items-center'>
                         <img
-                            src={isOpen ? './open-accordion.png' : './closed-accordion.png'}
+                            src={isOpen ? OpenAccordianPNG : ClosedAccordianPNG}
                             alt={isOpen ? 'Open accordian' : 'Close accordion'}
                             className="w-6 h-6"
                         />

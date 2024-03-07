@@ -7,6 +7,8 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import FilterPNG from '../images/filter.png';
 import ViewPNG from '../images/view.png';
+import OpenAccordianPNG from '../images/open-accordion.png';
+import ClosedAccordianPNG from '../images/closed-accordion.png';
 
 const SocialVitalSigns = ({ id }) => {
     const { clientId } = useParams();
@@ -76,7 +78,7 @@ const SocialVitalSigns = ({ id }) => {
                     {/* <p>Kindly provide complete and valid information for the Contact Information section.</p> */}
                 </div>
                 <img
-                    src={isOpen ? './open-accordion.png' : './closed-accordion.png'}
+                    src={isOpen ? OpenAccordianPNG : ClosedAccordianPNG}
                     alt={isOpen ? 'Open accordian' : 'Close accordion'}
                     className="ml-2 w-6 h-6"
                 />

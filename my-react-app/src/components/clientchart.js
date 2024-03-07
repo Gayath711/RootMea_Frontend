@@ -13,6 +13,8 @@ import ClientDetails from './clientchart/clientdetails';
 import SocialVitalSigns from './clientchart/socialvitalsigns';
 import Diagnosis from './clientchart/diagnosis';
 import Medications from './clientchart/medications';
+import EditPNG from './images/edit.png';
+import SavePNG from './images/save.png';
 
 function ClientChart() {
 
@@ -133,8 +135,8 @@ function ClientChart() {
         <div className='flex justify-between mb-4 mt-4 pl-4'>
           <div className='flex flex-row space-x-12'>
             <div className="text-gray-800 text-2xl font-medium font-['Poppins']">Client Chart</div>
-            <img src="./edit.png" class="w-6 h-6" />
-            <img src="./save.png" class="w-5 h-6" />
+            <img src={EditPNG} class="w-6 h-6" />
+            <img src={SavePNG} class="w-5 h-6" />
           </div>
           <div className='flex space-x-8'>
             <p className='text-green-700 font-medium'>Dashboard</p>

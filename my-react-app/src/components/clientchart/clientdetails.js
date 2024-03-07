@@ -6,7 +6,8 @@ import '../css/mypanel.module.css'
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import TestJPG from '../images/test.jpg';
-
+import OpenAccordianPNG from '../images/open-accordion.png';
+import ClosedAccordianPNG from '../images/closed-accordion.png';
 
 const ClientDetails = ({ id }) => {
 
@@ -18,6 +19,7 @@ const ClientDetails = ({ id }) => {
     const [clientData, setClientData] = useState([]);
     const toggleAccordion = () => {
         setIsOpen(!isOpen);
+        console.log(isOpen)
     };
 
     useEffect(() => {
@@ -47,7 +49,7 @@ const ClientDetails = ({ id }) => {
                     {/* <p>Kindly provide complete and valid information for the Contact Information section.</p> */}
                 </div>
                 <img
-                    src={isOpen ? './open-accordion.png' : './closed-accordion.png'}
+                    src={isOpen ? OpenAccordianPNG : ClosedAccordianPNG}
                     alt={isOpen ? 'Open accordian' : 'Close accordion'}
                     className="ml-2 w-6 h-6"
                 />
