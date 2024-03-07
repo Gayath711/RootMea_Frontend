@@ -37,7 +37,7 @@ const GeneralInformation = ({ id, isEdittable, clientData, handleFieldChange }) 
                             <div className="border-1 w-[25.92vh] h-[32.40vh] border-1
                 border-gray-600/50 bg-white rounded-md flex flex-col justify-center items-center">
                                 <img src={require('../images/avatar-man.png')} alt="Client Photo" className="w-28 h-28 object-cover rounded-full border-1 border-zinc-500" />
-                                <div className="mt-4 text-center text-green-800">John Doe</div>
+                                <div className="mt-4 text-center text-green-800">{clientData.first_name} {clientData.last_name}</div>
                             </div>
 
                             <div className="flex flex-col justify-between flex-1">
