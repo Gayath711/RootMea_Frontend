@@ -4,7 +4,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 // import { BsCalendar } from 'react-icons/bs';
 import { format } from 'date-fns'; // Import the format function from date-fns
 
-const DateInput = ({ name, id = { name }, placeholder, height = '7vh', isEdittable, value, handleChange }) => {
+const DateInput = ({ name, id = { name }, placeholder, width = 340, height = '7vh', isEdittable, value, handleChange }) => {
     const [startDate, setStartDate] = useState(value || null);
     const bgDisabled = isEdittable ? '#F6F7F7' : ''
     const bgLabelDisabled = isEdittable ? '#F6F7F7' : 'white'
@@ -31,7 +31,7 @@ const DateInput = ({ name, id = { name }, placeholder, height = '7vh', isEdittab
         }
     }
     return (
-        <div className="relative">
+        <div className="relative flex-grow">
             <DatePicker
                 name={name}
                 id={id}
@@ -41,19 +41,22 @@ const DateInput = ({ name, id = { name }, placeholder, height = '7vh', isEdittab
                 onChange={handleDateChange}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
+                style={{ width: '100%', minWidth: '10rem' }}
                 dateFormat="yyyy-MM-dd"
                 // style={{ height: `${height}` }}
-                className={`w-full!
+                className={`
             px-2 border-1
-                border-gray-600/50
+                border-gray-300/50
                 placeholder-gray-500 
                 placeholder-opacity-50 
                 rounded-md
                 text-md
                 z-50
-                h-[7vh]`}
+                h-[7vh]
+                w-[${width}px]`
+                }
                 placeholderText=" "
-                style={styles["react-datepicker__month-container"]}
+            // style={styles["react-datepicker__month-container"]}
             />
 
             <label

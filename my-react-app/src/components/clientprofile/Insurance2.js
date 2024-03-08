@@ -40,11 +40,11 @@ const Insurance = ({ heading, isEdittable, clientData, handleFieldChange }) => {
                                     handleChange={(e) => handleFieldChange('insurance_secondary_relation_to_insured', e.target.value)} />
                             </div>
                             <div className="flex-1">
-                                <DateInput placeholder="Effective From Date" isEdittable={isEdittable} value={clientData.insurance_secondary_effective_from}
+                                <DateInput placeholder="Effective From Date" width={260} isEdittable={isEdittable} value={clientData.insurance_secondary_effective_from}
                                     handleChange={(selectedDate) => handleFieldChange('insurance_secondary_effective_from', selectedDate)} />
                             </div>
                             <div className="flex-1">
-                                <DateInput placeholder="Effective To Date" isEdittable={isEdittable} value={clientData.insurance_secondary_effective_to}
+                                <DateInput placeholder="Effective To Date" width={260} isEdittable={isEdittable} value={clientData.insurance_secondary_effective_to}
                                     handleChange={(selectedDate) => handleFieldChange('insurance_secondary_effective_to', selectedDate)} />
                             </div>
                         </div>
