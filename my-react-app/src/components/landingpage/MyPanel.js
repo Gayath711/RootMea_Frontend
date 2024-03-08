@@ -70,7 +70,7 @@ const MyPanel = (id) => {
     const programOptions = ['ECM', 'Diabetes', 'STOMP', 'Clean360'];
 
     return (
-        <div className="border border-gray-300  bg-gray-50" id={`accordian-${id}`}>
+        <div className="border border-gray-300 rounded-md bg-gray-50" id={`accordian-${id}`}>
             <div
                 className="flex items-center justify-between p-4 cursor-pointer"
                 onClick={toggleAccordion}
@@ -90,7 +90,7 @@ const MyPanel = (id) => {
             </div>
             {
                 isOpen && (
-                    <div className='flex flex-col px-3 mt-2'>
+                    <div className='flex flex-col px-3 mt-2 rounded-md'>
                         <div className="rounded-sm p-4" >
                             <table {...getTableProps()} className="">
                                 <thead>

@@ -39,7 +39,7 @@ const Calendar = (id) => {
         useTable({ columns, data });
 
     return (
-        <div className="border border-gray-300  bg-gray-50" id={`accordian-${id}`}>
+        <div className="border border-gray-300 rounded-md bg-gray-50" id={`accordian-${id}`}>
             <div
                 className="flex items-center justify-between p-4 cursor-pointer"
                 onClick={toggleAccordion}
