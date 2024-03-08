@@ -94,7 +94,7 @@ function DynamicFieldForm() {
 
             console.log('FormData:', formDataWithFile);
 
-            const response = await axios.post('http://localhost:8000/api/my-view/', formDataWithFile, {
+            const response = await axios.post('http://192.168.3.24:8000/api/my-view/', formDataWithFile, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
