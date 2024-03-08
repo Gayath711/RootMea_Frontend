@@ -57,16 +57,16 @@ const LoginForm = ({ onLogin }) => {
 
     <div className="w-screen h-screen relative bg-white bg-cover bg-center" style={{ backgroundImage: "url('./login/background.png')" }}>
       <div className="flex items-center justify-center h-screen">
-        <div className="w-96 h-fit flex flex-col bg-white rounded shadow pt-2">
-          <div className="flex flex-col items-center space-y-0 pb-5">
-            <img className="w-24 h-20" src={RootsLogo} />
-            <div className="font-medium text-2xl">Welcome</div>
+        <div className="w-[600px] h-fit flex flex-col bg-white rounded shadow pt-12">
+          <div className="flex flex-col items-center space-y-8 pb-24">
+            <img className="w-28 h-24" src={RootsLogo} />
+            <div className="font-medium text-2xl text-black">Welcome to Dashboard</div>
           </div>
           <div className=''>
             <div className="flex flex-col items-start px-4">
               <div className=" text-gray-800 text-opacity-50 text-xs font-normal">Enter Roots Email Address</div>
               <input
-                class="border-b border-gray-800  focus:outline-none px-2 py-1 w-full mb-3"
+                class="border-b border-gray-800  focus:outline-none px-2 py-1 w-full mb-14"
                 type="text"
                 placeholder=""
                 id="username"
@@ -84,19 +84,19 @@ const LoginForm = ({ onLogin }) => {
               />
             </div>
           </div>
-          <div className="flex flex-row justify-between pt-2 px-4 pb-12">
+          <div className="flex flex-row justify-between pt-4 px-4 pb-24">
             <div className='flex flex-row space-x-4'>
-              <div className="w-6 h-3 relative">
-                <div className="w-8 h-4 left-0 top-0 absolute bg-zinc-300 rounded-xl" />
-                <div className="w-4 h-4 left-0 top-0 absolute rounded-full border border-gray-800" />
+              <div className="w-12 h-5 relative">
+                <div className="w-12 h-5 left-0 top-0 absolute bg-zinc-300 rounded-xl" />
+                <div className="w-5 h-5 left-0 top-0 absolute rounded-full border border-black" />
               </div>
-              <div className=" text-black-500 text-xs font-normal">Stay Signed In</div>
+              <div className=" text-black text-xs font-normal">Stay Signed In</div>
             </div>
-            <div className=" text-black-500 text-xs font-normal">Reset Your Password</div>
+            <div className=" text-black text-xs font-normal">Reset Your Password</div>
           </div>
-          <div className="flex flex-col items-center pb-5">
+          <div className="flex flex-col items-center pb-16">
             <button
-              className="w-36 h-10 border-1 bg-green-800 text-white text-md rounded-md"
+              className="w-52 h-14 border-1 bg-[#0F7235] text-white text-md rounded-sm"
               onClick={handleLogin}
             >
               SIGN IN
