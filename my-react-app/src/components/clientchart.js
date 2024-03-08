@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
+
 import Accordion from 'react-bootstrap/Accordion';
 import './css/clientchart.css'
 import Modal from 'react-bootstrap/Modal';
@@ -139,7 +141,9 @@ function ClientChart() {
             <img src={SavePNG} class="w-5 h-6" /> */}
           </div>
           <div className='flex space-x-8'>
-            <p className='text-green-700 font-medium'>Dashboard</p>
+            <Link to={'/'}>
+              <p className='text-green-700 font-medium'>Dashboard</p>
+            </Link>
             <p className='text-green-700 font-medium'>AMD Profile</p>
             <p className='text-green-700 font-medium pr-8'>Manage Program</p>
           </div>

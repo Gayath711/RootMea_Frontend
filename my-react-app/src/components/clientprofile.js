@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/Sidebar.css';
@@ -113,7 +114,7 @@ const ClientProfile = () => {
         <div className="flex justify-between mb-0 mt-4 pl-4">
           <div className='flex space-x-12'>
             <h2 className="text-gray-800 text-2xl font-medium">Client: {clientData.first_name} {clientData.last_name}</h2>
-            {isEdittable && (<button onClick={handleEdit}>
+            {/* {isEdittable && (<button onClick={handleEdit}>
               <div className='flex flex-col items-center'>
                 <img
                   // src={EditPNG} 
@@ -134,10 +135,34 @@ const ClientProfile = () => {
                   class="w-5 h-6" />
                 {isHovered && <div className="text-green-800 text-base font-medium">Save</div>}
               </div>
-            </button>)}
+            </button>)} */}
+            <button onClick={handleEdit} disabled={!isEdittable}>
+              <div className='flex space-x-2 items-center'>
+                <img
+                  // src={EditGreenPNG}
+                  src={isEdittable ? EditGreenPNG : EditPNG}
+                  // onMouseEnter={handleMouseEnter}
+                  // onMouseLeave={() => setIsHovered(false)}
+                  class={`w-6 h-6 ${isEdittable ? '' : 'cursor-not-allowed'}`} />
+                <div className={isEdittable ? "text-green-800 text-base font-medium" : "text-gray-800 text-base font-medium cursor-not-allowed"}>Edit</div>
+              </div>
+            </button>
+            <button onClick={handleSave} disabled={isEdittable}>
+              <div className='flex space-x-2 items-center'>
+                <img
+                  // src={SaveGreenPNG}
+                  src={!isEdittable ? SaveGreenPNG : SavePNG}
+                  // onMouseEnter={handleMouseEnter}
+                  // onMouseLeave={() => setIsHovered(false)}
+                  class={`w-5 h-6 ${!isEdittable ? '' : 'cursor-not-allowed'}`} />
+                <div className={!isEdittable ? "text-green-800 text-base font-medium" : "text-gray-800 text-base font-medium cursor-not-allowed"}>Save</div>
+              </div>
+            </button>
           </div>
           <div className='flex space-x-8'>
-            <p className='text-green-700 font-medium'>Dashboard</p>
+            <Link to={'/'}>
+              <p className='text-green-700 font-medium'>Dashboard</p>
+            </Link>
             <p className='text-green-700 font-medium'>Client Chart</p>
             <p className='text-green-700 font-medium'>AMD Profile</p>
             <p className='text-green-700 font-medium pr-8'>Manage Program</p>

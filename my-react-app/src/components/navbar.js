@@ -90,7 +90,7 @@ const Navbar = ({ onLogout, isMinimized, toggleSidebar }) => {
             <a href="#" role="button" id="navbarDropdown" onClick={handleDropdownToggle}>
               <img src={ProfilePNG} alt="Profile" className="h-8 w-8 rounded-full border-1 border-green-800" />
             </a>
-            <div className={`dropdown-menu${dropdownOpen ? ' show' : ''}`} aria-labelledby="navbarDropdown">
+            <div className={`dropdown-menu${dropdownOpen ? ' show' : ''} absolute origin-top-right right-0`} aria-labelledby="navbarDropdown">
               <a className="dropdown-item" href="/UserProfile"><i className="fas fa-sliders-h fa-fw"></i> Account</a>
               <a className="dropdown-item" href="#"><i className="fas fa-cog fa-fw"></i> Settings</a>
               <div className="dropdown-divider"></div>
