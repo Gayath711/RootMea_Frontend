@@ -43,7 +43,7 @@ const SystemInformation = ({ id, isEdittable, clientData, handleFieldChange }) =
                                             handleChange={(e) => handleFieldChange('system_information_import_notes', e.target.value)} />
                                     </div>
                                     <div className="flex-1">
-                                        <DateInput placeholder="Import Date and Time" isEdittable={isEdittable} value={clientData.system_information_import_date}
+                                        <DateInput placeholder="Import Date and Time" width={290} isEdittable={isEdittable} value={clientData.system_information_import_date}
                                             handleChange={(selectedDate) => handleFieldChange('system_information_import_date', selectedDate)} />
                                     </div>
                                 </div>
