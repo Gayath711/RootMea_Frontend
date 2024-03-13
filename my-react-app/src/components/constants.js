@@ -97,11 +97,11 @@ export const SOCIAL_VITAL_COLUMNS = [
         accessor: 'risk',
         width: 250,
     },
-//    {
-//        Header: 'Date Last Accessed',
-//        accessor: 'date_last_accessed',
-//        width: 250,
-//    },
+    //    {
+    //        Header: 'Date Last Accessed',
+    //        accessor: 'date_last_accessed',
+    //        width: 250,
+    //    },
 ];
 
 export const DIAGNOSIS_COLUMNS = [
@@ -161,12 +161,12 @@ export const MEDICATION_COLUMNS = [
     {
         Header: 'Last Updated By',
         accessor: 'last_updated_by',
-        width: 150,
+        width: 200,
     },
     {
         Header: 'Last Updated Date',
         accessor: 'last_updated_date',
-        width: 150,
+        width: 220,
     },
     {
         Header: 'Start Date',
