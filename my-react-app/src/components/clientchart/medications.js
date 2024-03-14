@@ -102,7 +102,7 @@ const Medications = (id) => {
                     <div className="py-4 border-t border-gray-300">
                         <div className='flex flex-col px-0 mt-2'>
                             <div className="rounded-lg p-4" >
-                                <table {...getTableProps()} className="">
+                                <table {...getTableProps()} className=" table">
                                     <thead>
                                         {headerGroups.map((headerGroup) => (
                                             <tr {...headerGroup.getHeaderGroupProps()} >

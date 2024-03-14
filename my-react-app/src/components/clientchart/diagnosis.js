@@ -102,7 +102,7 @@ const Diagnosis = (id) => {
                     <div className="py-4 border-t border-gray-300">
                         <div className='flex flex-col px-0 mt-2 '>
                             <div className="p-4 overflow-x-auto" >
-                                <table {...getTableProps()} className="rounded-lg">
+                                <table {...getTableProps()} className="rounded-lg table">
                                     <thead>
                                         {headerGroups.map((headerGroup) => (
                                             <tr {...headerGroup.getHeaderGroupProps()} >
