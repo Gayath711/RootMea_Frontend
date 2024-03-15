@@ -1,11 +1,23 @@
+.date-picker .MuiPickersDay-daySelected {
+  border: unset !important;
+}
+.MuiDateCalendar-root {
+  border: 1px solid #dedede;
+}
+.date-picker .Mui-selected {
+  background-color: #5bc4bf !important;
+}
+.date-picker .MuiButtonBase-root {
+  border: unset !important;
+}
 .mui-flbe84-MuiDayCalendar-weekContainer {
-    justify-content: space-between;
+  justify-content: space-between;
 }
 
 .MuiDayCalendar-header {
-    justify-content: space-between;
+  justify-content: space-between;
 }
 
 .MuiDayCalendar-weekContainer {
-    margin: 0;
+  margin: 0;
 }
