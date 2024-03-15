@@ -6,6 +6,7 @@ import { styled } from "@mui/material/styles";
 import CautionIcon from "../images/cautionIcon.svg";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import LineUpTeal from "../images/lineUpTeal.svg"
+import { useWindowSize } from "../Utils/windowResize";
 
 const data = [
   { value: 10, label: "High", color: "#1F4B51" },
@@ -13,10 +14,6 @@ const data = [
   { value: 15, label: "Medium", color: "#2F9384" },
 ];
 
-const size = {
-  width: 360,
-  height: 100,
-};
 
 const StyledText = styled("text")(({ theme }) => ({
   fill: theme.palette.text.primary,
@@ -37,8 +34,15 @@ function PieCenterLabel({ children }) {
 }
 
 const SocialVital = () => {
+  const { width } = useWindowSize();
+
+  const size = {
+    width: 360,
+    height: width > 1280 ? 100: 150,
+  };
+  
   return (
-    <div className="bg-white w-full rounded-md shadow-md">
+    <div className="bg-white w-full rounded-md shadow-md min-[320px]:h-full;">
       <div className="flex justify-between items-center px-4 my-2">
         <div className="text-lg font-medium">Social Vital Signs</div>
         <button className="flex justify-center items-center space-x-2 border border-[#2F9384] px-2 py-0.5 rounded-sm">

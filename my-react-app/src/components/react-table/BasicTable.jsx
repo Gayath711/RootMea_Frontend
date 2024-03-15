@@ -77,6 +77,7 @@ function ReactTable({ columns, data, striped, type }) {
     });
 
   return (
+    // <div style={{ overflowX: 'auto', minWidth: '700px' }}>
     <Table
       className="overflow-x-scroll"
       style={{ fontSize: "10px !important"}}

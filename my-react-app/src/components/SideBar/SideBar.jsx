@@ -8,7 +8,7 @@ import LeftBarIcon7 from "../images/leftBarIcon7.svg";
 
 const SideBar = () => {
   return (
-    <div className="flex flex-col justify-center items-center space-y-12 pt-8 pb-24 bg-white shadow-2xl rounded-br-[2rem]">
+    <div className="flex flex-col justify-center items-center space-y-12 pt-8 pb-24 bg-white shadow-2xl rounded-br-[2rem] sticky left-0 top-[100px]">
       <button className="p-1 bg-[#D4EDEC]">
         <img src={LeftBarIcon1} className="size-4" alt="icon1" />
       </button>

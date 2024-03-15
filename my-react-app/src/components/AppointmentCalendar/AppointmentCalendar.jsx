@@ -84,7 +84,7 @@ function AppointmentCalendar() {
         </div>
       </div>
       <hr className="w-[98%] mx-auto my-2" />
-      <div className="w-[96%] mx-auto my-3">
+      <div className="w-[96%] mx-auto my-3 overflow-x-auto">
         <BasicTable type={'appointmentCalendar'} columns={columns} data={data} />
       </div>
     </div>

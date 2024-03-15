@@ -20,7 +20,7 @@ const ActivityItem = () => {
 
 function Activities() {
   return (
-    <div className="bg-white w-full rounded-md shadow-sm">
+    <div className="bg-white w-full rounded-md shadow-sm md:max-xl:">
       <div className="flex justify-between items-center px-6 my-2">
         <div className="text-lg font-medium">Activities</div>
         <button>
@@ -29,6 +29,7 @@ function Activities() {
       </div>
       <hr className="w-11/12 mx-auto my-2" />
       <div className="flex flex-col justify-between space-y-2 mx-3 my-8">
+        <ActivityItem />
         <ActivityItem />
         <ActivityItem />
         <ActivityItem />

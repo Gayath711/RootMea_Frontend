@@ -69,7 +69,7 @@ function PriorityList({title, type}) {
   );
 
   return (
-    <div className="bg-white rounded-md shadow-md flex flex-col w-[49%]">
+    <div className="bg-white rounded-md shadow-md flex flex-col xl:w-[49%] min-[320px]:w-full ">
       <div className="flex justify-between items-center mx-4 mt-2">
         <div className="flex items-center space-x-4">
           <span className="text-lg font-medium">{title}</span>
@@ -80,7 +80,7 @@ function PriorityList({title, type}) {
         </button>
       </div>
       <hr className="w-[98%] mx-auto my-2" />
-      <div className="w-[96%] mx-auto my-3">
+      <div className="w-[96%] mx-auto my-3 overflow-x-auto">
         <BasicTable type={type} columns={columns} data={data} />
       </div>
     </div>

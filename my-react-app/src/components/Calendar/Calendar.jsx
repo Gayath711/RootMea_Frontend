@@ -8,7 +8,7 @@ const CalendarCard = () => {
   const [date, setDate] = useState(null);
   return (
     <>
-      <div className="bg-white shadow-md rounded-md w-full text-xs border">
+      <div className="bg-white shadow-md rounded-md xl:w-full text-xs border min-[320px]:w-[38%] ">
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DateCalendar />
         </LocalizationProvider>
