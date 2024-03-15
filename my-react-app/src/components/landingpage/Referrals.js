@@ -1,8 +1,9 @@
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useTable } from 'react-table';
 
 import { COLUMNS } from '../constants';
 import '../css/mypanel.module.css'
+import axios from 'axios';
 
 const Referrals = (id) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -37,6 +38,31 @@ const Referrals = (id) => {
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
         useTable({ columns, data });
+
+        useEffect(() => {
+            fetchData();
+        }, []);
+    
+        const fetchData = async () => {
+            const token = localStorage.getItem('access_token');
+    
+            if (!token) {
+                return;
+            }
+    
+            try {
+                const response = await axios.get(`http://192.168.3.24:8000/clientreferral-api`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                setData(response.data);
+                console.log("client-referral", JSON.stringify(response.data, null, 2))
+            } catch (error) {
+                console.error('Error fetching Client Data:', error);
+            }
+        };
+
 
     return (
         <div className="border border-gray-300 rounded-md bg-gray-50" id={`accordian-${id}`}>
