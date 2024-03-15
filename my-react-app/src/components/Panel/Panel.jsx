@@ -8,7 +8,7 @@ import SocialVital from "../SocialVital/SocialVital";
 
 const Panel = () => {
     return (
-        <div className="flex flex-col space-y-8 items-center pt-12 w-full">
+        <div className="flex flex-col justify-between space-y-8 items-center w-full">
              <SocialVital />
              <Calendar />
              <Appointment />

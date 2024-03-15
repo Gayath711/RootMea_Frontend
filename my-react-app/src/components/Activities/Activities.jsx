@@ -4,7 +4,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 const ActivityItem = () => {
   return (
-    <div className="flex justify-between">
+    <div className="flex justify-around">
       <img src={AvatarImg} alt="avatar" />
       <div className="space-y-1">
         <div className="text-sm">John Doe completed the program</div>
@@ -22,7 +22,7 @@ function Activities() {
   return (
     <div className="bg-white w-full rounded-md shadow-sm">
       <div className="flex justify-between items-center px-6 my-2">
-        <div className="text-lg font-medium">Upcoming</div>
+        <div className="text-lg font-medium">Activities</div>
         <button>
           <MoreVertIcon className="size-4" />
         </button>

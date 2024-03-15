@@ -27,7 +27,7 @@ const styles = {
   },
   clientGoal: {
     header: {
-      classes: "bg-[#7397B5] border border-[#7397B5] text-white",
+      classes: "bg-[#7397B5] border border-[#7397B5]",
       styles: {
         color: "white",
       }
@@ -43,7 +43,7 @@ const styles = {
   },
   priorityListPrograms: {
     header: {
-      classes: "bg-[#7397B5] border border-[#7397B5] text-white",
+      classes: "bg-[#7397B5] border border-[#7397B5]",
       styles: {
         color: "white",
       }
@@ -51,9 +51,17 @@ const styles = {
   },
   referralPrograms: {
     header: {
-      classes: "bg-[#5BC4BF] border border-[#5BC4BF] text-white",
+      classes: "bg-[#5BC4BF] border border-[#5BC4BF]",
       styles: {
         color: "white",
+      }
+    }
+  },
+  appointmentCalendar: {
+    header: {
+      classes: "bg-[#FFEDE2] border border-[#FFEDE2] text-white",
+      styles: {
+        color: "#CB6A69",
       }
     }
   }
@@ -71,7 +79,7 @@ function ReactTable({ columns, data, striped, type }) {
   return (
     <Table
       className="overflow-x-scroll"
-      style={{ fontSize: "10px !important" }}
+      style={{ fontSize: "10px !important"}}
       {...getTableProps()}
     >
       <TableHead>

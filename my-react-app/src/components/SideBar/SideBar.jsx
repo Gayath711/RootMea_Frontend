@@ -13,22 +13,22 @@ const SideBar = () => {
         <img src={LeftBarIcon1} className="size-4" alt="icon1" />
       </button>
       <button className="p-1 bg-[#EAECEB]">
-        <img src={LeftBarIcon2} className="size-4" alt="icon1" />
+        <img src={LeftBarIcon2} className="size-4" alt="icon2" />
       </button>
       <button className="p-1 bg-[#EAECEB]">
-        <img src={LeftBarIcon3} className="size-4" alt="icon1" />
+        <img src={LeftBarIcon3} className="size-4" alt="icon3" />
       </button>
       <button className="p-1 bg-[#EAECEB]">
-        <img src={LeftBarIcon4} className="size-4" alt="icon1" />
+        <img src={LeftBarIcon4} className="size-4" alt="icon4" />
       </button>
       <button className="p-1 bg-[#EAECEB]">
-        <img src={LeftBarIcon5} className="size-4" alt="icon1" />
+        <img src={LeftBarIcon5} className="size-4" alt="icon5" />
       </button>
       <button className="p-1 bg-[#EAECEB]">
-        <img src={LeftBarIcon6} className="size-4" alt="icon1" />
+        <img src={LeftBarIcon6} className="size-4" alt="icon6" />
       </button>
       <button className="p-1 bg-[#EAECEB]">
-        <img src={LeftBarIcon7} className="size-4" alt="icon1" />
+        <img src={LeftBarIcon7} className="size-4" alt="icon7" />
       </button>
     </div>
   );

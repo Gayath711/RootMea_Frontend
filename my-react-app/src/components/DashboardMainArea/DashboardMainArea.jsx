@@ -8,7 +8,7 @@ import ReferralPrograms from "../ReferralPrograms/ReferralPrograms";
 
 const DashboardMainArea = () => {
   return (
-    <div className="py-12 mx-4 space-y-8">
+    <div className="space-y-8 flex flex-col justify-between">
       <div className="flex justify-between">
         <GreetingCard />
         <TopStats />
