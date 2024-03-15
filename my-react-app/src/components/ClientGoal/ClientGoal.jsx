@@ -1,68 +1,56 @@
 import React from "react";
-import { useState, useMemo } from "react";
+import axios from "axios";
+import { useState, useMemo, useEffect } from "react";
 import ExternalLinkIcon from "../images/externalLink.svg";
 import BasicTable from "../react-table/BasicTable";
 import CarePlanImg from "../images/carePlan.svg";
 import { Checkbox } from "@mui/material";
 
 function ClientGoal() {
-  const [data, setData] = useState([
-    {
-      client: "John Doe",
-      date_of_birth: "...",
-      goal: "...",
-      problem: "...",
-      status: "...",
-      status_date: "...",
-      created_date: "...",
-    },
-    {
-      client: "John Doe",
-      date_of_birth: "...",
-      goal: "...",
-      problem: "...",
-      status: "...",
-      status_date: "...",
-      created_date: "...",
-    },
-    {
-      client: "John Doe",
-      date_of_birth: "...",
-      goal: "...",
-      problem: "...",
-      status: "...",
-      status_date: "...",
-      created_date: "...",
-    },
-    {
-      client: "John Doe",
-      date_of_birth: "...",
-      goal: "...",
-      problem: "...",
-      status: "...",
-      status_date: "...",
-      created_date: "...",
-    },
-    {
-      client: "John Doe",
-      date_of_birth: "...",
-      goal: "...",
-      problem: "...",
-      status: "...",
-      status_date: "...",
-      created_date: "...",
-    },
-  ]);
+
+  const [data, setData] = useState([]);
+
+  const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    fetchData();
+  }, [searchQuery]);
+
+  const fetchData = async () => {
+    const token = localStorage.getItem("access_token");
+
+    if (!token) {
+      return;
+    }
+
+    try {
+      const response = await axios.get(
+        `http://192.168.3.24:8000/clientgoal-api?search=${searchQuery}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setData(response.data.slice(0,6));
+      console.log(data);
+    } catch (error) {
+      console.error("Error fetching Client Data:", error);
+    }
+  };
 
   const columns = useMemo(
     () => [
       {
         Header: "Client",
-        accessor: "client",
+        accessor: "first_name",
+        Cell: ({ row }) =>
+          `${row.original.first_name}, ${row.original.last_name}`,
       },
       {
         Header: "D.O.B",
-        accessor: "date_of_birth",
+        accessor: "dob",
       },
       {
         Header: "Goal",
@@ -82,7 +70,7 @@ function ClientGoal() {
       },
       {
         Header: "Created Date",
-        accessor: "created_date",
+        accessor: "care_plan_created_date",
       },
       {
         Header: "Care Plan",
@@ -95,7 +83,7 @@ function ClientGoal() {
   );
 
   return (
-    <div className="xl:w-[65%] bg-white rounded-md shadow-md flex flex-col min-[320px]:w-full ">
+    <div className="xl:w-full bg-white rounded-md shadow-md flex flex-col min-[320px]:w-full ">
       <div className="flex justify-between items-center mx-4 mt-2">
         <div className="flex items-center space-x-4">
           <span className="text-lg font-medium">Client Goal</span>

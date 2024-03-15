@@ -44,7 +44,7 @@ function App() {
   return (
     <Router>
       <div className="App">
-        {true ? (
+        {isLoggedIn ? (
           <>
             <Navbar onLogout={() => setIsLoggedIn(false)} isMinimized={isMinimized} toggleSidebar={toggleSidebar} />
             <div className='flex min-h-screen'>

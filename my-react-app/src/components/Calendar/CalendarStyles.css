@@ -10,7 +10,7 @@
 .date-picker .MuiButtonBase-root {
   border: unset !important;
 }
-.mui-flbe84-MuiDayCalendar-weekContainer {
+/* .mui-flbe84-MuiDayCalendar-weekContainer {
   justify-content: space-between;
 }
 
@@ -21,3 +21,10 @@
 .MuiDayCalendar-weekContainer {
   margin: 0;
 }
+.MuiButtonBase-root {
+    height: 30px !important;
+}
+
+.MuiDateCalendar-root {
+    min-height: fit-content !important;
+}  */

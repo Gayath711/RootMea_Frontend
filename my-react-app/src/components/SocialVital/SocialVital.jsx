@@ -38,7 +38,7 @@ const SocialVital = () => {
 
   const size = {
     width: 360,
-    height: width > 1280 ? 100: 150,
+    height: width > 1280 ? 95: 150,
   };
   
   return (

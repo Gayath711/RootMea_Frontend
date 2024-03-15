@@ -7,6 +7,9 @@ import PriorityList from "../PriorityList/PriorityList";
 import ReferralPrograms from "../ReferralPrograms/ReferralPrograms";
 import { useWindowSize } from "../Utils/windowResize";
 import Panel from "../Panel/Panel";
+import PriorityListMyPrograms from "../PriorityListMyPrograms/PriorityListMyPrograms";
+import AppointmentCalendar from "../AppointmentCalendar/AppointmentCalendar";
+import Encounters from "../Encounters/Encounters";
 
 const DashboardMainArea = () => {
   const { width } = useWindowSize();
@@ -16,24 +19,27 @@ const DashboardMainArea = () => {
         <GreetingCard />
         <TopStats />
       </div>
-      <div> {width < 1280 && <Panel />}</div>
+      {width < 1280 && (
+        <div>
+          {" "}
+          <Panel />
+        </div>
+      )}
       <div>
         <MyPanel />
       </div>
       <div className="flex justify-between  xl:flex-row min-[320px]:flex-col min-[320px]:gap-y-4">
         <ClientGoal />
-        <NotificationCard />
       </div>
-      <div className="flex justify-between  xl:flex-row min-[320px]:flex-col min-[320px]:gap-y-4"> 
-        <PriorityList title={"Priority Lists"} type={"priorityList"} />
-        <PriorityList
-          title={"Priority Lists in my Programs"}
-          type={"priorityListPrograms"}
-        />
+      <div className="flex justify-between  xl:flex-row min-[320px]:flex-col min-[320px]:gap-y-4">
+        <PriorityList />
+        <PriorityListMyPrograms />
       </div>
       <div>
         <ReferralPrograms />
       </div>
+      <AppointmentCalendar />
+      <Encounters />
     </div>
   );
 };

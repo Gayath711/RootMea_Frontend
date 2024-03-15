@@ -2,8 +2,9 @@ import React from "react";
 import { useState, useMemo } from "react";
 import ExternalLinkIcon from "../images/externalLink.svg";
 import BasicTable from "../react-table/BasicTable";
-import ClientProfileImg from "../images/clientProfile.svg"
-import ClientChartImg from "../images/clientChart.svg"
+import DocumentAddIcon from "../images/documentAdd.svg"
+import EditIcon from "../images/edit.svg"
+import EyeIcon from "../images/eye.svg"
 
 function AppointmentCalendar() {
 
@@ -61,10 +62,23 @@ function AppointmentCalendar() {
       {
         Header: "Encounter Note",
         accessor: "encounterNote",
+        Cell: ({ row }) => (
+          <div className="mx-auto flex justify-around items-center">
+            <img src={DocumentAddIcon} alt="add" />
+            <img src={EditIcon} alt="edit" />
+            <img src={EyeIcon} alt="view" />
+          </div>
+        ),
       },
       {
         Header: "Action",
         accessor: "action",
+        Cell: ({ row }) => (
+          <div className="mx-auto flex justify-around space-x-2 items-center">
+            <img src={EditIcon} alt="edit" />
+            <img src={EyeIcon} alt="view" />
+          </div>
+        ),
       },
     ],
     []
@@ -78,7 +92,7 @@ function AppointmentCalendar() {
           <img src={ExternalLinkIcon} className="size-4" alt="link" />
         </div>
         <div>
-          <button className="px-2 py-1 border-1 rounded-sm border-[#EBAC88] text-[#CB6A69]">
+          <button className="px-2 py-1 border-1 text-sm rounded-sm border-[#EBAC88] text-[#CB6A69]">
             Create New
           </button>
         </div>

@@ -7,7 +7,7 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 const NotificationTile = () => {
   return (
-    <div className="flex justify-around w-11/12 mx-auto ">
+    <div className="flex space-x-6 w-11/12 mx-auto ">
       <span>
         <img src={ClientProfileImg} className="size-16" alt="profile" />
       </span>
@@ -30,7 +30,7 @@ const NotificationTile = () => {
 
 function NotificationCard() {
   return (
-    <div className="bg-white rounded-md shadow-md xl:w-[33%] min-[320px]:w-full">
+    <div className="bg-white rounded-md shadow-md xl:w-full min-[320px]:w-full">
       <div className="flex justify-between items-center px-6 my-2">
         <div className="text-lg flex items-center space-x-3 font-medium py-1">
           <div>Notifications</div>

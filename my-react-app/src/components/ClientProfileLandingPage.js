@@ -4,6 +4,7 @@ import DashboardMainArea from "./DashboardMainArea/DashboardMainArea";
 import Panel from "./Panel/Panel";
 import AppointmentCalendar from "./AppointmentCalendar/AppointmentCalendar";
 import { useWindowSize } from "./Utils/windowResize";
+import Encounters from "./Encounters/Encounters";
 
 function ClientProfileLandingPage({ onLogout }) {
   const { width } = useWindowSize();
@@ -26,10 +27,10 @@ function ClientProfileLandingPage({ onLogout }) {
         </div>
         <div className="flex justify-between gap-4 min-[320px]:flex-col xl:flex-row">
           <div className="xl:w-[49%] min-[320px]:w-[100%]">
-            <AppointmentCalendar />
+            {/* <AppointmentCalendar /> */}
           </div>
           <div className="xl:w-[49%] min-[320px]:w-[100%]">
-            <AppointmentCalendar />
+              {/* <Encounters /> */}
           </div>
         </div>
       </div>

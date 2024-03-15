@@ -1,81 +1,64 @@
 import React from "react";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import ExternalLinkIcon from "../images/externalLink.svg";
 import BasicTable from "../react-table/BasicTable";
+import axios from "axios";
 import ClientProfileImg from "../images/clientProfile.svg";
 import ClientChartImg from "../images/clientChart.svg";
 
 function ReferralPrograms() {
-  const [data, setData] = useState([
-    {
-      client: "Vincent",
-      program: "Program, Activity",
-      referralDate: "24-02-2024",
-      referralComments: "...",
-      status: "New",
-      progressComments: "...",
-      closedDate: "24-02-2024",
-      closedBy: "User",
-    },
-    {
-      client: "Sullivan ",
-      program: "Program, Activity",
-      referralDate: "24-02-2024",
-      referralComments: "...",
-      status: "Closed",
-      progressComments: "...",
-      closedDate: "24-02-2024",
-      closedBy: "User",
-    },
-    {
-      client: "Gray ",
-      program: "Program, Activity",
-      referralDate: "24-02-2024",
-      referralComments: "...",
-      status: "Pending",
-      progressComments: "...",
-      closedDate: "24-02-2024",
-      closedBy: "User",
-    },
-    {
-      client: "Farrell ",
-      program: "Program, Activity",
-      referralDate: "24-02-2024",
-      referralComments: "...",
-      status: "...",
-      progressComments: "...",
-      closedDate: "24-02-2024",
-      closedBy: "User",
-    },
-    {
-      client: "Bennett ",
-      program: "Program, Activity",
-      referralDate: "24-02-2024",
-      referralComments: "...",
-      status: "...",
-      progressComments: "...",
-      closedDate: "24-02-2024",
-      closedBy: "User",
-    },
-  ]);
+  
+  const [data, setData] = useState([]);
+
+  const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    fetchData();
+  }, [searchQuery]);
+
+  const fetchData = async () => {
+    const token = localStorage.getItem("access_token");
+
+    if (!token) {
+      return;
+    }
+
+    try {
+      const response = await axios.get(
+        `http://192.168.3.24:8000/clientreferral-api?search=${searchQuery}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setData(response.data.slice(0,6));
+      console.log(data);
+    } catch (error) {
+      console.error("Error fetching Client Data:", error);
+    }
+  };
 
   const columns = useMemo(
     () => [
       {
         Header: "Client",
-        accessor: "client",
+        accessor: "first_name",
+        Cell: ({ row }) =>
+          `${row.original.client_first_name}, ${row.original.client_last_name }`,
       },
       {
         Header: "Program",
-        accessor: "program",
+        accessor: "program_name",
       },
       {
         Header: "Referral Date",
-        accessor: "referralDate",
+        accessor: "referred_date",
       },
       {
         Header: "Referral Comments",
-        accessor: "referralComments",
+        accessor: "referral_comments",
       },
       {
         Header: "Status",
@@ -83,15 +66,15 @@ function ReferralPrograms() {
       },
       {
         Header: "Progress Comments",
-        accessor: "progressComments",
+        accessor: "progress_comments",
       },
       {
         Header: "Closed Date",
-        accessor: "closedDate",
+        accessor: "date_closed",
       },
       {
         Header: "Closed By",
-        accessor: "closedBy",
+        accessor: "closed_by",
       },
     ],
     []
