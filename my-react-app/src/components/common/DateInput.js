@@ -4,7 +4,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 // import { BsCalendar } from 'react-icons/bs';
 import { format } from 'date-fns'; // Import the format function from date-fns
 
-const DateInput = ({ name, id = { name }, placeholder, width = 340, height = '7vh', isEdittable, value, handleChange }) => {
+const DateInput = ({ name, id, placeholder, width = 340, height = '7vh', isEdittable, value, handleChange, register }) => {
     const [startDate, setStartDate] = useState(value || null);
     const bgDisabled = isEdittable ? '#F6F7F7' : ''
     const bgLabelDisabled = isEdittable ? '#F6F7F7' : 'white'
@@ -30,15 +30,21 @@ const DateInput = ({ name, id = { name }, placeholder, width = 340, height = '7v
             backgroundColor: "#ffffff",
         }
     }
+    const [selectedDate, setSelectedDate] = useState(null);
+
+    if (!register) {
+        register = () => { }
+    }
+    console.log("value", value)
     return (
         <div className="relative flex-grow">
             <DatePicker
                 name={name}
-                id={id}
-                selected={startDate}
+                id={id || name}
+                // selected={startDate}
                 disabled={isEdittable}
                 value={value}
-                onChange={handleDateChange}
+                onChange={handleChange}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
                 style={{ width: '100%', minWidth: '10rem' }}
@@ -56,6 +62,9 @@ const DateInput = ({ name, id = { name }, placeholder, width = 340, height = '7v
                 w-[${width}px]`
                 }
                 placeholderText=" "
+                selected={value}
+            // onChange={date => setSelectedDate(date)}
+            // {...register(name)}
             // style={styles["react-datepicker__month-container"]}
             />
 

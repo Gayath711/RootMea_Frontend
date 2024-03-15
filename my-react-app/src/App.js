@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import './tailwind.css'
+
 import Footer from './components/footer';
 import Home from './components/home';
 import './App.css';
@@ -17,7 +19,8 @@ import MedicationTable from './components/medicationTable';
 import DiagnosisTable from './components/diagnosisTable';
 import EncounterNote from './components/encounternote';
 import ClientProfileFull from './components/clientprofilefull';
-import './tailwind.css'
+import Calendar from './components/calendar/calendar';
+
 
 
 function App() {
@@ -64,7 +67,7 @@ function App() {
                   <Route path="/encounter_note" element={<EncounterNote />} />
                   <Route path="/clientprofilefull" element={<ClientProfileFull />} />
                   <Route path="/clientprofilefull/:clientId" element={<ClientProfileFull />} />
-
+                  <Route path="/calendar" element={<Calendar />} />
                 </Routes>
               </div>
             </div>
