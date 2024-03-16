@@ -82,34 +82,42 @@ const Diagnosis = ({ id, setShowAlert }) => {
 
 
     //Add New Row
-    const [lastUpdatedDate, setLastUpdatedDate] = useState(null);
-    const [startDate, setStartDate] = useState(null);
-    const [stopDate, setStopDate] = useState(null);
+    const [newDiagnosis, setNewDiagnosis] = useState({
+        start_date: '',
+        stop_date: '',
+        diagnosis_name: '',
+        icd10_code: null,
+        diagnosis_status: null,
+        last_updated_date: null,
+        comments: "",
+        last_updated_by: "" // Assign a value here
+    });
+    
 
     function handleAddRow(e) {
         e.stopPropagation();
         setShowAddRow(true)
     }
 
-    const handleDateChange = (name, value) => {
-        const formattedDate = format(value, 'yyyy-MM-dd')
-        console.log("name,value", name, formattedDate)
-        setValue(name, value);
+    // const handleDateChange = (name, value) => {
+    //     const formattedDate = format(value, 'yyyy-MM-dd')
+    //     console.log("name,value", name, formattedDate)
+    //     setValue(name, value);
 
-        if (name === "last_updated_date") {
-            setLastUpdatedDate(formattedDate);
-        } else if (name === "start_date") {
-            setStartDate(formattedDate);
-        } else if (name === "stop_date") {
-            setStopDate(formattedDate);
-        }
-        console.log(lastUpdatedDate, startDate, stopDate)
-    }
+    //     if (name === "last_updated_date") {
+    //         setLastUpdatedDate(formattedDate);
+    //     } else if (name === "start_date") {
+    //         setStartDate(formattedDate);
+    //     } else if (name === "stop_date") {
+    //         setStopDate(formattedDate);
+    //     }
+    //     console.log(lastUpdatedDate, startDate, stopDate)
+    // }
 
 
     const {
         register,
-        handleSubmit,
+        //handleSubmit,
         setValue,
         formState: { errors },
         reset,
@@ -124,6 +132,47 @@ const Diagnosis = ({ id, setShowAlert }) => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
+    const handleSubmit = (newDiagnosis) => {
+        console.log(newDiagnosis,"dtdrter")
+        const formDataWithClientId = {
+            ...newDiagnosis,
+            last_updated_date: newDiagnosis.last_updated_date ? format(new Date(newDiagnosis.last_updated_date), 'yyyy-MM-dd') : null,
+            start_date: newDiagnosis.start_date ? format(new Date(newDiagnosis.start_date), 'yyyy-MM-dd') : null,
+            stop_date: newDiagnosis.stop_date ? format(new Date(newDiagnosis.stop_date), 'yyyy-MM-dd') : null,
+            client_id: clientId
+        };
+        console.log(JSON.stringify(formDataWithClientId));
+            // Handle adding new medication (existing code)
+            axios.post(`http://192.168.3.24:8000/clientdiagnoses-api/`, formDataWithClientId, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => {
+                console.log("Successfully added:", response.data);
+                // Reset form data after submission
+                setNewDiagnosis({
+                    start_date: '',
+                    stop_date: '',
+                    diagnosis_name: '',
+                    icd10_code: null,
+                    diagnosis_status: null,
+                    last_updated_date: null,
+                    comments: "",
+                    last_updated_by: ""
+                });
+                // Hide the add row section
+                setShowAddRow(false);
+                // Show alert or perform any other action upon successful submission
+                setShowAlert(true);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            })
+            .catch(error => {
+                console.error('Error adding client medication:', error);
+                // Handle error here, show error message or perform any other action
+            });
+    };
 
     const EditableRows = () => {
         return (
@@ -134,8 +183,8 @@ const Diagnosis = ({ id, setShowAlert }) => {
                         id="diagnosis_name"
                         type="text"
                         className="block px-2.5 h-[7vh] w-full text-md rounded-md border-1 focus:outline-none focus:ring-0 peer"
-                        {...register("diagnosis_name")}
-                    />
+                        value={newDiagnosis.diagnosis_name}
+                        onChange={(e) => setNewDiagnosis({ ...newDiagnosis, diagnosis_name: e.target.value })}                    />
                 </td>
                 <td style={{ paddingLeft: "10px", backgroundColor: 'white', borderTop: '1px solid #E1FBE8' }}>
                     <input
@@ -143,8 +192,8 @@ const Diagnosis = ({ id, setShowAlert }) => {
                         id="icd_code"
                         type="text"
                         className="block px-2.5 h-[7vh] w-full text-md rounded-md border-1 focus:outline-none focus:ring-0 peer"
-                        {...register("icd_code")}
-                    />
+                        value={newDiagnosis.icd10_code}
+                        onChange={(e) => setNewDiagnosis({ ...newDiagnosis, icd10_code: e.target.value })}                    />
                 </td>
                 <td style={{ paddingLeft: "10px", backgroundColor: 'white', borderTop: '1px solid #E1FBE8' }}>
                     <input
@@ -152,8 +201,8 @@ const Diagnosis = ({ id, setShowAlert }) => {
                         id="comments"
                         type="text"
                         className="block px-2.5 h-[7vh] w-full text-md rounded-md border-1 focus:outline-none focus:ring-0 peer"
-                        {...register("comments")}
-                    />
+                        value={newDiagnosis.comments}
+                        onChange={(e) => setNewDiagnosis({ ...newDiagnosis, comments: e.target.value })}                    />
                 </td>
                 <td style={{ paddingLeft: "15px", backgroundColor: 'white', borderTop: '1px solid #E1FBE8' }}>
                     <input
@@ -161,34 +210,34 @@ const Diagnosis = ({ id, setShowAlert }) => {
                         id="last_updated_by"
                         type="text"
                         className="block px-2.5 h-[7vh] w-full text-md rounded-md border-1 focus:outline-none focus:ring-0 peer"
-                        {...register("last_updated_by")}
-                    />
+                        value={newDiagnosis.last_updated_by}
+                        onChange={(e) => setNewDiagnosis({ ...newDiagnosis, last_updated_by: e.target.value })}                    />
                 </td>
                 <td style={{ paddingLeft: "15px", backgroundColor: 'white', borderTop: '1px solid #E1FBE8' }}>
                     <DatePicker
                         id="last_updated_date"
-                        selected={lastUpdatedDate}
+                        selected={newDiagnosis.last_updated_date}
                         dateFormat="yyyy-MM-dd"
                         className="block px-2.5 h-[7vh] w-full text-md rounded-md border-1 focus:outline-none focus:ring-0 peer"
-                        onChange={(date) => handleDateChange("last_updated_date", date)}
+                        onChange={(e) => setNewDiagnosis({ ...newDiagnosis, last_updated_date: e })}
                     />
                 </td>
                 <td style={{ paddingLeft: "15px", backgroundColor: 'white', borderTop: '1px solid #E1FBE8' }}>
                     <DatePicker
                         id="start_date"
-                        selected={startDate}
+                        selected={newDiagnosis.start_date}
                         dateFormat="yyyy-MM-dd"
                         className="block px-2.5 h-[7vh] w-full text-md rounded-md border-1 focus:outline-none focus:ring-0 peer"
-                        onChange={(date) => handleDateChange("start_date", date)}
+                        onChange={(e) => setNewDiagnosis({ ...newDiagnosis, start_date: e })}
                     />
                 </td>
                 <td style={{ paddingLeft: "15px", backgroundColor: 'white', borderTop: '1px solid #E1FBE8' }}>
                     <DatePicker
                         id="stop_date"
-                        selected={stopDate}
+                        selected={newDiagnosis.stop_date}
                         dateFormat="yyyy-MM-dd"
                         className="block px-2.5 h-[7vh] w-full text-md rounded-md border-1 focus:outline-none focus:ring-0 peer"
-                        onChange={(date) => handleDateChange("stop_date", date)}
+                        onChange={(e) => setNewDiagnosis({ ...newDiagnosis, stop_date: e })}
                     />
                 </td>
                 <td style={{ paddingLeft: "15px", backgroundColor: 'white', borderTop: '1px solid #E1FBE8' }}>
@@ -198,12 +247,12 @@ const Diagnosis = ({ id, setShowAlert }) => {
                         id="status"
                         type="text"
                         className="block px-2.5 h-[7vh] w-full text-md rounded-md border-1 focus:outline-none focus:ring-0 peer"
-                        {...register("status")}
-                    />
+                        value={newDiagnosis.diagnosis_status}
+                        onChange={(e) => setNewDiagnosis({ ...newDiagnosis, diagnosis_status: e.target.value })}                    />
                 </td>
                 <td className='bg-white' >
                     <div className=' flex items-center'>
-                        <PrimaryButton type="submit" text={"Save"} width={40} height={'7vh'} />
+                        <PrimaryButton handleClick={() => handleSubmit(newDiagnosis)}  text={"Save"} width={40} height={'7vh'} />
                     </div>
                     {/* <div className='flex flex-row'>
                         <img src={SavePNG} onClick={saveRow} className="w-5 h-5" style={{ display: 'block', margin: '0 auto' }} />
@@ -243,7 +292,7 @@ const Diagnosis = ({ id, setShowAlert }) => {
                     <div className="py-4 border-t border-gray-300">
                         <div className='flex flex-col px-0 mt-2 '>
                             <div className="p-4 overflow-x-auto" >
-                                <form onSubmit={handleSubmit(onSubmit)}>
+                                <form>
                                     <table {...getTableProps()} className="rounded-lg">
                                         <thead>
                                             {headerGroups.map((headerGroup) => (

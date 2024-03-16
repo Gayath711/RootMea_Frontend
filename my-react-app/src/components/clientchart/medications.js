@@ -15,6 +15,7 @@ import ViewPNG from '../images/view.png';
 import AddNewButton from '../common/AddNewButton';
 import OpenAccordianPNG from '../images/open-accordion.png';
 import ClosedAccordianPNG from '../images/closed-accordion.png';
+import Button from 'react-bootstrap/Button';
 
 
 
@@ -57,11 +58,21 @@ const Medications = ({ id, setShowAlert }) => {
 
     const {
         register,
-        handleSubmit,
+        //handleSubmit,
         setValue,
         formState: { errors },
         reset,
     } = useForm();
+
+    const [newMedication, setNewMedication] = useState({
+        medication: '',
+        comments: '',
+        last_updated_by: '',
+        last_updated_date: null,
+        start_date: null,
+        stop_date: null,
+        status: ''
+    });
 
     const onSubmit = (data) => {
         console.log(data);
@@ -69,6 +80,47 @@ const Medications = ({ id, setShowAlert }) => {
         setShowAddRow(false);
         setShowAlert(true);
         window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const handleSubmit = (newMedication) => {
+        console.log(newMedication,"dtdrter")
+        const formDataWithClientId = {
+            ...newMedication,
+            last_updated_date: newMedication.last_updated_date ? format(new Date(newMedication.last_updated_date), 'yyyy-MM-dd') : null,
+            start_date: newMedication.start_date ? format(new Date(newMedication.start_date), 'yyyy-MM-dd') : null,
+            stop_date: newMedication.stop_date ? format(new Date(newMedication.stop_date), 'yyyy-MM-dd') : null,
+            client_id: clientId
+        };
+        console.log(JSON.stringify(formDataWithClientId));
+            // Handle adding new medication (existing code)
+            axios.post(`http://192.168.3.24:8000/clientmedication-api/`, formDataWithClientId, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => {
+                console.log("Successfully added:", response.data);
+                // Reset form data after submission
+                setNewMedication({
+                    medication: '',
+                    comments: '',
+                    last_updated_by: '',
+                    last_updated_date: null,
+                    start_date: null,
+                    stop_date: null,
+                    status: ''
+                });
+                // Hide the add row section
+                setShowAddRow(false);
+                // Show alert or perform any other action upon successful submission
+                setShowAlert(true);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            })
+            .catch(error => {
+                console.error('Error adding client medication:', error);
+                // Handle error here, show error message or perform any other action
+            });
     };
 
     const EditableRows = () => {
@@ -81,7 +133,8 @@ const Medications = ({ id, setShowAlert }) => {
                         id="medications"
                         type="text"
                         className="block px-2.5 h-[7vh] w-full text-md rounded-md border-1 focus:outline-none focus:ring-0 peer"
-                        {...register("medications")}
+                        value={newMedication.medication}
+                        onChange={(e) => setNewMedication({ ...newMedication, medication: e.target.value })}
                     />
                 </td>
                 <td style={{ paddingLeft: "10px", backgroundColor: 'white', borderTop: '1px solid #E1FBE8' }}>
@@ -91,7 +144,8 @@ const Medications = ({ id, setShowAlert }) => {
                         id="comments"
                         type="text"
                         className="block px-2.5 h-[7vh] w-full text-md rounded-md border-1 focus:outline-none focus:ring-0 peer"
-                        {...register("comments")}
+                        value={newMedication.comments}
+                        onChange={(e) => setNewMedication({ ...newMedication, comments: e.target.value })}
                     />
                 </td>
                 <td style={{ paddingLeft: "10px", backgroundColor: 'white', borderTop: '1px solid #E1FBE8' }}>
@@ -101,37 +155,38 @@ const Medications = ({ id, setShowAlert }) => {
                         id="last_updated_by"
                         type="text"
                         className="block px-2.5 h-[7vh] w-full text-md rounded-md border-1 focus:outline-none focus:ring-0 peer"
-                        {...register("last_updated_by")}
+                        value={newMedication.last_updated_by}
+                        onChange={(e) => setNewMedication({ ...newMedication, last_updated_by: e.target.value })}
                     />
                 </td>
                 <td style={{ paddingLeft: "15px", backgroundColor: 'white', borderTop: '1px solid #E1FBE8' }}>
                     {/* <DateInput name={"last_updated_date"} id={"last_updated_date"} handleChange={date => formik.setFieldValue('last_updated_date', date)} value={formik.values.last_updated_date} /> */}
                     <DatePicker
                         id="last_updated_date"
-                        selected={lastUpdatedDate}
+                        selected={newMedication.last_updated_date}
                         dateFormat="yyyy-MM-dd"
                         className="block px-2.5 h-[7vh] w-full text-md rounded-md border-1 focus:outline-none focus:ring-0 peer"
-                        onChange={(date) => handleDateChange("last_updated_date", date)}
+                        onChange={(e) => setNewMedication({ ...newMedication, last_updated_date: e })}
                     />
                 </td>
                 <td style={{ paddingLeft: "15px", backgroundColor: 'white', borderTop: '1px solid #E1FBE8' }}>
                     {/* <DateInput name={"start_date"} id={"start_date"} handleChange={date => formik.setFieldValue('start_date', date)} value={formik.values.start_date} /> */}
                     <DatePicker
                         id="start_date"
-                        selected={startDate}
+                        selected={newMedication.start_date}
                         dateFormat="yyyy-MM-dd"
                         className="block px-2.5 h-[7vh] w-full text-md rounded-md border-1 focus:outline-none focus:ring-0 peer"
-                        onChange={(date) => handleDateChange("start_date", date)}
+                        onChange={(e) => setNewMedication({ ...newMedication, start_date: e})}
                     />
                 </td>
                 <td style={{ paddingLeft: "15px", backgroundColor: 'white', borderTop: '1px solid #E1FBE8' }}>
                     {/* <DateInput name={"stop_date"} id={"stop_date"} handleChange={date => formik.setFieldValue('stop_date', date)} value={formik.values.stop_date} /> */}
                     <DatePicker
                         id="stop_date"
-                        selected={stopDate}
+                        selected={newMedication.stop_date}
                         dateFormat="yyyy-MM-dd"
                         className="block px-2.5 h-[7vh] w-full text-md rounded-md border-1 focus:outline-none focus:ring-0 peer"
-                        onChange={(date) => handleDateChange("stop_date", date)}
+                        onChange={(e) => setNewMedication({ ...newMedication, stop_date: e })}
                     />
                 </td>
                 <td style={{ paddingLeft: "15px", backgroundColor: 'white', borderTop: '1px solid #E1FBE8' }}>
@@ -141,12 +196,13 @@ const Medications = ({ id, setShowAlert }) => {
                         id="status"
                         type="text"
                         className="block px-2.5 h-[7vh] w-full text-md rounded-md border-1 focus:outline-none focus:ring-0 peer"
-                        {...register("status")}
+                        value={newMedication.status}
+                        onChange={(e) => setNewMedication({ ...newMedication, status: e.target.value })}
                     />
                 </td>
                 <td className='bg-white' >
                     <div className=' flex items-center'>
-                        <PrimaryButton type="submit" text={"Save"} width={40} height={'7vh'} />
+                        <PrimaryButton handleClick={() => handleSubmit(newMedication)}  text={"Save"} width={40} height={'7vh'} />
                     </div>
                     {/* <div className='flex flex-row'>
                         <img src={SavePNG} onClick={saveRow} className="w-5 h-5" style={{ display: 'block', margin: '0 auto' }} />
@@ -225,7 +281,7 @@ const Medications = ({ id, setShowAlert }) => {
                 onClick={toggleAccordion}
             >
                 <div>
-                    <h2 className="text-lg font-medium">Medications</h2>
+                    <h2 className="text-lg font-medium">Medication</h2>
 
                     {/* <p>Kindly provide complete and valid information for the Contact Information section.</p> */}
                 </div>
@@ -245,7 +301,7 @@ const Medications = ({ id, setShowAlert }) => {
                     <div className="py-4 border-t border-gray-300">
                         <div className='flex flex-col px-0 mt-2'>
                             <div className="rounded-lg p-4 overflow-x-auto" >
-                                <form onSubmit={handleSubmit(onSubmit)}>
+                                
                                     <table {...getTableProps()} className="">
                                         <thead>
                                             {headerGroups.map((headerGroup) => (
@@ -301,7 +357,7 @@ const Medications = ({ id, setShowAlert }) => {
                                             {showAddRow && <EditableRows />}
                                         </tbody>
                                     </table>
-                                </form>
+                                
                             </div>
                         </div >
                     </div>
