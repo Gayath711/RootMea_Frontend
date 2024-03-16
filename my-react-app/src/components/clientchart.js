@@ -15,8 +15,7 @@ import ClientDetails from './clientchart/clientdetails';
 import SocialVitalSigns from './clientchart/socialvitalsigns';
 import Diagnosis from './clientchart/diagnosis';
 import Medications from './clientchart/medications';
-import EditPNG from './images/edit.png';
-import SavePNG from './images/save.png';
+import AlertSuccess from './common/AlertSuccess';
 
 function ClientChart() {
 
@@ -33,6 +32,10 @@ function ClientChart() {
 
   const navigate = useNavigate();
 
+  const [showAlert, setShowAlert] = useState(false);
+  const closeAlert = () => {
+    setShowAlert(false);
+  }
 
   useEffect(() => {
     axios.get(`http://192.168.3.24:8000/clientinfo-api/${clientId}`, {
@@ -133,6 +136,7 @@ function ClientChart() {
 
   return (
     <div className="w-screen bg-gray-50">
+      {showAlert && <AlertSuccess message="Saved successfully" handleClose={closeAlert} />}
       <div className="bg-white p-4 shadow">
         <div className='flex justify-between mb-4 mt-4 pl-4'>
           <div className='flex flex-row space-x-12'>
@@ -158,10 +162,10 @@ function ClientChart() {
               <SocialVitalSigns clientSVSData={clientSVSData} />
             </div>
             <div>
-              <Diagnosis clientDiagnosesData={clientDiagnosesData} />
+              <Diagnosis clientDiagnosesData={clientDiagnosesData} setShowAlert={setShowAlert} />
             </div>
             <div>
-              <Medications clientMedicationData={clientMedicationData} />
+              <Medications clientMedicationData={clientMedicationData} setShowAlert={setShowAlert} />
             </div>
           </div>
 
