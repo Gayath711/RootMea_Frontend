@@ -1,41 +1,49 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import SearchBar from './SearchBar';
-import CollapseButton1 from '../image/collapse-button-1.png';
-import CollapseButton2 from '../image/collapse-button.png';
-import RootsLogo from '../image/root.png';
-import MessagePNG from '../image/message.png';
-import NotificationPNG from '../image/notification.png';
-import ProfilePNG from './images/avatar-man.png';
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import Button from "@mui/material/Button";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Logo from "./images/logo.svg";
+import MenuIcon from "./images/menuIcon.svg";
+import GroupIcon from "./images/groupIcon.svg";
+import GroupIcon2 from "./images/groupIcon2.svg";
+import SettingIcon from "./images/settingIcon.svg";
+import ProfileIcon from "./images/profileIcon.svg";
 
 const Navbar = ({ onLogout, isMinimized, toggleSidebar }) => {
   const navigate = useNavigate(); // Initialize navigate function
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [profileType, setProfileType] = useState(null);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   useEffect(() => {
     const fetchProfileType = async () => {
       try {
-        const response = await fetch('http://192.168.3.24:8000/profile-type/', {
+        const response = await fetch("http://192.168.3.24:8000/profile-type/", {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
           },
         });
         if (!response.ok) {
-          throw new Error('Failed to fetch profile type');
+          throw new Error("Failed to fetch profile type");
         }
         const data = await response.json();
-        console.log(data)
+        console.log(data);
         setProfileType(data.user_type);
-
       } catch (error) {
-        console.error('Error fetching profile type:', error);
+        console.error("Error fetching profile type:", error);
       }
     };
 
     fetchProfileType();
   }, []);
-
 
   const handleDropdownToggle = (e) => {
     e.preventDefault();
@@ -43,66 +51,64 @@ const Navbar = ({ onLogout, isMinimized, toggleSidebar }) => {
   };
 
   const logout = () => {
-    localStorage.removeItem('access_token'); // Remove access token
-    localStorage.removeItem('refresh_token');
-    localStorage.setItem('isLoggedIn', false); // Set isLoggedIn to false
+    localStorage.removeItem("access_token"); // Remove access token
+    localStorage.removeItem("refresh_token");
+    localStorage.setItem("isLoggedIn", false); // Set isLoggedIn to false
     onLogout(); // Call the onLogout function passed as a prop (if needed)
-    navigate('/'); // Redirect to the login page
+    navigate("/"); // Redirect to the login page
   };
 
   return (
-    <nav className="bg-white h-32 w-screen shadow flex items-center justify-between px-4">
-      <div className="flex items-center">
-        <div className={`flex flex-row w-[250px] place-items-center ${isMinimized ? '' : 'justify-between'} pr-3`}>
-          <img src={RootsLogo} className="w-24 h-20 ml-4" alt="Roots Logo" />
-          {/* <button onClick={toggleSidebar}>
-            {isMinimized && (<img src={CollapseButton1} className="h-5 w-5" alt="Collapse button" />)}
-            {!isMinimized && (<img src={CollapseButton2} className="h-5 w-5 mr-4" alt="Collapse button" />)}
-          </button> */}
-        </div>
-      </div>
-      <div className="flex items-center">
-
-        <div className="flex items-center justify-between border-b py-4">
-          {profileType === 'admin' && (
-            <div className="flex items-center">
-              {/* <p className="text-gray-700">User Profile Type: {profileType}</p> */}
-            </div>
-          )}
-          {profileType === 'admin12' && (
-            <div>
-              <button className="bg-green-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                <a href="http://192.168.3.24:8000/admin/">Admin</a>
-              </button>
-            </div>
-          )}
-        </div>
-
-
-        <div className='flex space-x-16'>
-          <SearchBar />
-
-          <img src={MessagePNG} className="h-8 w-8" alt="messages" />
-          <img src={NotificationPNG} className="h-8 w-8" alt="notifications" />
-
-
-          <div className="dropdown pr-2">
-            <a href="#" role="button" id="navbarDropdown" onClick={handleDropdownToggle}>
-              <img src={ProfilePNG} alt="Profile" className="h-8 w-8 rounded-full border-1 border-green-800" />
-            </a>
-            <div className={`dropdown-menu${dropdownOpen ? ' show' : ''} absolute origin-top-right right-0`} aria-labelledby="navbarDropdown">
-              <a className="dropdown-item" href="/UserProfile"><i className="fas fa-sliders-h fa-fw"></i> Account</a>
-              <a className="dropdown-item" href="#"><i className="fas fa-cog fa-fw"></i> Settings</a>
-              <div className="dropdown-divider"></div>
-              <a className="dropdown-item" href="#" onClick={logout}><i className="fas fa-sign-out-alt fa-fw"></i> Log Out</a>
-            </div>
+    <nav id="navBar" className="px-4 shadow-lg bg-white z-20 relative">
+      <div className="flex justify-between">
+        <div className="flex justify-center items-center">
+          <img src={Logo} className="size-24 py-2" alt="logo" />
+          <button className="mx-4">
+            <img src={MenuIcon} className="size-5" alt="menu" />
+          </button>
+          <div className="flex items-center mx-2 bg-[#F5F5F5] p-3 py-2 space-x-3">
+            <img src={GroupIcon} className="size-5" alt="search" />
+            <input
+              type="text"
+              placeholder="Search here"
+              className="bg-[#F5F5F5] text-sm text-[#1F4B51] p-1 font-medium w-44"
+            />
           </div>
-
-
+        </div>
+        <div className="flex justify-center items-center space-x-12 mx-5">
+          <button className="p-1 bg-[#EAECEB]">
+            <img src={GroupIcon2} className="size-4" alt="no-idea" />
+          </button>
+          <button className="p-1 bg-[#EAECEB]">
+            <img src={SettingIcon} className="size-4" alt="settings" />
+          </button>
+          <button className="p-1 bg-[#EAECEB]" onClick={handleClick}>
+            <img src={ProfileIcon} className="size-4" alt="profile" />
+          </button>
+          <Menu
+            id="demo-positioned-menu"
+            aria-labelledby="demo-positioned-button"
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+            className="mt-7"
+          >
+            <MenuItem onClick={() => navigate('/UserProfile')}>Profile</MenuItem>
+            <MenuItem onClick={handleClose}>My account</MenuItem>
+            <MenuItem onClick={logout}>Logout</MenuItem>
+          </Menu>
         </div>
       </div>
     </nav>
   );
-}
+};
 
 export default Navbar;

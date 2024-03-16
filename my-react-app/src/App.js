@@ -46,7 +46,7 @@ function App() {
   const toggleSidebar = () => {
     setIsMinimized(!isMinimized);
   };
-
+  
   return (
     <Router>
       <div className="App">

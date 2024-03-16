@@ -292,12 +292,11 @@ const Diagnosis = ({ id, setShowAlert }) => {
                     <div className="py-4 border-t border-gray-300">
                         <div className='flex flex-col px-0 mt-2 '>
                             <div className="p-4 overflow-x-auto" >
-                                <form>
-                                    <table {...getTableProps()} className="rounded-lg">
-                                        <thead>
-                                            {headerGroups.map((headerGroup) => (
-                                                <tr {...headerGroup.getHeaderGroupProps()} >
-                                                    {headerGroup.headers.map((column) => (
+                                <table {...getTableProps()} className="rounded-lg table">
+                                    <thead>
+                                        {headerGroups.map((headerGroup) => (
+                                            <tr {...headerGroup.getHeaderGroupProps()} >
+                                                {headerGroup.headers.map((column) => (
 
                                                         <th className='text-left' {...column.getHeaderProps()} style={{ padding: '20px', minWidth: column.width, backgroundColor: 'white', borderBottom: '1px solid #34703C' }}>
                                                             <div className='flex flex-row'>
@@ -349,7 +348,6 @@ const Diagnosis = ({ id, setShowAlert }) => {
                                             {showAddRow && <EditableRows />}
                                         </tbody>
                                     </table>
-                                </form>
                             </div>
                         </div >
                     </div>
