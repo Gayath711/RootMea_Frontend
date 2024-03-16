@@ -1,11 +1,11 @@
-const TextBox = ({ name, id = { name }, placeholder, width = 480, height = '7vh', isEdittable, value, handleChange }) => {
+const TextBox = ({ name, id, placeholder, width = 480, height = '7vh', isEdittable, value, handleChange, register = "" }) => {
     const bgDisabled = isEdittable ? '#F6F7F7' : ''
     const bgLabelDisabled = isEdittable ? '#F6F7F7' : 'white'
     return (
         <div className="relative">
             <input
                 name={name}
-                id={id}
+                id={id || name}
                 disabled={isEdittable}
                 style={{ height: height, background: bgDisabled }}
                 type="text"
@@ -13,6 +13,7 @@ const TextBox = ({ name, id = { name }, placeholder, width = 480, height = '7vh'
                 placeholder=" "
                 value={value}
                 onChange={handleChange}
+
             />
             <label
                 htmlFor={id}
