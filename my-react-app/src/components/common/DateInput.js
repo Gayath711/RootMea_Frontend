@@ -32,7 +32,8 @@ const DateInput = ({ name, id = { name }, placeholder, width = 340, height = '7v
     }
     return (
         <div className="relative flex-grow">
-            <DatePicker
+            <input
+                type="date"
                 name={name}
                 id={id}
                 selected={startDate}
@@ -45,13 +46,15 @@ const DateInput = ({ name, id = { name }, placeholder, width = 340, height = '7v
                 dateFormat="yyyy-MM-dd"
                 // style={{ height: `${height}` }}
                 className={`
-            px-2 border-1
+                px-2 border-1
                 border-gray-300/50
                 placeholder-gray-500 
                 placeholder-opacity-50 
                 rounded-md
                 text-md
                 z-50
+                appearance-none
+                placeholder-transparent
                 h-[7vh]
                 w-[${width}px]`
                 }
@@ -61,7 +64,7 @@ const DateInput = ({ name, id = { name }, placeholder, width = 340, height = '7v
 
             <label
                 htmlFor={id}
-                className={`absolute px-2 text-sm text-gray-500 duration-300 transform ${isFocused || value ? '-translate-y-6 scale-75 top-4' : 'translate-y-1/2 scale-100 top-1.5'} z-10 origin-[0] start-2.5 peer-focus:text-gray-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto`}
+                className={`absolute px-2 text-sm text-gray-500 duration-300 transform ${isFocused || value ? '-translate-y-6 scale-75 top-4' : 'translate-y-1/2 scale-100 top-1.5'} z-0 origin-[0] start-2.5 peer-focus:text-gray-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto`}
                 style={{ background: bgLabelDisabled }}
             >
                 {placeholder}
