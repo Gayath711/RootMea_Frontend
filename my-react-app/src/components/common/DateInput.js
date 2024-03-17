@@ -1,7 +1,9 @@
 import { useState } from "react";
 import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-// import { BsCalendar } from 'react-icons/bs';
+// import 'react-datepicker/dist/react-datepicker.css';
+import './DateInput.css'
+
+
 import { format } from 'date-fns'; // Import the format function from date-fns
 
 const DateInput = ({ name, id = { name }, placeholder, width, height = '7vh', isEdittable, value, handleChange, register }) => {
@@ -31,9 +33,8 @@ const DateInput = ({ name, id = { name }, placeholder, width, height = '7vh', is
         }
     }
     return (
-        <div className="relative flex-grow">
-            <input
-                type="date"
+        <div className="relative customDatePickerWidth">
+            <DatePicker
                 name={name}
                 id={id}
                 selected={startDate}
@@ -42,28 +43,20 @@ const DateInput = ({ name, id = { name }, placeholder, width, height = '7vh', is
                 onChange={handleChange}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
-                // style={{ minWidth: '10rem' }}
                 dateFormat="yyyy-MM-dd"
-                style={{ height: `${height}`, width: `${width}` }}
-                // style={{ width, height }}
-                className={`
+                className="
+                custom-datepicker
                 px-2 border-1
                 border-gray-300/50
                 placeholder-gray-500 
                 placeholder-opacity-50 
                 rounded-md
                 text-md
-                z-50
-                appearance-none
-                placeholder-transparent
                 h-[7vh]
-                z-50`
-                    // h-[${height}vh]
-                    // w-[${width}px]`
-                }
+                z-50
+                w-full
+                "
                 placeholderText=" "
-            // {...register(name)}
-            // style={styles["react-datepicker__month-container"]}
             />
 
             <label
