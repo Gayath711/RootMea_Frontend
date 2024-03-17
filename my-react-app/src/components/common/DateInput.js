@@ -47,19 +47,22 @@ const DateInput = ({ name, id, placeholder, width = 340, height = '7vh', isEditt
                 onChange={handleChange}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
-                style={{ width: '100%', minWidth: '10rem' }}
+                // style={{ minWidth: '10rem' }}
                 dateFormat="yyyy-MM-dd"
-                // style={{ height: `${height}` }}
+                style={{ height: `${height}`, width: `${width}` }}
+                // style={{ width, height }}
                 className={`
-            px-2 border-1
+                px-2 border-1
                 border-gray-300/50
                 placeholder-gray-500 
                 placeholder-opacity-50 
                 rounded-md
                 text-md
-                z-50
+                w-full
                 h-[7vh]
-                w-[${width}px]`
+                z-50`
+                    // h-[${height}vh]
+                    // w-[${width}px]`
                 }
                 placeholderText=" "
                 selected={value}

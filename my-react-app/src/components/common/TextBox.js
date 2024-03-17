@@ -19,7 +19,7 @@ const TextBox = ({ name, id = { name }, placeholder, width = 480, height = '7vh'
             <input
                 ref={inputRef}
                 name={name}
-                id={id}
+                id={id || name}
                 disabled={isEdittable}
                 style={{ height: height, background: bgDisabled }}
                 type="text"

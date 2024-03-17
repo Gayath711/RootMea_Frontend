@@ -22,6 +22,12 @@ import ClientProfileFull from './components/clientprofilefull';
 import Calendar from './components/calendar/calendar';
 
 
+import CreateTableComponent from './components/clientprofile/createtable';
+import CreateTableForm from './components/clientprofile/createtableform'
+import AlterTable from './components/clientprofile/altertable'
+import NewPage from './components/clientprofile/nepage'
+import BulkUploadComponent from './components/clientprofile/BulkUploadComponent'
+
 
 function App() {
   // Retrieve isLoggedIn state from localStorage on initial render
@@ -68,6 +74,12 @@ function App() {
                   <Route path="/clientprofilefull" element={<ClientProfileFull />} />
                   <Route path="/clientprofilefull/:clientId" element={<ClientProfileFull />} />
                   <Route path="/calendar" element={<Calendar />} />
+                  <Route path="/create_table" element={<CreateTableComponent />} />
+                  <Route path='/createtableform' element={<CreateTableForm />} />
+                  <Route path="/createtableform/:tableName" element={<NewPage />} />
+                  <Route path='/alterTable' element={< AlterTable />} />
+                  <Route path='/BulkUploadComponent/:tableName' element={< BulkUploadComponent />} />
+
                 </Routes>
               </div>
             </div>
