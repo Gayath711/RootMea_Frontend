@@ -2,6 +2,7 @@ import DatePicker from 'react-datepicker';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { format } from 'date-fns';
+import axios from 'axios';
 
 import ClosePNG from '../images/close.png';
 import DropDown from '../common/Dropdown';
@@ -9,7 +10,7 @@ import TextBox from '../common/TextBox';
 import DateInput from '../common/DateInput';
 import TimeInput from '../common/TimeInput';
 
-const AddAppointment = ({ toggleModal, savedEvents, setSavedEvents }) => {
+const AddAppointment = ({ toggleModal, savedEvents, setSavedEvents, fetchEvents, setShowAlert }) => {
     const options = [
         { value: '15 mins before time', label: '15 mins before time' },
         { value: 'on time', label: 'on time' },
@@ -44,8 +45,30 @@ const AddAppointment = ({ toggleModal, savedEvents, setSavedEvents }) => {
     const onSubmit = (data) => {
         reset();
         toggleModal();
-        setSavedEvents([...savedEvents, data]);
-        console.log("savedEvents", savedEvents);
+        console.log("data", data);
+        const event = {
+            "summary": data.appointement_title,
+            "start_datetime": data.date,
+            "end_datetime": data.date,
+        }
+        console.log("event", event);
+
+        // Save the new event
+        axios.post(`http://127.0.0.1:8000/create_event/`, event)
+            .then(response => {
+                // setSavedEvents(response.data.data);
+                console.log(response.data);
+
+                setShowAlert(true);
+                fetchEvents();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            })
+            .catch(error => {
+                console.error('Error fetching Client Diagnosis Data:', error);
+            });
+
+        // setSavedEvents([...savedEvents, data]);
+        // console.log("savedEvents", savedEvents);
         // window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 

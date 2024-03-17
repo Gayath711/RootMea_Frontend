@@ -1,4 +1,6 @@
-const CalendarHeader = () => {
+import dayjs from "dayjs";
+
+const CalendarHeader = ({ currentMonth }) => {
     return (
         <div className="flex flex-row bg-white justify-between items-start">
             <div className="flex flex-row p-2 space-x-5">
@@ -8,8 +10,8 @@ const CalendarHeader = () => {
                 <p className="text-xs">Year</p>
             </div>
             <div className="flex flex-row space-x-3 p-2 rounded shadow-sm w-fit">
-                <div className="text-center text-teal-600 text-xs">March</div>
-                <div className="text-center text-teal-600 text-xs">2024</div>
+                <div className="text-center text-teal-600 text-xs">{dayjs().format("MMMM")}</div>
+                <div className="text-center text-teal-600 text-xs">{dayjs().year()}</div>
             </div>
         </div>
 
