@@ -9,6 +9,27 @@ export default function Day({ day, rowIdx, savedEvents }) {
             : "pt-2 pr-2";
     }
 
+    function getTitleBackGround() {
+        const dayOfWeek = day.format("dddd");
+
+        switch (dayOfWeek) {
+            case "Sunday":
+                return "text-white bg-fuchsia-900"
+            case "Monday":
+                return "text-white bg-emerald-500"
+            case "Tuesday":
+                return "text-white bg-sky-500"
+            case "Wednesday":
+                return "text-white bg-red-500"
+            case "Thursday":
+                return "text-black bg-yellow-200"
+            case "Friday":
+                return "text-white bg-teal-500"
+            case "Saturday":
+                return "text-white bg-indigo-00"
+        }
+    }
+
     const MAX_EVENTS_DISPLAYED = 2;
     const displayedEvents = savedEvents.slice(0, MAX_EVENTS_DISPLAYED);
     const additionalEventsCount = savedEvents.length - MAX_EVENTS_DISPLAYED;
@@ -16,68 +37,36 @@ export default function Day({ day, rowIdx, savedEvents }) {
 
     // console.log("savedEvents", savedEvents)
     return (
-        // <div className="opacity-75 h-20 border border-gray-200 flex flex-col">
-        //     <div className={`flex flex-col  ${rowIdx === 0 ? 'items-center py-4' : 'items-end pt-1 pr-1'}`}>
-        //         {/* {rowIdx === 0 ? <p className="text-sm text-[#2F9384] items-center">{dayjs().format("dddd")}</p> */}
-        //         {rowIdx === 0 ? <p className="text-sm text-[#2F9384] items-center">{day}</p>
-        //             : (<p className={`text-center text-sm ${getCurrentDayClass()}`}>
-        //                 {day.format("DD")}
-
-        //             </p>)
-        //         }
-        //     </div>
-        //     <div className="text-xs">
-        //         {savedEvents.map((event, index) => {
-        //             // console.log("event", event);
-        //             if (new Date(day).toDateString() === new Date(event.start.dateTime).toDateString()) {
-        //                 return (
-        //                     <>
-        //                         <div key={index}>
-        //                             <p key={index} className="bg-[#43B09C] text-gray-100">
-        //                                 {event.summary.substring(0, 20)}
-        //                             </p>
-        //                         </div>
-        //                     </>
-        //                 );
-
-        //             } else {
-        //                 return null;
-        //             }
-        //         })}
-        //     </div>
-        // </div>
-        <div className="opacity-75 h-24 border border-gray-200 flex flex-col">
+        <div className="opacity-75 h-36 border border-gray-200 flex flex-col">
             {rowIdx === 0 ?
-                <div className="flex items-center justify-center h-20 text-sm text-[#2F9384]">
+                <div className="flex items-center justify-center h-36 text-sm text-[#2F9384]">
                     {day}
                 </div>
                 : (
                     <div className="flex justify-end">
                         <div className={`text-center text-sm ${getCurrentDayClass()}`}>
                             {day.format("DD")}
-
                         </div>
                     </div>)}
             {savedEvents.map((event, index) => {
-                // console.log("event", event);
                 if (new Date(day).toDateString() === new Date(event.start.dateTime).toDateString()) {
                     numberOfEvents++;
                     if (numberOfEvents < 3) {
                         return (
                             <>
-                                <div key={index} className="bg-[#43B09C] text-gray-100 text-xs mb-1">
-
-                                    {console.log("numberOfEvents", numberOfEvents)}
-                                    {event.summary.substring(0, 20)}
-
+                                <div className="m-2 relative">
+                                    <div className="flex flex-col space-y-8 w-full h-20 left-0 top-0 absolute bg-white rounded-sm shadow">
+                                        <div className={`w-full h-7 left-0 top-0 absolute ${getTitleBackGround()} rounded-tl-sm rounded-tr-sm p-2`}>
+                                            <div className="text-center  text-xs font-normal">{event.summary.substring(0, 15)}</div>
+                                        </div>
+                                        <div className="text-gray-800 text-xs font-normal p-2">
+                                            {new Date(event.start.dateTime).toDateString()}
+                                        </div>
+                                    </div>
                                 </div>
-                                {/* <div className="bg-[#43B09C] text-gray-100 text-xs mb-1"> */}
-                                {/* {++numberOfEvents} */}
-                                {/* </div> */}
                             </>
                         );
                     } else {
-                        // return (numberOfEvents - 3);
                         return null;
                     }
                 } else {
@@ -88,36 +77,3 @@ export default function Day({ day, rowIdx, savedEvents }) {
         </div>
     )
 };
-
-// { "appointement_title": "appointment", "client_name": "client Name", "scheduler_name": "S Name", "remainder_notification": "remainder", "comments": "comments", "date": "2024-03-27T00:00:00.000Z", "start_time": "2024-03-15T06:30:00.000Z", "end_time": "2024-03-15T07:30:00.000Z" }
-{/* <div className="border border-gray-200 flex flex-col">
-    <header className="flex flex-col items-center">
-        {rowIdx === 0 && (
-            <p className="text-sm mt-1">
-                {day.format("ddd").toUpperCase()}
-            </p>
-        )}
-        <p
-            className={`text-sm p-1 my-1 text-center  ${getCurrentDayClass()}`}
-        >
-            {day.format("DD")}
-        </p>
-    </header>
-    <div
-        className="flex-1 cursor-pointer"
-        onClick={() => {
-            setDaySelected(day);
-            setShowEventModal(true);
-        }}
-    >
-        {dayEvents.map((evt, idx) => (
-            <div
-                key={idx}
-                onClick={() => setSelectedEvent(evt)}
-                className={`bg-${evt.label}-200 p-1 mr-3 text-gray-600 text-sm rounded mb-1 truncate`}
-            >
-                {evt.title}
-            </div>
-        ))}
-    </div>
-</div> */}
