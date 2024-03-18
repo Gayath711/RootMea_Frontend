@@ -96,7 +96,7 @@ export const TablePagination = ({ gotoPage, rows, setPageSize, pageSize, pageInd
   };
 
   return (
-    <Grid container alignItems="center" justifyContent="space-between" sx={{ width: 'auto' }}>
+    <Grid className='p-2 flex-grow' container alignItems="end" justifyContent="space-between" sx={{ width: 'auto' }}>
       <Grid item>
         <Stack direction="row" spacing={1} alignItems="center">
           <Stack direction="row" spacing={1} alignItems="center">
@@ -106,16 +106,20 @@ export const TablePagination = ({ gotoPage, rows, setPageSize, pageSize, pageInd
             <FormControl sx={{ m: 1 }}>
               <Select
                 id="demo-controlled-open-select"
+                className='text-xs'
                 open={open}
                 onClose={handleClose}
                 onOpen={handleOpen}
                 value={pageSize}
                 onChange={handleChange}
                 size="small"
-                sx={{ '& .MuiSelect-select': { py: 0.75, px: 1.25 } }}
+                sx={{ '& .MuiSelect-select': { py: 0.5, px: 1, fontSize: "small" } }}
               >
+                {pageSize > 0 && pageSize < 5 && <MenuItem value={pageSize}>{pageSize}</MenuItem>}
                 <MenuItem value={5}>5</MenuItem>
+                {pageSize > 5 && pageSize < 10 && <MenuItem value={pageSize}>{pageSize}</MenuItem>}
                 <MenuItem value={10}>10</MenuItem>
+                {pageSize > 10 && pageSize < 25 && <MenuItem value={pageSize}>{pageSize}</MenuItem>}
                 <MenuItem value={25}>25</MenuItem>
                 <MenuItem value={50}>50</MenuItem>
                 <MenuItem value={100}>100</MenuItem>
@@ -133,7 +137,7 @@ export const TablePagination = ({ gotoPage, rows, setPageSize, pageSize, pageInd
               const page = e.target.value ? Number(e.target.value) : 0;
               gotoPage(page - 1);
             }}
-            sx={{ '& .MuiOutlinedInput-input': { py: 0.75, px: 1.25, width: 36 } }}
+            sx={{ '& .MuiOutlinedInput-input': { py: 0.5, px: 1, width: 30, fontSize: "small" } }}
           />
         </Stack>
       </Grid>
@@ -143,6 +147,7 @@ export const TablePagination = ({ gotoPage, rows, setPageSize, pageSize, pageInd
           page={pageIndex + 1}
           onChange={handleChangePagination}
           color="primary"
+          size='small'
           variant="combined"
           showFirstButton
           showLastButton

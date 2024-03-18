@@ -56,6 +56,7 @@ function Encounters() {
       {
         Header: "Date",
         accessor: "date",
+        align: "left",
       },
       {
         Header: "Time",
@@ -63,6 +64,7 @@ function Encounters() {
       },
       {
         Header: "Client",
+        align: "left",
         accessor: "client",
       },
       {
@@ -129,7 +131,7 @@ function Encounters() {
         </div>
       </div>
       <hr className="w-[98%] mx-auto my-2" />
-      <div className="w-[96%] mx-auto my-3 overflow-auto">
+      <div className="w-full flex-grow flex flex-col">
         <BasicTable type={"encounters"} columns={columns} data={data} />
       </div>
     </div>

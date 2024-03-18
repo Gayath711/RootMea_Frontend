@@ -25,8 +25,7 @@ import {
 } from "react-table";
 
 // project import
-import { CSVExport, TablePagination } from './ReactTable';
-
+import { CSVExport, TablePagination } from "./ReactTable";
 
 const styles = {
   myPanel: {
@@ -71,7 +70,7 @@ const styles = {
   },
   appointmentCalendar: {
     header: {
-      classes: "bg-[#FFEDE2] border border-[#FFEDE2] text-white",
+      classes: "bg-[#FFEDE2] border border-[#FFEDE2]",
       styles: {
         color: "#CB6A69",
       },
@@ -79,9 +78,118 @@ const styles = {
   },
   encounters: {
     header: {
-      classes: "bg-[#C7CED4] border border-[#C7CED4] text-white",
+      classes: "bg-[#C7CED4] border border-[#C7CED4]",
       styles: {
         color: "#313B44",
+      },
+    },
+  },
+  socialVitalSigns: {
+    // client chart page
+    header: {
+      classes: "bg-[#89D6DE] border border-[#89D6DE]",
+      styles: {
+        color: "white",
+      },
+    },
+  },
+  encounterNotes: {
+    // client chart page
+    header: {
+      classes: "bg-[#5BC4BF] border border-[#5BC4BF]",
+      styles: {
+        color: "white",
+      },
+    },
+  },
+  priorityLists: {
+    // client chart page
+    header: {
+      classes: "bg-[#76818E] border border-[#76818E]",
+      styles: {
+        color: "white",
+      },
+    },
+  },
+  medicalVitalSigns: {
+    // client chart page
+    header: {
+      classes: "bg-[#89D6DE80] border border-[#89D6DE80]",
+      styles: {
+        color: "#1A1F25",
+      },
+    },
+  },
+  carePlan: {
+    // client chart page
+    header: {
+      classes: "bg-[#FFF2E9] border border-[#FFF2E9]",
+      styles: {
+        color: "#1A1F25",
+      },
+    },
+  },
+  documents: {
+    // client chart page
+    header: {
+      classes: "bg-[#8AD0F5] border border-[#8AD0F5]",
+      styles: {
+        color: "#1A1F25",
+      },
+    },
+  },
+  forms: {
+    // client chart page
+    header: {
+      classes: "bg-[#FFF6C4] border border-[#FFF6C4]",
+      styles: {
+        color: "#1A1F25",
+      },
+    },
+  },
+  appointments: {
+    // client chart page
+    header: {
+      classes: "bg-[#78C3B8] border border-[#78C3B8]",
+      styles: {
+        color: "#1A1F25",
+      },
+    },
+  },
+  referrals: {
+    // client chart page
+    header: {
+      classes: "bg-[#FFD9EB] border border-[#FFD9EB]",
+      styles: {
+        color: "#1A1F25",
+      },
+    },
+  },
+  diagnoses: {
+    // client chart page
+    header: {
+      classes: "bg-[#D9F1FF] border border-[#D9F1FF]",
+      styles: {
+        color: "#1A1F25",
+      },
+    },
+  },
+  medications: {
+    // client chart page
+    header: {
+      classes: "bg-[#E4C3B1] border border-[#E4C3B1]",
+      styles: {
+        color: "white",
+      },
+    },
+  },
+  labResults: {
+    // client chart page
+    header: {
+      classes: "",
+      styles: {
+        background:
+          "linear-gradient(90deg, #2F9384 0%, #5BC4BF 52.4%, #43B09C 100%)",
       },
     },
   },
@@ -89,7 +197,7 @@ const styles = {
 
 // ==============================|| REACT TABLE ||============================== //
 
-function ReactTable({ columns, data, striped, type, top }) {
+function ReactTable({ columns, data, striped, type, top, defaultPageSize }) {
   const {
     getTableProps,
     getTableBodyProps,
@@ -104,19 +212,92 @@ function ReactTable({ columns, data, striped, type, top }) {
     {
       columns,
       data,
-      initialState: { pageIndex: 0, pageSize: 10 },
+      initialState: { pageIndex: 0, pageSize: defaultPageSize || 5 },
     },
     useFilters,
     usePagination
   );
 
-  console.log(type);
-
   return (
-    // <div style={{ overflowX: 'auto', minWidth: '700px' }}>
-    <Stack>
+    <Stack className="flex-grow flex flex-col m-3">
       {top && (
         <Box sx={{ p: 2 }}>
+          <TablePagination
+            gotoPage={gotoPage}
+            rows={page}
+            setPageSize={setPageSize}
+            pageIndex={pageIndex}
+            pageSize={pageSize}
+          />
+        </Box>
+      )}
+      <div className="overflow-x-auto flex-grow-0">
+        <Table style={{ fontSize: "10px !important" }} {...getTableProps()}>
+          <TableHead>
+            {headerGroups.map((headerGroup) => (
+              <TableRow
+                className={`${styles[type].header.classes}`}
+                style={{ ...styles[type].header.styles }}
+                {...headerGroup.getHeaderGroupProps()}
+              >
+                {headerGroup.headers.map((column) => (
+                  <TableCell
+                    style={{
+                      paddingTop: "8px",
+                      paddingBottom: "8px",
+                      fontWeight: "600",
+                      textAlign: column.align || "center",
+                      fontSize: column.fontSize || 13,
+                      whiteSpace: "nowrap",
+                      color: "inherit",
+                    }}
+                    {...column.getHeaderProps([
+                      { className: column.className },
+                    ])}
+                  >
+                    {column.render("Header")}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableHead>
+          <TableBody
+            style={{ border: "1px solid #EAECEB", borderRadius: "16px" }}
+            {...getTableBodyProps()}
+            {...(striped && { className: "striped" })}
+          >
+            {page.map((row, i) => {
+              prepareRow(row);
+              return (
+                <TableRow
+                  style={{ borderColor: "#EAECEB" }}
+                  {...row.getRowProps()}
+                >
+                  {row.cells.map((cell) => (
+                    <TableCell
+                      style={{
+                        paddingTop: "8px",
+                        paddingBottom: "8px",
+                        textAlign: cell.column.align || "center",
+                        fontSize: cell.column.fontSize || 13,
+                        whiteSpace: "nowrap",
+                      }}
+                      {...cell.getCellProps([
+                        { className: cell.column.className },
+                      ])}
+                    >
+                      {cell.render("Cell")}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </div>
+      {!top && (
+        // <TableRow>
+        //   <TableCell sx={{ p: 2 }} colSpan={columns.length}>
           <TablePagination
             gotoPage={gotoPage}
             rows={rows}
@@ -124,86 +305,23 @@ function ReactTable({ columns, data, striped, type, top }) {
             pageIndex={pageIndex}
             pageSize={pageSize}
           />
-        </Box>
+        //   </TableCell>
+        // </TableRow>
       )}
-
-      <Table style={{ fontSize: "10px !important" }} {...getTableProps()}>
-        <TableHead>
-          {headerGroups.map((headerGroup) => (
-            <TableRow
-              className={`${styles[type].header.classes}`}
-              {...headerGroup.getHeaderGroupProps()}
-            >
-              {headerGroup.headers.map((column) => (
-                <TableCell
-                  className="text-center"
-                  style={{
-                    ...styles[type].header.styles,
-                    paddingTop: "8px",
-                    paddingBottom: "8px",
-                    fontWeight: "600",
-                    fontSize: 13,
-                    textAlign: "center",
-                  }}
-                  {...column.getHeaderProps([{ className: column.className }])}
-                >
-                  {column.render("Header")}
-                </TableCell>
-              ))}
-            </TableRow>
-          ))}
-        </TableHead>
-        <TableBody
-          style={{ border: "1px solid #EAECEB", borderRadius: "16px" }}
-          {...getTableBodyProps()}
-          {...(striped && { className: "striped" })}
-        >
-          {rows.map((row, i) => {
-            prepareRow(row);
-            return (
-              <TableRow
-                style={{ borderColor: "#EAECEB" }}
-                {...row.getRowProps()}
-              >
-                {row.cells.map((cell) => (
-                  <TableCell
-                    style={{
-                      paddingTop: "8px",
-                      paddingBottom: "8px",
-                      textAlign: "center",
-                    }}
-                    {...cell.getCellProps([
-                      { className: cell.column.className },
-                    ])}
-                  >
-                    {cell.render("Cell")}
-                  </TableCell>
-                ))}
-              </TableRow>
-            );
-          })}
-          {!top && (
-            <TableRow>
-              <TableCell sx={{ p: 2 }} colSpan={columns.length}>
-                <TablePagination
-                  gotoPage={gotoPage}
-                  rows={rows}
-                  setPageSize={setPageSize}
-                  pageIndex={pageIndex}
-                  pageSize={pageSize}
-                />
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
     </Stack>
   );
 }
 
 // ==============================|| REACT TABLE - BASIC ||============================== //
 
-const BasicTable = ({ data, striped, title, columns, type }) => {
+const BasicTable = ({
+  data,
+  striped,
+  title,
+  columns,
+  type,
+  defaultPageSize,
+}) => {
   // const columns = useMemo(
   //   () => [
   //     {
@@ -261,6 +379,7 @@ const BasicTable = ({ data, striped, title, columns, type }) => {
       columns={columns}
       data={data}
       striped={striped}
+      defaultPageSize={defaultPageSize}
     />
     // </MainCard>
   );

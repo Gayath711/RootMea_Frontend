@@ -2,6 +2,7 @@
 
 body {
   font-family: "Poppins", sans-serif !important;
+  background-color: #F9F9F9;
 }
 
 .App {
@@ -55,7 +56,25 @@ body {
   top: 0 !important;
 }
 
-body {
-  min-width: 100%;
-  max-width: 100%;
+
+/* width */
+::-webkit-scrollbar {
+  height: 5px;
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #D9D9D9; /* Light gray */
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #bbb; /* Gray */
+  border-radius: 16px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #aaa; /* Dark gray */
 }

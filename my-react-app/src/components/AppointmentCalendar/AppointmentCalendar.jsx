@@ -46,6 +46,7 @@ function AppointmentCalendar() {
       {
         Header: "Time",
         accessor: "time",
+        align: "left",
       },
       {
         Header: "Client Topic",
@@ -98,7 +99,7 @@ function AppointmentCalendar() {
         </div>
       </div>
       <hr className="w-[98%] mx-auto my-2" />
-      <div className="w-[96%] mx-auto my-3 overflow-x-auto">
+      <div className="w-full flex-grow flex flex-col">
         <BasicTable type={'appointmentCalendar'} columns={columns} data={data} />
       </div>
     </div>

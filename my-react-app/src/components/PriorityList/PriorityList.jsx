@@ -31,7 +31,7 @@ function PriorityList() {
         }
       );
 
-      setData(response.data.slice(0,6));
+      setData(response.data);
       console.log(data);
     } catch (error) {
       console.error("Error fetching Client Data:", error);
@@ -43,6 +43,7 @@ function PriorityList() {
       {
         Header: "Program",
         accessor: "program_name",
+        align: "left",
       },
       {
         Header: "List Name",
@@ -65,7 +66,7 @@ function PriorityList() {
   );
 
   return (
-    <div className="bg-white rounded-md shadow-md flex flex-col xl:w-[49%] min-[320px]:w-full ">
+    <div className="bg-white rounded-md shadow-md flex flex-col xl:w-[49%] min-[320px]:w-full">
       <div className="flex justify-between items-center mx-4 mt-2">
         <div className="flex items-center space-x-4">
           <span className="text-lg font-medium">Priority Lists</span>
@@ -76,7 +77,7 @@ function PriorityList() {
         </button>
       </div>
       <hr className="w-[98%] mx-auto my-2" />
-      <div className="w-[96%] mx-auto my-3 overflow-x-auto">
+      <div className="w-full flex-grow flex flex-col">
         <BasicTable type={"priorityList"} columns={columns} data={data} />
       </div>
     </div>

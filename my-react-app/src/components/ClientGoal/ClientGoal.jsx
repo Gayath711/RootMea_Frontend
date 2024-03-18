@@ -33,7 +33,7 @@ function ClientGoal() {
         }
       );
 
-      setData(response.data.slice(0,6));
+      setData(response.data);
       console.log(data);
     } catch (error) {
       console.error("Error fetching Client Data:", error);
@@ -45,6 +45,7 @@ function ClientGoal() {
       {
         Header: "Client",
         accessor: "first_name",
+        align: "left",
         Cell: ({ row }) =>
           `${row.original.first_name}, ${row.original.last_name}`,
       },
@@ -118,7 +119,7 @@ function ClientGoal() {
         </div>
       </div>
       <hr className="w-[98%] mx-auto my-2" />
-      <div className="w-[96%] mx-auto my-3 overflow-x-auto"  >
+      <div className="w-full flex-grow flex flex-col">
         <BasicTable type={"clientGoal"} columns={columns} data={data} />
       </div>
     </div>

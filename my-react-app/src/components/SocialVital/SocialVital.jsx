@@ -38,7 +38,7 @@ const SocialVital = () => {
 
   const size = {
     width: 360,
-    height: width > 1280 ? 95: 150,
+    height: width > 1280 ? 100: 150,
   };
   
   return (
@@ -64,7 +64,7 @@ const SocialVital = () => {
           <PieCenterLabel>100%</PieCenterLabel>
         </PieChart>
       </div>
-      <div className="flex justify-around items-center mx-6 my-3">
+      <div className="flex justify-around items-center m-3">
         <div className="flex items-center">
           <img src={LineUpTeal} className="size-4 mx-1" alt="lineup" />
           <div className="text-xs">
@@ -72,7 +72,7 @@ const SocialVital = () => {
           </div>
           <img src={CautionIcon} className="size-5 mx-2" alt="client" />
         </div>
-            <button className="px-3 text-white py-1 font-medium text-sm bg-[#7397B5] rounded-sm">View Details</button>
+            <button className="px-4 text-white py-1.5 font-medium text-sm bg-[#7397B5] rounded-sm">View Details</button>
       </div>
     </div>
   );

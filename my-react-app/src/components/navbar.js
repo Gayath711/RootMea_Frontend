@@ -59,7 +59,7 @@ const Navbar = ({ onLogout, isMinimized, toggleSidebar }) => {
   };
 
   return (
-    <nav id="navBar" className="px-4 shadow-lg bg-white z-20 relative">
+    <nav id="navBar" className="px-4 shadow-lg bg-white z-20 relative w-full">
       <div className="flex justify-between">
         <div className="flex justify-center items-center">
           <img src={Logo} className="size-24 py-2" alt="logo" />

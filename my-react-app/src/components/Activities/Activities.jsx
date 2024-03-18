@@ -30,7 +30,8 @@ function Activities() {
         </button>
       </div>
       <hr className="w-11/12 mx-auto my-2" />
-      <div className="flex flex-col justify-between space-y-2 mx-3 my-8">
+      <div className="flex flex-col justify-between gap-y-6 mx-3 my-8">
+        <ActivityItem />
         <ActivityItem />
         <ActivityItem />
         <ActivityItem />

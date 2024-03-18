@@ -6,6 +6,9 @@ import ExternalLinkIcon from "../images/externalLink.svg";
 import BasicTable from "../react-table/BasicTable";
 // import ClientProfileImg from "../images/clientProfile.svg";
 import ClientChartImg from "../images/clientChart.svg";
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchClientsInfoAsync } from "../../store/slices/clientsInfoSlice";
 
 function getRandomDate(dates) {
   const randomIndex = Math.floor(Math.random() * dates.length);
@@ -33,49 +36,58 @@ function MyPanel() {
     "2024-03-24",
   ];
 
-  const [data, setData] = useState([]);
+  // const [data, setData] = useState([]);
+  const data = useSelector((state) => state.clientsInfo.data);
+  const dataLoading = useSelector((state) => state.clientsInfo.loading);
+  const dispatch = useDispatch()
+  // const [searchQuery, setSearchQuery] = useState("");
 
-  const [searchQuery, setSearchQuery] = useState("");
+  // useEffect(() => {
+  //   fetchData();
+  // }, [searchQuery]);
 
   useEffect(() => {
-    fetchData();
-  }, [searchQuery]);
-
-  const fetchData = async () => {
-    const token = localStorage.getItem("access_token");
-
-    if (!token) {
-      return;
+    if (!dataLoading) {
+      dispatch(fetchClientsInfoAsync())
     }
+  }, [])
 
-    try {
-      const response = await axios.get(
-        `http://192.168.3.24:8000/clientinfo-api?search=${searchQuery}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+  // const fetchData = async () => {
+  //   const token = localStorage.getItem("access_token");
 
-      const processedData = response.data.slice(0,6).map((client) => ({
-        date_assigned: getRandomDate(dates),
-        program: getRandomProgram(programs),
-        ...client,
-      }));
+  //   if (!token) {
+  //     return;
+  //   }
 
-      setData(processedData);
-      console.log(data);
-    } catch (error) {
-      console.error("Error fetching Client Data:", error);
-    }
-  };
+  //   try {
+  //     const response = await axios.get(
+  //       `http://192.168.3.24:8000/clientinfo-api?search=${searchQuery}`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+
+  //     const processedData = response.data.slice(0, 6).map((client) => ({
+  //       date_assigned: getRandomDate(dates),
+  //       program: getRandomProgram(programs),
+  //       ...client,
+  //     }));
+
+  //     setData(processedData);
+  //     console.log(data);
+  //   } catch (error) {
+  //     console.error("Error fetching Client Data:", error);
+  //   }
+  // };
 
   const columns = useMemo(
     () => [
       {
         Header: "Client",
         accessor: "first_name",
+        align: "left",
         Cell: ({ row }) =>
           `${row.original.first_name}, ${row.original.last_name}`,
       },
@@ -102,16 +114,20 @@ function MyPanel() {
       {
         Header: "Client Profile",
         Cell: ({ row }) => (
-          <Avatar className="mx-auto" sx={{ bgcolor: "#77ceca"}}>
-            {row.original?.first_name[0].toUpperCase() +
-              row.original?.last_name[0].toUpperCase()}
-          </Avatar>
+          <Link to={`/clientprofile/${row.original.id}`}>
+            <Avatar className="mx-auto" sx={{ bgcolor: "#77ceca", height: 25, width: 25, fontSize: 10 }}>
+              {row.original?.first_name[0].toUpperCase() +
+                row.original?.last_name[0].toUpperCase()}
+            </Avatar>
+          </Link>
         ),
       },
       {
         Header: "Client Chart",
-        Cell: () => (
+        Cell: ({row}) => (
+          <Link to={`/clientchart/${row.original.id}`}>
           <img src={ClientChartImg} className="size-6 mx-auto" alt="client" />
+          </Link>
         ),
       },
     ],
@@ -126,14 +142,14 @@ function MyPanel() {
           <img src={ExternalLinkIcon} className="size-4" alt="link" />
         </div>
         <div>
-          <button className="px-3 py-1 border-2 rounded-sm border-[#2F9384] text-[#2F9384]">
+          <button className="px-3 py-1 border-2 rounded-sm border-[#2F9384] text-xs text-[#2F9384]">
             View all
           </button>
         </div>
       </div>
       <hr className="w-[98%] mx-auto my-2" />
-      <div className="w-[96%] mx-auto my-3 overflow-x-auto">
-        <BasicTable type={'myPanel'} columns={columns} data={data} />
+      <div className="w-full flex-grow flex flex-col">
+        <BasicTable type={"myPanel"} columns={columns} data={data} />
       </div>
     </div>
   );
