@@ -16,6 +16,7 @@ import DiagnosisTable from "./components/diagnosisTable";
 import EncounterNote from "./components/encounternote";
 import ClientProfileFull from "./components/clientprofilefull";
 import SideBar from "./components/SideBar/SideBar";
+import CalendarMain from "./components/calendar/CalendarMain";
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from "./store/slices/authSlice";
 import "./App.css";
@@ -105,6 +106,7 @@ function App() {
                       <UserProfile onLogout={() => setIsLoggedIn(false)} />
                     }
                   /> */}
+                  <Route path="/calendar" element={<CalendarMain />} />
                   <Route path="/encounter_note" element={<EncounterNote />} />
                   <Route
                     path="/clientprofilefull"
