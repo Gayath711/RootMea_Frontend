@@ -19,15 +19,15 @@ import EncounterNote from './components/encounternote';
 import ClientProfileFull from './components/clientprofilefull';
 import './tailwind.css'
 
-import CreateTableComponent from './components/clientprofile/createtable';
-import CreateTableForm from './components/clientprofile/createtableform'
-import AlterTable from './components/clientprofile/altertable'
-import NewPage from './components/clientprofile/nepage'
-import BulkUploadComponent from './components/clientprofile/BulkUploadComponent'
-
+import CreateTableComponent from './components/dynamicform/createtable';
+import CreateTableForm from './components/dynamicform/createtableform'
+import AlterTable from './components/dynamicform/altertable'
+import NewPage from './components/dynamicform/nepage'
+import BulkUploadComponent from './components/dynamicform/BulkUploadComponent'
+import RectangleComponent from './components/dynamicform/create'
 
 function App() {
-  // Retrieve isLoggedIn state from localStorage on initial render
+ 
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem('isLoggedIn') === 'true'
   );
@@ -76,6 +76,7 @@ function App() {
                   <Route path="/createtableform/:tableName" element={<NewPage />} />
                   <Route path='/alterTable'  element={< AlterTable />} />
                   <Route path='/BulkUploadComponent/:tableName'  element={< BulkUploadComponent />} />
+                  <Route path='/RectangleComponent'  element={< RectangleComponent />} />
 
                 </Routes>
               </div>
