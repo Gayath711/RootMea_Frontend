@@ -90,7 +90,7 @@ const SocialVitalSigns = ({ id }) => {
 
                         <div className='flex flex-col px-0 mt-2'>
                             <div className="rounded-lg p-4" >
-                                <table {...getTableProps()} className="">
+                                <table {...getTableProps()} className="table">
                                     <thead>
                                         {headerGroups.map((headerGroup) => (
                                             <tr {...headerGroup.getHeaderGroupProps()} >

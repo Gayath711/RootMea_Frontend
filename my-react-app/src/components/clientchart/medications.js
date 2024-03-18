@@ -300,14 +300,12 @@ const Medications = ({ id, setShowAlert }) => {
                 isOpen && (
                     <div className="py-4 border-t border-gray-300">
                         <div className='flex flex-col px-0 mt-2'>
-                            <div className="rounded-lg p-4 overflow-x-auto" >
-                                
-                                    <table {...getTableProps()} className="">
-                                        <thead>
-                                            {headerGroups.map((headerGroup) => (
-                                                <tr {...headerGroup.getHeaderGroupProps()} >
-                                                    {headerGroup.headers.map((column) => (
-
+                            <div className="rounded-lg p-4" >
+                                <table {...getTableProps()} className=" table">
+                                    <thead>
+                                        {headerGroups.map((headerGroup) => (
+                                            <tr {...headerGroup.getHeaderGroupProps()} >
+                                                {headerGroup.headers.map((column) => (
                                                         <th className='text-left' {...column.getHeaderProps()} style={{ padding: '20px', minWidth: column.width, backgroundColor: 'white', borderBottom: '1px solid #34703C' }}>
                                                             <div className='flex flex-row'>
                                                                 <div>
@@ -356,8 +354,7 @@ const Medications = ({ id, setShowAlert }) => {
                                             })}
                                             {showAddRow && <EditableRows />}
                                         </tbody>
-                                    </table>
-                                
+                                    </table>                               
                             </div>
                         </div >
                     </div>

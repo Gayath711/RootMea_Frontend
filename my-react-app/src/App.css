@@ -1,7 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
 body {
   font-family: "Poppins", sans-serif !important;
+  background-color: #F9F9F9;
 }
 
 .App {
@@ -41,4 +42,39 @@ body {
   to {
     transform: rotate(360deg);
   }
+}
+
+#navBar {
+  position: sticky;
+  top: 0;
+  width: 100vw;
+}
+
+#sideBar {
+  position: sticky !important;
+  left: 0 !important;
+  top: 0 !important;
+}
+
+
+/* width */
+::-webkit-scrollbar {
+  height: 5px;
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #D9D9D9; /* Light gray */
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #bbb; /* Gray */
+  border-radius: 16px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #aaa; /* Dark gray */
 }
