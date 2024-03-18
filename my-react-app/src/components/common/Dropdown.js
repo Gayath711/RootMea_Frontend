@@ -13,6 +13,14 @@ const DropDown = ({ name, id = { name }, placeholder, height = '7vh', isEdittabl
     const handleBlur = () => {
         setIsFocused(false);
     };
+
+    const [selectedOption, setSelectedOption] = useState('');
+
+    const handleChange1 = (event) => {
+        alert(event.target);
+        setSelectedOption(event.target.value);
+    };
+
     return (
         <div className="relative">
             <Select
@@ -20,10 +28,10 @@ const DropDown = ({ name, id = { name }, placeholder, height = '7vh', isEdittabl
                 id={id}
                 options={options}
                 placeholder=""
-                value={value}
+                value={selectedOption}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
-                onChange={handleChange}
+                onChange={handleChange1}
                 isDisabled={isEdittable}
                 styles={{
                     control: (styles) => ({

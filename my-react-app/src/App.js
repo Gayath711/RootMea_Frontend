@@ -43,8 +43,9 @@ function App() {
   // };
 
   const isLoggedIn = useSelector(state => {
-      console.log(state);
-    return state.auth.isLoggedIn});
+    console.log(state);
+    return state.auth.isLoggedIn
+  });
   const dispatch = useDispatch();
 
   // useEffect(() => {
