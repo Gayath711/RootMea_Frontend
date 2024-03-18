@@ -23,6 +23,14 @@ import "./tailwind.css";
 import ClientProfileInputForm from './components/DemoPages/ClientProfielInputForm';
 
 
+import CreateTableComponent from './components/dynamicform/createtable';
+import CreateTableForm from './components/dynamicform/createtableform'
+import AlterTable from './components/dynamicform/altertable'
+import NewPage from './components/dynamicform/nepage'
+import BulkUploadComponent from './components/dynamicform/BulkUploadComponent'
+
+
+
 
 function App() {
   // Retrieve isLoggedIn state from localStorage on initial render
@@ -108,6 +116,15 @@ function App() {
                   <Route path="/clientprofilefull" element={<ClientProfileFull />} />
                   <Route path="/clientprofilefull/:clientId" element={<ClientProfileFull />} />
                   <Route path="/clientprofileform" element={<ClientProfileInputForm />} />
+
+
+             
+                  <Route path="/create_table" element={<CreateTableComponent />} />
+                  <Route path='/createtableform' element={<CreateTableForm />} />
+                  <Route path="/createtableform/:tableName" element={<NewPage />} />
+                  <Route path='/alterTable'  element={< AlterTable />} />
+                  <Route path='/BulkUploadComponent/:tableName'  element={< BulkUploadComponent />} />
+         
                 </Routes>
               </div>
             </div>
