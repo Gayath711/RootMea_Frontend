@@ -54,7 +54,7 @@ const AddAppointment = ({ toggleModal, savedEvents, setSavedEvents, fetchEvents,
         console.log("event", event);
 
         // Save the new event
-        axios.post(`http://127.0.0.1:8000/create_event/`, event)
+        axios.post(`http://192.168.3.24:8000/create_event/`, event)
             .then(response => {
                 // setSavedEvents(response.data.data);
                 console.log(response.data);

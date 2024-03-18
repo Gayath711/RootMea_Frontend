@@ -31,7 +31,7 @@ const Calendar = () => {
     const [savedEvents, setSavedEvents] = useState([]);
 
     function fetchEvents() {
-        axios.get(`http://127.0.0.1:8000/rest/v1/calendar/events/`)
+        axios.get(`http://192.168.3.24:8000/rest/v1/calendar/events/`)
             .then(response => {
                 setSavedEvents(response.data.data);
                 console.log(response.data.data);
