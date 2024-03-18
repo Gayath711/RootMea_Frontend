@@ -18,12 +18,10 @@ const DateInput = ({ name, id = { name }, placeholder, width, height = '7vh', is
         // Perform any additional actions with the selected date if needed
         handleChange(formattedDate);
     };
-
     const [isFocused, setIsFocused] = useState(false);
     const handleFocus = () => {
         setIsFocused(true);
     };
-
     const handleBlur = () => {
         setIsFocused(false);
     };
@@ -40,7 +38,7 @@ const DateInput = ({ name, id = { name }, placeholder, width, height = '7vh', is
                 selected={startDate}
                 disabled={isEdittable}
                 value={value}
-                onChange={handleChange}
+                onChange={handleDateChange}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
                 dateFormat="yyyy-MM-dd"
@@ -69,5 +67,4 @@ const DateInput = ({ name, id = { name }, placeholder, width, height = '7vh', is
         </div>
     );
 }
-
 export default DateInput;

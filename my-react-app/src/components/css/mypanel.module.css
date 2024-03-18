@@ -1,21 +1,21 @@
-td {
+.table td {
     padding-left: 25px;
     border-top: 1px solid #d9d9d9;
     text-align: left;
     font-weight: 400;
 }
 
-table {
+.table {
     font-family: 'Poppins', sans-serif;
     border-collapse: collapse;
     width: 100%;
-    border-color: #0F7235!important;
-    border-radius: 5px !important;
+    border-color: #0F7235 !important;
+    border-radius: 5px;
     border: 1px solid ;
     font-style: normal;
 }
 
-th {
+.table th {
     padding-left: 25px;
     text-align: left;
     min-width: 150px;
