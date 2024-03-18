@@ -26,7 +26,7 @@ export default function Day({ day, rowIdx, savedEvents }) {
             case "Friday":
                 return "text-white bg-teal-500"
             case "Saturday":
-                return "text-white bg-indigo-00"
+                return "text-white bg-indigo-500"
         }
     }
 
