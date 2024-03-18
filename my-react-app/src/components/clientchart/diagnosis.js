@@ -297,7 +297,6 @@ const Diagnosis = ({ id, setShowAlert }) => {
                                         {headerGroups.map((headerGroup) => (
                                             <tr {...headerGroup.getHeaderGroupProps()} >
                                                 {headerGroup.headers.map((column) => (
-
                                                         <th className='text-left' {...column.getHeaderProps()} style={{ padding: '20px', minWidth: column.width, backgroundColor: 'white', borderBottom: '1px solid #34703C' }}>
                                                             <div className='flex flex-row'>
                                                                 <div>
