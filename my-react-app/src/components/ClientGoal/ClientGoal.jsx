@@ -87,7 +87,7 @@ function ClientGoal() {
     <div className="xl:w-full bg-white rounded-md shadow-md flex flex-col min-[320px]:w-full ">
       <div className="flex justify-between items-center mx-4 mt-2">
         <div className="flex items-center space-x-4">
-          <span className="text-lg font-medium">Client Goal</span>
+          <span className="text-xl font-medium">Client Goal</span>
           <img src={ExternalLinkIcon} className="size-4" alt="link" />
         </div>
         <div className="flex items-center space-x-4 text-xs">

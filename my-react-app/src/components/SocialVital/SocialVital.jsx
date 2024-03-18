@@ -42,12 +42,12 @@ const SocialVital = () => {
   };
   
   return (
-    <div className="bg-white w-full rounded-md shadow-md min-[320px]:h-full;">
+    <div className="bg-white w-full rounded-md shadow-md min-[320px]:h-full pb-2.5">
       <div className="flex justify-between items-center px-4 my-2">
-        <div className="text-lg font-medium">Social Vital Signs</div>
-        <button className="flex justify-center items-center space-x-2 border border-[#2F9384] px-2 py-0.5 rounded-sm">
-          <span className="text-[#2F9384] text-sm ">Year</span>
-          <ExpandMoreIcon className="text-[#2F9384]" />
+        <div className="text-xl font-medium">Social Vital Signs</div>
+        <button className="flex justify-center items-center space-x-1 border-1 border-[#2F9384] px-2 py-0.5 rounded-sm">
+          <span className="text-[#2F9384] text-xs">Year</span>
+          <ExpandMoreIcon className="text-[#2F9384] size-2" />
         </button>
       </div>
       <hr className="w-11/12 mx-auto my-2" />
@@ -64,7 +64,7 @@ const SocialVital = () => {
           <PieCenterLabel>100%</PieCenterLabel>
         </PieChart>
       </div>
-      <div className="flex justify-around items-center m-3">
+      <div className="flex justify-between items-center m-3 px-2">
         <div className="flex items-center">
           <img src={LineUpTeal} className="size-4 mx-1" alt="lineup" />
           <div className="text-xs">
@@ -72,7 +72,7 @@ const SocialVital = () => {
           </div>
           <img src={CautionIcon} className="size-5 mx-2" alt="client" />
         </div>
-            <button className="px-4 text-white py-1.5 font-medium text-sm bg-[#7397B5] rounded-sm">View Details</button>
+            <button className="px-3 text-white py-2 font-medium text-xs bg-[#7397B5] rounded-sm">View Details</button>
       </div>
     </div>
   );

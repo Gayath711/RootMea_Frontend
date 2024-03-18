@@ -6,16 +6,16 @@ import ProgramIcon from "../images/programIcon.svg"
 const TopStats =() => {
     return (
         <div className="bg-white rounded-md shadow-md w-[38%]">
-            <div className="flex justify-around text-lg font-medium my-2 text-center">
+            <div className="flex justify-around text-xl font-medium my-2 text-center">
                 <div>Total Clients</div>
                 <div>Total Program</div>
             </div>
             <hr className="w-11/12 mx-auto my-2" />
-            <div className="flex justify-around text-3xl font-semibold my-8">
+            <div className="flex justify-around text-[38px] font-semibold my-8">
                 <div className="mx-auto my-auto p-3 rounded-md bg-[#D9F0EF] text-[#43B09C]"><span>270</span></div>
                 <div className="mx-auto my-auto p-3 rounded-md bg-[#E6EAED] text-[#1F4B51]"><span>378</span></div>
             </div>
-            <div className="flex justify-around items-center">
+            <div className="flex justify-around items-center pt-2">
                 <div className="flex items-center">
                     <img src={LineUpTeal} className="size-4 mx-1" alt="lineup" />
                     <div className="text-xs"><span className="text-[#43B09C]">28%</span> vs Last Year</div>

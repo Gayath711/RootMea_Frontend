@@ -22,7 +22,7 @@ function ClientChartTopBar({clientId}) {
   return (
     <div className="w-full bg-white border border-white shadow-sm rounded-md flex justify-between items-center p-3">
       <div className="flex space-x-6 items-center">
-        <div className="text-[#28293B] text-xl font-medium">{data?.first_name} {data?.last_name}</div>
+        <div className="text-[#28293B] text-[22px] font-medium">{data?.first_name} {data?.last_name}</div>
         <img src={Icon1} className="size-5" alt="icon1" />
         <img src={Icon2} className="size-5" alt="icon2" />
       </div>
@@ -34,7 +34,7 @@ function ClientChartTopBar({clientId}) {
           className="bg-transparent text-[#00000026]"
         />
       </div>
-      <div className="flex items-center gap-x-8 text-sm">
+      <div className="flex items-center gap-x-8 text-base">
         <Link to="/">
         <a href="#" className="text-[#43B09C]">Dashboard</a>
         </Link>

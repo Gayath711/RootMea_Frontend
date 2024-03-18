@@ -97,7 +97,7 @@ function Encounters() {
     <div className="w-full bg-white rounded-md shadow-md flex flex-col">
       <div className="flex justify-between items-center mx-8 mt-2">
         <div className="flex items-center space-x-4">
-          <span className="text-lg font-medium">Encounters</span>
+          <span className="text-xl font-medium">Encounters</span>
           <img src={ExternalLinkIcon} className="size-4" alt="link" />
         </div>
         <div className="flex items-center space-x-4 text-xs">
@@ -125,7 +125,7 @@ function Encounters() {
             />
             <span className="text-[#1F4B51]">Completed</span>
           </label>
-          <button className="px-3 py-1 border-1 rounded-sm border-[#1F4B51] text-[#28293B]">
+          <button className="px-3 py-1 border-2 rounded-sm border-[#1F4B51] text-[#28293B]">
             View all
           </button>
         </div>

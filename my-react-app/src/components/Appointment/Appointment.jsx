@@ -24,14 +24,14 @@ function Appointment() {
   return (
     <div className="bg-white w-full rounded-md shadow-sm">
       <div className="flex justify-between items-center px-6 my-2">
-        <div className="text-lg font-medium">Upcoming</div>
+        <div className="text-xl font-medium">Upcoming</div>
         <button className="flex justify-center items-center space-x-1 bg-[#5BC4BF] text-white px-2.5 py-1.5 text-xs rounded-sm">
           <AddCircleIcon className="text-white size-4" />
           <span className="text-xs">New Appointment</span>
         </button>
       </div>
       <hr className="w-11/12 mx-auto my-2" />
-      <div className="flex flex-col justify-between space-y-6 mx-3 my-8">
+      <div className="flex flex-col justify-between gap-y-8 mx-3 my-8">
         <AppointmentItem />
         <AppointmentItem />
         <AppointmentItem />

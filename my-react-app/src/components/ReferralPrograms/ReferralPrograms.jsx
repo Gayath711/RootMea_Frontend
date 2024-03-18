@@ -85,11 +85,11 @@ function ReferralPrograms() {
     <div className="w-full bg-white rounded-md shadow-md flex flex-col">
       <div className="flex justify-between items-center mx-8 mt-2">
         <div className="flex items-center space-x-4">
-          <span className="text-lg font-medium">Referral Programs</span>
+          <span className="text-xl font-medium">Referral Programs</span>
           <img src={ExternalLinkIcon} className="size-4" alt="link" />
         </div>
         <div>
-          <button className="px-3 py-1 border-2 rounded-sm border-[#2F9384] text-[#2F9384]">
+          <button className="px-3 py-1 border-2 text-xs rounded-sm border-[#2F9384] text-[#2F9384]">
             View all
           </button>
         </div>
