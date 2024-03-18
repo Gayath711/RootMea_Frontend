@@ -9,8 +9,7 @@ const GreetingCard = () => {
           Good Day
         </div>
         <div className="text-sm my-4 font-light">
-          Welcome to the Roots family! <br />
-          We are delighted that you have visited our dashboard.
+          Get a snapshot of Roots member's overall picture of health and wellness
         </div>
         <button className="flex justify-center items-center space-x-2 mt-8 px-4 py-2.5 bg-white rounded-sm">
           <span className="text-[#2F9384] text-sm">Select Staff</span>
