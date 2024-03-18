@@ -21,13 +21,6 @@ import { logout } from "./store/slices/authSlice";
 import "./App.css";
 import "./tailwind.css";
 
-import CreateTableComponent from './components/clientprofile/createtable';
-import CreateTableForm from './components/clientprofile/createtableform'
-import AlterTable from './components/clientprofile/altertable'
-import NewPage from './components/clientprofile/nepage'
-import BulkUploadComponent from './components/clientprofile/BulkUploadComponent'
-import ClientProfileInputForm from './components/DemoPages/ClientProfielInputForm'
-
 function App() {
   // Retrieve isLoggedIn state from localStorage on initial render
   // const [isLoggedIn, setIsLoggedIn] = useState(
@@ -111,13 +104,6 @@ function App() {
                   />
                   <Route path="/clientprofilefull" element={<ClientProfileFull />} />
                   <Route path="/clientprofilefull/:clientId" element={<ClientProfileFull />} />
-
-                  <Route path="/create_table" element={<CreateTableComponent />} />
-                  <Route path='/createtableform' element={<CreateTableForm />} />
-                  <Route path="/createtableform/:tableName" element={<NewPage />} />
-                  <Route path='/alterTable'  element={< AlterTable />} />
-                  <Route path='/BulkUploadComponent/:tableName'  element={< BulkUploadComponent />} />
-                  <Route path='/clientprofileinputform'  element={< ClientProfileInputForm />} />
                 </Routes>
               </div>
             </div>
