@@ -6,13 +6,39 @@ import Screenshot1 from '../../image/Screenshot.png';
 import Screenshot2 from '../../image/Screenshot.png'; 
 import Screenshot3 from '../../image/Screenshot.png'; 
 import Screenshot4 from '../../image/Screenshot.png'; 
+import { motion } from 'framer-motion';
+
 
 function NewPage() {
     const { tableName } = useParams();
 
     const [tableColumns, setTableColumns] = useState([]);
     const [formData, setFormData] = useState({});
-    const [matchingTables, setMatchingTables] = useState([]);
+    const [tableHeaders, setTableHeaders] = useState([]);
+  
+    useEffect(() => {
+      fetchTableHeaders();
+    }, [tableName]);
+  
+    const fetchTableHeaders = async () => {
+      try {
+        const cleanedTableName = tableName.replace("roots", "");
+        const response = await axios.get(`http://127.0.0.1:8000/insert_header_get/${tableName}/`);
+        if (response.data.headers) {
+          setTableHeaders(response.data.headers);
+          console.log("headr",response.data.headers)
+         
+        } else {
+          console.error('No headers found in response:', response);
+        }
+      } catch (error) {
+        console.error('Error fetching table headers:', error);
+      }
+    };
+  
+    // const handleTableNameChange = (e) => {
+    //   setTableName(e.target.value);
+    // };
 
     useEffect(() => {
         fetchTableStructure();
@@ -34,11 +60,14 @@ function NewPage() {
         }
     };
 
+
+
+
+
     const handleInputChange = async (event, columnName) => {
-        // Extract the value from the event
+      
         const value = event.target.type === 'file' ? event.target.files[0] : event.target.value;
 
-        // Update the formData state using a callback function
         setFormData(prevState => ({
             ...prevState,
             [columnName]: value
@@ -188,13 +217,30 @@ function NewPage() {
 
 
 
-            <div className="card p-4 shadow " style={{ width: '70%', margin:"auto"}}>
+            <div className="card p-4 shadow " style={{ width: '70%', margin:"auto",backgroundColor : "#f6f6f6"}}>
 
             <div className="card mb-3">
   {/* <img className="card-img-top" style={{ hight: '300px'}} src={Screenshot} alt="Card image cap" /> */}
-  
+
+
+    <div>
+            <ul className="grid grid-cols-1 gap-4">
+                {tableHeaders.map((header, index) => (
+                    <motion.li
+                        key={index}
+                        className="p-4 bg-white rounded-lg shadow-md"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        transition={{ duration: 0.2 }}
+                    >
+                        <h1 className="text-xl font-semibold mb-2">{header[2]}</h1>
+                        <h3 className="text-base font-medium text-gray-700">{header[3]}</h3>
+                    </motion.li>
+                ))}
+            </ul>
+        </div>
 </div>
-                <h2 className="text-2xl font-bold mb-4">Form Name - {tableName}</h2>
+                {/* <h2 className="text-2xl font-bold mb-4">Form Name - {tableName}</h2> */}
                 {tableColumns.length > 0 && (
                     <form onSubmit={handleSubmitPost}>
                         {tableColumns.map((column) => (
@@ -203,7 +249,7 @@ function NewPage() {
                         <div className="text-center mt-6">
                             <button
                                 type="submit"
-                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                className="bg-Teal-500 hover:bg-Teal-700 text-block font-bold py-2 px-4 rounded mb-4 mr-2 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-Teal-500" style={{ borderRadius: '3px', background: '#9CDADA' }} 
                             >
                                 Submit
                             </button>

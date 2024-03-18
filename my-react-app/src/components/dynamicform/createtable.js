@@ -18,12 +18,17 @@ function CreateTableComponent() {
   const [columns, setColumns] = useState([{ name: '', type: '', notNull: false, width: 'w-full' }]);
   const [showPreview, setShowPreview] = useState(false);
   const columnTypes = ['INTEGER', 'FLOAT', 'VARCHAR(250)', 'TEXT', 'TIMESTAMP', 'BOOLEAN', 'BYTEA','my_enum_type' ];
-  const showcolumnType = ['Number', 'Float', 'Text', 'Textarea', 'Date', 'Boolean', 'file','Dropdown'];
+  const showcolumnType = ['Number', 'Decimal', 'Text', 'Textarea', 'Date', 'Boolean', 'File Attachment','Dropdown'];
   const columnwidth = ["w-1/2", "w-1/4", "w-full", "w-3/4"];
   const showcolumnwidth = ['Half', 'Quarter', 'Full', 'Three-quarters'];
+  
   const [matchingTables, setMatchingTables] = useState([]);
  
   const [enumValues, setEnumValues] = useState([]);
+
+  
+  const [headerValue, setHeaderValue] = useState('');
+  const [subHeaderValue, setSubHeaderValue] = useState('');
 
 
 
@@ -51,22 +56,7 @@ function CreateTableComponent() {
   };
  
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('http://192.168.3.24:8000/get_matching_tables/');
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        setMatchingTables(data.matching_tables);
-        console.log(data.matching_tables)
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-    fetchData();
-  }, []);
+
 
   const navigate = useNavigate();
 
@@ -80,12 +70,37 @@ function CreateTableComponent() {
         enumValues: enumValues
       });
       console.log(response.data);
+      await insertHeader();
       navigate('/createtableform');
     } catch (error) {
       console.error('Error:', error.response.data.message);
       window.alert('An error occurred. Please try again later.');
     }
   };
+
+
+
+
+
+
+ const insertHeader = async () => {
+    try {
+
+      console.log(tableName,headerValue,subHeaderValue)
+      console.log(tableName)
+      const response = await axios.post(`http://127.0.0.1:8000/insert_header/${tableName}/`, {
+        tablename: tableName,
+        header_name: headerValue,
+        sub_header_name: subHeaderValue,
+      });
+      console.log(response.data);
+   
+    } catch (error) {
+      console.error('Error:', error);
+      
+    }
+  };
+
 
   const handleColumnNameChange = (index, value) => {
     const newColumns = [...columns];
@@ -129,12 +144,13 @@ function CreateTableComponent() {
 
   return (
     <div className="container">
-      <h1 className="my-4">All Forms</h1>
+      <h1 className="my-4 text-left" style={{ fontSize: '3rem', color: '#5BC4BF', paddingBottom: '10px' }}>Dynamic Form Builder</h1>
+
       <div className="container">
-        <h1>Forms</h1>
+
         <div className="container">
           <div className="row my-4">
-            <div className="col-10" style={{ borderRadius: '5px 5px 0px 0px', border: '1px solid #5BC4BF', background: '#F6F6F6' }}>
+            <div className="col-12" style={{ borderRadius: '5px 5px 0px 0px', border: '1px solid #5BC4BF', background: '#F6F6F6' }}>
               <nav className="navbar navbar-light bg-light justify-content-between">
                 <a>
                   <button className="bg-Teal-500 hover:bg-Teal-700 text-block font-bold py-2 px-4 rounded mb-4 mr-2 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-Teal-500" style={{ borderRadius: '3px', background: '#9CDADA', marginTop: '20px' }} fdprocessedid="wgjh4" onClick={togglePreview}>Toggle Preview</button>
@@ -143,11 +159,11 @@ function CreateTableComponent() {
                   <a>
                     <Link to="/createtableform" className="bg-Teal-500 hover:bg-Teal-700 text-block font-bold py-2 px-4 rounded mb-4 mr-2 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-Teal-500" style={{ borderRadius: '3px', background: '#9CDADA' }}>Available Forms</Link>
                   </a>
-                  <Link to="/alterTable" className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mb-4 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-yellow-500">Alter Available Forms</Link>
+                  <Link to="/alterTable" className="bg-Teal-500 hover:bg-Teal-700 text-block font-bold py-2 px-4 rounded mb-4 mr-2 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-Teal-500" style={{ borderRadius: '3px', background: '#9CDADA' }} >Alter Available Forms</Link>
                 </form>
               </nav>
             </div>
-            <div className="col-2">
+            {/* <div className="col-2">
               <div style={{ maxWidth: '600px', margin: '0 auto' }}>
                 <div style={{ backgroundColor: '#e0f7fa', borderRadius: '8px', padding: '20px' }}>
                   <h1 style={{ textAlign: 'center', marginBottom: '20px', color: '#0097a7' }}>Recent Forms</h1>
@@ -166,16 +182,17 @@ function CreateTableComponent() {
                   />
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
           <div className="row">
-            <div className="col-10" style={{ borderRadius: '5px 5px 0px 0px', border: '1px solid #5BC4BF', background: '#F6F6F6' }}>
-              {showPreview && (
-                <form className="mb-4">
-                  <div className="mb-4">
-                    <label className="block mb-2">Form Name:</label>
-                    <span>{tableName}</span>
-                  </div>
+           <div className="col-12" style={{ borderRadius: '5px 5px 0px 0px', border: '1px solid #5BC4BF', background: '#F6F6F6' }}>
+   
+    {showPreview && (
+      <form className="mb-4">
+        <div className="mb-4">
+          <label className="block mb-2">Form Name:</label>
+          <span>{tableName}</span>
+        </div>
                   <div className="mb-4">
                     <label className="block mb-2">Columns:</label>
                     {columns.map((column, index) => (
@@ -189,14 +206,51 @@ function CreateTableComponent() {
                 </form>
               )}
               <form onSubmit={handleSubmit} className={showPreview ? 'hidden' : 'block'}>
-                <div className="mb-4">
-                  <label className="block mb-2 animate-fadeIn" style={{ fontWeight: 'bold' }}>Form Name</label>
-                  <input
-                    type="text"
-                    value={tableName}
-                    onChange={(e) => setTableName(e.target.value)}
-                    className="border border-gray-300 rounded px-4 py-2 w-96 focus:outline-none focus:border-green-500 transition-colors duration-300"
-                  />
+         
+                  
+
+                  <div className="mb-4">
+
+
+                  <div className="mb-4 flex flex-wrap">
+                  <label className="block mb-2  mr-4 animate-fadeIn" style={{ fontWeight: 'bold', marginTop: '15px' }}>
+    Form Name <span className="text-red-500">*</span>
+</label>
+<input
+    type="text"
+    value={tableName}
+    placeholder="Enter Form name..."
+    onChange={(e) => setTableName(e.target.value)}
+    className="border border-gray-300 rounded px-4 mt-2 py-2 w-96 focus:outline-none focus:border-green-500 transition-colors duration-300" 
+    style={{ fontWeight: 'bold', marginTop: '10px' }}
+/>
+
+    <div className="flex flex-wrap w-full">
+        <div className="w-1/2 pr-2">
+            <label className="block mb-2 mt-4 animate-fadeIn"style={{ fontWeight: 'bold' }} htmlFor="headerInput">Title </label>
+            <input
+                id="headerInput"
+                type="text"
+                value={headerValue}
+                onChange={(e) => setHeaderValue(e.target.value)}
+                placeholder="Enter Title..."
+                className="border border-gray-300 rounded px-4 py-2 mr-4 w-full focus:outline-none focus:border-green-500 transition-colors duration-300 mb-2"
+            />
+        </div>
+        <div className="w-1/2 pl-2">
+            <label className="block mb-2 mt-4 animate-fadeIn" htmlFor="subheaderTextarea">Sub Title</label>
+            <input
+                id="subheaderTextarea"
+                value={subHeaderValue}
+                onChange={(e) => setSubHeaderValue(e.target.value)}
+                className="border border-gray-300 rounded px-4 py-2 w-full focus:outline-none focus:border-green-500 transition-colors duration-300 mb-2"
+         placeholder="Enter SubTitle..."
+            />
+        </div>
+    </div>
+</div>
+
+
                 </div>
                 <div className="mb-4">
                   <label className="block mb-2">Field Name:</label>
@@ -254,7 +308,7 @@ function CreateTableComponent() {
    
   </div>
 )}
-                      <select
+                      {/* <select
                         value={showcolumnwidth[columnwidth.indexOf(column.width)]}
                         onChange={(e) => handleColumnwidthChange(index, e.target.value)}
                         className="border border-gray-300 rounded px-4 w-32 py-2 focus:outline-none focus:border-green-500"
@@ -263,7 +317,7 @@ function CreateTableComponent() {
                         {showcolumnwidth.map((width, i) => (
                           <option key={i} value={width}>{width}</option>
                         ))}
-                      </select>
+                      </select> */}
 
                       <input
                         type="checkbox"
@@ -290,7 +344,7 @@ function CreateTableComponent() {
 
 
             </div>
-            <div className='col-2'>
+            {/* <div className='col-2'>
               <div>
                 {matchingTables.slice(0, 2).map((matchedTableName, index) => {
                   const cleanedTableName = matchedTableName.replace("roots", "");
@@ -329,7 +383,7 @@ function CreateTableComponent() {
                   );
                 })}
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -338,3 +392,5 @@ function CreateTableComponent() {
 }
 
 export default CreateTableComponent;
+
+

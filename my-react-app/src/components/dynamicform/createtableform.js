@@ -11,6 +11,7 @@ import bulk from '../../image/bulk.jpg';
 import share from '../../image/share.jpg';
 import down from '../../image/down.png';
 import file from '../../image/file.jpg';
+import file1 from '../../image/file1.png';
 import date from '../../image/date.png';
 
 initMDB({ Input, Ripple });
@@ -62,6 +63,8 @@ function CreateTableForm() {
       alert('Sharing failed. Please try again later.');
     }
   };
+
+  
 
   const handledownload = async (tableName) => {
     try {
@@ -138,8 +141,10 @@ function CreateTableForm() {
                 <div className="card-body text-success">
                   <div style={{ textAlign: 'center' }}>
                     <h5 className="card-title">{cleanedTableName.charAt(0).toUpperCase() + cleanedTableName.slice(1)}</h5>
+
+                    
                     <a href={`/createtableform/${matchedTableName}`}>
-                      <img src={file} alt="File" className="img-fluid" style={{ width: '60px', height: '60px', flexShrink: 0, margin: 'auto' }} />
+                      <img src={file1} alt="File1" className="img-fluid" style={{ width: '60px', height: '60px', flexShrink: 0, margin: 'auto' }} />
                     </a>
                   </div>
                 </div>
