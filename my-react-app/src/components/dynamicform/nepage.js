@@ -21,7 +21,7 @@ function NewPage() {
     const fetchTableStructure = async () => {
         console.log(tableName, "htdtdytdf");
         try {
-            const response = await axios.get(`http://localhost:8000/get_table_structure/${tableName}`);
+            const response = await axios.get(`http://192.168.3.24:8000/get_table_structure/${tableName}`);
             if (response.headers['content-type'].includes('application/json')) {
                 console.log(response.data.columns)
                 console.log(response.data)
@@ -49,7 +49,7 @@ function NewPage() {
         event.preventDefault();
         try {
             console.log(formData);
-            const response = await axios.post(`http://localhost:8000/get_table_structure/${tableName}/`, formData);
+            const response = await axios.post(`http://192.168.3.24:8000/get_table_structure/${tableName}/`, formData);
     
             if (response.status === 201) {
                 console.log('Data inserted successfully');

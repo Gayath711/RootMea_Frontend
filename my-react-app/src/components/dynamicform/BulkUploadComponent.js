@@ -21,7 +21,7 @@ function BulkUploadComponent() {
     formData.append('table_name', tableName);
     formData.append('csv_file', file);
 
-    axios.post('http://localhost:8000/upload_csv_to_table/', formData)
+    axios.post('http://192.168.3.24:8000/upload_csv_to_table/', formData)
       .then(response => {
         setMessage(response.data.message);
       })
@@ -33,7 +33,7 @@ function BulkUploadComponent() {
 
   const handleformdownload = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/download_table_column_data/${tableName}/`);
+      const response = await fetch(`http://192.168.3.24:8000/download_table_column_data/${tableName}/`);
   
       if (!response.ok) {
         throw new Error('Failed to download table data');

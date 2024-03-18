@@ -9,7 +9,7 @@ function AlterTable() {
 
   const fetchTableStructure = async () => {
     try {
-      const response = await axios.get(`http://localhost:8000/get_table_structure/${tableName}`);
+      const response = await axios.get(`http://192.168.3.24:8000/get_table_structure/${tableName}`);
       if (response.headers['content-type'].includes('application/json')) {
         setTableColumns(response.data.columns);
       } else {
@@ -31,7 +31,7 @@ function AlterTable() {
     console.log(clickedTableName);
     try {
       setTableName(clickedTableName);
-      const response = await axios.get(`http://localhost:8000/get_table_structure/${clickedTableName}`);
+      const response = await axios.get(`http://192.168.3.24:8000/get_table_structure/${clickedTableName}`);
       if (response.headers['content-type'].includes('application/json')) {
         setTableColumns(response.data.columns);
       } else {
@@ -44,7 +44,7 @@ function AlterTable() {
 
   const handleDeleteTable = async (tableName) => {
     try {
-      await axios.delete(`http://localhost:8000/get_table_structure/${tableName}`);
+      await axios.delete(`http://192.168.3.24:8000/get_table_structure/${tableName}`);
       const updatedMatchingTables = matchingTables.filter((table) => table !== tableName);
       setMatchingTables(updatedMatchingTables);
     } catch (error) {
@@ -59,7 +59,7 @@ function AlterTable() {
 
   const handleDropColumn = async (columnName) => {
     try {
-      await axios.patch(`http://localhost:8000/get_table_structure/${tableName}/`, { column_name: columnName });
+      await axios.patch(`http://192.168.3.24:8000/get_table_structure/${tableName}/`, { column_name: columnName });
       const updatedColumns = tableColumns.filter((column) => column.name !== columnName);
       setTableColumns(updatedColumns);
     } catch (error) {
@@ -70,7 +70,7 @@ function AlterTable() {
   const handleAddColumn = async () => {
     try {
 
-      const response = await axios.put('http://localhost:8000/get_table_structure/' + tableName + '/', { column_name: 'new_column1', data_type: 'VARCHAR(250)' });
+      const response = await axios.put('http://192.168.3.24:8000/get_table_structure/' + tableName + '/', { column_name: 'new_column1', data_type: 'VARCHAR(250)' });
       console.log(response.data);
       await fetchTableStructure(); 
     } catch (error) {
@@ -81,7 +81,7 @@ function AlterTable() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:8000/get_matching_tables/');
+        const response = await fetch('http://192.168.3.24:8000/get_matching_tables/');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

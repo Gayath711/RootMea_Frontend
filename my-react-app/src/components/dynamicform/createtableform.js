@@ -25,7 +25,7 @@ function CreateTableForm() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/get_matching_tables/');
+        const response = await axios.get('http://192.168.3.24:8000/get_matching_tables/');
         setMatchingTables(response.data.matching_tables);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -65,7 +65,7 @@ function CreateTableForm() {
 
   const handledownload = async (tableName) => {
     try {
-      const response = await axios.get(`http://localhost:8000/download_table_data/${tableName}`, {
+      const response = await axios.get(`http://192.168.3.24:8000/download_table_data/${tableName}`, {
         responseType: 'blob'
       });
 

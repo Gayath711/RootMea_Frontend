@@ -54,7 +54,7 @@ function CreateTableComponent() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:8000/get_matching_tables/');
+        const response = await fetch('http://192.168.3.24:8000/get_matching_tables/');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -74,7 +74,7 @@ function CreateTableComponent() {
     e.preventDefault();
     try {
       console.log(columns)
-      const response = await axios.post('http://localhost:8000/create_table_endpoint/', {
+      const response = await axios.post('http://192.168.3.24:8000/create_table_endpoint/', {
         table_name: "Roots" + tableName,
         columns: columns,
         enumValues: enumValues
