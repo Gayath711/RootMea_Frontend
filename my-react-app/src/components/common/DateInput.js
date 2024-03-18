@@ -36,7 +36,7 @@ const DateInput = ({ name, id = { name }, placeholder, width, height = '7vh', is
                 selected={startDate}
                 disabled={isEdittable}
                 value={value}
-                onChange={handleChange}
+                onChange={handleDateChange}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
                 // style={{ minWidth: '10rem' }}
