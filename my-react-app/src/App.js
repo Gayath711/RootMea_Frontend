@@ -22,6 +22,8 @@ import "./App.css";
 import "./tailwind.css";
 import ClientProfileInputForm from './components/DemoPages/ClientProfielInputForm';
 
+
+
 function App() {
   // Retrieve isLoggedIn state from localStorage on initial render
   // const [isLoggedIn, setIsLoggedIn] = useState(
