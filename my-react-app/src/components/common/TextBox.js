@@ -17,7 +17,7 @@ const TextBox = ({ name, id, placeholder, width = 480, height = '7vh', isEdittab
             />
             <label
                 htmlFor={id}
-                className="absolute px-2 text-sm  text-gray-500 duration-300 transform -translate-y-6 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-gray-600  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto"
+                className="absolute px-2 text-sm  text-gray-500 duration-300 transform -translate-y-6 scale-75 top-4 z-0 origin-[0] start-2.5 peer-focus:text-gray-600  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto"
                 style={{ background: bgLabelDisabled }}
             >
                 {placeholder}

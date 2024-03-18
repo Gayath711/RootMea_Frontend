@@ -108,7 +108,7 @@ const ClientProfile = () => {
   }
 
   return (
-    <div className="w-screen h-full bg-gray-50">
+    <div className="h-full bg-gray-50">
       {showAlert && <AlertSuccess message="Saved successfully" handleClose={closeAlert} />}
       <div className="bg-white p-4 shadow">
         <div className="flex justify-between mb-0 mt-4 pl-4">

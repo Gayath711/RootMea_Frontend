@@ -40,7 +40,7 @@ const LoginForm = ({ onLogin }) => {
           <div className="flex flex-col items-center space-y-0 pb-5 pt-0">
             <img className="w-24 h-20" src={RootsLogo} />
             <div className="font-medium text-2xl pt-3">
-              Welcome to Dashboard
+              Welcome
             </div>
           </div>
           <div className="">
