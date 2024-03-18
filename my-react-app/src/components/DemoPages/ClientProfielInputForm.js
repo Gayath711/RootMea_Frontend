@@ -57,6 +57,20 @@ const ContactInformation = () => {
             alert("Sucessfully created")
             console.log('Data submitted successfully:', response.data);
             // Add any additional handling after successful submission
+            setClientData({
+                first_name: '',
+                middle_name: '',
+                last_name: '',
+                sex: '',
+                date_of_birth: '',
+                mobile_number: '',
+                home_phone: '',
+                work_phone: '',
+                best_way_to_contact: '',
+                primary_phone: '',
+                comfortable_language: '',
+                other_language: ''
+            });
         })
         .catch(error => {
             console.error('Error submitting Client Data:', error);
