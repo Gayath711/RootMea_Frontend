@@ -20,6 +20,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { logout } from "./store/slices/authSlice";
 import "./App.css";
 import "./tailwind.css";
+import ClientProfileInputForm from './components/DemoPages/ClientProfielInputForm';
 
 function App() {
   // Retrieve isLoggedIn state from localStorage on initial render
@@ -104,6 +105,7 @@ function App() {
                   />
                   <Route path="/clientprofilefull" element={<ClientProfileFull />} />
                   <Route path="/clientprofilefull/:clientId" element={<ClientProfileFull />} />
+                  <Route path="/clientprofileform" element={<ClientProfileInputForm />} />
                 </Routes>
               </div>
             </div>
