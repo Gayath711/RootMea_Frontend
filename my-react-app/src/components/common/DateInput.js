@@ -16,12 +16,10 @@ const DateInput = ({ name, id = { name }, placeholder, width, height = '7vh', is
         // Perform any additional actions with the selected date if needed
         handleChange(formattedDate);
     };
-
     const [isFocused, setIsFocused] = useState(false);
     const handleFocus = () => {
         setIsFocused(true);
     };
-
     const handleBlur = () => {
         setIsFocused(false);
     };
@@ -38,7 +36,7 @@ const DateInput = ({ name, id = { name }, placeholder, width, height = '7vh', is
                 selected={startDate}
                 disabled={isEdittable}
                 value={value}
-                onChange={handleChange}
+                onChange={handleDateChange}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
                 // style={{ minWidth: '10rem' }}
@@ -59,19 +57,17 @@ const DateInput = ({ name, id = { name }, placeholder, width, height = '7vh', is
                     // w-[${width}px]`
                 }
                 placeholderText=" "
-            // {...register(name)}
-            // style={styles["react-datepicker__month-container"]}
-            />
-
-            <label
+                // style={styles["react-datepicker__month-container"]}
+                />
+                
+                <label
                 htmlFor={id}
                 className={`absolute px-2 text-sm text-gray-500 duration-300 transform ${isFocused || value ? '-translate-y-6 scale-75 top-4' : 'translate-y-1/2 scale-100 top-1.5'} z-10 origin-[0] start-2.5 peer-focus:text-gray-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto`}
                 style={{ background: bgLabelDisabled }}
-            >
+                >
                 {placeholder}
             </label>
         </div>
     );
 }
-
 export default DateInput;

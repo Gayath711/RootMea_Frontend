@@ -24,7 +24,7 @@ import CreateTableForm from './components/clientprofile/createtableform'
 import AlterTable from './components/clientprofile/altertable'
 import NewPage from './components/clientprofile/nepage'
 import BulkUploadComponent from './components/clientprofile/BulkUploadComponent'
-
+import ClientProfileInputForm from './components/DemoPages/ClientProfielInputForm'
 
 function App() {
   // Retrieve isLoggedIn state from localStorage on initial render
@@ -46,7 +46,7 @@ function App() {
   const toggleSidebar = () => {
     setIsMinimized(!isMinimized);
   };
-
+  
   return (
     <Router>
       <div className="App">
@@ -76,6 +76,7 @@ function App() {
                   <Route path="/createtableform/:tableName" element={<NewPage />} />
                   <Route path='/alterTable'  element={< AlterTable />} />
                   <Route path='/BulkUploadComponent/:tableName'  element={< BulkUploadComponent />} />
+                  <Route path='/clientprofileinputform'  element={< ClientProfileInputForm />} />
 
                 </Routes>
               </div>
