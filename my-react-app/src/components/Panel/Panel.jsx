@@ -2,7 +2,7 @@
 
 import Activities from "../Activities/Activities";
 import Appointment from "../Appointment/Appointment";
-import Calendar from "../calendar/Calendar.jsx"
+import Calendar from "../Calendar/Calendar"
 import NotificationCard from "../NotificationCard/NotificationCard";
 import SocialVital from "../SocialVital/SocialVital";
 
