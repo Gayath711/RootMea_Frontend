@@ -144,7 +144,7 @@ function CreateTableComponent() {
 
   return (
     <div className="container">
-      <h1 className="my-4 text-left" style={{ fontSize: '3rem', color: '#5BC4BF', paddingBottom: '10px' }}>Dynamic Form Builder</h1>
+      <h1 className="my-4 text-left" style={{ fontSize: '3rem', color: '#5BC4BF', paddingBottom: '10px' }}>Form Builder</h1>
 
       <div className="container">
 

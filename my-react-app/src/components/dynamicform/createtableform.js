@@ -43,7 +43,7 @@ function CreateTableForm() {
     tableName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const staticurl = "http://localhost:3001/";
+  const staticurl = "http://192.168.3.24:3001/";
 
   const handleShare = async (tableName) => {
     try {
@@ -92,7 +92,7 @@ function CreateTableForm() {
       <div className="row">
         <div className="row justify-content-center align-items-center" style={{ minHeight: '200px', backgroundColor: '#f8f9fa', padding: '20px' }}>
           <div className="col text-center">
-            <h1 className="display-3" style={{ fontFamily: 'Arial, sans-serif', color: '#333' }}>All Forms</h1>
+            <h1 className="display-3" style={{ fontFamily: 'Arial, sans-serif', color: '#333' }}>Form Directories</h1>
             <p className="lead" style={{ fontFamily: 'Arial, sans-serif', color: '#666' }}>Explore and manage all forms here</p>
 
             <div className="input-group mb-3 justify-content-center" style={{ width: '50%', margin: 'auto' }}>
@@ -140,7 +140,7 @@ function CreateTableForm() {
                 </div>
                 <div className="card-body text-success">
                   <div style={{ textAlign: 'center' }}>
-                    <h5 className="card-title">{cleanedTableName.charAt(0).toUpperCase() + cleanedTableName.slice(1)}</h5>
+                  <h5 className="card-title" style={{fontWeight: 'bold'}}>{cleanedTableName.charAt(0).toUpperCase() + cleanedTableName.slice(1)}</h5>
 
                     
                     <a href={`/createtableform/${matchedTableName}`}>
