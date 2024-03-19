@@ -122,7 +122,7 @@ function App() {
 
 
              
-                  <Route path="/create_table" element={<CreateTableComponent />} />
+                  <Route path="/create_form" element={<CreateTableComponent />} />
                   <Route path='/createtableform' element={<CreateTableForm />} />
                   <Route path="/createtableform/:tableName" element={<NewPage />} />
                   <Route path='/alterTable'  element={< AlterTable />} />
