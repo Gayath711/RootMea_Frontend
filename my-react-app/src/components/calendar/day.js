@@ -54,17 +54,18 @@ export default function Day({ day, rowIdx, savedEvents }) {
                     if (numberOfEvents < 3) {
                         return (
                             <>
-                                <div className="m-2 relative">
-                                    <div className="flex flex-col space-y-8 w-full h-20 left-0 top-0 absolute bg-white rounded-sm shadow">
-                                        <div className={`w-full h-7 left-0 top-0 absolute ${getTitleBackGround()} rounded-tl-sm rounded-tr-sm p-2`}>
-                                            <div className="text-center  text-xs font-normal">{event.summary.substring(0, 15)}</div>
-                                        </div>
-                                        <div className="text-gray-800 text-xs font-normal p-2">
-                                            {new Date(event.start.dateTime).toDateString()}
-                                        </div>
-                                    </div>
-                                </div>
-                            </>
+  <div className="m-2 relative">
+  <a href={event.htmlLink} className="flex flex-col space-y-8 w-full h-20 left-0 top-0 absolute bg-white rounded-sm shadow event-container transition-opacity duration-500 transform hover:scale-105">
+    <div className={`w-full h-7 left-0 top-0 absolute ${getTitleBackGround()} rounded-tl-sm rounded-tr-sm p-2`}>
+      <div className="text-center text-xs font-normal">
+        {event.summary.substring(0, 15)}
+      </div>
+    </div>
+    <div className="text-gray-800 text-xs font-normal p-2">
+      {new Date(event.start.dateTime).toDateString()}
+    </div>
+  </a>
+</div>                 </>
                         );
                     } else {
                         return null;
