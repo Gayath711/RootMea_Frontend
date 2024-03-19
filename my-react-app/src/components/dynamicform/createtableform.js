@@ -56,11 +56,16 @@ function CreateTableForm() {
         });
         console.log('Shared successfully');
       } else {
-        throw new Error('Web Share API is not supported in this browser');
+
+   
       }
     } catch (error) {
       console.error('Error sharing:', error);
-      alert('Sharing failed. Please try again later.');
+
+      const url = `${staticurl}createtableform/${tableName}`;
+      await navigator.clipboard.writeText(url);
+      console.log('URL copied to clipboard');
+    
     }
   };
 
