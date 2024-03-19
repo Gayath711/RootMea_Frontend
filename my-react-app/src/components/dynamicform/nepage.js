@@ -166,8 +166,8 @@ function NewPage() {
                             className={`${column.width} border border-gray-300 rounded px-4 py-2`}
                         >
                             <option value="">Select</option>
-                            <option value="true">True</option>
-                            <option value="false">False</option>
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
                         </select>
                     </div>
                 );
@@ -188,7 +188,7 @@ function NewPage() {
                     <div key={column.name} className="mb-4">
                         <label className="block mb-1">{label}</label>
                         <input
-                            type="datetime-local"
+                            type="date"
                             value={formData[column.name] || ''}
                             onChange={(event) => handleInputChange(event, column.name)}
                             className={`${column.width} border border-gray-300 rounded px-4 py-2`}
