@@ -48,7 +48,7 @@ function CreateTableForm() {
   const handleShare = async (tableName) => {
     try {
       if (navigator.share) {
-        const url = `${staticurl}createtableform/${tableName}`;
+        const url = 'https://www.google.com/';
         await navigator.share({
           title: 'Share Table Form',
           text: 'Check out this table form',
