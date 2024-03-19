@@ -60,7 +60,7 @@ function CreateTableForm() {
       }
     } catch (error) {
       console.error('Error sharing:', error);
-      alert(`Share Not supported for http, copy this URL: ${staticurl}`);
+      alert(`Share Not supported for http only work for https, copy this URL: ${url}`);
 
     }
   };
