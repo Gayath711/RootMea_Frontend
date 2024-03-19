@@ -88,7 +88,7 @@ function CreateTableComponent() {
 
       console.log(tableName,headerValue,subHeaderValue)
       console.log(tableName)
-      const response = await axios.post(`http://127.0.0.1:8000/insert_header/${tableName}/`, {
+      const response = await axios.post(`http://192.168.3.24:8000/insert_header/${tableName}/`, {
         tablename: tableName,
         header_name: headerValue,
         sub_header_name: subHeaderValue,

@@ -23,7 +23,7 @@ function NewPage() {
     const fetchTableHeaders = async () => {
       try {
         const cleanedTableName = tableName.replace("roots", "");
-        const response = await axios.get(`http://127.0.0.1:8000/insert_header_get/${tableName}/`);
+        const response = await axios.get(`http://192.168.3.24:8000/insert_header_get/${tableName}/`);
         if (response.data.headers) {
           setTableHeaders(response.data.headers);
           console.log("headr",response.data.headers)
