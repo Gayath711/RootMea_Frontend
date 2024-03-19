@@ -94,6 +94,16 @@ function MyPanel() {
       {
         Header: "D.O.B",
         accessor: "date_of_birth",
+        Cell: ({ value }) => {
+          // Parse the date string
+          const date = new Date(value);
+          // Extract day, month, and year
+          const day = String(date.getDate()).padStart(2, '0');
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const year = date.getFullYear();
+          // Format date as "dd-mm-yyyy"
+          return `${day}-${month}-${year}`;
+        },
       },
       {
         Header: "Gender",
@@ -106,6 +116,16 @@ function MyPanel() {
       {
         Header: "Date Assigned",
         accessor: "date_assigned",
+        Cell: ({ value }) => {
+          // Parse the date string
+          const date = new Date(value);
+          // Extract day, month, and year
+          const day = String(date.getDate()).padStart(2, '0');
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const year = date.getFullYear();
+          // Format date as "dd-mm-yyyy"
+          return `${day}-${month}-${year}`;
+        },
       },
       {
         Header: "Program",
