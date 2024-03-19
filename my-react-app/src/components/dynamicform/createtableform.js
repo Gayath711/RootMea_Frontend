@@ -46,6 +46,8 @@ function CreateTableForm() {
   const staticurl = "http://192.168.3.24:3001/";
 
   const handleShare = async (tableName) => {
+
+    const url = `${staticurl}createtableform/${tableName}`;
     try {
       if (navigator.share) {
         const url = `${staticurl}createtableform/${tableName}`;
