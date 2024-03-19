@@ -18,7 +18,7 @@ function CreateTableComponent() {
   const [columns, setColumns] = useState([{ name: '', type: '', notNull: false, width: 'w-full' }]);
   const [showPreview, setShowPreview] = useState(false);
   const columnTypes = ['INTEGER', 'FLOAT', 'VARCHAR(250)', 'TEXT', 'TIMESTAMP', 'BOOLEAN', 'BYTEA','my_enum_type' ];
-  const showcolumnType = ['Number', 'Decimal', 'Text', 'Textarea', 'Date', 'Boolean', 'File Attachment','Dropdown'];
+  const showcolumnType = ['Number', 'Decimal', 'Text', 'Memo', 'Date', 'Boolean', 'File Attachment','Dropdown'];
   const columnwidth = ["w-1/2", "w-1/4", "w-full", "w-3/4"];
   const showcolumnwidth = ['Half', 'Quarter', 'Full', 'Three-quarters'];
   
@@ -238,13 +238,13 @@ function CreateTableComponent() {
             />
         </div>
         <div className="w-1/2 pl-2">
-            <label className="block mb-2 mt-4 animate-fadeIn" htmlFor="subheaderTextarea">Sub Title</label>
+            <label className="block mb-2 mt-4 animate-fadeIn" htmlFor="subheaderTextarea">Description</label>
             <input
                 id="subheaderTextarea"
                 value={subHeaderValue}
                 onChange={(e) => setSubHeaderValue(e.target.value)}
                 className="border border-gray-300 rounded px-4 py-2 w-full focus:outline-none focus:border-green-500 transition-colors duration-300 mb-2"
-         placeholder="Enter SubTitle..."
+         placeholder="Enter Description..."
             />
         </div>
     </div>
