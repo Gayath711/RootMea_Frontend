@@ -48,24 +48,20 @@ function CreateTableForm() {
   const handleShare = async (tableName) => {
     try {
       if (navigator.share) {
-        const url = 'https://www.google.com/';
+        const url = `${staticurl}createtableform/${tableName}`;
         await navigator.share({
           title: 'Share Table Form',
           text: 'Check out this table form',
           url: url
         });
         console.log('Shared successfully');
-      } 
+      } else {
+        throw new Error('Web Share API is not supported in this browser');
+      }
     } catch (error) {
       console.error('Error sharing:', error);
+      alert(`Share Not supported for http, copy this URL: ${staticurl}`);
 
-      const url = 'https://www.google.com/';
- 
-      await navigator.clipboard.writeText(url);
-      console.log('URL copied to clipboard');
-      alert('URL copied to clipboard. You can manually share it.');
-      console.log('URL copied to clipboard');
-    
     }
   };
 
