@@ -48,7 +48,7 @@ function CreateTableForm() {
   const handleShare = async (tableName) => {
     try {
       if (navigator.share) {
-        const url = `${staticurl}createtabl ceform/${tableName}`;
+        const url = `${staticurl}createtableform/${tableName}`;
         await navigator.share({
           title: 'Share Table Form',
           text: 'Check out this table form',
@@ -59,11 +59,11 @@ function CreateTableForm() {
     } catch (error) {
       console.error('Error sharing:', error);
 
-      // const url = `${staticurl}createtableform/${tableName}`;
-      // console.log(url)
-      // await navigator.clipboard.writeText(url);
-      // console.log('URL copied to clipboard');
-      alert('Share Only work for https.');
+      const url = 'https://www.google.com/';
+      conslog.log(url)
+      await navigator.clipboard.writeText(url);
+      console.log('URL copied to clipboard');
+      alert('URL copied to clipboard. You can manually share it.');
       console.log('URL copied to clipboard');
     
     }
