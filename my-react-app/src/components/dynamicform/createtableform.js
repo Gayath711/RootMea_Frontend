@@ -55,15 +55,15 @@ function CreateTableForm() {
           url: url
         });
         console.log('Shared successfully');
-      } else {
-
-   
-      }
+      } 
     } catch (error) {
       console.error('Error sharing:', error);
 
       const url = `${staticurl}createtableform/${tableName}`;
+      console.log(url)
       await navigator.clipboard.writeText(url);
+      console.log('URL copied to clipboard');
+      alert('URL copied to clipboard. You can manually share it.');
       console.log('URL copied to clipboard');
     
     }
