@@ -60,7 +60,7 @@ function CreateTableForm() {
       console.error('Error sharing:', error);
 
       const url = 'https://www.google.com/';
-      conslog.log(url)
+ 
       await navigator.clipboard.writeText(url);
       console.log('URL copied to clipboard');
       alert('URL copied to clipboard. You can manually share it.');
