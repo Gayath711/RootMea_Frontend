@@ -17,7 +17,7 @@ function DynamicFieldForm() {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get('http://localhost:8000/api/my-data');
+            const response = await axios.get('http://192.168.3.24:8000/api/my-data');
             setApiData(response.data);
         } catch (error) {
             console.error('Error fetching data:', error);
