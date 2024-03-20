@@ -144,7 +144,7 @@ function App() {
                   <Route path="/clientprofilefull/:clientId" element={<ClientProfileFull />} />
                   <Route path="/clientprofileform" element={<ClientProfileInputForm />} />
 
-
+                  <Route path="/create_form" element={<CreateTableComponent />} />
 
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/admin-dashboard" element={<Admin />} />
