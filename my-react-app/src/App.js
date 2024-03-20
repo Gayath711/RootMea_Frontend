@@ -23,6 +23,14 @@ import "./App.css";
 import "./tailwind.css";
 import ClientProfileInputForm from './components/DemoPages/ClientProfielInputForm';
 
+import Admin from './pages/AdminDashboard/AdminDashboard';
+import Authorization from './components/Authorization';
+import CareForm from './components/CareForm';
+import EncounterForm from './components/EncounterForm';
+import CreateForm from './components/CreateForm';
+// import Dashboard from './components/Dashboard';
+
+
 
 import CreateTableComponent from './components/dynamicform/createtable';
 import CreateTableForm from './components/dynamicform/createtableform'
@@ -58,6 +66,22 @@ function App() {
   const toggleSidebar = () => {
     setIsMinimized(!isMinimized);
   };
+
+
+  const PERMISSIONS = {
+    CAN_VIEW_ADMIN: "admin",
+    CAN_CREATE_FORM: "create_form",
+    CAN_VIEW_CARE_FORM: "view_care_form",
+    CAN_VIEW_ENCOUNTER_FORM: "view_encounter_form",
+  };
+
+
+  const [user, setUser] = useState({
+    username: "admin",
+    permissions: localStorage.getItem("permissions") ? localStorage.getItem("permissions").split(",") : ["admin"]
+    // permissions: ["admin"],
+  });
+  console.log("user", user);
 
   return (
     <Router>
@@ -121,13 +145,32 @@ function App() {
                   <Route path="/clientprofileform" element={<ClientProfileInputForm />} />
 
 
-             
-                  <Route path="/create_form" element={<CreateTableComponent />} />
+
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/admin-dashboard" element={<Admin />} />
+                  {/* <Route element={<Authorization user={user} permissions={[PERMISSIONS.CAN_VIEW_ADMIN]} />}>
+                    <Route path="/admin-dashboard" element={<Admin user={user} setUser={setUser} />} />
+                  </Route>;
+
+                  <Route element={<Authorization user={user} permissions={[PERMISSIONS.CAN_CREATE_FORM]} />}>
+                    <Route path="/create-form" element={<CreateForm />} />
+                  </Route>;
+
+                  <Route element={<Authorization user={user} permissions={[PERMISSIONS.CAN_VIEW_CARE_FORM]} />}>
+                    <Route path="/care-form" element={<CareForm />} />
+                  </Route>;
+
+                  <Route element={<Authorization user={user} permissions={[PERMISSIONS.CAN_VIEW_ENCOUNTER_FORM]} />}>
+                    <Route path="/encounter-form" element={<EncounterForm />} />
+                  </Route>; */}
+
+
+                  <Route path="/create_table" element={<CreateTableComponent />} />
                   <Route path='/createtableform' element={<CreateTableForm />} />
                   <Route path="/createtableform/:tableName" element={<NewPage />} />
-                  <Route path='/alterTable'  element={< AlterTable />} />
-                  <Route path='/BulkUploadComponent/:tableName'  element={< BulkUploadComponent />} />
-         
+                  <Route path='/alterTable' element={< AlterTable />} />
+                  <Route path='/BulkUploadComponent/:tableName' element={< BulkUploadComponent />} />
+
                 </Routes>
               </div>
             </div>
