@@ -102,7 +102,7 @@ function MyPanel() {
           const month = String(date.getMonth() + 1).padStart(2, '0');
           const year = date.getFullYear();
           // Format date as "dd-mm-yyyy"
-          return `${day}-${month}-${year}`;
+          return `${month}-${day}-${year}`;
         },
       },
       {
@@ -124,7 +124,7 @@ function MyPanel() {
           const month = String(date.getMonth() + 1).padStart(2, '0');
           const year = date.getFullYear();
           // Format date as "dd-mm-yyyy"
-          return `${day}-${month}-${year}`;
+          return `${month}-${day}-${year}`;
         },
       },
       {
