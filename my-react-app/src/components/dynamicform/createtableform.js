@@ -46,6 +46,8 @@ function CreateTableForm() {
   const staticurl = "http://192.168.3.24:3001/";
 
   const handleShare = async (tableName) => {
+
+    const url = `${staticurl}createtableform/${tableName}`;
     try {
       if (navigator.share) {
         const url = `${staticurl}createtableform/${tableName}`;
@@ -56,16 +58,12 @@ function CreateTableForm() {
         });
         console.log('Shared successfully');
       } else {
-
-   
+        throw new Error('Web Share API is not supported in this browser');
       }
     } catch (error) {
       console.error('Error sharing:', error);
+      alert(`Share Not supported for http only work for https, copy this URL: ${url}`);
 
-      const url = `${staticurl}createtableform/${tableName}`;
-      await navigator.clipboard.writeText(url);
-      console.log('URL copied to clipboard');
-    
     }
   };
 
