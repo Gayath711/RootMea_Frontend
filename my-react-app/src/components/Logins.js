@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
-import axios from 'axios'; // Don't forget to import axios if it's not already imported
-import RootsLogo from '../image/root.png';
-import TextBox from './common/TextBox'
-
+import React, { useState } from "react";
+import axios from "axios"; // Don't forget to import axios if it's not already imported
+import RootsLogo from "../image/root.png";
+import TextBox from "./common/TextBox";
+import { useDispatch } from "react-redux";
+import { loginAsync } from "../store/slices/authSlice";
 
 const LoginForm = ({ onLogin }) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -16,55 +18,36 @@ const LoginForm = ({ onLogin }) => {
     setPassword(event.target.value);
   };
 
-  const handleLogin = async () => {
+  const handleLogin = () => {
     const user = {
       email: username,
-      password: password
+      password: password,
     };
-
-    // Log request data before sending the request
-    console.log('Login request data:', user);
-
     try {
-      // Create the POST request
-      const { data } = await axios.post(
-        'http://192.168.3.24:8000/token/',
-        user,
-        {
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          withCredentials: true
-        }
-      );
-
-
-      console.log('Login response:', data);
-
-      localStorage.clear();
-      localStorage.setItem('access_token', data.access);
-      localStorage.setItem('refresh_token', data.refresh);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${data.access}`;
-      localStorage.setItem('isLoggedIn', 'true');
-      window.location.href = '/';
+      dispatch(loginAsync(user));
     } catch (error) {
-      console.error('Login error:', error);
-
+      console.error("Login error:", error);
     }
   };
 
   return (
-
-    <div className="w-screen h-screen relative bg-white bg-cover bg-center" style={{ backgroundImage: "url('./login/background.png')" }}>
+    <div
+      className="w-screen h-screen relative bg-white bg-cover bg-center"
+      style={{ backgroundImage: "url('./login/background.png')" }}
+    >
       <div className="flex items-center justify-center h-screen">
         <div className="w-96 h-fit flex flex-col bg-white rounded shadow pt-5">
           <div className="flex flex-col items-center space-y-0 pb-5 pt-0">
             <img className="w-24 h-20" src={RootsLogo} />
-            <div className="font-medium text-2xl pt-3">Welcome to Dashboard</div>
+            <div className="font-medium text-2xl pt-3">
+              Welcome
+            </div>
           </div>
-          <div className=''>
+          <div className="">
             <div className="flex flex-col items-start px-4">
-              <div className=" text-gray-800 text-opacity-50 text-xs font-normal">Enter Roots Email Address</div>
+              <div className=" text-gray-800 text-opacity-50 text-xs font-normal">
+                Enter Roots Email Address
+              </div>
               <input
                 class="border-b border-gray-800  focus:outline-none px-2 py-1 w-full mb-3"
                 type="text"
@@ -73,7 +56,9 @@ const LoginForm = ({ onLogin }) => {
                 value={username}
                 onChange={handleUsernameChange}
               />
-              <div className=" text-gray-800 text-opacity-50 text-xs font-normal">Enter Roots Password</div>
+              <div className=" text-gray-800 text-opacity-50 text-xs font-normal">
+                Enter Roots Password
+              </div>
               <input
                 class="border-b border-gray-800  focus:outline-none px-2 py-1 w-full"
                 type="password"
@@ -85,14 +70,18 @@ const LoginForm = ({ onLogin }) => {
             </div>
           </div>
           <div className="flex flex-row justify-between pt-3 px-4 pb-12">
-            <div className='flex flex-row space-x-4'>
+            <div className="flex flex-row space-x-4">
               <div className="w-6 h-3 relative">
                 <div className="w-8 h-4 left-0 top-0 absolute bg-zinc-300 rounded-xl" />
                 <div className="w-4 h-4 left-0 top-0 absolute rounded-full border border-black" />
               </div>
-              <div className=" text-black-500 text-xs font-normal">Stay Signed In</div>
+              <div className=" text-black-500 text-xs font-normal">
+                Stay Signed In
+              </div>
             </div>
-            <div className=" text-black-500 text-xs font-normal">Reset Your Password</div>
+            <div className=" text-black-500 text-xs font-normal">
+              Reset Your Password
+            </div>
           </div>
           <div className="flex flex-col items-center pb-5">
             <button
@@ -107,9 +96,9 @@ const LoginForm = ({ onLogin }) => {
         </div>
       </div>
       <div className="absolute bottom-0 right-0">
-        <img src="./login/flower-pot.png" className='w-44 h-72'></img>
+        <img src="./login/flower-pot.png" className="w-44 h-72"></img>
       </div>
-    </div >
+    </div>
 
     // <div className="w-screen h-screen relative bg-white bg-cover bg-center" style={{ backgroundImage: "url('./login/background.png')" }}>
     //   <div className="flex items-center justify-center h-screen">
@@ -348,9 +337,6 @@ const LoginForm = ({ onLogin }) => {
     //     </div>
     //   </section>
   );
-
-
-
 };
 
 export default LoginForm;
