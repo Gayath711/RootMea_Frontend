@@ -57,12 +57,10 @@ function ReferralPrograms() {
         Header: "Referral Date",
         accessor: "referred_date",
         Cell: ({ value }) => {
-          console.log("Raw date value:", value);
           // Split the raw date value into day, month, and year components
           const [day, month, year] = value.split('-');
           // Construct a Date object with the components in the correct order
           const date = new Date(`${year}-${month}-${day}`);
-          console.log("Parsed date:", date);
           // Check if the date is valid
           if (isNaN(date.getTime())) {
             return "Invalid Date";
