@@ -23,6 +23,14 @@ import "./App.css";
 import "./tailwind.css";
 import ClientProfileInputForm from './components/DemoPages/ClientProfielInputForm';
 
+import Admin from './pages/AdminDashboard/AdminDashboard';
+import Authorization from './components/Authorization';
+import CareForm from './components/CareForm';
+import EncounterForm from './components/EncounterForm';
+import CreateForm from './components/CreateForm';
+// import Dashboard from './components/Dashboard';
+
+
 
 import CreateTableComponent from './components/dynamicform/createtable';
 import CreateTableForm from './components/dynamicform/createtableform'
@@ -70,7 +78,7 @@ function App() {
 
   const [user, setUser] = useState({
     username: "admin",
-    permissions: localStorage.getItem("permissions").split(","),
+    permissions: localStorage.getItem("permissions") ? localStorage.getItem("permissions").split(",") : ["admin"]
     // permissions: ["admin"],
   });
   console.log("user", user);
@@ -139,7 +147,8 @@ function App() {
 
 
                   <Route path="/dashboard" element={<Dashboard />} />
-                  <Route element={<Authorization user={user} permissions={[PERMISSIONS.CAN_VIEW_ADMIN]} />}>
+                  <Route path="/admin-dashboard" element={<Admin />} />
+                  {/* <Route element={<Authorization user={user} permissions={[PERMISSIONS.CAN_VIEW_ADMIN]} />}>
                     <Route path="/admin-dashboard" element={<Admin user={user} setUser={setUser} />} />
                   </Route>;
 
@@ -153,7 +162,7 @@ function App() {
 
                   <Route element={<Authorization user={user} permissions={[PERMISSIONS.CAN_VIEW_ENCOUNTER_FORM]} />}>
                     <Route path="/encounter-form" element={<EncounterForm />} />
-                  </Route>;
+                  </Route>; */}
 
 
                   <Route path="/create_table" element={<CreateTableComponent />} />
