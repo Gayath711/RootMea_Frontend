@@ -9,6 +9,8 @@ import ClientChartImg from "../images/clientChart.svg";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchClientsInfoAsync } from "../../store/slices/clientsInfoSlice";
+import { useWindowSize } from "../Utils/windowResize";
+import "./MyPanelStyles.css"
 
 function getRandomDate(dates) {
   const randomIndex = Math.floor(Math.random() * dates.length);
@@ -21,6 +23,9 @@ function getRandomProgram(programs) {
 }
 
 function MyPanel() {
+
+  const {width} = useWindowSize();
+
   const programs = ["ECM", "Diabetes", "STOMP"];
 
   const dates = [
@@ -155,20 +160,20 @@ function MyPanel() {
   );
 
   return (
-    <div className="w-full bg-white rounded-md shadow-md flex flex-col">
-      <div className="flex justify-between items-center mx-8 mt-2">
+    <div id="my-panel-1" className="bg-white rounded-md shadow-md flex flex-col col-span-8">
+      <div id="my-panel-2" className="flex justify-between items-center mx-3 sm:mx-8 mt-2">
         <div className="flex items-center space-x-4">
-          <span className="text-lg font-medium">My Panel</span>
-          <img src={ExternalLinkIcon} className="size-4" alt="link" />
+          <span id="my-panel-3" className="text-lg font-medium">My Panel</span>
+          <img id="my-panel-4" src={ExternalLinkIcon} className="size-3 sm:size-4" alt="link" />
         </div>
         <div>
-          <button className="px-3 py-1 border-2 rounded-sm border-[#2F9384] text-xs text-[#2F9384]">
+          <button id="my-panel-5" className="px-3 py-1 border-1 sm:border-2 rounded-sm border-[#2F9384] text-xs text-[#2F9384]">
             View all
           </button>
         </div>
       </div>
-      <hr className="w-[98%] mx-auto my-2" />
-      <div className="w-full flex-grow flex flex-col">
+      <hr id="my-panel-6" className="w-[98%] mx-auto my-2" />
+      <div className={`w-full flex-grow flex flex-col max-w-[${width}px]`}>
         <BasicTable type={"myPanel"} columns={columns} data={data} />
       </div>
     </div>

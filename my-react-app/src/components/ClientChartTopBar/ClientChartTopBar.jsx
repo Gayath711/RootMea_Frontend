@@ -31,7 +31,7 @@ function ClientChartTopBar({clientId}) {
         <input
           type="text"
           placeholder="Search your clients"
-          className="bg-transparent text-[#00000026]"
+          className="bg-transparent text-[#00000026] text-sm"
         />
       </div>
       <div className="flex items-center gap-x-8 text-sm">

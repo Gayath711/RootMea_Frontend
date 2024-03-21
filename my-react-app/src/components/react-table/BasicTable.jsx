@@ -26,6 +26,7 @@ import {
 
 // project import
 import { CSVExport, TablePagination } from "./ReactTable";
+import { useWindowSize } from "../Utils/windowResize";
 
 const styles = {
   myPanel: {
@@ -188,6 +189,7 @@ const styles = {
     header: {
       classes: "",
       styles: {
+        color: "white",
         background:
           "linear-gradient(90deg, #2F9384 0%, #5BC4BF 52.4%, #43B09C 100%)",
       },
@@ -218,6 +220,8 @@ function ReactTable({ columns, data, striped, type, top, defaultPageSize }) {
     usePagination
   );
 
+  const {width} = useWindowSize();
+
   return (
     <Stack className="flex-grow flex flex-col m-3">
       {top && (
@@ -231,7 +235,7 @@ function ReactTable({ columns, data, striped, type, top, defaultPageSize }) {
           />
         </Box>
       )}
-      <div className="overflow-x-auto flex-grow-0">
+      <div className="overflow-x-auto flex-grow-0" style={{maxWidth: "100%", border: "1px solid #EAECEB", borderRadius: "5px"}}>
         <Table style={{ fontSize: "10px !important" }} {...getTableProps()}>
           <TableHead>
             {headerGroups.map((headerGroup) => (
