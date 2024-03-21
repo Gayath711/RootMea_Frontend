@@ -65,7 +65,7 @@ const SocialVital = () => {
           <PieCenterLabel>100%</PieCenterLabel>
         </PieChart>
       </div>
-      <div id="social-vital-6" className="flex justify-around items-center m-3">
+      <div id="social-vital-6" className="flex justify-around items-center my-3 mx-0">
         <div className="flex items-center">
           <img id="social-vital-7" src={LineUpTeal} className="size-4 mx-1" alt="lineup" />
           <div id="social-vital-8" className="text-xs">
