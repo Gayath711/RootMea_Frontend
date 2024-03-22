@@ -5,12 +5,11 @@ const GreetingCard = () => {
   return (
     <div className="flex justify-between items-center shadow-lg p-6 bg-gradient-to-r from-[#D9F0EF] to-[#5BC4BF] rounded-md w-[60%]">
       <div>
-        <div className="text-[23px] leading-7 tracking-normal font-medium">
-          Good Day, Mr John Doe
+        <div className="text-lg leading-7 tracking-normal font-medium">
+          Welcome
         </div>
-        <div className="text-base my-4 font-light">
-          Welcome to the Roots family! <br />
-          We are delighted that you have visited our dashboard.
+        <div className="text-sm my-4 font-light">
+          Get a snapshot of Roots member's overall picture of health and wellness
         </div>
         <button className="flex justify-center items-center space-x-2 mt-8 px-4 py-2.5 bg-white rounded-sm">
           <span className="text-[#2F9384] text-base font-medium">Select Staff</span>

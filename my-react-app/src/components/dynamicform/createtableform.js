@@ -11,6 +11,7 @@ import bulk from '../../image/bulk.jpg';
 import share from '../../image/share.jpg';
 import down from '../../image/down.png';
 import file from '../../image/file.jpg';
+import file1 from '../../image/file1.png';
 import date from '../../image/date.png';
 
 initMDB({ Input, Ripple });
@@ -25,7 +26,7 @@ function CreateTableForm() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/get_matching_tables/');
+        const response = await axios.get('http://192.168.3.24:8000/get_matching_tables/');
         setMatchingTables(response.data.matching_tables);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -42,9 +43,11 @@ function CreateTableForm() {
     tableName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const staticurl = "http://localhost:3001/";
+  const staticurl = "http://192.168.3.24:3001/";
 
   const handleShare = async (tableName) => {
+
+    const url = `${staticurl}createtableform/${tableName}`;
     try {
       if (navigator.share) {
         const url = `${staticurl}createtableform/${tableName}`;
@@ -59,13 +62,16 @@ function CreateTableForm() {
       }
     } catch (error) {
       console.error('Error sharing:', error);
-      alert('Sharing failed. Please try again later.');
+      alert(`Share Not supported for http only work for https, copy this URL: ${url}`);
+
     }
   };
 
+  
+
   const handledownload = async (tableName) => {
     try {
-      const response = await axios.get(`http://localhost:8000/download_table_data/${tableName}`, {
+      const response = await axios.get(`http://192.168.3.24:8000/download_table_data/${tableName}`, {
         responseType: 'blob'
       });
 
@@ -89,7 +95,7 @@ function CreateTableForm() {
       <div className="row">
         <div className="row justify-content-center align-items-center" style={{ minHeight: '200px', backgroundColor: '#f8f9fa', padding: '20px' }}>
           <div className="col text-center">
-            <h1 className="display-3" style={{ fontFamily: 'Arial, sans-serif', color: '#333' }}>All Forms</h1>
+            <h1 className="display-3" style={{ fontFamily: 'Arial, sans-serif', color: '#333' }}>Form Directories</h1>
             <p className="lead" style={{ fontFamily: 'Arial, sans-serif', color: '#666' }}>Explore and manage all forms here</p>
 
             <div className="input-group mb-3 justify-content-center" style={{ width: '50%', margin: 'auto' }}>
@@ -137,9 +143,11 @@ function CreateTableForm() {
                 </div>
                 <div className="card-body text-success">
                   <div style={{ textAlign: 'center' }}>
-                    <h5 className="card-title">{cleanedTableName.charAt(0).toUpperCase() + cleanedTableName.slice(1)}</h5>
+                  <h5 className="card-title" style={{fontWeight: 'bold'}}>{cleanedTableName.charAt(0).toUpperCase() + cleanedTableName.slice(1)}</h5>
+
+                    
                     <a href={`/createtableform/${matchedTableName}`}>
-                      <img src={file} alt="File" className="img-fluid" style={{ width: '60px', height: '60px', flexShrink: 0, margin: 'auto' }} />
+                      <img src={file1} alt="File1" className="img-fluid" style={{ width: '60px', height: '60px', flexShrink: 0, margin: 'auto' }} />
                     </a>
                   </div>
                 </div>

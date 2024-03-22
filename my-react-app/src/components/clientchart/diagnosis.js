@@ -92,7 +92,7 @@ const Diagnosis = ({ id, setShowAlert }) => {
         comments: "",
         last_updated_by: "" // Assign a value here
     });
-    
+
 
     function handleAddRow(e) {
         e.stopPropagation();
@@ -133,7 +133,7 @@ const Diagnosis = ({ id, setShowAlert }) => {
     };
 
     const handleSubmit = (newDiagnosis) => {
-        console.log(newDiagnosis,"dtdrter")
+        console.log(newDiagnosis, "dtdrter")
         const formDataWithClientId = {
             ...newDiagnosis,
             last_updated_date: newDiagnosis.last_updated_date ? format(new Date(newDiagnosis.last_updated_date), 'yyyy-MM-dd') : null,
@@ -142,13 +142,13 @@ const Diagnosis = ({ id, setShowAlert }) => {
             client_id: clientId
         };
         console.log(JSON.stringify(formDataWithClientId));
-            // Handle adding new medication (existing code)
-            axios.post(`http://192.168.3.24:8000/clientdiagnoses-api/`, formDataWithClientId, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
-            })
+        // Handle adding new medication (existing code)
+        axios.post(`http://192.168.3.24:8000/clientdiagnoses-api/`, formDataWithClientId, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
             .then(response => {
                 console.log("Successfully added:", response.data);
                 // Reset form data after submission
@@ -184,7 +184,7 @@ const Diagnosis = ({ id, setShowAlert }) => {
                         type="text"
                         className="block px-2.5 h-[7vh] w-full text-md rounded-md border-1 focus:outline-none focus:ring-0 peer"
                         value={newDiagnosis.diagnosis_name}
-                        onChange={(e) => setNewDiagnosis({ ...newDiagnosis, diagnosis_name: e.target.value })}                    />
+                        onChange={(e) => setNewDiagnosis({ ...newDiagnosis, diagnosis_name: e.target.value })} />
                 </td>
                 <td style={{ paddingLeft: "10px", backgroundColor: 'white', borderTop: '1px solid #E1FBE8' }}>
                     <input
@@ -193,7 +193,7 @@ const Diagnosis = ({ id, setShowAlert }) => {
                         type="text"
                         className="block px-2.5 h-[7vh] w-full text-md rounded-md border-1 focus:outline-none focus:ring-0 peer"
                         value={newDiagnosis.icd10_code}
-                        onChange={(e) => setNewDiagnosis({ ...newDiagnosis, icd10_code: e.target.value })}                    />
+                        onChange={(e) => setNewDiagnosis({ ...newDiagnosis, icd10_code: e.target.value })} />
                 </td>
                 <td style={{ paddingLeft: "10px", backgroundColor: 'white', borderTop: '1px solid #E1FBE8' }}>
                     <input
@@ -202,7 +202,7 @@ const Diagnosis = ({ id, setShowAlert }) => {
                         type="text"
                         className="block px-2.5 h-[7vh] w-full text-md rounded-md border-1 focus:outline-none focus:ring-0 peer"
                         value={newDiagnosis.comments}
-                        onChange={(e) => setNewDiagnosis({ ...newDiagnosis, comments: e.target.value })}                    />
+                        onChange={(e) => setNewDiagnosis({ ...newDiagnosis, comments: e.target.value })} />
                 </td>
                 <td style={{ paddingLeft: "15px", backgroundColor: 'white', borderTop: '1px solid #E1FBE8' }}>
                     <input
@@ -211,7 +211,7 @@ const Diagnosis = ({ id, setShowAlert }) => {
                         type="text"
                         className="block px-2.5 h-[7vh] w-full text-md rounded-md border-1 focus:outline-none focus:ring-0 peer"
                         value={newDiagnosis.last_updated_by}
-                        onChange={(e) => setNewDiagnosis({ ...newDiagnosis, last_updated_by: e.target.value })}                    />
+                        onChange={(e) => setNewDiagnosis({ ...newDiagnosis, last_updated_by: e.target.value })} />
                 </td>
                 <td style={{ paddingLeft: "15px", backgroundColor: 'white', borderTop: '1px solid #E1FBE8' }}>
                     <DatePicker
@@ -248,11 +248,11 @@ const Diagnosis = ({ id, setShowAlert }) => {
                         type="text"
                         className="block px-2.5 h-[7vh] w-full text-md rounded-md border-1 focus:outline-none focus:ring-0 peer"
                         value={newDiagnosis.diagnosis_status}
-                        onChange={(e) => setNewDiagnosis({ ...newDiagnosis, diagnosis_status: e.target.value })}                    />
+                        onChange={(e) => setNewDiagnosis({ ...newDiagnosis, diagnosis_status: e.target.value })} />
                 </td>
                 <td className='bg-white' >
                     <div className=' flex items-center'>
-                        <PrimaryButton handleClick={() => handleSubmit(newDiagnosis)}  text={"Save"} width={40} height={'7vh'} />
+                        <PrimaryButton handleClick={() => handleSubmit(newDiagnosis)} text={"Save"} width={40} height={'7vh'} />
                     </div>
                     {/* <div className='flex flex-row'>
                         <img src={SavePNG} onClick={saveRow} className="w-5 h-5" style={{ display: 'block', margin: '0 auto' }} />

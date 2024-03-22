@@ -56,6 +56,22 @@ function ReferralPrograms() {
       {
         Header: "Referral Date",
         accessor: "referred_date",
+        Cell: ({ value }) => {
+          // Split the raw date value into day, month, and year components
+          const [day, month, year] = value.split('-');
+          // Construct a Date object with the components in the correct order
+          const date = new Date(`${year}-${month}-${day}`);
+          // Check if the date is valid
+          if (isNaN(date.getTime())) {
+            return "Invalid Date";
+          }
+          // Extract month, day, and year
+          const formattedMonth = String(date.getMonth() + 1).padStart(2, '0');
+          const formattedDay = String(date.getDate()).padStart(2, '0');
+          const formattedYear = date.getFullYear();
+          // Format date as "mm-dd-yyyy"
+          return `${formattedMonth}-${formattedDay}-${formattedYear}`;
+        },
       },
       {
         Header: "Referral Comments",
@@ -72,6 +88,16 @@ function ReferralPrograms() {
       {
         Header: "Closed Date",
         accessor: "date_closed",
+        Cell: ({ value }) => {
+          // Parse the date string
+          const date = new Date(value);
+          // Extract day, month, and year
+          const day = String(date.getDate()).padStart(2, '0');
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const year = date.getFullYear();
+          // Format date as "dd-mm-yyyy"
+          return `${month}-${day}-${year}`;
+        },
       },
       {
         Header: "Closed By",

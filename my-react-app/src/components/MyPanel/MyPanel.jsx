@@ -94,6 +94,16 @@ function MyPanel() {
       {
         Header: "D.O.B",
         accessor: "date_of_birth",
+        Cell: ({ value }) => {
+          // Parse the date string
+          const date = new Date(value);
+          // Extract day, month, and year
+          const day = String(date.getDate()).padStart(2, '0');
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const year = date.getFullYear();
+          // Format date as "dd-mm-yyyy"
+          return `${month}-${day}-${year}`;
+        },
       },
       {
         Header: "Gender",
@@ -106,6 +116,16 @@ function MyPanel() {
       {
         Header: "Date Assigned",
         accessor: "date_assigned",
+        Cell: ({ value }) => {
+          // Parse the date string
+          const date = new Date(value);
+          // Extract day, month, and year
+          const day = String(date.getDate()).padStart(2, '0');
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const year = date.getFullYear();
+          // Format date as "dd-mm-yyyy"
+          return `${month}-${day}-${year}`;
+        },
       },
       {
         Header: "Program",
@@ -142,6 +162,15 @@ function MyPanel() {
           <img src={ExternalLinkIcon} className="size-4" alt="link" />
         </div>
         <div>
+        <Link to={`/clientprofilenew`}>
+
+        <button
+          className="px-3 py-1.5 text-xs bg-[#5BC4BF] text-white rounded-sm font-medium"
+          //onClick={toggleModal}
+        >
+          Add New
+        </button>
+        </Link>
           <button className="px-3 py-1 border-2 rounded-sm border-[#2F9384] text-xs text-[#2F9384]">
             View all
           </button>

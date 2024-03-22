@@ -16,10 +16,30 @@ import DiagnosisTable from "./components/diagnosisTable";
 import EncounterNote from "./components/encounternote";
 import ClientProfileFull from "./components/clientprofilefull";
 import SideBar from "./components/SideBar/SideBar";
+import CalendarMain from "./components/Calendar/CalendarMain";
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from "./store/slices/authSlice";
 import "./App.css";
 import "./tailwind.css";
+import ClientProfileInputForm from './components/DemoPages/ClientProfielInputForm';
+
+import Admin from './pages/AdminDashboard/AdminDashboard';
+import Authorization from './components/Authorization';
+import CareForm from './components/CareForm';
+import EncounterForm from './components/EncounterForm';
+import CreateForm from './components/CreateForm';
+// import Dashboard from './components/Dashboard';
+
+
+
+import CreateTableComponent from './components/dynamicform/createtable';
+import CreateTableForm from './components/dynamicform/createtableform';
+import AlterTable from './components/dynamicform/altertable';
+import NewPage from './components/dynamicform/nepage';
+import BulkUploadComponent from './components/dynamicform/BulkUploadComponent';
+import UserDirectory from './pages/UserDirectory/Directory';
+import ClientProfileNew from "./components/clientprofilenew/clientprofile";
+
 
 function App() {
   // Retrieve isLoggedIn state from localStorage on initial render
@@ -32,8 +52,9 @@ function App() {
   // };
 
   const isLoggedIn = useSelector(state => {
-      console.log(state);
-    return state.auth.isLoggedIn});
+    console.log(state);
+    return state.auth.isLoggedIn
+  });
   const dispatch = useDispatch();
 
   // useEffect(() => {
@@ -45,6 +66,22 @@ function App() {
   const toggleSidebar = () => {
     setIsMinimized(!isMinimized);
   };
+
+
+  const PERMISSIONS = {
+    CAN_VIEW_ADMIN: "admin",
+    CAN_CREATE_FORM: "create_form",
+    CAN_VIEW_CARE_FORM: "view_care_form",
+    CAN_VIEW_ENCOUNTER_FORM: "view_encounter_form",
+  };
+
+
+  const [user, setUser] = useState({
+    username: "admin",
+    permissions: localStorage.getItem("permissions") ? localStorage.getItem("permissions").split(",") : ["admin"]
+    // permissions: ["admin"],
+  });
+  console.log("user", user);
 
   return (
     <Router>
@@ -93,6 +130,7 @@ function App() {
                       <UserProfile onLogout={() => setIsLoggedIn(false)} />
                     }
                   /> */}
+                  <Route path="/calendar" element={<CalendarMain />} />
                   <Route path="/encounter_note" element={<EncounterNote />} />
                   <Route
                     path="/clientprofilefull"
@@ -104,6 +142,37 @@ function App() {
                   />
                   <Route path="/clientprofilefull" element={<ClientProfileFull />} />
                   <Route path="/clientprofilefull/:clientId" element={<ClientProfileFull />} />
+                  <Route path="/clientprofileform" element={<ClientProfileInputForm />} />
+
+                  <Route path="/create_form" element={<CreateTableComponent />} />
+
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/admin-dashboard" element={<Admin />} />
+                  {/* <Route element={<Authorization user={user} permissions={[PERMISSIONS.CAN_VIEW_ADMIN]} />}>
+                    <Route path="/admin-dashboard" element={<Admin user={user} setUser={setUser} />} />
+                  </Route>;
+
+                  <Route element={<Authorization user={user} permissions={[PERMISSIONS.CAN_CREATE_FORM]} />}>
+                    <Route path="/create-form" element={<CreateForm />} />
+                  </Route>;
+
+                  <Route element={<Authorization user={user} permissions={[PERMISSIONS.CAN_VIEW_CARE_FORM]} />}>
+                    <Route path="/care-form" element={<CareForm />} />
+                  </Route>;
+
+                  <Route element={<Authorization user={user} permissions={[PERMISSIONS.CAN_VIEW_ENCOUNTER_FORM]} />}>
+                    <Route path="/encounter-form" element={<EncounterForm />} />
+                  </Route>; */}
+
+
+                  <Route path="/create_table" element={<CreateTableComponent />} />
+                  <Route path='/createtableform' element={<CreateTableForm />} />
+                  <Route path="/createtableform/:tableName" element={<NewPage />} />
+                  <Route path='/alterTable' element={< AlterTable />} />
+                  <Route path='/BulkUploadComponent/:tableName' element={< BulkUploadComponent />} />
+                  <Route path='/directory' element={< UserDirectory />} />
+                  <Route path='/clientprofilenew' element={< ClientProfileNew />} />
+
                 </Routes>
               </div>
             </div>
