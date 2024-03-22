@@ -78,7 +78,7 @@ function App() {
   return (
     <Router>
       <div className="App w-full">
-        {true ? (
+        {isLoggedIn ? (
           <>
             <Navbar
               // onLogout={() => setIsLoggedIn(false)}
