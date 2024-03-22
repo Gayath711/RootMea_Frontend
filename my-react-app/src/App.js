@@ -33,12 +33,12 @@ import CreateForm from './components/CreateForm';
 
 
 import CreateTableComponent from './components/dynamicform/createtable';
-import CreateTableForm from './components/dynamicform/createtableform'
-import AlterTable from './components/dynamicform/altertable'
-import NewPage from './components/dynamicform/nepage'
-import BulkUploadComponent from './components/dynamicform/BulkUploadComponent'
-
-
+import CreateTableForm from './components/dynamicform/createtableform';
+import AlterTable from './components/dynamicform/altertable';
+import NewPage from './components/dynamicform/nepage';
+import BulkUploadComponent from './components/dynamicform/BulkUploadComponent';
+import UserDirectory from './pages/UserDirectory/Directory';
+import ClientProfileNew from "./components/clientprofilenew/clientprofile";
 
 
 function App() {
@@ -170,6 +170,8 @@ function App() {
                   <Route path="/createtableform/:tableName" element={<NewPage />} />
                   <Route path='/alterTable' element={< AlterTable />} />
                   <Route path='/BulkUploadComponent/:tableName' element={< BulkUploadComponent />} />
+                  <Route path='/directory' element={< UserDirectory />} />
+                  <Route path='/clientprofilenew' element={< ClientProfileNew />} />
 
                 </Routes>
               </div>

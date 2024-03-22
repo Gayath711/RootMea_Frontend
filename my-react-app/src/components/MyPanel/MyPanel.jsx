@@ -162,6 +162,15 @@ function MyPanel() {
           <img src={ExternalLinkIcon} className="size-4" alt="link" />
         </div>
         <div>
+        <Link to={`/clientprofilenew`}>
+
+        <button
+          className="px-3 py-1.5 text-xs bg-[#5BC4BF] text-white rounded-sm font-medium"
+          //onClick={toggleModal}
+        >
+          Add New
+        </button>
+        </Link>
           <button className="px-3 py-1 border-2 rounded-sm border-[#2F9384] text-xs text-[#2F9384]">
             View all
           </button>
