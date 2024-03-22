@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchClientsInfoAsync } from "../../store/slices/clientsInfoSlice";
 import { useWindowSize } from "../Utils/windowResize";
-import "./MyPanelStyles.css"
+import "./MyPanelStyles.css";
 
 function getRandomDate(dates) {
   const randomIndex = Math.floor(Math.random() * dates.length);
@@ -23,8 +23,7 @@ function getRandomProgram(programs) {
 }
 
 function MyPanel() {
-
-  const {width} = useWindowSize();
+  const { width } = useWindowSize();
 
   const programs = ["ECM", "Diabetes", "STOMP"];
 
@@ -44,7 +43,7 @@ function MyPanel() {
   // const [data, setData] = useState([]);
   const data = useSelector((state) => state.clientsInfo.data);
   const dataLoading = useSelector((state) => state.clientsInfo.loading);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   // const [searchQuery, setSearchQuery] = useState("");
 
   // useEffect(() => {
@@ -53,9 +52,9 @@ function MyPanel() {
 
   useEffect(() => {
     if (!dataLoading) {
-      dispatch(fetchClientsInfoAsync())
+      dispatch(fetchClientsInfoAsync());
     }
-  }, [])
+  }, []);
 
   // const fetchData = async () => {
   //   const token = localStorage.getItem("access_token");
@@ -103,8 +102,8 @@ function MyPanel() {
           // Parse the date string
           const date = new Date(value);
           // Extract day, month, and year
-          const day = String(date.getDate()).padStart(2, '0');
-          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const day = String(date.getDate()).padStart(2, "0");
+          const month = String(date.getMonth() + 1).padStart(2, "0");
           const year = date.getFullYear();
           // Format date as "dd-mm-yyyy"
           return `${month}-${day}-${year}`;
@@ -125,8 +124,8 @@ function MyPanel() {
           // Parse the date string
           const date = new Date(value);
           // Extract day, month, and year
-          const day = String(date.getDate()).padStart(2, '0');
-          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const day = String(date.getDate()).padStart(2, "0");
+          const month = String(date.getMonth() + 1).padStart(2, "0");
           const year = date.getFullYear();
           // Format date as "dd-mm-yyyy"
           return `${month}-${day}-${year}`;
@@ -140,7 +139,10 @@ function MyPanel() {
         Header: "Client Profile",
         Cell: ({ row }) => (
           <Link to={`/clientprofile/${row.original.id}`}>
-            <Avatar className="mx-auto" sx={{ bgcolor: "#77ceca", height: 25, width: 25, fontSize: 10 }}>
+            <Avatar
+              className="mx-auto"
+              sx={{ bgcolor: "#77ceca", height: 25, width: 25, fontSize: 10 }}
+            >
               {row.original?.first_name[0].toUpperCase() +
                 row.original?.last_name[0].toUpperCase()}
             </Avatar>
@@ -149,9 +151,9 @@ function MyPanel() {
       },
       {
         Header: "Client Chart",
-        Cell: ({row}) => (
+        Cell: ({ row }) => (
           <Link to={`/clientchart/${row.original.id}`}>
-          <img src={ClientChartImg} className="size-6 mx-auto" alt="client" />
+            <img src={ClientChartImg} className="size-6 mx-auto" alt="client" />
           </Link>
         ),
       },
@@ -160,16 +162,40 @@ function MyPanel() {
   );
 
   return (
-    <div id="my-panel-1" className="bg-white rounded-md shadow-md flex flex-col col-span-8">
-      <div id="my-panel-2" className="flex justify-between items-center mx-3 sm:mx-8 mt-2">
+    <div
+      id="my-panel-1"
+      className="bg-white rounded-md shadow-md flex flex-col col-span-8"
+    >
+      <div
+        id="my-panel-2"
+        className="flex justify-between items-center mx-3 sm:mx-8 mt-2"
+      >
         <div className="flex items-center space-x-4">
-          <span id="my-panel-3" className="text-lg font-medium">My Panel</span>
-          <img id="my-panel-4" src={ExternalLinkIcon} className="size-3 sm:size-4" alt="link" />
+          <span id="my-panel-3" className="text-lg font-medium">
+            My Panel
+          </span>
+          <img
+            id="my-panel-4"
+            src={ExternalLinkIcon}
+            className="size-3 sm:size-4"
+            alt="link"
+          />
         </div>
-        <div>
-          <button id="my-panel-5" className="px-3 py-1 border-1 sm:border-2 rounded-sm border-[#2F9384] text-xs text-[#2F9384]">
-            View all
-          </button>
+        <div className="space-x-2">
+            <Link to={`/clientprofilenew`}>
+              <button
+                className="px-3 py-1 text-xs bg-[#5BC4BF] text-white rounded-sm font-medium"
+                //onClick={toggleModal}
+              >
+                Add New
+              </button>
+            </Link>
+            <button
+              id="my-panel-5"
+              className="px-3 py-1 border-1 sm:border-2 rounded-sm border-[#2F9384] text-xs text-[#2F9384]"
+            >
+              View all
+            </button>
         </div>
       </div>
       <hr id="my-panel-6" className="w-[98%] mx-auto my-2" />
