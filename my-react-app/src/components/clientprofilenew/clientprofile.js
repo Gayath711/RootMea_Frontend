@@ -26,6 +26,92 @@ import SaveGreenPNG from '../images/save-green.png';
 import MyComponent from '../clientprofilefull'
 
 
+const initialValues = {
+  first_name: null,
+  middle_name: null,
+  last_name: null,
+  nickname_preferred_name: null,
+  preferred_pronouns: null,
+  email_address: null,
+  mobile_number: null,
+  home_phone: null,
+  work_phone: null,
+  best_way_to_contact: null,
+  primary_phone: null,
+  comfortable_language: null,
+  other_language: null,
+  date_of_birth: null,
+  age: null,
+  sex: null,
+  social_security_number: null,
+  us_armed_forces: null,
+  describe_the_place_you_live: null,
+  race: null,
+  other_race: null,
+  ethnicity: null,
+  gender_identity: null,
+  other_gender_identity: null,
+  sexual_orientation: null,
+  other_sexual_orientation: null,
+  mailing_address_line_1: null,
+  mailing_address_line_2: null,
+  city: null,
+  state: null,
+  zip: null,
+  usual_location: null,
+  preferred_pharmacy_name: null,
+  preferred_pharmacy_location: null,
+  preferred_pharmacy_phone: null,
+  insurance_primary_carrier_name: null,
+  insurance_primary_subscriber_id: null,
+  insurance_primary_subscriber_name: null,
+  insurance_primary_group_name: null,
+  insurance_primary_group_id: null,
+  insurance_primary_relation_to_insured: null,
+  insurance_primary_effective_from: null,
+  insurance_primary_effective_to: null,
+  insurance_secondary_carrier_name: null,
+  insurance_secondary_subscriber_id: null,
+  insurance_secondary_subscriber_name: null,
+  insurance_secondary_group_name: null,
+  insurance_secondary_group_id: null,
+  insurance_secondary_relation_to_insured: null,
+  insurance_secondary_effective_from: null,
+  insurance_secondary_effective_to: null,
+  insurance_tertiary_carrier_name: null,
+  insurance_tertiary_subscriber_id: null,
+  insurance_tertiary_subscriber_name: null,
+  insurance_tertiary_group_name: null,
+  insurance_tertiary_group_id: null,
+  insurance_tertiary_relation_to_insured: null,
+  insurance_tertiary_effective_from: null,
+  insurance_tertiary_effective_to: null,
+  emergency_contact_1_name: null,
+  emergency_contact_1_email_address: null,
+  emergency_contact_1_relationship: null,
+  emergency_contact_1_address_line_1: null,
+  emergency_contact_1_address_line_2: null,
+  emergency_contact_1_city: null,
+  emergency_contact_1_state: null,
+  emergency_contact_1_zip: null,
+  emergency_contact_1_phone: null,
+  emergency_contact_2_name: null,
+  emergency_contact_2_email_address: null,
+  emergency_contact_2_relationship: null,
+  emergency_contact_2_address_line_1: null,
+  emergency_contact_2_address_line_2: null,
+  emergency_contact_2_city: null,
+  emergency_contact_2_state: null,
+  emergency_contact_2_zip: null,
+  emergency_contact_2_phone: null,
+  system_information_original_data_source: null,
+  system_information_import_notes: null,
+  system_information_import_date: null,
+  system_information_prn: null,
+  system_information_chart_number: null,
+  system_information_system_id: null
+};
+
 
 const ClientProfile = () => {
   const { clientId } = useParams();
@@ -34,7 +120,7 @@ const ClientProfile = () => {
 
   const token = localStorage.getItem('access_token');
 
-  const [clientData, setClientData] = useState('');
+  const [clientData, setClientData] = useState(initialValues);
   const [isHovered, setIsHovered] = useState(false);
 
 
@@ -70,11 +156,19 @@ const ClientProfile = () => {
   const handleSave = (event) => {
     event.preventDefault();
     console.log('Submitting clientData:', clientData);
-    if (!clientData.first_name || !clientData.middle_name || !clientData.last_name) {
-        alert('Please fill out all mandatory fields.');
-        return;
-    }
-    axios.post(`http://localhost:8000/clientinfo-api/`, clientData, {
+    if (!clientData.first_name || 
+      !clientData.middle_name || 
+      !clientData.last_name) {
+      alert('Please fill out all mandatory fields and ensure ZIP code is at least 5 characters long and Social Security Number is 9 characters long.');
+      return;
+  } else if (clientData.zip_address_n_usual_location && clientData.zip_address_n_usual_location.length < 5) {
+      alert('Please ensure ZIP code is at least 5 characters long.');
+      return;
+  } else if (clientData.social_security_number && clientData.social_security_number.length !== 9) {
+      alert('Please ensure Social Security Number is 9 characters long.');
+      return;
+  }
+    axios.post(`http://192.168.3.24:8000/clientinfo-api/`, clientData, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -82,21 +176,7 @@ const ClientProfile = () => {
     .then(response => {
         alert("Successfully created")
         console.log('Data submitted successfully:', response.data);
-        setClientData({
-            first_name: '',
-            middle_name: '',
-            last_name: '',
-            sex: '',
-            date_of_birth: '',
-            mobile_number: '',
-            home_phone: '',
-            work_phone: '',
-            email_address: '',
-            best_way_to_contact: '',
-            primary_phone: '',
-            comfortable_language: '',
-            other_language: ''
-        });
+        setClientData(initialValues);
     })
     .catch(error => {
         console.error('Error submitting Client Data:', error);
