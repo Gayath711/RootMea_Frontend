@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import PageTitle from "../../components/PageTitle/PageTitle";
 import ClientChartTopBar from "../../components/ClientChartTopBar/ClientChartTopBar";
-import ClientProfile from "../../components/Clientprofile/ClientProfile";
+import ClientProfile from "../../components/Clientprofile1/ClientProfile";
 import SocialVitalSigns from "../../components/SocialVitalSigns/SocialVitalSigns";
 import EncounterNotes from "../../components/EncounterNotes/EncounterNotes";
 import PriorityLists from "../../components/PriorityListsClientChart/PrioriyLists";
