@@ -5,10 +5,12 @@ import ExternalLinkIcon from "../images/externalLink.svg";
 import BasicTable from "../react-table/BasicTable";
 import CarePlanImg from "../images/carePlan.svg";
 import { Checkbox } from "@mui/material";
+import { useWindowSize } from "../Utils/windowResize";
 
 function ClientGoal() {
 
   const [data, setData] = useState([]);
+  const {width} = useWindowSize();
 
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -114,20 +116,20 @@ function ClientGoal() {
   );
 
   return (
-    <div className="xl:w-full bg-white rounded-md shadow-md flex flex-col min-[320px]:w-full ">
-      <div className="flex justify-between items-center mx-4 mt-2">
-        <div className="flex items-center space-x-4">
-          <span className="text-xl font-medium">Client Goal</span>
-          <img src={ExternalLinkIcon} className="size-4" alt="link" />
+    <div className="xl:w-full bg-white rounded-md shadow-md flex flex-col min-[320px]:w-full">
+      <div className="flex justify-between items-center mx-3 sm:mx-4 mt-2">
+        <div className="flex items-center space-x-1 sm:space-x-4">
+          <span className="text-[16px] sm:text-lg font-medium">Client Goal</span>
+          <img src={ExternalLinkIcon} className="size-3 sm:size-4" alt="link" />
         </div>
-        <div className="flex items-center space-x-4 text-xs">
+        <div className="flex items-center space-x-1 sm:space-x-4 text-[8px] sm:text-xs">
           <label htmlFor="client-goal-active" className="flex items-center">
             <Checkbox
               checked={true}
               // onChange={handleChange}
               style={{
                 color: "#2F9384",
-                padding: "5px",
+                padding: width < 600 ? "3px" : "5px",
               }}
               inputProps={{ "aria-label": "controlled" }}
               /><span className="text-[#2F9384]">Active</span>
@@ -143,7 +145,7 @@ function ClientGoal() {
               inputProps={{ "aria-label": "controlled" }}
             /><span className="text-[#7397B5]">Completed</span>
           </label>
-          <button className="px-3 py-1 border-2 rounded-sm border-[#7397B5] text-[#28293B]">
+          <button className="px-3 py-1 border-1 sm:border-2 rounded-sm border-[#7397B5] text-[8px] sm:text-xs text-[#28293B]">
             View all
           </button>
         </div>

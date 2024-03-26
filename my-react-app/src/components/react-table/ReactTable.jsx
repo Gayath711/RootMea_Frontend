@@ -26,6 +26,7 @@ import {
 // import { CSVLink } from 'react-csv';
 // import { Headers } from 'react-csv/components/CommonPropTypes';
 import { Column, ColumnInstance, HeaderGroup, Row, SortingRule } from 'react-table';
+import { useWindowSize } from '../Utils/windowResize';
 // import { getEmptyImage } from 'react-dnd-html5-backend';
 // import { useDrop, useDrag, useDragLayer, DragLayerMonitor, DropTargetMonitor } from 'react-dnd';
 
@@ -78,6 +79,7 @@ import { Column, ColumnInstance, HeaderGroup, Row, SortingRule } from 'react-tab
 
 export const TablePagination = ({ gotoPage, rows, setPageSize, pageSize, pageIndex }) => {
   const [open, setOpen] = useState(false);
+  const {width} = useWindowSize();
 
   const handleClose = () => {
     setOpen(false);
@@ -100,9 +102,9 @@ export const TablePagination = ({ gotoPage, rows, setPageSize, pageSize, pageInd
       <Grid item>
         <Stack direction="row" spacing={1} alignItems="center">
           <Stack direction="row" spacing={1} alignItems="center">
-            <Typography variant="caption" color="#1A1F25">
+            {width > 640 && (<Typography variant="caption" color="#1A1F25">
               Row per page
-            </Typography>
+            </Typography>)}
             <FormControl sx={{ m: 1 }}>
               <Select
                 id="demo-controlled-open-select"
