@@ -5,6 +5,7 @@ import BasicTable from "../react-table/BasicTable";
 import axios from "axios";
 import ClientProfileImg from "../images/clientProfile.svg";
 import ClientChartImg from "../images/clientChart.svg";
+import "./ReferralProgramsStyles.css";
 
 function ReferralPrograms() {
   
@@ -109,18 +110,18 @@ function ReferralPrograms() {
 
   return (
     <div className="w-full bg-white rounded-md shadow-md flex flex-col">
-      <div className="flex justify-between items-center mx-8 mt-2">
+      <div id="referral-programs-2" className="flex justify-between items-center mx-3 sm:mx-8 mt-2">
         <div className="flex items-center space-x-4">
-          <span className="text-lg font-medium">Referral Programs</span>
-          <img src={ExternalLinkIcon} className="size-4" alt="link" />
+          <span id="referral-programs-3" className="text-lg font-medium">Referral Programs</span>
+          <img id="referral-programs-4" src={ExternalLinkIcon} className="size-3 sm:size-4" alt="link" />
         </div>
         <div>
-          <button className="px-3 py-1 border-2 rounded-sm border-[#2F9384] text-[#2F9384]">
+          <button id="referral-programs-5" className="px-3 py-1 border-1 sm:border-2 rounded-sm border-[#2F9384] text-xs text-[#2F9384]">
             View all
           </button>
         </div>
       </div>
-      <hr className="w-[98%] mx-auto my-2" />
+      <hr id="referral-programs-6" className="w-[98%] mx-auto my-2" />
       <div className="w-full flex-grow flex flex-col">
         <BasicTable type={"referralPrograms"} columns={columns} data={data} />
       </div>

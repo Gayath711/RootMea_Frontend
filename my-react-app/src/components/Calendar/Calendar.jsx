@@ -10,7 +10,7 @@ const CalendarCard = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   return (
     <>
-      <div className="bg-white shadow-md rounded-md xl:w-full text-xs border min-[320px]:w-[38%] p-[20px] ">
+      <div className="bg-white shadow-md rounded-md lg:w-full text-xs border p-[20px] col-span-3">
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DateCalendar className="date-picker" defaultValue={dayjs(selectedDate)} onChange={setSelectedDate} />
         </LocalizationProvider>

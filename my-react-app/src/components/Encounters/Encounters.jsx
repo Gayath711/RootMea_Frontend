@@ -6,8 +6,10 @@ import DocumentAddIcon from "../images/documentAdd.svg";
 import EditIcon from "../images/edit.svg";
 import EyeIcon from "../images/eye.svg";
 import { Checkbox } from "@mui/material";
+import { useWindowSize } from "../Utils/windowResize";
 
 function Encounters() {
+  const {width} = useWindowSize();
   const [data, setData] = useState([
     {
       date: "01-01-2000",
@@ -105,23 +107,22 @@ function Encounters() {
 
   return (
     <div className="w-full bg-white rounded-md shadow-md flex flex-col">
-      <div className="flex justify-between items-center mx-8 mt-2">
-        <div className="flex items-center space-x-4">
-          <span className="text-lg font-medium">Encounters</span>
-          <img src={ExternalLinkIcon} className="size-4" alt="link" />
+      <div className="flex justify-between items-center mx-3 sm:mx-4 mt-2">
+        <div className="flex items-center space-x-1 sm:space-x-4">
+          <span className="text-[16px] sm:text-lg font-medium">Encounters</span>
+          <img src={ExternalLinkIcon} className="size-3 sm:size-4" alt="link" />
         </div>
-        <div className="flex items-center space-x-4 text-xs">
+        <div className="flex items-center space-x-1 sm:space-x-4 text-[8px] sm:text-xs">
           <label htmlFor="client-goal-active" className="flex items-center">
             <Checkbox
               checked={true}
               // onChange={handleChange}
               style={{
                 color: "#2F9384",
-                padding: "5px",
+                padding: width < 600 ? "3px" : "5px",
               }}
               inputProps={{ "aria-label": "controlled" }}
-            />
-            <span className="text-[#2F9384]">Active</span>
+              /><span className="text-[#2F9384]">Active</span>
           </label>
           <label htmlFor="client-goal-active" className="flex items-center">
             <Checkbox
@@ -132,10 +133,9 @@ function Encounters() {
                 padding: "5px",
               }}
               inputProps={{ "aria-label": "controlled" }}
-            />
-            <span className="text-[#1F4B51]">Completed</span>
+            /><span className="text-[#7397B5]">Completed</span>
           </label>
-          <button className="px-3 py-1 border-1 rounded-sm border-[#1F4B51] text-[#28293B]">
+          <button className="px-3 py-1 border-2 rounded-sm border-[#7397B5] text-[8px] sm:text-xs text-[#28293B]">
             View all
           </button>
         </div>

@@ -5,6 +5,7 @@ import BasicTable from "../react-table/BasicTable";
 import DocumentAddIcon from "../images/documentAdd.svg"
 import EditIcon from "../images/edit.svg"
 import EyeIcon from "../images/eye.svg"
+import "./AppointmentCalendarStyles.css";
 
 function AppointmentCalendar() {
 
@@ -87,18 +88,18 @@ function AppointmentCalendar() {
 
   return (
     <div className="w-full bg-white rounded-md shadow-md flex flex-col">
-      <div className="flex justify-between items-center mx-8 mt-2">
-        <div className="flex items-center space-x-4">
-          <span className="text-lg font-medium">Appointment Calendar</span>
-          <img src={ExternalLinkIcon} className="size-4" alt="link" />
+      <div id="appointment-calendar-2" className="flex justify-between items-center mx-3 sm:mx-8 mt-2">
+        <div className="flex items-center space-x-2 sm:space-x-4">
+          <span id="appointment-calendar-3" className="text-lg font-medium">Appointment Calendar</span>
+          <img id="appointment-calendar-4" src={ExternalLinkIcon} className="size-3 sm:size-4" alt="link" />
         </div>
         <div>
-          <button className="px-2 py-1 border-1 text-sm rounded-sm border-[#EBAC88] text-[#CB6A69]">
+          <button id="appointment-calendar-5" className="px-3 py-1 border-1 sm:border-2 rounded-sm border-[#EBAC88] text-[#CB6A69] text-xs">
             Create New
           </button>
         </div>
       </div>
-      <hr className="w-[98%] mx-auto my-2" />
+      <hr id="appointment-calendar-6" className="w-[98%] mx-auto my-2" />
       <div className="w-full flex-grow flex flex-col">
         <BasicTable type={'appointmentCalendar'} columns={columns} data={data} />
       </div>

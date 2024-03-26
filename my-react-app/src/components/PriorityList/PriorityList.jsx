@@ -3,6 +3,7 @@ import { useState, useMemo, useEffect } from "react";
 import ExternalLinkIcon from "../images/externalLink.svg";
 import BasicTable from "../react-table/BasicTable";
 import axios from "axios";
+import "./PriorityListStyles.css";
 
 function PriorityList() {
   
@@ -76,17 +77,19 @@ function PriorityList() {
   );
 
   return (
-    <div className="bg-white rounded-md shadow-md flex flex-col xl:w-[49%] min-[320px]:w-full">
-      <div className="flex justify-between items-center mx-4 mt-2">
+    <div className="bg-white rounded-md shadow-md flex flex-col min-[320px]:w-full">
+      <div id="priority-list-2" className="flex justify-between items-center mx-3 sm:mx-8 mt-2">
         <div className="flex items-center space-x-4">
-          <span className="text-lg font-medium">Priority Lists</span>
-          <img src={ExternalLinkIcon} className="size-4" alt="link" />
+          <span id="priority-list-3" className="text-lg font-medium">Priority Lists</span>
+          <img id="priority-list-4" src={ExternalLinkIcon} className="size-3 sm:size-4" alt="link" />
         </div>
-        <button className="px-3 py-1 border-2 rounded-sm border-[#7397B5] text-[#28293B]">
+        <div>
+          <button id="priority-list-5" className="px-3 py-1 border-1 sm:border-2 rounded-sm border-[#7397B5] text-[#28293B] text-xs">
             View all
-        </button>
+          </button>
+        </div>
       </div>
-      <hr className="w-[98%] mx-auto my-2" />
+      <hr id="priority-list-6" className="w-[98%] mx-auto my-2" />
       <div className="w-full flex-grow flex flex-col">
         <BasicTable type={"priorityList"} columns={columns} data={data} />
       </div>
