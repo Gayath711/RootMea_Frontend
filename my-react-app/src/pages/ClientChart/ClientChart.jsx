@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import PageTitle from "../../components/PageTitle/PageTitle";
 import ClientChartTopBar from "../../components/ClientChartTopBar/ClientChartTopBar";
-import ClientProfile from "../../components/clientprofile/ClientProfile";
+import ClientProfile from "../../components/Clientprofile1/ClientProfile";
 import SocialVitalSigns from "../../components/SocialVitalSigns/SocialVitalSigns";
 import EncounterNotes from "../../components/EncounterNotes/EncounterNotes";
 import PriorityLists from "../../components/PriorityListsClientChart/PrioriyLists";
@@ -18,6 +18,10 @@ import LabResults from "../../components/LabResults/LabResults";
 
 function ClientChart() {
   const { clientId } = useParams();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [])
 
   return (
     <div className="flex flex-col space-y-8">

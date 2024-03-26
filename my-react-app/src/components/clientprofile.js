@@ -201,9 +201,9 @@ const ClientProfile = () => {
               <SystemInformation id={8} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
             </div>
 
-            <div>
+            {/* <div>
               <MyComponent id={9} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
-            </div>
+            </div> */}
 
             {/* <div className='flex justify-center space-x-4'>
               <SecondaryButton text="Cancel" />
