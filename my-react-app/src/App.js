@@ -39,6 +39,7 @@ import NewPage from './components/dynamicform/nepage';
 import BulkUploadComponent from './components/dynamicform/BulkUploadComponent';
 import UserDirectory from './pages/UserDirectory/Directory';
 import ClientProfileNew from "./components/clientprofilenew/clientprofile";
+import SocialVitalSignsMain from "./components/SocialVitalSigns/SocialVitalSignsMain";
 
 
 function App() {
@@ -172,6 +173,11 @@ function App() {
                   <Route path='/BulkUploadComponent/:tableName' element={< BulkUploadComponent />} />
                   <Route path='/directory' element={< UserDirectory />} />
                   <Route path='/clientprofilenew' element={< ClientProfileNew />} />
+
+                  <Route
+                    path="/socialvitalsigns/:clientId"
+                    element={<SocialVitalSignsMain />}
+                  />
 
                 </Routes>
               </div>

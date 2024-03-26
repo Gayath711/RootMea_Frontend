@@ -21,7 +21,7 @@ function ClientChart() {
 
   return (
     <div className="flex flex-col space-y-8">
-      <PageTitle clientId={clientId} />
+      <PageTitle clientId={clientId} title={"Client Chart"} />
       <ClientChartTopBar clientId={clientId} />
       <ClientProfile clientId={clientId} />
       <div className="grid grid-cols-12 gap-x-4">
