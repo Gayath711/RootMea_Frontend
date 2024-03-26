@@ -79,10 +79,10 @@ function PriorityList() {
     <div className="bg-white rounded-md shadow-md flex flex-col xl:w-[49%] min-[320px]:w-full">
       <div className="flex justify-between items-center mx-4 mt-2">
         <div className="flex items-center space-x-4">
-          <span className="text-lg font-medium">Priority Lists</span>
+          <span className="text-xl font-medium">Priority Lists</span>
           <img src={ExternalLinkIcon} className="size-4" alt="link" />
         </div>
-        <button className="px-3 py-1 border-2 rounded-sm border-[#7397B5] text-[#28293B]">
+        <button className="px-3 py-1 border-2 text-xs rounded-sm border-[#7397B5] text-[#28293B]">
             View all
         </button>
       </div>

@@ -158,7 +158,7 @@ function MyPanel() {
     <div className="w-full bg-white rounded-md shadow-md flex flex-col">
       <div className="flex justify-between items-center mx-8 mt-2">
         <div className="flex items-center space-x-4">
-          <span className="text-lg font-medium">My Panel</span>
+          <span className="text-xl font-medium">My Panel</span>
           <img src={ExternalLinkIcon} className="size-4" alt="link" />
         </div>
         <div>

@@ -12,7 +12,7 @@ const GreetingCard = () => {
           Get a snapshot of Roots member's overall picture of health and wellness
         </div>
         <button className="flex justify-center items-center space-x-2 mt-8 px-4 py-2.5 bg-white rounded-sm">
-          <span className="text-[#2F9384] text-sm">Select Staff</span>
+          <span className="text-[#2F9384] text-base font-medium">Select Staff</span>
           <img src={DownArrowIcon} className="size-4" alt="arrow" />
         </button>
       </div>

@@ -165,7 +165,7 @@ function PriorityLists({clientId}) {
           <img src={ExternalLinkIcon} className="size-4" alt="link" />
         </div>
         <div className="flex items-center gap-x-10">
-          <button className="px-3 py-1.5 text-xs bg-[#76818E] text-white rounded-sm font-medium">
+          <button className="px-3 py-2 text-sm bg-[#76818E] text-white rounded-sm font-medium">
             Add New
           </button>
           <RemoveCircleIcon

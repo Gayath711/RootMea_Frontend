@@ -32,7 +32,7 @@ function NotificationCard() {
   return (
     <div className="bg-white rounded-md shadow-md xl:w-full min-[320px]:w-full">
       <div className="flex justify-between items-center px-6 my-2">
-        <div className="text-lg flex items-center space-x-3 font-medium py-1">
+        <div className="text-xl flex items-center space-x-3 font-medium py-1">
           <div>Notifications</div>
           <img src={FilterIcon} className="size-4" alt="filter" />
         </div>
@@ -41,7 +41,7 @@ function NotificationCard() {
         </button>
       </div>
       <hr className="w-11/12 mx-auto my-2" />
-      <div className="flex flex-col space-y-4 py-4 items-center">
+      <div className="flex flex-col space-y-7 py-4 items-center">
         <NotificationTile />
         <NotificationTile />
         <NotificationTile />

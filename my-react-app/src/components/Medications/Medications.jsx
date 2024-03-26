@@ -134,7 +134,7 @@ function Medications({clientId}) {
         </div>
         <div className="flex items-center gap-x-10">
           <SearchIcon className="text-[#585A60] hover:cursor-pointer" />
-          <button className="px-3 py-1.5 text-xs bg-[#E4C3B1] text-white rounded-sm font-medium">
+          <button className="px-3 py-2 text-sm bg-[#E4C3B1] text-white rounded-sm font-medium">
             Add New
           </button>
           <RemoveCircleIcon

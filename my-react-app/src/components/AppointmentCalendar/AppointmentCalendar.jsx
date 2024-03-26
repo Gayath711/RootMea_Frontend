@@ -89,11 +89,11 @@ function AppointmentCalendar() {
     <div className="w-full bg-white rounded-md shadow-md flex flex-col">
       <div className="flex justify-between items-center mx-8 mt-2">
         <div className="flex items-center space-x-4">
-          <span className="text-lg font-medium">Appointment Calendar</span>
+          <span className="text-xl font-medium">Appointment Calendar</span>
           <img src={ExternalLinkIcon} className="size-4" alt="link" />
         </div>
         <div>
-          <button className="px-2 py-1 border-1 text-sm rounded-sm border-[#EBAC88] text-[#CB6A69]">
+          <button className="px-2 py-1 border-2 text-xs rounded-sm border-[#EBAC88] text-[#CB6A69]">
             Create New
           </button>
         </div>

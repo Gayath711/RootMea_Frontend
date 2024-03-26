@@ -77,7 +77,7 @@ const Content = ({data}) => {
               alt="badge"
             />
           </div>
-          <div className="text-white flex flex-col justify-evenly gap-2 my-2.5 font-semibold items-center">
+          <div className="text-white text-lg flex flex-col justify-evenly gap-2 my-2.5 font-semibold items-center">
             <div>{data?.first_name}</div>
             <div>#2154984641</div>
           </div>
