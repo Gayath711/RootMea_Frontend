@@ -251,7 +251,7 @@ function ReactTable({ columns, data, striped, type, top, defaultPageSize }) {
                       paddingBottom: "8px",
                       fontWeight: "600",
                       textAlign: column.align || "center",
-                      fontSize: column.fontSize || 13,
+                      fontSize: column.fontSize || 15,
                       whiteSpace: "nowrap",
                       color: "inherit",
                     }}
@@ -283,7 +283,7 @@ function ReactTable({ columns, data, striped, type, top, defaultPageSize }) {
                         paddingTop: "8px",
                         paddingBottom: "8px",
                         textAlign: cell.column.align || "center",
-                        fontSize: cell.column.fontSize || 13,
+                        fontSize: cell.column.fontSize || 14,
                         whiteSpace: "nowrap",
                       }}
                       {...cell.getCellProps([

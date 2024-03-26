@@ -130,7 +130,7 @@ function Appointments({clientId}) {
           <img src={ExternalLinkIcon} className="size-4" alt="link" />
         </div>
         <div className="flex items-center gap-x-10">
-          <button className="px-3 py-1.5 text-xs bg-[#78C3B8] text-[#1A1F25] rounded-sm font-medium">
+          <button className="px-3 py-2 text-sm bg-[#78C3B8] text-[#1A1F25] rounded-sm font-medium">
             Add New
           </button>
           <RemoveCircleIcon

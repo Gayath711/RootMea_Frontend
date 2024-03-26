@@ -47,7 +47,7 @@ function NotificationCard() {
         </button>
       </div>
       <hr className="w-11/12 mx-auto my-2" />
-      <div className="flex flex-col space-y-4 py-4 items-center">
+      <div className="flex flex-col space-y-7 py-4 items-center">
         <NotificationTile />
         <NotificationTile />
         <NotificationTile />

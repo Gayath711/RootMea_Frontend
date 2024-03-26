@@ -19,7 +19,7 @@ const Users = ({ setShowAlert, setUser, group }) => {
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const response = await axios.get("http://localhost:8000/api/user_directory");
+        const response = await axios.get("http://192.168.3.24:8000/api/user_directory");
         setUsers(response.data);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -65,7 +65,7 @@ const Users = ({ setShowAlert, setUser, group }) => {
   useEffect(() => {
     async function fetchProjects() {
       try {
-        const response = await axios.get("http://localhost:8000/api/program_directory");
+        const response = await axios.get("http://192.168.3.24:8000/api/program_directory");
         setProjects(response.data);
       } catch (error) {
         console.error("Error fetching projects:", error);
