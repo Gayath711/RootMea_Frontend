@@ -6,7 +6,7 @@ import GreetingCard from "../../components/GreetingCard/GreetingCard";
 import TopStats from "../../components/TopStatsCard/TopStatsCard";
 import SocialVital from "../../components/SocialVital/SocialVital";
 import MyPanel from "../../components/MyPanel/MyPanel";
-import CalendarCard from "../../components/Calendar/Calendar";
+import CalendarCard from "../../components/Calendar1/Calendar";
 import Appointments from "../../components/Appointment/Appointment";
 import ClientGoal from "../../components/ClientGoal/ClientGoal";
 import NotificationCard from "../../components/NotificationCard/NotificationCard";
