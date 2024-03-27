@@ -6,8 +6,8 @@ import "./TopStatsCardStyles.css"
 
 const TopStats =() => {
     return (
-        <div id="top-stats-1" className="bg-white rounded-md shadow-md col-span-3">
-            <div id="top-stats-2" className="flex justify-around text-lg font-medium my-2 text-center">
+        <div id="top-stats-1" className="bg-white rounded-md shadow-md col-span-3 flex-1">
+            <div id="top-stats-2" className="flex justify-around text-lg font-medium mt-6 mb-2 text-center">
                 <div id="top-stats-3">Total Clients</div>
                 <div id="top-stats-4">Total Program</div>
             </div>

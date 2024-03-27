@@ -168,7 +168,7 @@ function MyPanel() {
     >
       <div
         id="my-panel-2"
-        className="flex justify-between items-center mx-3 sm:mx-8 mt-2"
+        className="flex justify-between items-center mx-3 sm:mx-8 mt-6"
       >
         <div className="flex items-center space-x-4">
           <span id="my-panel-3" className="text-lg font-medium">
@@ -184,7 +184,7 @@ function MyPanel() {
         <div className="space-x-2">
             <Link to={`/clientprofilenew`}>
               <button
-                className="px-3 py-1 text-xs bg-[#5BC4BF] text-white rounded-sm font-medium"
+                className="px-3 py-1 text-[13px] font-medium leading-5 bg-[#5BC4BF] text-white rounded-sm font-medium"
                 //onClick={toggleModal}
               >
                 Add New
@@ -192,7 +192,7 @@ function MyPanel() {
             </Link>
             <button
               id="my-panel-5"
-              className="px-3 py-1 border-1 sm:border-2 rounded-sm border-[#2F9384] text-xs text-[#2F9384]"
+              className="px-3 py-1 border-1 sm:border-2 rounded-sm border-[#2F9384] text-[13px] font-medium leading-5 text-[#2F9384]"
             >
               View all
             </button>

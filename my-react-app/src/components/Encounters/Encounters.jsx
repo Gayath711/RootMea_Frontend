@@ -107,7 +107,7 @@ function Encounters() {
 
   return (
     <div className="w-full bg-white rounded-md shadow-md flex flex-col">
-      <div className="flex justify-between items-center mx-3 sm:mx-4 mt-2">
+      <div className="flex justify-between items-center mx-3 sm:mx-4 mt-6">
         <div className="flex items-center space-x-1 sm:space-x-4">
           <span className="text-[16px] sm:text-lg font-medium">Encounters</span>
           <img src={ExternalLinkIcon} className="size-3 sm:size-4" alt="link" />
@@ -135,7 +135,7 @@ function Encounters() {
               inputProps={{ "aria-label": "controlled" }}
             /><span className="text-[#7397B5]">Completed</span>
           </label>
-          <button className="px-3 py-1 border-2 rounded-sm border-[#7397B5] text-[8px] sm:text-xs text-[#28293B]">
+          <button className="px-3 py-1 border-1 rounded-sm border-[#1F4B51] text-[13px] font-medium leading-5 sm:text-xs text-[#1F4B51]">
             View all
           </button>
         </div>

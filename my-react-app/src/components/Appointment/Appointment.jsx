@@ -24,7 +24,7 @@ const AppointmentItem = () => {
 function Appointment() {
   return (
     <div className="bg-white w-full rounded-md shadow-md">
-      <div className="flex justify-between items-center mx-3 sm:mx-6 my-2">
+      <div className="flex justify-between items-center mx-3 sm:mx-6 mt-6 mb-2">
         <div id="appointment-1" className="text-lg font-medium">Upcoming</div>
         <button id="appointment-2" className="flex justify-center items-center space-x-1 bg-[#5BC4BF] text-white px-2.5 py-1 sm:py-1.5 my-1.5 sm:my-0 text-xs rounded-sm">
           <AddCircleIcon id="appointment-3" className="text-white size-3 sm:size-4" />
