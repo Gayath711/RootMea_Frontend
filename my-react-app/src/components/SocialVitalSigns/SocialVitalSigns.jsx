@@ -1,5 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
+
 import { fetchSocialVitalSignsAsync } from "../../store/slices/socialVitalSignsSlice";
 import ExternalLinkIcon from "../images/externalLink.svg";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
@@ -11,12 +13,14 @@ const options = {
   Medium: "bg-[#FEE4D0] text-[#F79421]",
   Low: "bg-[#FEFAE5] text-[#F5D11E]",
   No: "bg-[#E9FEFB] text-[#2F9384]",
-  Yes: "bg-[#FFE5E5] text-[#FF0A0A]"
+  Yes: "bg-[#FFE5E5] text-[#FF0A0A]",
 };
 
 const Tag = ({ text }) => {
   return (
-    <div className={`${options[text]} text-center text-xs px-3 py-0.5 mx-auto w-fit`}>
+    <div
+      className={`${options[text]} text-center text-xs px-3 py-0.5 mx-auto w-fit`}
+    >
       {text}
     </div>
   );
@@ -27,13 +31,17 @@ const Content = ({ data, columns }) => {
   return (
     <div className="flex-grow flex flex-col">
       <hr className="w-[99%] mx-auto text-[#bababa] flex-grow-0" />
-        <BasicTable type={"socialVitalSigns"} defaultPageSize={10} columns={columns} data={data} />
-      </div>
+      <BasicTable
+        type={"socialVitalSigns"}
+        defaultPageSize={10}
+        columns={columns}
+        data={data}
+      />
+    </div>
   );
 };
 
-function SocialVitalSigns({clientId}) {
-
+function SocialVitalSigns({ clientId }) {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.socialVitalSigns.data);
   const dataLoading = useSelector((state) => state.socialVitalSigns.loading);
@@ -116,7 +124,12 @@ function SocialVitalSigns({clientId}) {
       {
         Header: "Actions",
         Cell: ({ row }) => (
-          <img src={EyeIcon} className="size-4 mx-auto" alt="view" />
+          <Link
+            to={`/socialvitalsigns/${row.original.id}`}
+            state={`${row.original.domain}`}
+          >
+            <img src={EyeIcon} className="size-4 mx-auto" alt="view" />
+          </Link>
         ),
       },
     ],
@@ -126,7 +139,9 @@ function SocialVitalSigns({clientId}) {
   return (
     <div
       id="clientChartClientProfile"
-      className={`bg-white rounded-md shadow-sm flex flex-col ${open ? "h-full" : ""}`}
+      className={`bg-white rounded-md shadow-sm flex flex-col ${
+        open ? "h-full" : ""
+      }`}
     >
       <div className="flex justify-between p-3">
         <div className="flex gap-4 items-center">

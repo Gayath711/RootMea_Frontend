@@ -42,7 +42,7 @@ const SocialVitalSigns = ({ id }) => {
         "id": 10, "domain": "Healthcare - General Health", "risk": "Medium", "date_last_accessed": "2022-09-21"
     },
     {
-        "id": 10, "domain": "Healthcare - Cardiovascular  risk", "risk": "Low", "date_last_accessed": "2022-10-06"
+        "id": 10, "domain": "Healthcare - Cardiovascular risk", "risk": "Low", "date_last_accessed": "2022-10-06"
     }
     ]);
 
@@ -110,7 +110,7 @@ const SocialVitalSigns = ({ id }) => {
                                                 ))}
                                                 <th className='text-left' style={{ padding: '20px', backgroundColor: 'white', borderBottom: '1px solid #34703C' }}>
                                                     Date Assigned
-                                                </th>                                                
+                                                </th>
                                                 <th className='text-center' style={{ minWidth: '130px', backgroundColor: 'white', borderBottom: '1px solid #34703C' }}>
                                                     Action
                                                 </th>
@@ -138,7 +138,7 @@ const SocialVitalSigns = ({ id }) => {
                                                             </td>
                                                         );
                                                     })}
-                                                    <td  style={{ padding: '15px 20px', backgroundColor: 'white', borderTop: '1px solid #E1FBE8' }}>
+                                                    <td style={{ padding: '15px 20px', backgroundColor: 'white', borderTop: '1px solid #E1FBE8' }}>
                                                         2023-10-01
                                                     </td>
                                                     <td className='' style={{ backgroundColor: 'white', borderTop: '1px solid #E1FBE8' }}>

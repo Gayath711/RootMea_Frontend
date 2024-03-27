@@ -38,7 +38,8 @@ import NewPage from './components/dynamicform/nepage';
 import BulkUploadComponent from './components/dynamicform/BulkUploadComponent';
 import UserDirectory from './pages/UserDirectory/Directory';
 import ClientProfileNew from "./components/clientprofilenew/clientprofile";
-import { useWindowSize } from "./components/Utils/windowResize";
+import { useWindowSize } from "./components/Utils/windowResize"; import SocialVitalSignsMain from "./components/SocialVitalSigns/SocialVitalSignsMain";
+
 
 function App() {
   // Retrieve isLoggedIn state from localStorage on initial render
@@ -195,6 +196,11 @@ function App() {
                     path="/BulkUploadComponent/:tableName"
                     element={<BulkUploadComponent />}
                   />
+                  <Route
+                    path="/socialvitalsigns/:clientId"
+                    element={<SocialVitalSignsMain />}
+                  />
+
                 </Routes>
               </div>
             </div>
