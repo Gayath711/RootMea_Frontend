@@ -10,6 +10,7 @@ import GroupIcon2 from "../images/groupIcon2.svg";
 import SettingIcon from "../images/settingIcon.svg";
 import ProfileIcon from "../images/profileIcon.svg";
 import { useWindowSize } from "../Utils/windowResize";
+import apiURL from '../../apiConfig';
 
 const Navbar = ({ onLogout, isMinimized, toggleSidebar }) => {
   const navigate = useNavigate(); // Initialize navigate function
@@ -31,7 +32,7 @@ const Navbar = ({ onLogout, isMinimized, toggleSidebar }) => {
   useEffect(() => {
     const fetchProfileType = async () => {
       try {
-        const response = await fetch("http://192.168.3.24:8000/profile-type/", {
+        const response = await fetch(`${apiURL}/profile-type/`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
           },

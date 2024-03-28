@@ -4,6 +4,7 @@ import { useTable } from 'react-table';
 import { COLUMNS } from '../constants';
 import '../css/mypanel.module.css'
 import axios from 'axios';
+import apiURL from '../../apiConfig';
 
 const ClientGoals = (id) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -52,7 +53,7 @@ const ClientGoals = (id) => {
             }
     
             try {
-                const response = await axios.get(`http://192.168.3.24:8000/clientgoal-api`, {
+                const response = await axios.get(`${apiURL}/clientgoal-api`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }

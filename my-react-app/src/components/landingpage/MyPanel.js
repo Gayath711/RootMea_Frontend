@@ -5,6 +5,7 @@ import { COLUMNS } from '../constants';
 import '../css/mypanel.module.css'
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import apiURL from '../../apiConfig';
 
 const MyPanel = (id) => {
     const [isOpen, setIsOpen] = useState(true);
@@ -55,7 +56,7 @@ const MyPanel = (id) => {
         }
 
         try {
-            const response = await axios.get(`http://192.168.3.24:8000/clientinfo-api?search=${searchQuery}`, {
+            const response = await axios.get(`${apiURL}/clientinfo-api?search=${searchQuery}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

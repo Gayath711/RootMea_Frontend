@@ -4,6 +4,7 @@ import { useTable } from 'react-table';
 import { COLUMNS } from '../constants';
 import '../css/mypanel.module.css'
 import axios from 'axios';
+import apiURL from '../../apiConfig';
 
 const Referrals = (id) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -51,7 +52,7 @@ const Referrals = (id) => {
             }
     
             try {
-                const response = await axios.get(`http://192.168.3.24:8000/clientreferral-api`, {
+                const response = await axios.get(`${apiURL}/clientreferral-api`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }

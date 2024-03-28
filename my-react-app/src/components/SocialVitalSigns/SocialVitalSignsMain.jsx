@@ -9,6 +9,7 @@ import SideBar from "./SideBar";
 import SvsContent from "./SvsContent";
 import Graph from "./Graph";
 import Stats from "./Stats";
+import apiURL from '../../apiConfig';
 
 const SocialVitalSignsMain = () => {
   const { clientId } = useParams();
@@ -43,7 +44,7 @@ const SocialVitalSignsMain = () => {
 
   useEffect(() => {
     axios
-      .get(`http://192.168.3.24:8000/api/clientsvsquestions/`, {
+      .get(`${apiURL}/api/clientsvsquestions/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -58,7 +59,7 @@ const SocialVitalSignsMain = () => {
       });
 
     axios
-      .get(`http://192.168.3.24:8000/api/clientsvsfull/${clientId}/`, {
+      .get(`${apiURL}/api/clientsvsfull/${clientId}/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

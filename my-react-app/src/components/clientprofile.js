@@ -25,8 +25,8 @@ import EditGreenPNG from './images/edit-green.png';
 import SaveGreenPNG from './images/save-green.png';
 // import DynamicFieldForm from './clientprofile/dynamicfield'
 
-import MyComponent from './clientprofilefull'
-
+import MyComponent from './clientprofilefull';
+import apiURL from '.././apiConfig';
 
 
 const ClientProfile = () => {
@@ -41,7 +41,7 @@ const ClientProfile = () => {
 
   useEffect(() => {
     console.log(clientId, "clientId")
-    axios.get(`http://192.168.3.24:8000/clientinfo-api/${clientId}`, {
+    axios.get(`${apiURL}/clientinfo-api/${clientId}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -86,7 +86,7 @@ const ClientProfile = () => {
     setIsHovered(false)
     window.scrollTo({ top: 0, behavior: 'smooth' });
     // Perform API request to update client data
-    axios.put(`http://192.168.3.24:8000/clientinfo-api/${clientId}`, clientData, {
+    axios.put(`${apiURL}/clientinfo-api/${clientId}`, clientData, {
       headers: {
         Authorization: `Bearer ${token}`
       }

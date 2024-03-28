@@ -6,6 +6,7 @@ import axios from "axios";
 import ClientProfileImg from "../images/clientProfile.svg";
 import ClientChartImg from "../images/clientChart.svg";
 import "./ReferralProgramsStyles.css";
+import apiURL from '../../apiConfig';
 
 function ReferralPrograms() {
   
@@ -26,7 +27,7 @@ function ReferralPrograms() {
 
     try {
       const response = await axios.get(
-        `http://192.168.3.24:8000/clientreferral-api?search=${searchQuery}`,
+        `${apiURL}/clientreferral-api?search=${searchQuery}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

@@ -7,6 +7,7 @@ import RootsLogo from '.../image/root.png';
 import MessagePNG from '.../image/message.png';
 import NotificationPNG from '.../image/notification.png';
 import ProfilePNG from '../images/avatar-man.png';
+import apiURL from '../../apiConfig';
 
 const Navbar = ({ onLogout, isMinimized, toggleSidebar }) => {
   const navigate = useNavigate(); // Initialize navigate function
@@ -16,7 +17,7 @@ const Navbar = ({ onLogout, isMinimized, toggleSidebar }) => {
   useEffect(() => {
     const fetchProfileType = async () => {
       try {
-        const response = await fetch('http://192.168.3.24:8000/profile-type/', {
+        const response = await fetch(`${apiURL}/profile-type/`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('access_token')}`,
           },
@@ -72,7 +73,7 @@ const Navbar = ({ onLogout, isMinimized, toggleSidebar }) => {
           {profileType === 'admin12' && (
             <div>
               <button className="bg-green-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                <a href="http://192.168.3.24:8000/admin/">Admin</a>
+                <a href={`${apiURL}/admin/`}>Admin</a>
               </button>
             </div>
           )}

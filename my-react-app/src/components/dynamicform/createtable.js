@@ -12,6 +12,7 @@ import share from '../../image/share.jpg';
 import down from '../../image/down.png';
 import file from '../../image/file.jpg';
 import date from '../../image/date.png';
+import apiURL from '../../apiConfig';
 
 function CreateTableComponent() {
   const [tableName, setTableName] = useState('');
@@ -64,7 +65,7 @@ function CreateTableComponent() {
     e.preventDefault();
     try {
       console.log(columns)
-      const response = await axios.post('http://192.168.3.24:8000/create_table_endpoint/', {
+      const response = await axios.post(`${apiURL}/create_table_endpoint/`, {
         table_name: "Roots" + tableName,
         columns: columns,
         enumValues: enumValues
@@ -88,7 +89,7 @@ function CreateTableComponent() {
 
       console.log(tableName,headerValue,subHeaderValue)
       console.log(tableName)
-      const response = await axios.post(`http://192.168.3.24:8000/insert_header/${tableName}/`, {
+      const response = await axios.post(`${apiURL}/insert_header/${tableName}/`, {
         tablename: tableName,
         header_name: headerValue,
         sub_header_name: subHeaderValue,

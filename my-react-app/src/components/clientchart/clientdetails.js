@@ -8,6 +8,7 @@ import { useParams } from 'react-router-dom';
 import AvatarPNG from '../images/avatar-man.png';
 import OpenAccordianPNG from '../images/open-accordion.png';
 import ClosedAccordianPNG from '../images/closed-accordion.png';
+import apiURL from '../../apiConfig';
 
 const ClientDetails = ({ id }) => {
 
@@ -23,7 +24,7 @@ const ClientDetails = ({ id }) => {
     };
 
     useEffect(() => {
-        axios.get(`http://192.168.3.24:8000/clientinfo-api/${clientId}`, {
+        axios.get(`${apiURL}/clientinfo-api/${clientId}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

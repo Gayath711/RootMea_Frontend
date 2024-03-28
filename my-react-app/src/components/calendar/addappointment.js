@@ -9,6 +9,7 @@ import DropDown from '../common/Dropdown';
 import TextBox from '../common/TextBox';
 import DateInput from '../common/DateInput';
 import TimeInput from '../common/TimeInput';
+import apiURL from '../.././apiConfig';
 
 const AddAppointment = ({ toggleModal, savedEvents, setSavedEvents, fetchEvents, setShowAlert }) => {
     const options = [
@@ -54,7 +55,7 @@ const AddAppointment = ({ toggleModal, savedEvents, setSavedEvents, fetchEvents,
         console.log("event", event);
 
         // Save the new event
-        axios.post(`http://192.168.3.24:8000/create_event/`, event)
+        axios.post(`${apiURL}/create_event/`, event)
             .then(response => {
                 // setSavedEvents(response.data.data);
                 console.log(response.data);

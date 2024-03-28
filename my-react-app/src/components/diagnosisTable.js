@@ -4,6 +4,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useParams } from 'react-router-dom';
+import apiURL from '.././apiConfig';
 
 function DiagnosisTable() {
   const { clientId } = useParams();
@@ -13,7 +14,7 @@ function DiagnosisTable() {
   const [showEditModal, setShowEditModal] = useState(false);
 
   useEffect(() => {
-    axios.get(`http://192.168.3.24:8000/clientdiagnoses-api/${clientId}`)
+    axios.get(`${apiURL}/clientdiagnoses-api/${clientId}`)
       .then(response => {
         setClientDiagnosisData(response.data);
         console.log(response.data);
@@ -37,11 +38,11 @@ function DiagnosisTable() {
     console.log(updatedDiagnosis)
     // Implement logic to save changes
     // You can use the updatedDiagnosis data to send back to the server
-    axios.put(`http://192.168.3.24:8000/clientdiagnoses-api/${selectedDiagnosis.id}`, updatedDiagnosis)
+    axios.put(`${apiURL}/clientdiagnoses-api/${selectedDiagnosis.id}`, updatedDiagnosis)
       .then(response => {
         console.log('Updated Successfully:', response.data);
         // Refresh data after successful update
-        axios.get(`http://192.168.3.24:8000/clientdiagnoses-api/${clientId}`)
+        axios.get(`${apiURL}/clientdiagnoses-api/${clientId}`)
           .then(response => {
             setClientDiagnosisData(response.data);
           })

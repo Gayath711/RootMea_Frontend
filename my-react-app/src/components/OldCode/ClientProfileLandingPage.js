@@ -16,7 +16,7 @@ import Referrals from '../landingpage/Referrals';
 import Calendar from '../landingpage/Calendar';
 import Encounter from '../landingpage/Encounter';
 import Notification from '../landingpage/Notification';
-
+import apiURL from '../../apiConfig';
 
 function ClientProfileLandingPage({ onLogout }) {
   const [clientData, setClientData] = useState([]);
@@ -35,7 +35,7 @@ function ClientProfileLandingPage({ onLogout }) {
     }
 
     try {
-      const response = await axios.get(`http://192.168.3.24:8000/clientinfo-api?search=${searchQuery}`, {
+      const response = await axios.get(`${apiURL}/clientinfo-api?search=${searchQuery}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }

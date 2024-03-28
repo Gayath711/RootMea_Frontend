@@ -4,6 +4,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useParams } from 'react-router-dom';
+import apiURL from '.././apiConfig';
 
 function MedicationTable() {
   const { clientId } = useParams();
@@ -13,7 +14,7 @@ function MedicationTable() {
   const [showEditModal, setShowEditModal] = useState(false);
 
   useEffect(() => {
-    axios.get(`http://192.168.3.24:8000/clientmedication-api/${clientId}`)
+    axios.get(`${apiURL}/clientmedication-api/${clientId}`)
       .then(response => {
         setClientMedicationData(response.data);
         console.log(response.data);
@@ -37,11 +38,11 @@ function MedicationTable() {
     console.log(updatedMedication)
     // Implement logic to save changes
     // You can use the updatedMedication data to send back to the server
-    axios.put(`http://192.168.3.24:8000/clientmedication-api/${selectedMedication.id}`, updatedMedication)
+    axios.put(`${apiURL}/clientmedication-api/${selectedMedication.id}`, updatedMedication)
       .then(response => {
         console.log('Updated Successfully:', response.data);
         // Refresh data after successful update
-        axios.get(`http://192.168.3.24:8000/clientmedication-api/${clientId}`)
+        axios.get(`${apiURL}/clientmedication-api/${clientId}`)
           .then(response => {
             setClientMedicationData(response.data);
           })
