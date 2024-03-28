@@ -28,7 +28,7 @@ function ClientGoal() {
 
     try {
       const response = await axios.get(
-        `${apiURL}clientgoal-api?search=${searchQuery}`,
+        `${apiURL}/clientgoal-api?search=${searchQuery}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
