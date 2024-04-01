@@ -79,6 +79,9 @@ function AlterTable() {
     }
   };
 
+
+  
+
   useEffect(() => {
     const fetchData = async () => {
       try {

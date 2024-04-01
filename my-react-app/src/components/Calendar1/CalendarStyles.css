@@ -28,3 +28,12 @@
 .MuiDateCalendar-root {
     min-height: fit-content !important;
 }  */
+
+@media screen and (max-width: 768px){
+  .css-1q04gal-MuiDateCalendar-root, .css-1vs7z2v-MuiYearCalendar-root {
+    width: 100% !important;
+  }
+  .css-i5q14k-MuiDayCalendar-header, .css-flbe84-MuiDayCalendar-weekContainer {
+    justify-content: space-around !important;
+  }
+}

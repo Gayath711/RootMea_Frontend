@@ -62,13 +62,13 @@ function PriorityListMyPrograms() {
 
   return (
     <div className="bg-white rounded-md shadow-md flex flex-col min-[320px]:w-full ">
-      <div id="priority-list-my-programs-2" className="flex justify-between items-center mx-3 sm:mx-8 mt-2">
+      <div id="priority-list-my-programs-2" className="flex justify-between items-center mx-3 sm:mx-8 mt-6">
         <div className="flex items-center space-x-2 sm:space-x-4">
           <span id="priority-list-my-programs-3" className="text-lg font-medium">Priority Lists in my Programs</span>
           <img id="priority-list-my-programs-4" src={ExternalLinkIcon} className="size-3 sm:size-4" alt="link" />
         </div>
         <div>
-          <button id="priority-list-my-programs-5" className="px-3 py-1 border-1 sm:border-2 rounded-sm border-[#7397B5] text-[#28293B] text-xs">
+          <button id="priority-list-my-programs-5" className="px-3 py-1 border-1 sm:border-2 rounded-sm border-[#7397B5] text-[#28293B] text-[13px] font-medium leading-5">
             View all
           </button>
         </div>

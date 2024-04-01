@@ -8,6 +8,7 @@ import Screenshot3 from '../../image/Screenshot.png';
 import Screenshot4 from '../../image/Screenshot.png'; 
 import { motion } from 'framer-motion';
 import apiURL from '../../apiConfig';
+import Swal from 'sweetalert2';
 
 function NewPage() {
     const { tableName } = useParams();
@@ -19,11 +20,29 @@ function NewPage() {
     useEffect(() => {
       fetchTableHeaders();
     }, [tableName]);
+
+
+
+
+    const handleDropdownOptionsFetch = async (enumType) => {
+        try {
+            const response = await axios.get(`${apiURL}/get_enum_labels/`, {
+                params: {
+                    enum_type: enumType
+                }
+            });
+            const dropdownOptions = response.data.enum_labels;
+           
+            console.log('Dropdown options:', dropdownOptions);
+        } catch (error) {
+            console.error('Error fetching dropdown options:', error);
+        }
+    };
   
     const fetchTableHeaders = async () => {
       try {
         const cleanedTableName = tableName.replace("roots", "");
-        const response = await axios.get(`${apiURL}insert_header_get/${tableName}/`);
+        const response = await axios.get(`${apiURL}/insert_header_get/${tableName}/`);
         if (response.data.headers) {
           setTableHeaders(response.data.headers);
           console.log("headr",response.data.headers)
@@ -49,8 +68,8 @@ function NewPage() {
         try {
             const response = await axios.get(`${apiURL}/get_table_structure/${tableName}`);
             if (response.headers['content-type'].includes('application/json')) {
-                console.log(response.data.columns)
-                console.log(response.data)
+                console.log("response.data.columns",response.data.columns)
+                console.log('response.data',response.data)
                 setTableColumns(response.data.columns);
             } else {
                 console.error('Unexpected response format:', response);
@@ -74,6 +93,7 @@ function NewPage() {
         }));
     };
 
+
     const handleSubmitPost = async (event) => {
         event.preventDefault();
         try {
@@ -83,17 +103,30 @@ function NewPage() {
             if (response.status === 201) {
                 console.log('Data inserted successfully');
                 setFormData({});
-                alert('Data inserted successfully');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Data inserted successfully',
+                    timer: 2000
+                });
             } else {
                 console.error('Error:', response.data.message);
-                alert('Failed to insert data. Please try again later.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Failed to insert data. Please fill the required field properly.'
+                });
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('An unexpected error occurred. Please try again later.');
-        }
-    };
-
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'An unexpected error occurred. Please try again later.'
+            });
+        } // remove error here
+    }
+    
 
 
     const renderInputField = (column) => {
@@ -103,9 +136,13 @@ function NewPage() {
         if (column.is_nullable === "NO") {
             label += " *";
         }
+        
+     
+
+    
 
         switch (column.type) {
-            case 'character varying': // Adjusted type for VARCHAR
+            case 'character varying': 
                 return (
                     <div key={column.name} className="mb-4">
                         <label className="block mb-1">{label}</label>
@@ -183,6 +220,10 @@ function NewPage() {
                         />
                     </div>
                 );
+
+
+    
+            
             case 'timestamp without time zone':
                 return (
                     <div key={column.name} className="mb-4">
@@ -195,18 +236,35 @@ function NewPage() {
                         />
                     </div>
                 );
-            default:
-                return (
-                    <div key={column.name} className="mb-4">
-                        <label className="block mb-1">{label}</label>
-                        <input
-                            type="text" 
-                            value={formData[column.name] || ''}
-                            onChange={(event) => handleInputChange(event, column.name)}
-                            className={`${column.width} border border-gray-300 rounded px-4 py-2`}
-                        />
-                    </div>
-                );
+                default:
+                    
+
+                    
+                
+
+                   
+                    // const dropdownOptions1=[1,2,3]
+
+                    const enumType = `enum_type_${tableName}_${column.name}_enum_type`;
+                    const dropdownOptions1 =handleDropdownOptionsFetch(enumType)
+
+                    console.log(dropdownOptions1)
+
+                    return (
+                        <div key={column.name} className="mb-4">
+                            <label className="block mb-1">{label}</label>
+                            <select
+                                value={formData[column.name] || ''}
+                                onChange={(event) => handleInputChange(event, column.name)}
+                                className={`${column.width} border border-gray-300 rounded px-4 py-2`}
+                            >
+                                <option value="">Select</option>
+                                {dropdownOptions1.map(option => (
+                                    <option key={option} value={option}>{option}</option>
+                                ))}
+                            </select>
+                        </div>
+                    );
         }
     };
 
@@ -226,6 +284,8 @@ function NewPage() {
     <div>
             <ul className="grid grid-cols-1 gap-4">
                 {tableHeaders.map((header, index) => (
+
+                   
                     <motion.li
                         key={index}
                         className="p-4 bg-white rounded-lg shadow-md"
