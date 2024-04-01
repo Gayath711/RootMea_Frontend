@@ -204,9 +204,9 @@ function App() {
                   />
 
 
-<Route path='/create' element={< YourComponent />} />
-             
-                  
+                  <Route path='/create' element={< YourComponent />} />
+
+
                   <Route path='/Preview' element={< Preview />} />
 
                 </Routes>
