@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios"; // Don't forget to import axios if it's not already imported
 import RootsLogo from "../image/root.png";
-import TextBox from "./common/TextBox";
+import TextBox from "../common/TextBox";
 import { useDispatch } from "react-redux";
-import { loginAsync } from "../store/slices/authSlice";
+import { loginAsync } from "../../store/slices/authSlice";
 
 const LoginForm = ({ onLogin }) => {
   const [username, setUsername] = useState("");
@@ -79,9 +79,10 @@ const LoginForm = ({ onLogin }) => {
                 Stay Signed In
               </div>
             </div>
-            <div className=" text-black-500 text-xs font-normal">
+            <button className=" text-black-500 text-xs font-normal"
+              onClick={() => }>
               Reset Your Password
-            </div>
+            </button>
           </div>
           <div className="flex flex-col items-center pb-5">
             <button
@@ -95,6 +96,9 @@ const LoginForm = ({ onLogin }) => {
           </div>
         </div>
       </div>
+      {showModal && (
+        <Passw toggleModal={toggleModal} handleSubmit={submitAppointment} savedEvents={savedEvents} setSavedEvents={setSavedEvents} setShowAlert={setShowAlert} fetchEvents={fetchEvents} />
+      )}
       <div className="absolute bottom-0 right-0">
         <img src="./login/flower-pot.png" className="w-44 h-72"></img>
       </div>
