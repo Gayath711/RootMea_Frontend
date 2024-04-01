@@ -52,7 +52,7 @@ function DragDropDemo() {
         console.log('labelTitleList', labelTitleList);
         
         labelTitleList.forEach((element, index) => {
-            if (typeof element === 'undefined' || element === '' || (typeof empty !== 'undefined' && element === empty)) {
+            if (typeof element === 'undefined' || element === '' ) {
                 undefinedIndices.push(index);
             }
         });
