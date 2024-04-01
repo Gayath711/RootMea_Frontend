@@ -220,7 +220,7 @@ function ReactTable({ columns, data, striped, type, top, defaultPageSize }) {
     usePagination
   );
 
-  const {width} = useWindowSize();
+  const { width } = useWindowSize();
 
   return (
     <Stack className="flex-grow flex flex-col m-3">
@@ -235,7 +235,14 @@ function ReactTable({ columns, data, striped, type, top, defaultPageSize }) {
           />
         </Box>
       )}
-      <div className="overflow-x-auto flex-grow-0" style={{maxWidth: "100%", border: "1px solid #EAECEB", borderRadius: "5px"}}>
+      <div
+        className="overflow-x-auto flex-grow-0"
+        style={{
+          maxWidth: "100%",
+          border: "1px solid #EAECEB",
+          borderRadius: "5px",
+        }}
+      >
         <Table style={{ fontSize: "10px !important" }} {...getTableProps()}>
           <TableHead>
             {headerGroups.map((headerGroup) => (
@@ -272,8 +279,10 @@ function ReactTable({ columns, data, striped, type, top, defaultPageSize }) {
           >
             {page.map((row, i) => {
               prepareRow(row);
+
               return (
                 <TableRow
+                  key={row.id}
                   style={{ borderColor: "#EAECEB" }}
                   {...row.getRowProps()}
                 >
@@ -302,13 +311,13 @@ function ReactTable({ columns, data, striped, type, top, defaultPageSize }) {
       {!top && (
         // <TableRow>
         //   <TableCell sx={{ p: 2 }} colSpan={columns.length}>
-          <TablePagination
-            gotoPage={gotoPage}
-            rows={rows}
-            setPageSize={setPageSize}
-            pageIndex={pageIndex}
-            pageSize={pageSize}
-          />
+        <TablePagination
+          gotoPage={gotoPage}
+          rows={rows}
+          setPageSize={setPageSize}
+          pageIndex={pageIndex}
+          pageSize={pageSize}
+        />
         //   </TableCell>
         // </TableRow>
       )}

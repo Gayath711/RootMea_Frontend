@@ -6,6 +6,8 @@ import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import BasicTable from "../react-table/BasicTable";
 import EditIcon from "../images/edit.svg";
 import SearchIcon from "@mui/icons-material/Search";
+import MedicationsModal from "./MedicationsModal";
+import TextBox from "../common/TextBox";
 
 const options = {
   Pending: "bg-[#FFE5E5] text-[#E0382D]",
@@ -24,62 +26,38 @@ const Tag = ({ text }) => {
 };
 
 const Content = ({ data, columns }) => {
-  console.log(data, columns);
   return (
     <>
       <hr className="w-[99%] mx-auto text-[#bababa]" />
-        <BasicTable
-          type={"medications"}
-          defaultPageSize={3}
-          columns={columns}
-          data={data}
-        />
+      <BasicTable
+        type={"medications"}
+        defaultPageSize={3}
+        columns={columns}
+        data={data}
+      />
     </>
   );
 };
 
-function Medications({clientId}) {
-
+function Medications({ clientId, setShowModal, showModal }) {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.medication.data);
   const dataLoading = useSelector((state) => state.medication.loading);
 
-  useState(() => {
+  const [id, setId] = useState(null);
+
+  function fetchData() {
     if (!dataLoading) {
       dispatch(fetchMedicationInfoAsync({ clientId }));
     }
+  }
+
+  useState(() => {
+    fetchData();
   }, []);
 
   const [open, setOpen] = useState(true);
-  // const [data, setData] = useState([
-  //   {
-  //     medication: "...",
-  //     comment: "...",
-  //     updated_by: "...",
-  //     updated_date: "...",
-  //     start_date: "2024-1-1",
-  //     stop_date: "2024-1-1",
-  //     status: "done",
-  //   },
-  //   {
-  //     medication: "...",
-  //     comment: "...",
-  //     updated_by: "...",
-  //     updated_date: "...",
-  //     start_date: "2024-1-1",
-  //     stop_date: "2024-1-1",
-  //     status: "pending",
-  //   },
-  //   {
-  //     medication: "...",
-  //     comment: "...",
-  //     updated_by: "...",
-  //     updated_date: "...",
-  //     start_date: "2024-1-1",
-  //     stop_date: "2024-1-1",
-  //     status: "active",
-  //   },
-  // ]);
+  const [update, setUpdate] = useState(false);
 
   const columns = useMemo(
     () => [
@@ -115,17 +93,32 @@ function Medications({clientId}) {
       {
         Header: "Action",
         Cell: ({ row }) => (
-          <img src={EditIcon} className="size-4 mx-auto" alt="view" />
+          <img
+            src={EditIcon}
+            className="size-4 mx-auto"
+            alt="view"
+            onClick={() => {
+              setUpdate(true);
+              setId(row.original.id);
+              toggleModal();
+            }}
+          />
         ),
       },
     ],
     []
   );
 
+  const toggleModal = () => {
+    setShowModal(!showModal);
+  };
+
   return (
     <div
       id="clientChartClientProfile"
-      className={`bg-white rounded-md shadow-sm flex flex-col ${open ? "h-full" : ""}`}
+      className={`bg-white rounded-md shadow-sm flex flex-col ${
+        open ? "h-full" : ""
+      }`}
     >
       <div className="flex justify-between p-3">
         <div className="flex gap-4 items-center">
@@ -134,7 +127,12 @@ function Medications({clientId}) {
         </div>
         <div className="flex items-center gap-x-10">
           <SearchIcon className="text-[#585A60] hover:cursor-pointer" />
-          <button className="px-3 py-2 text-sm bg-[#E4C3B1] text-white rounded-sm font-medium">
+          <button
+            className="px-3 py-2 text-sm bg-[#E4C3B1] text-white rounded-sm font-medium"
+            onClick={() => {
+              setShowModal(true);
+            }}
+          >
             Add New
           </button>
           <RemoveCircleIcon
@@ -144,6 +142,16 @@ function Medications({clientId}) {
         </div>
       </div>
       {open && <Content data={data} columns={columns} />}
+      {showModal && (
+        <MedicationsModal
+          toggleModal={toggleModal}
+          clientId={clientId}
+          fetchData={fetchData}
+          data={data}
+          id={id}
+          update={update}
+        />
+      )}
     </div>
   );
 }

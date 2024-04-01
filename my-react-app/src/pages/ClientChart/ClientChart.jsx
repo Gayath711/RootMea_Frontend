@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import PageTitle from "../../components/PageTitle/PageTitle";
 import ClientChartTopBar from "../../components/ClientChartTopBar/ClientChartTopBar";
@@ -18,10 +18,12 @@ import LabResults from "../../components/LabResults/LabResults";
 
 function ClientChart() {
   const { clientId } = useParams();
+  const [showDiagnosesModal, setShowDiagnosesModal] = useState(false);
+  const [showMedicationsModal, setShowMedicationsModal] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [])
+  }, []);
 
   return (
     <div className="flex flex-col space-y-8">
@@ -61,10 +63,18 @@ function ClientChart() {
           <Referrals clientId={clientId} />
         </div>
       </div>
-      <Diagnoses clientId={clientId} />
+      <Diagnoses
+        clientId={clientId}
+        showModal={showDiagnosesModal}
+        setShowModal={setShowDiagnosesModal}
+      />
       <div className="grid grid-cols-12 gap-x-4">
         <div className="col-span-7">
-          <Medications clientId={clientId} />
+          <Medications
+            clientId={clientId}
+            showModal={showMedicationsModal}
+            setShowModal={setShowMedicationsModal}
+          />
         </div>
         <div className="col-span-5">
           <LabResults clientId={clientId} />

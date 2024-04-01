@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchDiagnosesInfoAsync } from "../../store/slices/diagnosesSlice";
 import ExternalLinkIcon from "../images/externalLink.svg";
@@ -6,6 +6,7 @@ import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import BasicTable from "../react-table/BasicTable";
 import EyeIcon from "../images/eye.svg";
 import SearchIcon from "@mui/icons-material/Search";
+import DiagnosesModal from "./DiagnosesModal";
 
 const options = {
   Pending: "bg-[#FFE5E5] text-[#E0382D]",
@@ -24,62 +25,42 @@ const Tag = ({ text }) => {
 };
 
 const Content = ({ data, columns }) => {
-  console.log(data, columns);
   return (
     <>
       <hr className="w-[99%] mx-auto text-[#bababa]" />
-        <BasicTable
-          type={"diagnoses"}
-          defaultPageSize={3}
-          columns={columns}
-          data={data}
-        />
+      <BasicTable
+        type={"diagnoses"}
+        defaultPageSize={3}
+        columns={columns}
+        data={data}
+      />
     </>
   );
 };
 
-function Diagnoses({clientId}) {
-
+function Diagnoses({ clientId, setShowModal, showModal }) {
   const dispatch = useDispatch();
+  const [id, setId] = useState(null);
   const data = useSelector((state) => state.diagnoses.data);
   const dataLoading = useSelector((state) => state.diagnoses.loading);
 
-  useState(() => {
+  const [open, setOpen] = useState(true);
+  const [disable, setDisable] = useState(false);
+  const [selectedRow, setSelectedRow] = useState(true);
+
+  function fetchData() {
     if (!dataLoading) {
       dispatch(fetchDiagnosesInfoAsync({ clientId }));
     }
+  }
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
-  const [open, setOpen] = useState(true);
-  // const [data, setData] = useState([
-  //   {
-  //     diagnoses_name: "ICD10 Code",
-  //     comments: "...",
-  //     last_updated_by: "...",
-  //     last_updated_date: "...",
-  //     start_date: "2024-1-1",
-  //     stop_date: "2024-1-1",
-  //     status: "done",
-  //   },
-  //   {
-  //     diagnoses_name: "ICD10 Code",
-  //     comments: "...",
-  //     last_updated_by: "...",
-  //     last_updated_date: "...",
-  //     start_date: "2024-1-1",
-  //     stop_date: "2024-1-1",
-  //     status: "pending",
-  //   },
-  //   {
-  //     diagnoses_name: "ICD10 Code",
-  //     comments: "...",
-  //     last_updated_by: "...",
-  //     last_updated_date: "...",
-  //     start_date: "2024-1-1",
-  //     stop_date: "2024-1-1",
-  //     status: "active",
-  //   },
-  // ]);
+  const toggleModal = () => {
+    setShowModal(!showModal);
+  };
 
   const columns = useMemo(
     () => [
@@ -115,7 +96,16 @@ function Diagnoses({clientId}) {
       {
         Header: "Actions",
         Cell: ({ row }) => (
-          <img src={EyeIcon} className="size-4 mx-auto" alt="view" />
+          <button
+            type="button"
+            onClick={(e) => {
+              setDisable(true);
+              setId(row.original.id);
+              toggleModal();
+            }}
+          >
+            <img src={EyeIcon} className="size-4 mx-auto" alt="view" />
+          </button>
         ),
       },
     ],
@@ -125,7 +115,8 @@ function Diagnoses({clientId}) {
   return (
     <div
       id="clientChartClientProfile"
-      className={`bg-white rounded-md shadow-sm flex flex-col ${open ? "h-full" : ""}`}
+      className={`bg-white rounded-md shadow-sm flex flex-col 
+      } ${open ? "h-full" : ""}`}
     >
       <div className="flex justify-between p-3">
         <div className="flex gap-4 items-center">
@@ -134,7 +125,13 @@ function Diagnoses({clientId}) {
         </div>
         <div className="flex items-center gap-x-10">
           <SearchIcon className="text-[#585A60] hover:cursor-pointer" />
-          <button className="px-3 py-2 text-sm bg-[#D9F1FF] text-[#1A1F25] rounded-sm font-medium">
+          <button
+            className="px-3 py-2 text-sm bg-[#D9F1FF] text-[#1A1F25] rounded-sm font-medium"
+            onClick={() => {
+              setDisable(false);
+              setShowModal(true);
+            }}
+          >
             Add New
           </button>
           <RemoveCircleIcon
@@ -144,6 +141,15 @@ function Diagnoses({clientId}) {
         </div>
       </div>
       {open && <Content data={data} columns={columns} />}
+      {showModal && (
+        <DiagnosesModal
+          toggleModal={toggleModal}
+          clientId={clientId}
+          data={data}
+          id={id}
+          disable={disable}
+        />
+      )}
     </div>
   );
 }

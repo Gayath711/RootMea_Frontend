@@ -142,7 +142,7 @@ const SocialVitalSignsMain = () => {
                 data={answers}
               />
             )}
-            {contentToShow === "Healthcare - Cardiovascular risk" && (
+            {contentToShow === "Healthcare - Cardiovascular  risk" && (
               <SvsContent
                 title={"Healthcare - Cardiovascular risk"}
                 questions={questions}
