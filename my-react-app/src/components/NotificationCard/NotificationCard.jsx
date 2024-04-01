@@ -35,7 +35,7 @@ function NotificationCard() {
 
   return (
     <div className="bg-white rounded-md shadow-md xl:w-full min-[320px]:w-full">
-      <div className="flex justify-between items-center px-6 pt-2 sm:pt-2">
+      <div className="flex justify-between items-center px-6 !pt-6 sm:pt-2">
         <div className="text-xl flex items-center space-x-3 font-medium py-1">
           <div>Notifications</div>
           <img src={FilterIcon} className="size-4" alt="filter" />

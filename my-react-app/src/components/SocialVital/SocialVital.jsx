@@ -39,12 +39,12 @@ const SocialVital = () => {
 
   const size = {
     width: 360,
-    height: width > 1280 ? 100: 150,
+    height: width < 600 ? 150: 100,
   };
   
   return (
-    <div id="social-vital-1" className="bg-white rounded-md shadow-md min-[320px]:h-full col-span-3">
-      <div className="flex justify-between items-center px-4 my-2">
+    <div id="social-vital-1" className="bg-white rounded-md shadow-md min-[320px]:h-full col-span-3 flex-1">
+      <div className="flex justify-between items-center px-4 mt-6 mb-2">
         <div id="social-vital-2" className="text-lg font-medium">Social Vital Signs</div>
         <button id="social-vital-3" className="flex justify-center items-center space-x-2 border border-[#2F9384] px-2 py-0.5 rounded-sm">
           <span className="text-[#2F9384] text-sm ">Year</span>

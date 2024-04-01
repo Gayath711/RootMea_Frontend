@@ -26,9 +26,8 @@ function ClientChart() {
   }, []);
 
   return (
-    // <div className={`flex flex-col space-y-8 ${showModal ? "opacity-50" : ""}`}>
-    <div className={`flex flex-col space-y-8`}>
-      <PageTitle clientId={clientId} />
+    <div className="flex flex-col space-y-8">
+      <PageTitle clientId={clientId} title={"Client Chart"} />
       <ClientChartTopBar clientId={clientId} />
       <ClientProfile clientId={clientId} />
       <div className="grid grid-cols-12 gap-x-4">
