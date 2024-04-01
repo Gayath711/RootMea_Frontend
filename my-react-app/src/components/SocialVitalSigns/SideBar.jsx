@@ -95,7 +95,7 @@ function SideBar({ contentToShow, setContentToShow }) {
       <div className="w-[99.99%] mx-auto border-b border-[#5BC4BF] " />
       <div
         className={`flex flex-row justify-between items-center p-3 hover:cursor-pointer ${
-          contentToShow === "Healthcare - Cardiovascular risk"
+          contentToShow === "Healthcare - Cardiovascular  risk"
             ? "text-[#43B09C]"
             : ""
         }`}
