@@ -2,16 +2,22 @@ import dayjs from "dayjs";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-import { getMonth } from "../utils";
+import { getMonth, getWeek, getToday } from "../utils";
 import Month from "./month";
 import CalendarHeader from "./calendarheader";
 import AddAppointment from "./addappointment";
 import AlertSuccess from "../common/AlertSuccess";
 import apiURL from "../.././apiConfig";
+import Week from "./week";
 
 const CalendarMain = () => {
   // console.table(getMonth(3));
+
+  const CALENDAR_VIEWS = ["Today", "Week", "Month", "Year"];
+  const [currentCalendarView, setCurrentCalendarView] = useState("Month");
+
   const [currentMonth, setCurrentMonth] = useState(getMonth());
+
   const [showModal, setShowModal] = useState(false);
   const [fetchedEvents, setFetchedEvents] = useState(false);
 
@@ -51,6 +57,17 @@ const CalendarMain = () => {
 
   console.log("savedEvents - calendar", savedEvents);
 
+  const renderCalendar = () => {
+    switch (currentCalendarView) {
+      case "Month":
+        return <Month month={currentMonth} savedEvents={savedEvents} />;
+      case "Week":
+        return <Week week={getWeek()} savedEvents={savedEvents} />;
+      default:
+        return <p>No view found</p>;
+    }
+  };
+
   return (
     <div className="">
       {showAlert && (
@@ -70,10 +87,13 @@ const CalendarMain = () => {
           </button>
         </div>
         <div className="flex flex-col bg-white border-1 border-teal-400 rounded-md p-10 space-y-3">
-          <CalendarHeader currentMonth={currentMonth} />
-          {fetchedEvents && (
-            <Month month={currentMonth} savedEvents={savedEvents} />
-          )}
+          <CalendarHeader
+            viewList={CALENDAR_VIEWS}
+            currentCalendarView={currentCalendarView}
+            handleCalendarView={setCurrentCalendarView}
+            currentMonth={currentMonth}
+          />
+          {fetchedEvents && renderCalendar()}
         </div>
       </div>
 
