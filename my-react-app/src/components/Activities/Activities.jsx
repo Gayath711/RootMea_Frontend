@@ -32,7 +32,7 @@ function Activities() {
 
   return (
     <div className="bg-white w-full rounded-md shadow-md md:max-xl:">
-      <div className="flex justify-between items-center px-3 sm:px-6 my-2">
+      <div className="flex justify-between items-center px-3 sm:px-6 mt-6 mb-2">
         <div className="text-[16px] sm:text-lg font-medium">Activities</div>
         <button>
           <MoreVertIcon sx={{

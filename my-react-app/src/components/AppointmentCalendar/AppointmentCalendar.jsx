@@ -88,13 +88,13 @@ function AppointmentCalendar() {
 
   return (
     <div className="w-full bg-white rounded-md shadow-md flex flex-col">
-      <div id="appointment-calendar-2" className="flex justify-between items-center mx-3 sm:mx-8 mt-2">
+      <div id="appointment-calendar-2" className="flex justify-between items-center mx-3 sm:mx-8 mt-6">
         <div className="flex items-center space-x-2 sm:space-x-4">
           <span id="appointment-calendar-3" className="text-lg font-medium">Appointment Calendar</span>
           <img id="appointment-calendar-4" src={ExternalLinkIcon} className="size-3 sm:size-4" alt="link" />
         </div>
         <div>
-          <button id="appointment-calendar-5" className="px-3 py-1 border-1 sm:border-2 rounded-sm border-[#EBAC88] text-[#CB6A69] text-xs">
+          <button id="appointment-calendar-5" className="px-3 py-1 border-1 sm:border-2 rounded-sm border-[#EBAC88] text-[#CB6A69] text-[13px] font-medium leading-5">
             Create New
           </button>
         </div>
