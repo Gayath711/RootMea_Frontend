@@ -16,7 +16,7 @@ import AddNewButton from '../common/AddNewButton';
 import OpenAccordianPNG from '../images/open-accordion.png';
 import ClosedAccordianPNG from '../images/closed-accordion.png';
 import Button from 'react-bootstrap/Button';
-
+import apiURL from '../../apiConfig';
 
 
 const Medications = ({ id, setShowAlert }) => {
@@ -93,7 +93,7 @@ const Medications = ({ id, setShowAlert }) => {
         };
         console.log(JSON.stringify(formDataWithClientId));
             // Handle adding new medication (existing code)
-            axios.post(`http://192.168.3.24:8000/clientmedication-api/`, formDataWithClientId, {
+            axios.post(`${apiURL}/clientmedication-api/`, formDataWithClientId, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -260,7 +260,7 @@ const Medications = ({ id, setShowAlert }) => {
         useTable({ columns, data });
 
     useEffect(() => {
-        axios.get(`http://192.168.3.24:8000/clientmedication-api/${clientId}`, {
+        axios.get(`${apiURL}/clientmedication-api/${clientId}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

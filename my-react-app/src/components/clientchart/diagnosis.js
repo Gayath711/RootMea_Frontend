@@ -15,6 +15,7 @@ import ViewPNG from '../images/view.png';
 import OpenAccordianPNG from '../images/open-accordion.png';
 import ClosedAccordianPNG from '../images/closed-accordion.png';
 import PrimaryButton from '../common/PrimaryButton';
+import apiURL from '../../apiConfig';
 
 const Diagnosis = ({ id, setShowAlert }) => {
 
@@ -66,7 +67,7 @@ const Diagnosis = ({ id, setShowAlert }) => {
         useTable({ columns, data });
 
     useEffect(() => {
-        axios.get(`http://192.168.3.24:8000/clientdiagnoses-api/${clientId}`, {
+        axios.get(`${apiURL}/clientdiagnoses-api/${clientId}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -143,7 +144,7 @@ const Diagnosis = ({ id, setShowAlert }) => {
         };
         console.log(JSON.stringify(formDataWithClientId));
         // Handle adding new medication (existing code)
-        axios.post(`http://192.168.3.24:8000/clientdiagnoses-api/`, formDataWithClientId, {
+        axios.post(`${apiURL}/clientdiagnoses-api/`, formDataWithClientId, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`

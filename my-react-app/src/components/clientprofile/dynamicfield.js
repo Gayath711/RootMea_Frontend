@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import apiURL from '../../apiConfig';
 
 function DynamicFieldForm() {
     const [formData, setFormData] = useState([{ key: '', value: '', type: 'text', isYesChecked: false, isNoChecked: false }]);
@@ -17,7 +18,7 @@ function DynamicFieldForm() {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get('http://192.168.3.24:8000/api/my-data');
+            const response = await axios.get(`${apiURL}/api/my-data`);
             setApiData(response.data);
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -94,7 +95,7 @@ function DynamicFieldForm() {
 
             console.log('FormData:', formDataWithFile);
 
-            const response = await axios.post('http://192.168.3.24:8000/api/my-view/', formDataWithFile, {
+            const response = await axios.post(`${apiURL}/api/my-view/`, formDataWithFile, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

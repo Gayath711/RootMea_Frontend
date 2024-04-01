@@ -2,8 +2,9 @@ import axios from "axios";
 import {jwtDecode} from "jwt-decode";
 import dayjs from "dayjs";
 import { logout } from "../store/slices/authSlice";
+import apiURL from '.././apiConfig'; // Importing baseURL from apiConfig.js
 
-const baseURL = "http://192.168.3.24:8000" || process.env.BACKEND_BASE_URL;
+const baseURL = apiURL || process.env.BACKEND_BASE_URL;
 
 let storeInstance; // Store the store instance for access in the interceptor
 

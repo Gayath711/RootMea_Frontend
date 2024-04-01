@@ -7,8 +7,8 @@ import Screenshot2 from '../../image/Screenshot.png';
 import Screenshot3 from '../../image/Screenshot.png'; 
 import Screenshot4 from '../../image/Screenshot.png'; 
 import { motion } from 'framer-motion';
+import apiURL from '../../apiConfig';
 import Swal from 'sweetalert2';
-
 
 function NewPage() {
     const { tableName } = useParams();
@@ -26,7 +26,7 @@ function NewPage() {
 
     const handleDropdownOptionsFetch = async (enumType) => {
         try {
-            const response = await axios.get('http://192.168.3.24:8000/get_enum_labels/', {
+            const response = await axios.get(`${apiURL}/get_enum_labels/`, {
                 params: {
                     enum_type: enumType
                 }
@@ -42,7 +42,7 @@ function NewPage() {
     const fetchTableHeaders = async () => {
       try {
         const cleanedTableName = tableName.replace("roots", "");
-        const response = await axios.get(`http://192.168.3.24:8000/insert_header_get/${tableName}/`);
+        const response = await axios.get(`${apiURL}/insert_header_get/${tableName}/`);
         if (response.data.headers) {
           setTableHeaders(response.data.headers);
           console.log("headr",response.data.headers)
@@ -66,7 +66,7 @@ function NewPage() {
     const fetchTableStructure = async () => {
         console.log(tableName, "htdtdytdf");
         try {
-            const response = await axios.get(`http://192.168.3.24:8000/get_table_structure/${tableName}`);
+            const response = await axios.get(`${apiURL}/get_table_structure/${tableName}`);
             if (response.headers['content-type'].includes('application/json')) {
                 console.log("response.data.columns",response.data.columns)
                 console.log('response.data',response.data)
@@ -98,7 +98,7 @@ function NewPage() {
         event.preventDefault();
         try {
             console.log(formData);
-            const response = await axios.post(`http://192.168.3.24:8000/get_table_structure/${tableName}/`, formData);
+            const response = await axios.post(`${apiURL}/get_table_structure/${tableName}/`, formData);
     
             if (response.status === 201) {
                 console.log('Data inserted successfully');

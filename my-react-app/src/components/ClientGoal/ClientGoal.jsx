@@ -6,6 +6,7 @@ import BasicTable from "../react-table/BasicTable";
 import CarePlanImg from "../images/carePlan.svg";
 import { Checkbox } from "@mui/material";
 import { useWindowSize } from "../Utils/windowResize";
+import apiURL from '../../apiConfig';
 
 function ClientGoal() {
 
@@ -27,7 +28,7 @@ function ClientGoal() {
 
     try {
       const response = await axios.get(
-        `http://192.168.3.24:8000/clientgoal-api?search=${searchQuery}`,
+        `${apiURL}/clientgoal-api?search=${searchQuery}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

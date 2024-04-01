@@ -9,6 +9,7 @@ import FilterPNG from '../images/filter.png';
 import ViewPNG from '../images/view.png';
 import OpenAccordianPNG from '../images/open-accordion.png';
 import ClosedAccordianPNG from '../images/closed-accordion.png';
+import apiURL from '../../apiConfig';
 
 const SocialVitalSigns = ({ id }) => {
     const { clientId } = useParams();
@@ -52,7 +53,7 @@ const SocialVitalSigns = ({ id }) => {
         useTable({ columns, data });
 
     useEffect(() => {
-        axios.get(`http://192.168.3.24:8000/clientsvs-api/${clientId}`, {
+        axios.get(`${apiURL}/clientsvs-api/${clientId}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

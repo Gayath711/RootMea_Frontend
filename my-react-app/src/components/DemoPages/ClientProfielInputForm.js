@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import TextBox from "../common/TextBox";
 import DateInput from '../common/DateInput';
 import axios from 'axios';
+import apiURL from '../../apiConfig';
 
 const ContactInformation = () => {
   
@@ -39,7 +40,7 @@ const ContactInformation = () => {
             alert('Please fill out all mandatory fields.');
             return;
         }
-        axios.post(`http://192.168.3.24:8000/clientinfo-api/`, clientData, {
+        axios.post(`${apiURL}/clientinfo-api/`, clientData, {
           headers: {
             Authorization: `Bearer ${token}`
           }

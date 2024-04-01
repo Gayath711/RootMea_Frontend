@@ -7,6 +7,7 @@ import Month from "./month";
 import CalendarHeader from "./calendarheader";
 import AddAppointment from "./addappointment";
 import AlertSuccess from '../common/AlertSuccess';
+import apiURL from '../.././apiConfig';
 
 const CalendarMain = () => {
     // console.table(getMonth(3));
@@ -31,7 +32,7 @@ const CalendarMain = () => {
     const [savedEvents, setSavedEvents] = useState([]);
 
     function fetchEvents() {
-        axios.get(`http://192.168.3.24:8000/rest/v1/calendar/events/`)
+        axios.get(`${apiURL}/rest/v1/calendar/events/`)
             .then(response => {
                 setSavedEvents(response.data.data);
                 setFetchedEvents(true);

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { serverAddress } from './constants';
+import apiURL from '.././apiConfig';
 
 const SignupPage = () => {
 
@@ -27,7 +28,7 @@ const SignupPage = () => {
 
   const handlesignup = async () => {
     try {
-      // const response = await fetch('http://192.168.3.24:8000/api/signup/', {
+      // const response = await fetch(`${apiURL}/api/signup/`, {
       const response = await fetch(serverAddress+"api/signup/", {
         method: 'POST',
         headers: {

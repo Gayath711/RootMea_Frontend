@@ -16,6 +16,7 @@ import SocialVitalSigns from './clientchart/socialvitalsigns';
 import Diagnosis from './clientchart/diagnosis';
 import Medications from './clientchart/medications';
 import AlertSuccess from './common/AlertSuccess';
+import apiURL from '.././apiConfig'
 
 function ClientChart() {
 
@@ -38,7 +39,7 @@ function ClientChart() {
   }
 
   useEffect(() => {
-    axios.get(`http://192.168.3.24:8000/clientinfo-api/${clientId}`, {
+    axios.get(`${apiURL}/clientinfo-api/${clientId}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -54,7 +55,7 @@ function ClientChart() {
 
 
   useEffect(() => {
-    axios.get(`http://192.168.3.24:8000/clientsvs-api/${clientId}`, {
+    axios.get(`${apiURL}/clientsvs-api/${clientId}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -69,7 +70,7 @@ function ClientChart() {
   }, []);
 
   useEffect(() => {
-    axios.get(`http://192.168.3.24:8000/clientmedication-api/${clientId}`, {
+    axios.get(`${apiURL}/clientmedication-api/${clientId}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -84,7 +85,7 @@ function ClientChart() {
   }, []);
 
   useEffect(() => {
-    axios.get(`http://192.168.3.24:8000/clientdiagnoses-api/${clientId}`, {
+    axios.get(`${apiURL}/clientdiagnoses-api/${clientId}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }

@@ -10,6 +10,7 @@ import BasicTable from "../../components/react-table/BasicTable";
 // import EditIcon from "../images/edit.svg";
 import EyeIcon from "../../components/images/eye.svg";
 import EditIcon from "../../components/images/edit.svg";
+import apiURL from '../../apiConfig';
 
 const Users = ({ setShowAlert, setUser, group }) => {
   const [users, setUsers] = useState([]);
@@ -19,7 +20,7 @@ const Users = ({ setShowAlert, setUser, group }) => {
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const response = await axios.get("http://192.168.3.24:8000/api/user_directory");
+        const response = await axios.get(`${apiURL}/api/user_directory`);
         setUsers(response.data);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -65,7 +66,7 @@ const Users = ({ setShowAlert, setUser, group }) => {
   useEffect(() => {
     async function fetchProjects() {
       try {
-        const response = await axios.get("http://192.168.3.24:8000/api/program_directory");
+        const response = await axios.get(`${apiURL}/api/program_directory`);
         setProjects(response.data);
       } catch (error) {
         console.error("Error fetching projects:", error);

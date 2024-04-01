@@ -4,6 +4,7 @@ import ExternalLinkIcon from "../images/externalLink.svg";
 import BasicTable from "../react-table/BasicTable";
 import axios from "axios";
 import "./PriorityListStyles.css";
+import apiURL from '../../apiConfig';
 
 function PriorityList() {
   
@@ -24,7 +25,7 @@ function PriorityList() {
 
     try {
       const response = await axios.get(
-        `http://192.168.3.24:8000/clientprioritylist-api?search=${searchQuery}`,
+        `${apiURL}/clientprioritylist-api?search=${searchQuery}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

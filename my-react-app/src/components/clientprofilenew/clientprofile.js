@@ -23,8 +23,8 @@ import EditGreenPNG from '../images/edit-green.png';
 import SaveGreenPNG from '../images/save-green.png';
 // import DynamicFieldForm from './clientprofile/dynamicfield'
 
-import MyComponent from '../clientprofilefull'
-
+import MyComponent from '../clientprofilefull';
+import apiURL from '../../apiConfig';
 
 const initialValues = {
   first_name: null,
@@ -168,7 +168,7 @@ const ClientProfile = () => {
       alert('Please ensure Social Security Number is 9 characters long.');
       return;
   }
-    axios.post(`http://192.168.3.24:8000/clientinfo-api/`, clientData, {
+    axios.post(`${apiURL}/clientinfo-api/`, clientData, {
       headers: {
         Authorization: `Bearer ${token}`
       }
