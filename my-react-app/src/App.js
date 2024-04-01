@@ -16,7 +16,7 @@ import DiagnosisTable from "./components/diagnosisTable";
 import EncounterNote from "./components/encounternote";
 import ClientProfileFull from "./components/clientprofilefull";
 import SideBar from "./components/SideBar/SideBar";
-import CalendarMain from "./components/Calendar/CalendarMain";
+import CalendarMain from "./components/calendar/CalendarMain";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "./store/slices/authSlice";
 import "./App.css";
@@ -204,9 +204,9 @@ function App() {
                   />
 
 
-<Route path='/create' element={< YourComponent />} />
-             
-                  
+                  <Route path='/create' element={< YourComponent />} />
+
+
                   <Route path='/Preview' element={< Preview />} />
 
                 </Routes>
