@@ -6,7 +6,7 @@ import ClosePNG from "../images/close.png";
 import DropDown from "../common/Dropdown";
 import TextBox from "../common/TextBox";
 import DateInput from "../common/DateInput";
-import TimeInput from "../common/TimeInput";
+import apiURL from ".././apiConfig";
 
 function DiagnosesModal({
   toggleModal,
@@ -58,7 +58,7 @@ function DiagnosesModal({
     // console.log("event", event);
 
     axios
-      .post(`http://192.168.3.24:8000/clientdiagnoses-api/`, data)
+      .post(`${apiURL}/clientdiagnoses-api/`, data)
       .then((response) => {
         // setSavedEvents(response.data.data);
         console.log(response.data);
