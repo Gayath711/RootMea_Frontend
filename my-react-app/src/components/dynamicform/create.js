@@ -6,6 +6,8 @@ import axios from 'axios';
 import { useNavigate ,Link} from 'react-router-dom';
 
 import Preview from './preview';
+import apiURL from '../../apiConfig';
+
 
 import edit from '../../image/edit.jpg';
 import bulk from '../../image/bulk.jpg';
@@ -13,6 +15,8 @@ import share from '../../image/share.jpg';
 import down from '../../image/down.png';
 import file from '../../image/file.jpg';
 import date from '../../image/date.png';
+
+
 
 function DragDropDemo() {
 
@@ -74,7 +78,7 @@ function DragDropDemo() {
   
       console.log("..................",columns);
   
-      const response = await axios.post('http://localhost:8000/create_table_endpoint/', {
+      const response = await axios.post('${apiURL}/create_table_endpoint/', {
         table_name: "Roots" + tableName,
         columns: columns,
         
