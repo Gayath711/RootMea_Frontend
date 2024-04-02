@@ -175,7 +175,7 @@ const insertHeader = async () => {
 
     console.log("checking................",tableName,title,additionalDetails)
     console.log(tableName)
-    const response = await axios.post(`http://localhost:8000/insert_header/${tableName}/`, {
+    const response = await axios.post(`${apiURL}/insert_header/${tableName}/`, {
       tablename: tableName,
       header_name: title,
       sub_header_name: additionalDetails,
