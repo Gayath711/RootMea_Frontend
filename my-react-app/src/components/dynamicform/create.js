@@ -819,8 +819,7 @@ const togglePreview = () => {
               className={`${widthList[index]} border border-gray-300 rounded px-4 py-2`}
             >
               <option value="">Select</option>
-              <option value="true">Yes</option>
-              <option value="false">No</option>
+         
               disabled
             </select>
             </div>
@@ -887,7 +886,7 @@ const togglePreview = () => {
 
 
 
-
+        break;
 
         case 'BYTEA':
 
