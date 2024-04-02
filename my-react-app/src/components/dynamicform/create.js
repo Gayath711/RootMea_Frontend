@@ -78,7 +78,7 @@ function DragDropDemo() {
   
       console.log("..................",columns);
   
-      const response = await axios.post('${apiURL}/create_table_endpoint/', {
+      const response = await axios.post(`${apiURL}/create_table_endpoint/`, {
         table_name: "Roots" + tableName,
         columns: columns,
         
