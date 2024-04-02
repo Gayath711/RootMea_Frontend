@@ -6,6 +6,8 @@ import axios from 'axios';
 import { useNavigate ,Link} from 'react-router-dom';
 
 import Preview from './preview';
+import apiURL from '../../apiConfig';
+
 
 import edit from '../../image/edit.jpg';
 import bulk from '../../image/bulk.jpg';
@@ -13,6 +15,8 @@ import share from '../../image/share.jpg';
 import down from '../../image/down.png';
 import file from '../../image/file.jpg';
 import date from '../../image/date.png';
+
+
 
 function DragDropDemo() {
 
@@ -52,7 +56,7 @@ function DragDropDemo() {
         console.log('labelTitleList', labelTitleList);
         
         labelTitleList.forEach((element, index) => {
-            if (typeof element === 'undefined' || element === '' ) {
+            if (typeof element === 'undefined' || element === '') {
                 undefinedIndices.push(index);
             }
         });
@@ -74,7 +78,7 @@ function DragDropDemo() {
   
       console.log("..................",columns);
   
-      const response = await axios.post('http://192.168.3.24:8000/create_table_endpoint/', {
+      const response = await axios.post('${apiURL}/create_table_endpoint/', {
         table_name: "Roots" + tableName,
         columns: columns,
         
@@ -120,6 +124,7 @@ function DragDropDemo() {
 
   const handleTitleChange = (index, value) => {
     const updatedTitles = [...labelTitleList];
+    console.log(index + " has " + value);
     updatedTitles[index] = value;
     setLabelTitleList(updatedTitles);
   };
@@ -144,6 +149,7 @@ function DragDropDemo() {
   };
 
   const handleEnumChange = (index, enumValues) => {
+    console.log("Index: " + index + ", enum values " + enumValues); 
     const updatedEnums = [...enumList];
     updatedEnums[index] = enumValues;
     setEnumList(updatedEnums);
@@ -169,7 +175,7 @@ const insertHeader = async () => {
 
     console.log("checking................",tableName,title,additionalDetails)
     console.log(tableName)
-    const response = await axios.post(`http://192.168.3.24:8000/insert_header/${tableName}/`, {
+    const response = await axios.post(`http://localhost:8000/insert_header/${tableName}/`, {
       tablename: tableName,
       header_name: title,
       sub_header_name: additionalDetails,
@@ -385,6 +391,14 @@ const togglePreview = () => {
                   </Button>
                 </p>
               </div>
+              <div className='col-6 pt-4'>
+                <p draggable="true" onDragStart={e => handleDragStart(e, 'my_enum_typeb')} className="drag">
+                  <Button variant="info" style={{ display: 'flex', alignItems: 'center', width: '100%', textAlign: 'center' }}>
+                    <img src={file} alt="Text Icon" style={{ width: '15%', height: '15%', marginRight: '10px' }} />
+                    <span style={{ fontWeight: 'bold', marginLeft: '10%' }}>Multiple Select</span>
+                  </Button>
+                </p>
+              </div>              
               <div className='col-6 pt-4'>
                 <p draggable="true" onDragStart={e => handleDragStart(e, 'BYTEA')} className="drag">
                   <Button variant="info" style={{ display: 'flex', alignItems: 'center', width: '100%', textAlign: 'center' }}>
@@ -1064,6 +1078,7 @@ const togglePreview = () => {
 
                   break;
                 case 'my_enum_type':
+                case 'my_enum_typeb':
         
 
                 inputElement = (
@@ -1136,7 +1151,7 @@ const togglePreview = () => {
                           </Modal.Body>
                           <Modal.Footer>
                             
-                          <Button variant="info"  onClick={() => { handleCloseModal(index); handleColumnTypeChange(index, 'my_enum_type'); handleEnumChange(index, []); }}>Save changes</Button>
+                          <Button variant="info"  onClick={() => { handleCloseModal(index); handleColumnTypeChange(index, item.type); }}>Save changes</Button>
                           </Modal.Footer>
                         </Modal>
                       </div>
