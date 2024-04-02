@@ -6,7 +6,7 @@ import ClosePNG from "../images/close.png";
 import DropDown from "../common/Dropdown";
 import TextBox from "../common/TextBox";
 import DateInput from "../common/DateInput";
-import apiURL from ".././apiConfig";
+import apiURL from "../../apiConfig";
 
 function MedicationsModal({
   toggleModal,
