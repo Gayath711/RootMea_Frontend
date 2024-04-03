@@ -1,5 +1,5 @@
-import DatePicker from "react-datepicker";
 import React, { useState } from "react";
+import DatePicker from "react-datepicker";
 import { useForm } from "react-hook-form";
 import { format } from "date-fns";
 import axios from "axios";
@@ -24,6 +24,8 @@ const AddAppointment = ({
   ];
   const [selectedTime, setSelectedTime] = useState(null);
 
+  const [isExternal, setIsExternal] = useState(true);
+
   const {
     register,
     handleSubmit,
@@ -39,7 +41,6 @@ const AddAppointment = ({
   const handleDateChange = (name, value) => {
     if (name === "date") {
       const formattedDate = format(value, "yyyy-MM-dd");
-      console.log("name,value", name, formattedDate);
       setDate(formattedDate);
     } else if (name === "start_time") {
       setStartTime(value);
@@ -49,42 +50,44 @@ const AddAppointment = ({
     setValue(name, value);
   };
 
-  console.log({
-    startTime,
-    endTime,
-  });
-
   const onSubmit = (data) => {
     reset();
     toggleModal();
-    console.log("data", data);
 
     let start_datetime = new Date(data.date);
-    // Set the time part of combinedDate to match startTime
     start_datetime.setHours(data.start_time.getHours());
     start_datetime.setMinutes(data.start_time.getMinutes());
     start_datetime.setSeconds(data.start_time.getSeconds());
 
     let end_datetime = new Date(data.date);
-    // Set the time part of combinedDate to match startTime
     end_datetime.setHours(data.end_time.getHours());
     end_datetime.setMinutes(data.end_time.getMinutes());
     end_datetime.setSeconds(data.end_time.getSeconds());
 
-    const event = {
+    let event = {
       summary: data.appointement_title,
       start_datetime: start_datetime.toISOString(),
       end_datetime: end_datetime.toISOString(),
     };
-    console.log("event", event);
 
-    // Save the new event
+    let endpoint = isExternal ? "/create_event/" : "/django/create_event/";
+
+    if (!isExternal) {
+      let splittedAttendees = data.attendees.split(",").map((email) => {
+        return {
+          email,
+        };
+      });
+
+      event = {
+        ...event,
+        attendees: splittedAttendees,
+      };
+    }
+
     axios
-      .post(`${apiURL}/create_event/`, event)
+      .post(`${apiURL}${endpoint}`, event)
       .then((response) => {
-        // setSavedEvents(response.data.data);
-        console.log(response.data);
-
         setShowAlert(true);
         fetchEvents();
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -92,10 +95,10 @@ const AddAppointment = ({
       .catch((error) => {
         console.error("Error fetching Client Diagnosis Data:", error);
       });
+  };
 
-    // setSavedEvents([...savedEvents, data]);
-    // console.log("savedEvents", savedEvents);
-    // window.scrollTo({ top: 0, behavior: 'smooth' });
+  const handleToggle = (value) => {
+    setIsExternal(value === "external");
   };
 
   return (
@@ -110,8 +113,8 @@ const AddAppointment = ({
               </button>
             </header>
           </div>
+          <div className="my-1 border border-gray-500" />
           <div className="flex flex-col">
-            <div className="border border-gray-500" />
             <div className="p-3">
               <TextBox
                 name="appointement_title"
@@ -165,7 +168,6 @@ const AddAppointment = ({
               />
             </div>
             <div className="p-3 w-1/2">
-              {/* <DropDown placeholder="Remainder Notification" options={options} /> */}
               <TextBox
                 name="remainder_notification"
                 placeholder="Remainder Notification"
@@ -176,10 +178,38 @@ const AddAppointment = ({
           <div className="flex flex-row">
             <div className="p-3 w-full">
               <TextBox
-                name="comments"
-                placeholder="Comments"
+                name="attendees"
+                placeholder="Attendees"
                 register={register}
               />
+            </div>
+          </div>
+          <div className="flex flex-row justify-center items-center py-3 px-1 gap-3">
+            <div className="">
+              <label className="inline-flex items-center text-xs">
+                <input
+                  type="radio"
+                  className="form-radio h-5 w-5 text-[#43B09C] accent-teal-600"
+                  name="toggleType"
+                  value="external"
+                  checked={isExternal}
+                  onChange={() => handleToggle("external")}
+                />
+                <span className="ml-2 text-gray-700">External (Google)</span>
+              </label>
+            </div>
+            <div className="">
+              <label className="inline-flex items-center text-xs">
+                <input
+                  type="radio"
+                  className="form-radio h-5 w-5 text-[#43B09C] accent-teal-600"
+                  name="toggleType"
+                  value="internal"
+                  checked={!isExternal}
+                  onChange={() => handleToggle("internal")}
+                />
+                <span className="ml-2 text-gray-700">Internal</span>
+              </label>
             </div>
           </div>
           <div className="flex flex-row justify-between items-center pb-4">

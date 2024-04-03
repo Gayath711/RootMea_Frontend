@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import React, { useState } from "react";
 
 import GoogleIcon from "../images/google_icon.svg";
+import CalendarIcon from "../images/calendar-boxed.svg";
 import EventModal from "./EventsModal";
 
 export default function Day({ day, rowIdx, savedEvents, isMonth, isWeek }) {
@@ -79,10 +80,15 @@ export default function Day({ day, rowIdx, savedEvents, isMonth, isWeek }) {
                 className={`flex flex-row gap-1 items-center w-full h-7 ${getTitleBackGround()} rounded-tl-sm rounded-tr-sm mx-1`}
               >
                 <img
-                  src={GoogleIcon}
-                  className="size-4 sm:size-5"
-                  alt="google-meet"
+                  src={event.isExternal ? GoogleIcon : CalendarIcon}
+                  className={`${
+                    event.isExternal
+                      ? "size-4 sm:size-5"
+                      : "size-3 sm:size-3 ms-1"
+                  }`}
+                  alt="event-meet"
                 />
+
                 <div className="text-center text-xs font-normal truncate">
                   {event.summary}
                 </div>

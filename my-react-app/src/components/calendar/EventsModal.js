@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import ClosePNG from "../images/close.png";
 import GoogleIcon from "../images/google_icon.svg";
+import CalendarIcon from "../images/calendar-boxed.svg";
+
 import dayjs from "dayjs";
 
 const EventModal = ({ eventDate, toggleModal, events = [] }) => {
@@ -40,9 +42,13 @@ const EventModal = ({ eventDate, toggleModal, events = [] }) => {
                       className={`flex flex-row gap-1 items-start w-full rounded-tl-sm rounded-tr-sm mx-1`}
                     >
                       <img
-                        src={GoogleIcon}
-                        className="size-4 sm:size-5"
-                        alt="google-meet"
+                        src={event.isExternal ? GoogleIcon : CalendarIcon}
+                        className={
+                          event.isExternal
+                            ? "size-4 sm:size-5"
+                            : "size-3 sm:size-3"
+                        }
+                        alt="event-meet"
                       />
                       <div className="text-left font-normal">
                         <p className="truncate text-xs m-0">{event.summary}</p>

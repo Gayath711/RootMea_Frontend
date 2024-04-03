@@ -61,11 +61,9 @@ const CalendarMain = () => {
     }
   };
 
-  console.log({ currentDate });
-
   const [showModal, setShowModal] = useState(false);
-  const [fetchedEvents, setFetchedEvents] = useState(false);
   const [fetchedInternalEvents, setFetchedInternalEvents] = useState(false);
+  const [fetchedExternalEvents, setFetchedExternalEvents] = useState(false);
 
   const toggleModal = () => {
     setShowModal(!showModal);
@@ -82,17 +80,23 @@ const CalendarMain = () => {
   };
 
   const [savedEvents, setSavedEvents] = useState([]);
+  const [internalEvents, setInternalEvents] = useState([]);
+  const [externalEvents, setExternalEvents] = useState([]);
 
   function fetchGoogleEvents() {
     axios
       .get(`${apiURL}/rest/v1/calendar/events/`)
       .then((response) => {
-        setSavedEvents(response.data.data);
-        setFetchedEvents(true);
+        setFetchedExternalEvents(true);
+        setExternalEvents(response.data.data);
+
         console.log(response.data.data);
       })
       .catch((error) => {
         console.error("Error fetching calendar events:", error);
+      })
+      .finally(() => {
+        setFetchedExternalEvents(false);
       });
   }
 
@@ -100,16 +104,44 @@ const CalendarMain = () => {
     axios
       .get(`${apiURL}/django/calendar/events/`)
       .then((response) => {
-        setSavedEvents(response.data.data);
         setFetchedInternalEvents(true);
-        console.log(response.data.data);
+
+        setInternalEvents(response.data.events);
       })
       .catch((error) => {
         console.error("Error fetching calendar events:", error);
+      })
+      .finally(() => {
+        setFetchedInternalEvents(false);
       });
   }
 
-  console.log({ fetchedInternalEvents, fetchedGoogleEvents: fetchedEvents });
+  useEffect(() => {
+    let internal = internalEvents.map((event) => {
+      return {
+        isExternal: false,
+        summary: event.summary,
+        start: {
+          dateTime: event.start_datetime,
+          // timeZone: "Asia/Kolkata",
+        },
+        end: {
+          dateTime: event.end_datetime,
+          // timeZone: "Asia/Kolkata", // need to check
+        },
+      };
+    });
+    let external = externalEvents.map((event) => {
+      return {
+        isExternal: true,
+        ...event,
+      };
+    });
+
+    setSavedEvents(() => {
+      return [...internal, ...external];
+    });
+  }, [internalEvents, externalEvents]);
 
   function fetchEvents() {
     fetchGoogleEvents();
@@ -169,7 +201,8 @@ const CalendarMain = () => {
             }}
             currentDate={currentDate}
           />
-          {fetchedEvents && renderCalendar()}
+          {!(fetchedInternalEvents && fetchedExternalEvents) &&
+            renderCalendar()}
         </div>
       </div>
 
