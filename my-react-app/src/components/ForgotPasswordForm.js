@@ -1,6 +1,6 @@
 import React from 'react';
 
-const PasswordReset = () => {
+const PasswordResetForm = () => {
     return (
         <div className="container d-flex justify-content-center align-items-center vh-100">
             <div className="card text-center" style={{ width: "300px" }}>
@@ -24,4 +24,4 @@ const PasswordReset = () => {
     );
 }
 
-export default PasswordReset;
+export default PasswordResetForm;

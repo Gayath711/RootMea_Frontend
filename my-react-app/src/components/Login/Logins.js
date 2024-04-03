@@ -1,345 +1,268 @@
 import React, { useState } from "react";
 import axios from "axios"; // Don't forget to import axios if it's not already imported
-import RootsLogo from "../image/root.png";
-import TextBox from "../common/TextBox";
 import { useDispatch } from "react-redux";
 import { loginAsync } from "../../store/slices/authSlice";
+import { useForm } from "react-hook-form";
 
-const LoginForm = ({ onLogin }) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+import RootsLogo from "../../image/root.png";
+import apiURL from '../.././apiConfig';
+import PasswordReset from "./PasswordReset";
+import AlertSuccess from '../common/AlertSuccess';
+import AlertError from "../common/AlertError";
+
+
+const LoginForm = () => {
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [showSuccessAlert, setSuccessShowAlert] = useState(false);
+  const [showErrorAlert, setErrorShowAlert] = useState(false);
+
+  const [successMsg, setSuccessMsg] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(false);
+
+  const closeSuccessAlert = () => {
+    setSuccessShowAlert(false);
+  }
+
+  const closeErrorAlert = () => {
+    setErrorShowAlert(false);
+  }
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+    reset,
+  } = useForm();
+
+  const {
+    register: registerLogin,
+    handleSubmit: handleSubmitLogin,
+    setValue: setValueLogin,
+    formState: { errors: errorsLogin },
+    reset: resetLogin,
+  } = useForm();
+
   const dispatch = useDispatch();
 
-  const handleUsernameChange = (event) => {
-    setUsername(event.target.value);
-  };
+  // const handleUsernameChange = (event) => {
+  //   setUsername(event.target.value);
+  // };
 
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
-  };
+  // const handlePasswordChange = (event) => {
+  //   setPassword(event.target.value);
+  // };
 
-  const handleLogin = () => {
-    const user = {
-      email: username,
-      password: password,
-    };
-    try {
-      dispatch(loginAsync(user));
-    } catch (error) {
-      console.error("Login error:", error);
+  const handleLogin = (loginData) => {
+    console.log("Login data - 1", loginData.userEmail)
+    console.log("data length", Object.keys(errorsLogin).length)
+    console.log("errorsLogin", errorsLogin)
+    if (Object.keys(errorsLogin).length < 1) {
+      const user = {
+        email: loginData.userEmail,
+        password: loginData.password,
+      };
+      console.log("Login data - 2", user)
+
+      // axios.post(`${apiURL}/token/`, user)
+      //   .then(response => {
+      //     console.log(response.data)
+      //     setErrorShowAlert(false);
+      //     localStorage.clear();
+      //     localStorage.setItem("access_token", data.access);
+      //     localStorage.setItem("refresh_token", data.refresh);
+      //     // setSuccessShowAlert(true);
+      //     // setSuccessMsg("Password reset email has been sent");
+      //   })
+      //   .catch(error => {
+      //     console.error('Error fetching Client Diagnosis Data:', error.response.data);
+      //     // setSuccessShowAlert(false);
+      //     setErrorShowAlert(true);
+      //     setErrorMsg(error?.response?.data?.error);
+      //   });
+
+      try {
+        dispatch(loginAsync(user));
+        // resetLogin();
+      } catch (error) {
+        console.error("Login error:", error);
+      }
+
     }
   };
+
+  const handlePasswordReset = (resetData) => {
+    console.log(resetData);
+
+    axios.post(`${apiURL}/api/password/reset/`, resetData)
+      .then(response => {
+        console.log(response.data)
+        setSuccessMsg("Password reset email has been sent");
+        setErrorShowAlert(false);
+        setSuccessShowAlert(true);
+      })
+      .catch(error => {
+        console.error('Error fetching Client Diagnosis Data:', error.response.data);
+        setErrorMsg(error?.response?.data?.error);
+        setSuccessShowAlert(false);
+        setErrorShowAlert(true);
+      });
+
+  }
+
 
   return (
     <div
       className="w-screen h-screen relative bg-white bg-cover bg-center"
       style={{ backgroundImage: "url('./login/background.png')" }}
     >
-      <div className="flex items-center justify-center h-screen">
-        <div className="w-96 h-fit flex flex-col bg-white rounded shadow pt-5">
-          <div className="flex flex-col items-center space-y-0 pb-5 pt-0">
-            <img className="w-24 h-20" src={RootsLogo} />
-            <div className="font-medium text-2xl pt-3">
-              Welcome
-            </div>
+      <div className={`flex items-center justify-center h-screen`}>
+        {isFlipped ? (
+          <div className={`w-96 h-fit flex flex-col bg-white rounded shadow`} style={{
+            transformStyle: 'preserve-3d', transition: 'transform 0.5s', transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)'
+          }}>
+            {showSuccessAlert && (<div style={{ transform: 'rotateY(180deg)' }}><AlertSuccess message={successMsg} handleClose={closeSuccessAlert} /> </div>)}
+            {showErrorAlert && (<div style={{ transform: 'rotateY(180deg)' }}><AlertError message={errorMsg} handleClose={closeErrorAlert} /> </div>)}
+            <form onSubmit={handleSubmit(handlePasswordReset)}>
+              <div style={{ transform: 'rotateY(180deg)' }}>
+                <div className={`flex flex-col items-center space-y-0 pb-5 ${showSuccessAlert || showErrorAlert ? "pt-0" : "pt-5"}`}  >
+                  <img className="w-24 h-20" src={RootsLogo} />
+                  <div className="font-medium text-2xl pt-3">
+                    Reset Password
+                  </div>
+                </div>
+                <div className="flex flex-col items-start px-4">
+                  <div className=" text-gray-800 text-opacity-50 text-xs font-normal">
+                    Enter Roots Email Address
+                  </div>
+                  <input
+                    class="border-b border-gray-800  focus:outline-none px-2 py-1 w-full mb-2"
+                    {...register("email", {
+                      required: "Email Address is required",
+                      pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        message: "Invalid email address"
+                      }
+                    })}
+                  />
+                  {errors.email && <p role="alert" className="text-red-500 text-xs">{errors.email.message}</p>}
+                  <div className="flex w-full justify-evenly pb-5 pt-12">
+                    <div className="p-3">
+                      <button
+                        className="w-28 h-8 border-1 border-[#0F7235] text-md rounded-sm"
+                        onClick={() => { setIsFlipped(!isFlipped) }}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                    <div className="p-3">
+                      <button
+                        type="submit"
+                        className="w-28 h-8 border-1 bg-[#0F7235] text-white text-md rounded-sm"
+                      >
+                        Reset
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
           </div>
-          <div className="">
-            <div className="flex flex-col items-start px-4">
-              <div className=" text-gray-800 text-opacity-50 text-xs font-normal">
-                Enter Roots Email Address
+        ) :
+          (<div className={`w-96 h-fit flex flex-col bg-white rounded shadow pt-5`} style={{
+            transformStyle: 'preserve-3d', transition: 'transform 0.5s', transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)'
+          }}>
+            <form onSubmit={handleSubmitLogin(handleLogin)}>
+              <div className="flex flex-col items-center space-y-0 pb-5 pt-0">
+                <img className="w-24 h-20" src={RootsLogo} />
+                <div className="font-medium text-2xl pt-3">
+                  Welcome
+                </div>
               </div>
-              <input
-                class="border-b border-gray-800  focus:outline-none px-2 py-1 w-full mb-3"
-                type="text"
-                placeholder=""
-                id="username"
-                value={username}
-                onChange={handleUsernameChange}
-              />
-              <div className=" text-gray-800 text-opacity-50 text-xs font-normal">
-                Enter Roots Password
+              <div className="">
+                <div className="flex flex-col items-start px-4">
+                  <div className=" text-gray-800 text-opacity-50 text-xs font-normal">
+                    Enter Roots Email Address
+                  </div>
+                  <input
+                    class="border-b border-gray-800  focus:outline-none px-2 py-1 w-full mb-2"
+                    // type="text"
+                    // placeholder=""
+                    // id="userEmail"
+                    // value={username}
+                    // onChange={handleUsernameChange}
+                    {...registerLogin("userEmail", {
+                      required: "Email Address is required",
+                      pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        message: "Invalid email address"
+                      }
+                    })}
+                  />
+                  {errorsLogin.userEmail && <p role="alert" className="text-red-500 text-xs pb-3">{errorsLogin.userEmail.message}</p>}
+                  <div className=" text-gray-800 text-opacity-50 text-xs font-normal">
+                    Enter Roots Password
+                  </div>
+                  <input
+                    class="border-b border-gray-800  focus:outline-none px-2 py-1 w-full mb-2"
+                    // type="password"
+                    // id="password"
+                    // placeholder=""
+                    // value={password}
+                    // onChange={handlePasswordChange}
+                    {...registerLogin("password", {
+                      required: "Password is required",
+                    })}
+                  />
+                  {errorsLogin.password && (
+                    <p role="alert" className="text-red-500 text-xs pb-3">
+                      {errorsLogin.password.message}
+                    </p>
+                  )}
+                </div>
               </div>
-              <input
-                class="border-b border-gray-800  focus:outline-none px-2 py-1 w-full"
-                type="password"
-                id="password"
-                placeholder=""
-                value={password}
-                onChange={handlePasswordChange}
-              />
-            </div>
-          </div>
-          <div className="flex flex-row justify-between pt-3 px-4 pb-12">
-            <div className="flex flex-row space-x-4">
-              <div className="w-6 h-3 relative">
-                <div className="w-8 h-4 left-0 top-0 absolute bg-zinc-300 rounded-xl" />
-                <div className="w-4 h-4 left-0 top-0 absolute rounded-full border border-black" />
+              <div className="flex flex-row justify-between pt-3 px-4 pb-12">
+                <div className="flex flex-row space-x-4">
+                  <div className="w-6 h-3 relative">
+                    <div className="w-8 h-4 left-0 top-0 absolute bg-zinc-300 rounded-xl" />
+                    <div className="w-4 h-4 left-0 top-0 absolute rounded-full border border-black" />
+                  </div>
+                  <div className=" text-black-500 text-xs font-normal">
+                    Stay Signed In
+                  </div>
+                </div>
+                <button className=" text-black-500 text-xs font-normal"
+                  onClick={() => {
+                    setIsFlipped(!isFlipped);
+                    setErrorShowAlert(false);
+                    setSuccessShowAlert(false);
+                    reset();
+                  }}>
+                  Reset Your Password
+                </button>
               </div>
-              <div className=" text-black-500 text-xs font-normal">
-                Stay Signed In
-              </div>
-            </div>
-            <button className=" text-black-500 text-xs font-normal"
-              onClick={() => }>
-              Reset Your Password
-            </button>
-          </div>
-          <div className="flex flex-col items-center pb-5">
-            <button
-              className="w-36 h-10 border-1 bg-[#0F7235] text-white text-md rounded-sm"
-              onClick={handleLogin}
-            >
-              SIGN IN
-            </button>
-            {/* <p className=" text-black text-xs font-normal">OR</p>
+              <div className="flex flex-col items-center pb-5">
+                <button
+                  className="w-36 h-10 border-1 bg-[#0F7235] text-white text-md rounded-sm"
+                  onClick={handleLogin}
+                >
+                  SIGN IN
+                </button>
+                {/* <p className=" text-black text-xs font-normal">OR</p>
           <p className=" text-black text-xs font-normal">If you have loss your official email or password, Please contact your help desk support team.</p> */}
-          </div>
-        </div>
+              </div>
+            </form>
+          </div>)}
       </div>
-      {showModal && (
-        <Passw toggleModal={toggleModal} handleSubmit={submitAppointment} savedEvents={savedEvents} setSavedEvents={setSavedEvents} setShowAlert={setShowAlert} fetchEvents={fetchEvents} />
-      )}
+      {/* {
+        showModal && (
+          <PasswordReset toggleModal={toggleModal} />
+        )
+      } */}
       <div className="absolute bottom-0 right-0">
         <img src="./login/flower-pot.png" className="w-44 h-72"></img>
       </div>
-    </div>
-
-    // <div className="w-screen h-screen relative bg-white bg-cover bg-center" style={{ backgroundImage: "url('./login/background.png')" }}>
-    //   <div className="flex items-center justify-center h-screen">
-    //     <div className="w-96 h-96 flex flex-col bg-white rounded shadow pt-12">
-    //       <div className="flex flex-col items-center space-y-8 pb-24">
-    //         <img className="w-28 h-24" src={RootsLogo} />
-    //         <div className="font-medium text-2xl text-black">Welcome to Dashboard</div>
-    //       </div>
-    //       <div className=''>
-    //         <div className="flex flex-col items-start px-4">
-    //           <div className=" text-gray-800 text-opacity-50 text-xs font-normal">Enter Roots Email Address</div>
-    //           <input
-    //             class="border-b border-gray-800  focus:outline-none px-2 py-1 w-full mb-14"
-    //             type="text"
-    //             placeholder=""
-    //             id="username"
-    //             value={username}
-    //             onChange={handleUsernameChange}
-    //           />
-    //           <div className=" text-gray-800 text-opacity-50 text-xs font-normal">Enter Roots Password</div>
-    //           <input
-    //             class="border-b border-gray-800  focus:outline-none px-2 py-1 w-full"
-    //             type="password"
-    //             id="password"
-    //             placeholder=""
-    //             value={password}
-    //             onChange={handlePasswordChange}
-    //           />
-    //         </div>
-    //       </div>
-    //       <div className="flex flex-row justify-between pt-4 px-4 pb-24">
-    //         <div className='flex flex-row space-x-4'>
-    //           <div className="w-12 h-5 relative">
-    //             <div className="w-12 h-5 left-0 top-0 absolute bg-zinc-300 rounded-xl" />
-    //             <div className="w-5 h-5 left-0 top-0 absolute rounded-full border border-black" />
-    //           </div>
-    //           <div className=" text-black text-xs font-normal">Stay Signed In</div>
-    //         </div>
-    //         <div className=" text-black text-xs font-normal">Reset Your Password</div>
-    //       </div>
-    //       <div className="flex flex-col items-center pb-16">
-    //         <button
-    //           className="w-52 h-14 border-1 bg-[#0F7235] text-white text-md rounded-sm"
-    //           onClick={handleLogin}
-    //         >
-    //           SIGN IN
-    //         </button>
-    //         {/* <p className=" text-black text-xs font-normal">OR</p>
-    //         <p className=" text-black text-xs font-normal">If you have loss your official email or password, Please contact your help desk support team.</p> */}
-    //       </div>
-    //     </div>
-    //   </div>
-    //   <div className="absolute bottom-0 right-0">
-    //     <img src="./login/flower-pot.png" className='w-44 h-72'></img>
-    //   </div>
-    // </div >
-
-    // <div className="w-[1920px] h-[1080px] relative bg-white bg-cover bg-center" style={{ "background-image: url('./login/image.png')"}}>
-    // <div className="w-[1920px] h-[1080px] relative bg-white bg-cover" style={{ backgroundImage: "url('./login/background.png')" }}>
-    //   <div className="w-[591.04px] h-[798.75px] left-[664.48px] top-[170.60px] absolute bg-white rounded-[5px] shadow" />
-    //   <div className="opacity-5 w-[112.80px] h-[111.16px] left-[1410.45px] top-[115.02px] absolute">
-    //   </div>
-    //   <div className="opacity-5 w-[128.61px] h-[127.10px] left-[381.34px] top-[581.55px] absolute">
-    //   </div>
-    //   <div className="w-[229.88px] h-[229.88px] left-[50.10px] top-[115.02px] absolute">
-    //   </div>
-    //   <div className="opacity-5 w-[269.86px] h-[269.86px] left-[1633.61px] top-[232.14px] absolute">
-    //   </div>
-    //   <div className="opacity-5 w-[163.01px] h-[154.67px] left-[179.53px] top-[861.91px] absolute">
-    //   </div>
-    //   <div className="opacity-5 w-[72.85px] h-[72.45px] left-[1491.28px] top-[761.95px] absolute">
-    //   </div>
-    //   <div className="opacity-10 w-[112.26px] h-[112.27px] left-[552.23px] top-[175.32px] absolute">
-    //   </div>
-    //   <div className="opacity-10 w-[99.08px] h-[99.08px] left-[1255.52px] top-[858.29px] absolute">
-    //   </div>
-    //   <div className="opacity-10 w-[112.26px] h-[112.27px] left-[618.42px] top-[932.54px] absolute">
-    //   </div>
-    //   <div className="opacity-10 w-[77.37px] h-[77.37px] left-[1356.18px] top-[355.52px] absolute">
-    //   </div>
-    //   <div className="opacity-10 w-[61.64px] h-[62.20px] left-[1564.13px] top-[658.15px] absolute">
-    //   </div>
-    //   <div className="w-20 h-20 left-[105.66px] top-[554.52px] absolute">
-    //   </div>
-    //   <div className="opacity-10 w-[64.98px] h-[64.98px] left-[1481.11px] top-[984.09px] absolute">
-    //   </div>
-    //   <div className="w-[522.80px] h-[456.72px] left-[698.60px] top-[213.26px] absolute">
-    //     <div className="w-[365px] h-[161.51px] left-[78.90px] top-0 absolute">
-    //       <div className="left-0 top-[119.51px] absolute text-black text-[28px] font-medium font-['Poppins']">Welcome to Sign IN Board</div>
-    //       <img className="w-[116.86px] h-[94.84px] left-[124.07px] top-0 absolute" src={RootsLogo} />
-    //     </div>
-    //     <div className="w-[522.80px] h-[186.47px] left-0 top-[270.25px] absolute">
-    //       <div className="w-[522.80px] h-[142.24px] left-0 top-0 absolute">
-    //         <div className="w-[522.80px] h-[44.70px] left-0 top-0 absolute">
-    //           <div className="w-[522.80px] h-[0px] left-0 top-[44.70px] absolute border border-black"></div>
-    //           <div className="left-0 top-0 absolute text-gray-800 text-opacity-50 text-xs font-normal font-['Poppins']">Enter Roots Email Address</div>
-    //           <div className="w-[522.80px] h-[24.36px] left-0 top-[20.33px] absolute">
-    //             <input
-    //               class="border-b border-gray-800  focus:outline-none px-2 py-1 w-full top-[44.70px]"
-    //               type="text"
-    //               placeholder=""
-    //               id="username"
-    //               value={username}
-    //               onChange={handleUsernameChange}
-    //             />
-    //           </div>
-    //         </div>
-    //         <div className="w-[522.80px] h-[44.70px] left-0 top-[97.55px] absolute">
-    //           <div className="left-0 top-0 absolute text-gray-800 text-opacity-50 text-xs font-normal font-['Poppins']">Enter Roots Password</div>
-    //           <div className="w-[522.80px] h-[24.36px] left-0 top-[20.33px] absolute">
-    //             {/* <div className="w-[522.80px] h-[0px] left-0 top-[24.36px] absolute border border-black"></div> */}
-    //             <input
-    //               class="border-b border-gray-800  focus:outline-none px-2 py-1 w-full"
-    //               type="password"
-    //               id="password"
-    //               placeholder=""
-    //               value={password}
-    //               onChange={handlePasswordChange}
-    //             />
-    //             <div className="w-[17.90px] h-[15.67px] left-[504.89px] top-0 absolute">
-    //               <div className="w-[6.71px] h-[6.72px] left-[5.60px] top-[4.48px] absolute">
-    //               </div>
-    //             </div>
-    //           </div>
-    //         </div>
-    //       </div>
-    //       <div className="w-[519.11px] h-5 left-0 top-[166.47px] absolute">
-    //         <div className="w-[145px] h-5 left-0 top-0 absolute">
-    //           <div className="left-[60px] top-[1px] absolute text-gray-800 text-xs font-normal font-['Poppins']">Stay Signed In</div>
-    //           <div className="w-[46.71px] h-5 left-0 top-0 absolute">
-    //             <div className="w-[46.71px] h-5 left-0 top-0 absolute bg-zinc-300 rounded-[10.58px]" />
-    //             <div className="w-5 h-5 left-0 top-0 absolute rounded-full border border-gray-800" />
-    //           </div>
-    //         </div>
-    //         <div className="left-[395.11px] top-[1px] absolute text-black text-xs font-normal font-['Poppins']">Reset Your Password</div>
-    //       </div>
-    //     </div>
-    //   </div>
-    //   <div className="w-[215.89px] h-[56.43px] left-[852.05px] top-[721.26px] absolute">
-    //     <div className="w-[215.89px] h-[56.43px] left-0 top-0 absolute bg-green-800 rounded-[3px]" />
-    //     <button className="left-[78.95px] top-[16.21px] absolute text-white text-base font-medium font-['Poppins']" onClick={handleLogin}>SIGN IN</button>
-    //   </div>
-    //   <div className="w-[461px] h-[114px] left-[730.68px] top-[812.68px] absolute">
-    //     <div className="w-[461px] h-[55px] left-0 top-[59px] absolute text-center text-black text-base font-normal font-['Poppins']">If you have loss your official email or password, Please contact your help desk support team.</div>
-    //     <div className="left-[219px] top-0 absolute text-black text-base font-medium font-['Poppins']">OR</div>
-    //   </div>
-    //   <div className="w-44 h-[297.75px] left-[1709.02px] top-[782.25px] absolute">
-    //     <img src="./login/flower-pot.png"></img>
-    //   </div>
-    // </div>
-
-    //Old Code
-    //   <section className="vh-100">
-    //     <div className="container h-100">
-    //       <div className="row d-flex justify-content-center align-items-center h-100">
-    //         <div className="col-md-9 col-lg-6 col-xl-5 text-center">
-    //           <img src={RootsLogo} className="img-fluid" alt="Sample image" />
-    //         </div>
-    //         <div className="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-    //           <form>
-    //             <div className="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
-    //               <p className="lead fw-normal mb-0 me-3 fw-bolder">  Welcome to Roots</p>
-    //             </div>
-
-    //             <div className="divider d-flex align-items-center my-4">
-    //               <p className="text-center fw-bold mx-3 mb-0"></p>
-    //             </div>
-
-    //             <div className="form-outline mb-4">
-    //               <label className="form-label" htmlFor="username">Email</label>
-    //               <input
-    //                 type="text"
-    //                 id="username"
-    //                 className="form-control form-control-lg"
-    //                 placeholder="Enter your username"
-    //                 value={username}
-    //                 onChange={handleUsernameChange}
-    //               />
-    //             </div>
-
-    //             <div className="form-outline mb-3">
-    //               <label className="form-label" htmlFor="password">Password</label>
-    //               <input
-    //                 type="password"
-    //                 id="password"
-    //                 className="form-control form-control-lg"
-    //                 placeholder="Enter your password"
-    //                 value={password}
-    //                 onChange={handlePasswordChange}
-    //               />
-    //             </div>
-
-    //             <div className="d-flex justify-content-between align-items-center">
-    //               <div className="form-check mb-0">
-    //                 <input className="form-check-input me-2" type="checkbox" value="" id="form2Example3" />
-    //                 <label className="form-check-label" htmlFor="form2Example3">
-    //                   Remember me
-    //                 </label>
-    //               </div>
-    //               <a href="/PasswordReset" className="text-body">Forgot password?</a>
-    //             </div>
-
-    //             <div className="text-center text-lg-start mt-4 pt-2">
-    //               <button
-    //                 type="button"
-    //                 className="btn btn-primary btn-lg"
-    //                 style={{ paddingLeft: '2.5rem', paddingRight: '2.5rem' }}
-    //                 onClick={handleLogin}
-    //               >
-    //                 Login
-    //               </button>
-    //               <p className="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <a href="/signup" className="link-danger">Register</a></p>
-    //             </div>
-    //           </form>
-    //         </div>
-    //       </div>
-    //     </div>
-    //     <div className="d-flex flex-column flex-md-row text-center text-md-start justify-content-between py-4 px-4 px-xl-5 bg-primary">
-    //       <div className="text-white mb-3 mb-md-0">
-    //         Copyright © 2020. All rights reserved.
-    //       </div>
-    //       <div>
-    //         <a href="#!" className="text-white me-4">
-    //           <i className="fab fa-facebook-f"></i>
-    //         </a>
-    //         <a href="#!" className="text-white me-4">
-    //           <i className="fab fa-twitter"></i>
-    //         </a>
-    //         <a href="#!" className="text-white me-4">
-    //           <i className="fab fa-google"></i>
-    //         </a>
-    //         <a href="#!" className="text-white">
-    //           <i className="fab fa-linkedin-in"></i>
-    //         </a>
-    //       </div>
-    //     </div>
-    //   </section>
+    </div >
   );
 };
 
