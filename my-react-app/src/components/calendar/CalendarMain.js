@@ -2,13 +2,21 @@ import dayjs from "dayjs";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-import { getMonth, getWeek, getToday } from "../utils";
+import {
+  getMonth,
+  getWeek,
+  getToday,
+  getYearMonths,
+  getMonth2,
+} from "../utils";
 import Month from "./month";
 import CalendarHeader from "./calendarheader";
 import AddAppointment from "./addappointment";
 import AlertSuccess from "../common/AlertSuccess";
 import apiURL from "../.././apiConfig";
 import Week from "./week";
+import YearView from "./YearView";
+import TodayView from "./TodayView";
 
 const CalendarMain = () => {
   // console.table(getMonth(3));
@@ -16,10 +24,48 @@ const CalendarMain = () => {
   const CALENDAR_VIEWS = ["Today", "Week", "Month", "Year"];
   const [currentCalendarView, setCurrentCalendarView] = useState("Month");
 
-  const [currentMonth, setCurrentMonth] = useState(getMonth());
+  const [currentDate, setCurrentDate] = useState(dayjs());
+
+  const handleCalendarChange = (mode) => {
+    let dateParameter = "month";
+    switch (currentCalendarView) {
+      case "Month":
+        dateParameter = "month";
+        break;
+      case "Week":
+        dateParameter = "week";
+        break;
+      case "Year":
+        dateParameter = "year";
+        break;
+      default:
+        dateParameter = "month";
+        break;
+    }
+    if (mode === 1) {
+      // handle increment
+      console.log({
+        dateParameter,
+        mode,
+      });
+      setCurrentDate((prev) => prev.add(1, dateParameter));
+    }
+
+    if (mode === -1) {
+      // handle decrement
+      console.log({
+        dateParameter,
+        mode,
+      });
+      setCurrentDate((prev) => prev.subtract(1, dateParameter));
+    }
+  };
+
+  console.log({ currentDate });
 
   const [showModal, setShowModal] = useState(false);
   const [fetchedEvents, setFetchedEvents] = useState(false);
+  const [fetchedInternalEvents, setFetchedInternalEvents] = useState(false);
 
   const toggleModal = () => {
     setShowModal(!showModal);
@@ -37,7 +83,7 @@ const CalendarMain = () => {
 
   const [savedEvents, setSavedEvents] = useState([]);
 
-  function fetchEvents() {
+  function fetchGoogleEvents() {
     axios
       .get(`${apiURL}/rest/v1/calendar/events/`)
       .then((response) => {
@@ -50,6 +96,26 @@ const CalendarMain = () => {
       });
   }
 
+  function fetchInternalEvents() {
+    axios
+      .get(`${apiURL}/django/calendar/events/`)
+      .then((response) => {
+        setSavedEvents(response.data.data);
+        setFetchedInternalEvents(true);
+        console.log(response.data.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching calendar events:", error);
+      });
+  }
+
+  console.log({ fetchedInternalEvents, fetchedGoogleEvents: fetchedEvents });
+
+  function fetchEvents() {
+    fetchGoogleEvents();
+    fetchInternalEvents();
+  }
+
   useEffect(() => {
     console.log("savedEvents - inside useeffect", savedEvents);
     fetchEvents();
@@ -59,10 +125,14 @@ const CalendarMain = () => {
 
   const renderCalendar = () => {
     switch (currentCalendarView) {
-      case "Month":
-        return <Month month={currentMonth} savedEvents={savedEvents} />;
+      case "Today":
+        return <TodayView savedEvents={savedEvents} />;
       case "Week":
-        return <Week week={getWeek()} savedEvents={savedEvents} />;
+        return <Week currentDate={currentDate} savedEvents={savedEvents} />;
+      case "Month":
+        return <Month currentDate={currentDate} savedEvents={savedEvents} />;
+      case "Year":
+        return <YearView currentDate={currentDate} savedEvents={savedEvents} />;
       default:
         return <p>No view found</p>;
     }
@@ -91,7 +161,13 @@ const CalendarMain = () => {
             viewList={CALENDAR_VIEWS}
             currentCalendarView={currentCalendarView}
             handleCalendarView={setCurrentCalendarView}
-            currentMonth={currentMonth}
+            onIncrement={() => {
+              handleCalendarChange(1);
+            }}
+            onDecrement={() => {
+              handleCalendarChange(-1);
+            }}
+            currentDate={currentDate}
           />
           {fetchedEvents && renderCalendar()}
         </div>

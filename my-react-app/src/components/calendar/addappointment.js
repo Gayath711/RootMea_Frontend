@@ -43,6 +43,10 @@ const AddAppointment = ({ toggleModal, savedEvents, setSavedEvents, fetchEvents,
         setValue(name, value);
     }
 
+    console.log({
+        startTime, endTime
+    })
+
     const onSubmit = (data) => {
         reset();
         toggleModal();
