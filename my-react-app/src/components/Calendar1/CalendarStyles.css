@@ -29,7 +29,7 @@
     min-height: fit-content !important;
 }  */
 
-@media screen and (max-width: 768px){
+@media screen and (max-width: 1025px){
   .css-1q04gal-MuiDateCalendar-root, .css-1vs7z2v-MuiYearCalendar-root {
     width: 100% !important;
   }

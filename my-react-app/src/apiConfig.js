@@ -1,7 +1,6 @@
 const currentURL = window.location.href;
-//let baseURL;
+let baseURL;
 
-// Check if the current URL matches the development URL
 // if (currentURL === "http://52.34.62.96:3000/") {
 //   // If it matches, use the development backend URL
 //   baseURL = "http://52.34.62.96";
@@ -10,7 +9,11 @@ const currentURL = window.location.href;
 //   baseURL = "http://192.168.3.24:8000";
 // }
 
-// const baseURL = "http://52.34.62.96";
-const baseURL = "http://127.0.0.1:8000";
+// baseURL="http://localhost:8000";
+
+baseURL = "http://52.34.62.96";
+
+
+//   baseURL = "http://192.168.3.24:8000";
 
 export default baseURL;

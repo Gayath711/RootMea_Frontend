@@ -12,7 +12,7 @@ const TopStats =() => {
                 <div id="top-stats-4">Total Program</div>
             </div>
             <hr id="top-stats-5" className="w-11/12 mx-auto my-2" />
-            <div id="top-stats-6" className="flex justify-around text-3xl font-semibold my-8">
+            <div id="top-stats-6" className="flex justify-around text-3xl font-semibold my-10">
                 <div id="top-stats-7" className="mx-auto my-auto p-3 rounded-md bg-[#D9F0EF] text-[#43B09C]"><span>270</span></div>
                 <div id="top-stats-8" className="mx-auto my-auto p-3 rounded-md bg-[#E6EAED] text-[#1F4B51]"><span>378</span></div>
             </div>

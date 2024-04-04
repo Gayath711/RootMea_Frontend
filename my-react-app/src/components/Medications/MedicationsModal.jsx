@@ -6,6 +6,7 @@ import ClosePNG from "../images/close.png";
 import DropDown from "../common/Dropdown";
 import TextBox from "../common/TextBox";
 import DateInput from "../common/DateInput";
+import apiURL from "../../apiConfig";
 
 function MedicationsModal({
   toggleModal,
@@ -75,7 +76,7 @@ function MedicationsModal({
 
     if (update) {
       axios
-        .put(`http://192.168.3.24:8000/clientmedication-api/${clientId}`, data)
+        .put(`${apiURL}/clientmedication-api/${clientId}`, data)
         .then((response) => {
           console.log(response.data);
           fetchData();
@@ -85,7 +86,7 @@ function MedicationsModal({
         });
     } else {
       axios
-        .post(`http://192.168.3.24:8000/clientmedication-api/`, data)
+        .post(`${apiURL}/clientmedication-api/`, data)
         .then((response) => {
           console.log(response.data);
           fetchData();

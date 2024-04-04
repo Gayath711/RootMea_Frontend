@@ -188,9 +188,9 @@ const ClientProfile = () => {
             <div>
               <AddressInformation id={4} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
             </div>
-            <div>
+            {/* <div>
               <CustomFields id={5} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
-            </div>
+            </div> */}
             <div>
               <PreferredPharmacy id={6} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
             </div>
