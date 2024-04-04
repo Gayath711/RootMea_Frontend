@@ -3,6 +3,8 @@ import axios from "axios"; // Don't forget to import axios if it's not already i
 import { useDispatch } from "react-redux";
 import { loginAsync } from "../../store/slices/authSlice";
 import { useForm } from "react-hook-form";
+import { TailSpin } from "react-loader-spinner";
+import { BeatLoader } from "react-spinners";
 
 import RootsLogo from "../../image/root.png";
 import apiURL from "../.././apiConfig";
@@ -14,9 +16,11 @@ const LoginForm = () => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [showSuccessAlert, setSuccessShowAlert] = useState(false);
   const [showErrorAlert, setErrorShowAlert] = useState(false);
+  const [staySignedIn, setStaySignedIn] = useState(false);
 
   const [successMsg, setSuccessMsg] = useState(false);
   const [errorMsg, setErrorMsg] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const closeSuccessAlert = () => {
     setSuccessShowAlert(false);
@@ -53,41 +57,33 @@ const LoginForm = () => {
   // };
 
   const handleLogin = (loginData) => {
-    console.log("Login data - 1", loginData.userEmail);
-    console.log("data length", Object.keys(errorsLogin).length);
-    console.log("errorsLogin", errorsLogin);
-    if (Object.keys(errorsLogin).length < 1) {
-      const user = {
-        email: loginData.userEmail,
-        password: loginData.password,
-      };
-      console.log("Login data - 2", user);
-
-      // axios.post(`${apiURL}/token/`, user)
-      //   .then(response => {
-      //     console.log(response.data)
-      //     setErrorShowAlert(false);
-      //     localStorage.clear();
-      //     localStorage.setItem("access_token", data.access);
-      //     localStorage.setItem("refresh_token", data.refresh);
-      //     // setSuccessShowAlert(true);
-      //     // setSuccessMsg("Password reset email has been sent");
-      //   })
-      //   .catch(error => {
-      //     console.error('Error fetching Client Diagnosis Data:', error.response.data);
-      //     // setSuccessShowAlert(false);
-      //     setErrorShowAlert(true);
-      //     setErrorMsg(error?.response?.data?.error);
-      //   });
-
-      try {
-        dispatch(loginAsync(user));
-        // resetLogin();
-      } catch (error) {
-        console.error("Login error:", error);
-      }
+    setErrorShowAlert(false);
+    console.log("Login data ", loginData);
+    const user = {
+      email: loginData.userEmail,
+      password: loginData.password,
+    };
+    try {
+      setIsLoading(true);
+      dispatch(loginAsync(user)).then((result) => {
+        // 'result' here contains either the fulfilled action payload or the rejected action payload
+        console.log("result", result);
+        if (result.payload.detail) {
+          setErrorMsg(result.payload.detail);
+        } else if (result.payload) {
+          setErrorMsg(result.payload);
+        }
+        setErrorShowAlert(true);
+        setIsLoading(false);
+        // }
+      });
+    } catch (error) {
+      console.error("Login error:", error);
     }
-  };
+
+    console.log("Login")
+  }
+
 
   const handlePasswordReset = (resetData) => {
     console.log(resetData);
@@ -142,9 +138,8 @@ const LoginForm = () => {
             <form onSubmit={handleSubmit(handlePasswordReset)}>
               <div style={{ transform: "rotateY(180deg)" }}>
                 <div
-                  className={`flex flex-col items-center space-y-0 pb-5 ${
-                    showSuccessAlert || showErrorAlert ? "pt-0" : "pt-5"
-                  }`}
+                  className={`flex flex-col items-center space-y-0 pb-5 ${showSuccessAlert || showErrorAlert ? "pt-0" : "pt-5"
+                    }`}
                 >
                   <img className="w-24 h-20" src={RootsLogo} />
                   <div className="font-medium text-2xl pt-3">
@@ -196,17 +191,25 @@ const LoginForm = () => {
           </div>
         ) : (
           <div
-            className={`w-96 h-fit flex flex-col bg-white rounded shadow pt-5`}
+            className={`w-96 h-fit flex flex-col bg-white rounded shadow ${showErrorAlert ? "pt-0" : "pt-5"}`}
             style={{
               transformStyle: "preserve-3d",
               transition: "transform 0.5s",
               transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
             }}
           >
+            {showErrorAlert && (
+              <div >
+                <AlertError message={errorMsg} handleClose={closeErrorAlert} />{" "}
+              </div>
+            )}
             <form onSubmit={handleSubmitLogin(handleLogin)}>
               <div className="flex flex-col items-center space-y-0 pb-5 pt-0">
                 <img className="w-24 h-20" src={RootsLogo} />
                 <div className="font-medium text-2xl pt-3">Welcome</div>
+                {isLoading && (
+                  <BeatLoader className="opacity-75" color="#0F7235" size={25} />
+                )}
               </div>
               <div className="">
                 <div className="flex flex-col items-start px-4">
@@ -232,6 +235,7 @@ const LoginForm = () => {
                     Enter Roots Password
                   </div>
                   <input
+                    type="password"
                     className="border-b border-gray-800 focus:outline-none px-2 py-1 w-full mb-2"
                     {...registerLogin("password", {
                       required: "Password is required",
@@ -246,17 +250,26 @@ const LoginForm = () => {
               </div>
               <div className="flex flex-row justify-between pt-3 px-4 pb-12">
                 <div className="flex flex-row space-x-4">
-                  <div className="w-6 h-3 relative">
-                    <div className="w-8 h-4 left-0 top-0 absolute bg-zinc-300 rounded-xl" />
-                    <div className="w-4 h-4 left-0 top-0 absolute rounded-full border border-black" />
+                  <div className="w-6 h-3 relative hover:cursor-pointer" onClick={() => { localStorage.setItem("StaySignedIn", !staySignedIn); setStaySignedIn(!staySignedIn); }}>
+                    {staySignedIn ? (
+                      <div>
+                        <div className="w-8 h-4 left-0 top-0 absolute bg-[#0F7235] opacity-80 rounded-xl" />
+                        <div className="w-4 h-4 left-4 top-0 absolute rounded-full border border-black" />
+                      </div>
+                    ) : (
+                      <div><div className="w-8 h-4 left-0 top-0 absolute bg-zinc-300 rounded-xl" />
+                        <div className="w-4 h-4 left-0 top-0 absolute rounded-full border border-black" />
+                      </div>)}
                   </div>
                   <div className="text-black-500 text-xs font-normal">
                     Stay Signed In
                   </div>
                 </div>
-                <button
-                  className="text-black-500 text-xs font-normal"
+                <div
+                  className="text-black-500 text-xs font-normal hover:cursor-pointer"
                   onClick={() => {
+                    // (e) => {
+                    // e.preventDefault();
                     setIsFlipped(!isFlipped);
                     setErrorShowAlert(false);
                     setSuccessShowAlert(false);
@@ -264,7 +277,7 @@ const LoginForm = () => {
                   }}
                 >
                   Reset Your Password
-                </button>
+                </div>
               </div>
               <div className="flex flex-col items-center pb-5">
                 <button

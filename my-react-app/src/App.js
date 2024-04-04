@@ -56,6 +56,14 @@ function App() {
   const { width } = useWindowSize();
   console.log(width);
 
+  window.addEventListener('beforeunload', () => {
+    // Dispatch the logout action
+    const StaySignedIn = localStorage.getItem("StaySignedIn");
+    if (!StaySignedIn) {
+      dispatch(logout());
+    }
+  });
+
   const isLoggedIn = useSelector((state) => {
     console.log(state);
     return state.auth.isLoggedIn;

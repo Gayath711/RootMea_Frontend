@@ -10,31 +10,64 @@ const initialState = {
   error: null,
 };
 
-
 export const loginAsync = createAsyncThunk(
   "auth/login",
-  async (userCredentials) => {
+  async (userCredentials, { rejectWithValue }) => {
     try {
-      const { data } = await api.post(
-        "/token/",
-        userCredentials,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
-      );
+      const { data } = await api.post("/token/", userCredentials, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
 
-      localStorage.clear();
       localStorage.setItem("access_token", data.access);
       localStorage.setItem("refresh_token", data.refresh);
+
       return data;
     } catch (error) {
-      console.error("Login error:", error);
+      if (error.response) {
+        // Handle HTTP errors
+        return rejectWithValue(error.response.data);
+      } else if (error.request) {
+        // Handle network errors
+        return rejectWithValue("Network error occurred. Please try again.");
+      } else {
+        // Handle other errors
+        return rejectWithValue(
+          "An unexpected error occurred. Please try again later."
+        );
+      }
     }
   }
 );
+
+// export const loginAsync = createAsyncThunk(
+//   "auth/login",
+//   async ({ userCredentials }) => {
+//     try {
+//       const { data } = await api.post(
+//         "/token/",
+//         userCredentials,
+//         {
+//           headers: {
+//             "Content-Type": "application/json",
+//           },
+//           withCredentials: true,
+//         }
+//       );
+
+//       localStorage.removeItem("access_token");
+//       localStorage.removeItem("refresh_token");
+//       localStorage.setItem("access_token", data.access);
+//       localStorage.setItem("refresh_token", data.refresh);
+
+//       return data;
+//     } catch (error) {
+//       console.error("Login error:", error);
+//     }
+//   }
+// );
 
 const authSlice = createSlice({
   name: "auth",
@@ -43,6 +76,7 @@ const authSlice = createSlice({
     logout(state) {
       localStorage.removeItem("access_token");
       localStorage.removeItem("refresh_token");
+      localStorage.removeItem("StaySignedIn");
       state.isLoggedIn = false;
     },
   },
