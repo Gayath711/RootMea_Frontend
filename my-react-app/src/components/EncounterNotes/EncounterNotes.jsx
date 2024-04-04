@@ -44,7 +44,7 @@ function EncounterNotes({ clientId }) {
       facility: "...",
       note_type: "...",
       encounter_type: "Home Visit",
-      encounter_date: "2000-1-1",
+      encounter_date: "1-1-2000",
       status: "Done",
     },
     {
@@ -52,7 +52,7 @@ function EncounterNotes({ clientId }) {
       facility: "...",
       note_type: "...",
       encounter_type: "Home Visit",
-      encounter_date: "2000-1-1",
+      encounter_date: "1-1-2000",
       status: "Active",
     },
     {
@@ -60,7 +60,7 @@ function EncounterNotes({ clientId }) {
       facility: "...",
       note_type: "...",
       encounter_type: "Home Visit",
-      encounter_date: "2000-1-1",
+      encounter_date: "1-1-2000",
       status: "Pending",
     },
     {
@@ -68,7 +68,7 @@ function EncounterNotes({ clientId }) {
       facility: "...",
       note_type: "...",
       encounter_type: "Home Visit",
-      encounter_date: "2000-1-1",
+      encounter_date: "1-1-2000",
       status: "Done",
     },
     {
@@ -76,7 +76,7 @@ function EncounterNotes({ clientId }) {
       facility: "...",
       note_type: "...",
       encounter_type: "Home Visit",
-      encounter_date: "2000-1-1",
+      encounter_date: "1-1-2000",
       status: "Done",
     },
     {
@@ -84,7 +84,7 @@ function EncounterNotes({ clientId }) {
       facility: "...",
       note_type: "...",
       encounter_type: "Home Visit",
-      encounter_date: "2000-1-1",
+      encounter_date: "1-1-2000",
       status: "Pending",
     },
     {
@@ -92,7 +92,7 @@ function EncounterNotes({ clientId }) {
       facility: "...",
       note_type: "...",
       encounter_type: "Home Visit",
-      encounter_date: "2000-1-1",
+      encounter_date: "1-1-2000",
       status: "Pending",
     },
     {
@@ -100,7 +100,7 @@ function EncounterNotes({ clientId }) {
       facility: "...",
       note_type: "...",
       encounter_type: "Home Visit",
-      encounter_date: "2000-1-1",
+      encounter_date: "1-1-2000",
       status: "Active",
     },
     {
@@ -108,7 +108,7 @@ function EncounterNotes({ clientId }) {
       facility: "...",
       note_type: "...",
       encounter_type: "Home Visit",
-      encounter_date: "2000-1-1",
+      encounter_date: "1-1-2000",
       status: "Active",
     },
     {
@@ -116,7 +116,7 @@ function EncounterNotes({ clientId }) {
       facility: "...",
       note_type: "...",
       encounter_type: "Home Visit",
-      encounter_date: "2000-1-1",
+      encounter_date: "1-1-2000",
       status: "Done",
     },
   ]);
