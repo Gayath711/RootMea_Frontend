@@ -29,8 +29,8 @@ const EventModal = ({ eventDate, toggleModal, events = [] }) => {
         <div className="flex flex-col max-h-[50vh] overflow-y-auto p-2">
           <div className="flex flex-col divide-y divide-slate-200">
             {events.map((event, index) => {
-              const startTime = dayjs(event.start.dateTime).format("HH:mm A");
-              const endTime = dayjs(event.end.dateTime).format("HH:mm A");
+              const startTime = dayjs(event.start.dateTime).format("hh:mm A");
+              const endTime = dayjs(event.end.dateTime).format("hh:mm A");
 
               return (
                 <div
