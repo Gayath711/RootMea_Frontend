@@ -117,26 +117,30 @@ const CalendarMain = () => {
   }
 
   useEffect(() => {
-    let internal = internalEvents.map((event) => {
-      return {
-        isExternal: false,
-        summary: event.summary,
-        start: {
-          dateTime: event.start_datetime,
-          // timeZone: "Asia/Kolkata",
-        },
-        end: {
-          dateTime: event.end_datetime,
-          // timeZone: "Asia/Kolkata", // need to check
-        },
-      };
-    });
-    let external = externalEvents.map((event) => {
-      return {
-        isExternal: true,
-        ...event,
-      };
-    });
+    let internal = internalEvents
+      ? internalEvents.map((event) => {
+          return {
+            isExternal: false,
+            summary: event.summary,
+            start: {
+              dateTime: event.start_datetime,
+              // timeZone: "Asia/Kolkata",
+            },
+            end: {
+              dateTime: event.end_datetime,
+              // timeZone: "Asia/Kolkata", // need to check
+            },
+          };
+        })
+      : [];
+    let external = externalEvents
+      ? externalEvents.map((event) => {
+          return {
+            isExternal: true,
+            ...event,
+          };
+        })
+      : [];
 
     setSavedEvents(() => {
       return [...internal, ...external];
