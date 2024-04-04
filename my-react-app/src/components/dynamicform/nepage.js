@@ -13,15 +13,21 @@ function NewPage() {
     const [formData, setFormData] = useState({});
     const [tableHeaders, setTableHeaders] = useState([]);
 
-
+    
     const [droplist, setDroplist] = useState({});
+    
 
     useEffect(() => {
-        const newDroplist = {};
         const fetchDropdownOptions = async () => {
+            const newDroplist = {};
             for (const column of tableColumns) {
-                console.log(column.type)
-                if (column.type === "USER-DEFINED" || column.type=== "ARRAY" ) {
+                console.log(column.type);
+                console.log('column.name',column.name)
+
+                if (
+                    (column.type === "USER-DEFINED" || column.type === "ARRAY") &&
+                    (column.name.endsWith("_multiple") || column.name.endsWith("_checkbox"))
+                ) {
                     const enumType = `enum_type_${tableName}_${column.name}_enum_type`;
                     try {
                         const response = await axios.get(`${apiURL}/get_enum_labels/`, {
@@ -38,7 +44,7 @@ function NewPage() {
                 }
             }
             setDroplist(newDroplist);
-            // console.log("Droplist updated:", droplist);
+            console.log("Droplist updated:", droplist);
         };
     
         fetchDropdownOptions();
@@ -265,6 +271,8 @@ function NewPage() {
 
                     const key = `enum_type_${tableName}_${column.name}_enum_type`;
 
+                    console.log(key)
+
                     // console.log("keykey",key)
 
               
@@ -298,23 +306,91 @@ function NewPage() {
 
                     }
                     
-                    else {
-                      return (
-                        <div key={column.name} className="mb-4">
-                          <label className="block mb-1">{label}</label>
-                          <select
-                            value={formData[column.name] || ''}
-                            onChange={(event) => handleInputChange(event, column.name)}
-                            className={`${column.width} border border-gray-300 rounded px-4 py-2`}
-                          >
-                            <option value="">Select</option>
+                    // else if (key.endsWith("checkbox_enum_type")){
+                    //     console.log('checkbox_enum_type okkk')
+                    //     // console.log(droplist[key])
+                    //     return (
+                    //         <div key={column.name} className="mb-4">
+                    //             <label className="block mb-1">{label}</label>
+                    //             <Select
+                                
+                    //                 options={droplist[key] && droplist[key].map(option => ({ value: option, label: option }))}
+                    //                 isMulti
+                    //                 value={formData[column.name] ? formData[column.name].map(option => ({ value: option, label: option })) : []}
+                    //                 onChange={(selectedOptions) => {
+                    //                     const selectedValues = selectedOptions ? selectedOptions.map(option => option.value.toString()) : [];
+                    //                     console.log(column.name,selectedValues,'ssssssssssssssssssssssssssss')
+                    //                     setFormData(prevState => ({
+                    //                         ...prevState,
+                    //                         [column.name]: selectedValues
+                    //                     }));
+                    //                     console.log(column.name,selectedValues,'ssssssssssssssssssssssssssss')
+                    //                 }}
+                    //                 className={`${column.width} border border-gray-300 rounded px-4 py-2`}
+                    //                 placeholder="Select"
+                    //             />
+
+                    //         </div>
+                    //     );
+
+                    // }
+
+
+                    else if (key.endsWith("checkbox_enum_type")){
+                        console.log('checkbox_enum_type okkk')
+                        // console.log(droplist[key])
+                        return (
+                            <div key={column.name} className="mb-4">
+                            <label className="block mb-1">{label}</label>
                             {droplist[key] && droplist[key].map(option => (
-                              <option key={option} value={option}>{option}</option>
+                                <div key={option}>
+                                    <input
+                                        type="checkbox"
+                                        id={option}
+                                        value={option}
+                                        checked={formData[column.name] && formData[column.name].includes(option)}
+                                        onChange={(event) => {
+                                            const value = event.target.value;
+                                            setFormData(prevState => ({
+                                                ...prevState,
+                                                [column.name]: prevState[column.name] ? 
+                                                    (prevState[column.name].includes(value) ? 
+                                                        prevState[column.name].filter(val => val !== value) : 
+                                                        [...prevState[column.name], value]) :
+                                                    [value]
+                                            }));
+                                        }}
+                                    />
+                                    <label htmlFor={option}>{option}</label>
+                                </div>
                             ))}
-                          </select>
                         </div>
-                      );
+                        
+                        );
+
                     }
+
+  
+
+
+
+                    else {
+                        return (
+                          <div key={column.name} className="mb-4">
+                            <label className="block mb-1">{label}</label>
+                            <select
+                              value={formData[column.name] || ''}
+                              onChange={(event) => handleInputChange(event, column.name)}
+                              className={`${column.width} border border-gray-300 rounded px-4 py-2`}
+                            >
+                              <option value="">Select</option>
+                              {droplist[key] && droplist[key].map(option => (
+                                <option key={option} value={option}>{option}</option>
+                              ))}
+                            </select>
+                          </div>
+                        );
+                      }
 
 
 
