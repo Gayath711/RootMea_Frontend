@@ -54,12 +54,12 @@ const Sidebar = ({ handleClick }) => {
                                         <p className=''>Address/Usual Location</p>
                                     </li>
                                 </button>
-                                <button onClick={() => handleClick(5)}>
+                                {/* <button onClick={() => handleClick(5)}>
                                     <li className=" flex items-center mt-10">
                                         <img src={CustomFieldsPNG} className="h-[25px] w-[25px] mr-4" alt="custom fields" />
                                         Custom Fields
                                     </li>
-                                </button>
+                                </button> */}
                                 <button onClick={() => handleClick(6)}>
                                     <li className=" flex items-center mt-10">
                                         <img src={PharmacyPNG} className="h-[25px] w-[25px] mr-4" alt="preferred pharmacy" />
@@ -78,10 +78,10 @@ const Sidebar = ({ handleClick }) => {
                                         System Information
                                     </li>
                                 </button>
-                                <li className=" flex items-center mt-10 mb-3">
+                                {/* <li className=" flex items-center mt-10 mb-3">
                                     <img src={ExportPNG} className="h-[25px] w-[25px] mr-2" alt="export" />
                                     Report Builder
-                                </li>
+                                </li> */}
 
                             </ul>)
                         }
