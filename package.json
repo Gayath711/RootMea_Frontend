@@ -1,6 +1,8 @@
 {
   "dependencies": {
     "dayjs": "^1.11.10",
-    "framer-motion": "^11.0.15"
+    "framer-motion": "^11.0.15",
+    "react-loader-spinner": "^6.1.6",
+    "react-spinners": "^0.13.8"
   }
 }

@@ -6,9 +6,8 @@ import Navbar from "./components/NavBar/NavBar";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Dashboard from "./pages/Dashboard/Dashboard"; // Import Dashboard component
 import ClientProfile from "./components/clientprofile"; // Import ClientProfile component
-import LoginForm from "./components/Logins";
+import LoginForm from "./components/Login/Logins";
 import SignupPage from "./components/Signup";
-import PasswordReset from "./components/ForgotPasswordForm";
 import UserProfile from "./components/UserProfile";
 import ClientChart from "./pages/ClientChart/ClientChart";
 import MedicationTable from "./components/medicationTable";
@@ -17,6 +16,7 @@ import EncounterNote from "./components/encounternote";
 import ClientProfileFull from "./components/clientprofilefull";
 import SideBar from "./components/SideBar/SideBar";
 import CalendarMain from "./components/calendar/CalendarMain";
+import PasswordReset from "./components/Login/PasswordReset";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "./store/slices/authSlice";
 import "./App.css";
@@ -55,6 +55,14 @@ function App() {
 
   const { width } = useWindowSize();
   console.log(width);
+
+  window.addEventListener('beforeunload', () => {
+    // Dispatch the logout action
+    const StaySignedIn = localStorage.getItem("StaySignedIn");
+    if (!StaySignedIn) {
+      dispatch(logout());
+    }
+  });
 
   const isLoggedIn = useSelector((state) => {
     console.log(state);
@@ -221,7 +229,7 @@ function App() {
             {/* <Route path="/" element={<LoginForm onLogin={handleLogin} />} /> */}
             <Route path="/" element={<LoginForm />} />
             <Route path="/signup" element={<SignupPage />} />
-            <Route path="/PasswordReset" element={<PasswordReset />} />
+            <Route path="/password/reset" element={<PasswordReset />} />
           </Routes>
         )}
       </div>
