@@ -11,13 +11,7 @@ import DateInput from "../common/DateInput";
 import TimeInput from "../common/TimeInput";
 import apiURL from "../.././apiConfig";
 
-const AddAppointment = ({
-  toggleModal,
-  savedEvents,
-  setSavedEvents,
-  fetchEvents,
-  setShowAlert,
-}) => {
+const AddAppointment = ({ toggleModal, fetchEvents, setShowAlert }) => {
   const options = [
     { value: "15 mins before time", label: "15 mins before time" },
     { value: "on time", label: "on time" },
@@ -64,26 +58,20 @@ const AddAppointment = ({
     end_datetime.setMinutes(data.end_time.getMinutes());
     end_datetime.setSeconds(data.end_time.getSeconds());
 
+    let endpoint = isExternal ? "/create_event/" : "/django/create_event/";
+
+    let splittedAttendees = data.attendees.split(",").map((email) => {
+      return {
+        email,
+      };
+    });
+
     let event = {
       summary: data.appointement_title,
       start_datetime: start_datetime.toISOString(),
       end_datetime: end_datetime.toISOString(),
+      attendees: splittedAttendees,
     };
-
-    let endpoint = isExternal ? "/create_event/" : "/django/create_event/";
-
-    if (!isExternal) {
-      let splittedAttendees = data.attendees.split(",").map((email) => {
-        return {
-          email,
-        };
-      });
-
-      event = {
-        ...event,
-        attendees: splittedAttendees,
-      };
-    }
 
     axios
       .post(`${apiURL}${endpoint}`, event)
@@ -120,7 +108,13 @@ const AddAppointment = ({
                 name="appointement_title"
                 placeholder="Appointment Title"
                 register={register}
+                registerProps={{ required: true }}
               />
+              {errors.appointement_title && (
+                <span className="text-xs ms-1 text-red-500">
+                  This field is required
+                </span>
+              )}
             </div>
           </div>
           <div className="flex flex-row">
@@ -129,16 +123,28 @@ const AddAppointment = ({
                 name="client_name"
                 placeholder="Client Name"
                 register={register}
+                registerProps={{ required: true }}
               />
+              {errors.client_name && (
+                <span className="text-xs ms-1 text-red-500">
+                  This field is required
+                </span>
+              )}
             </div>
             <div className="p-3">
               <DateInput
                 name="date"
                 placeholder="Date"
                 register={register}
+                registerProps={{ required: true }}
                 value={date}
                 handleChange={(date) => handleDateChange("date", date)}
               />
+              {errors.date && (
+                <span className="text-xs ms-1 text-red-500">
+                  This field is required
+                </span>
+              )}
             </div>
           </div>
           <div className="flex flex-row">
@@ -148,7 +154,14 @@ const AddAppointment = ({
                 placeholder="Start Time"
                 value={startTime}
                 handleChange={(value) => handleDateChange("start_time", value)}
+                register={register}
+                registerProps={{ required: true }}
               />
+              {errors.start_time && (
+                <span className="text-xs ms-1 text-red-500">
+                  This field is required
+                </span>
+              )}
             </div>
             <div className="p-3">
               <TimeInput
@@ -156,32 +169,46 @@ const AddAppointment = ({
                 placeholder="End Time"
                 value={endTime}
                 handleChange={(value) => handleDateChange("end_time", value)}
-              />
-            </div>
-          </div>
-          <div className="flex flex-row">
-            <div className="p-3 w-1/2">
-              <TextBox
-                name="scheduler_name"
-                placeholder="Scheduler Name"
                 register={register}
+                registerProps={{ required: true }}
               />
-            </div>
-            <div className="p-3 w-1/2">
-              <TextBox
-                name="remainder_notification"
-                placeholder="Remainder Notification"
-                register={register}
-              />
+              {errors.end_time && (
+                <span className="text-xs ms-1 text-red-500">
+                  This field is required
+                </span>
+              )}
             </div>
           </div>
           <div className="flex flex-row">
             <div className="p-3 w-full">
               <TextBox
                 name="attendees"
-                placeholder="Attendees"
+                placeholder="Attendees (comma separated)"
                 register={register}
+                registerProps={{
+                  required: true,
+                  validate: (value) => {
+                    const emailPattern = /\S+@\S+\.\S+/;
+                    const emails = value
+                      .split(",")
+                      .map((email) => email.trim());
+                    return (
+                      emails.every((email) => emailPattern.test(email)) ||
+                      "Invalid email format"
+                    );
+                  },
+                }}
               />
+              {errors.attendees && (
+                <span className="text-xs ms-1 text-red-500">
+                  {errors.attendees.message}
+                </span>
+              )}
+              {errors.attendees && errors.attendees.type === "required" && (
+                <span className="text-xs ms-1 text-red-500">
+                  This field is required
+                </span>
+              )}
             </div>
           </div>
           <div className="flex flex-row justify-center items-center py-3 px-1 gap-3">
