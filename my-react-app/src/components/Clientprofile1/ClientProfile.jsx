@@ -23,6 +23,17 @@ const FormInput = ({ title, label, value }) => {
 };
 
 const Content = ({data}) => {
+
+  // Function to format date as 'mm-dd-yyyy'
+  const formatDate = (dateString) => {
+    if (!dateString) return ""; // Return empty string if date is null or undefined
+    const date = new Date(dateString);
+    const month = date.getMonth() + 1; // Months are zero indexed
+    const day = date.getDate();
+    const year = date.getFullYear();
+    return `${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}-${year}`;
+  };
+  
   return (
     <>
       <hr className="w-[99%] mx-auto text-[#bababa]" />
@@ -37,7 +48,7 @@ const Content = ({data}) => {
           <FormInput
             title={"Date of Birth"}
             label={"dateOfBirth"}
-            value={data?.date_of_birth || ""}
+            value={formatDate(data?.date_of_birth) || ""}
           />
           <FormInput title={"Language"} label={"language"} value={data?.comfortable_language || ""} />
           <FormInput

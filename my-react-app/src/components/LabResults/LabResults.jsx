@@ -40,7 +40,7 @@ function LabResults({clientId}) {
   const [open, setOpen] = useState(true);
   const [data, setData] = useState([
     {
-      collection_date: "2024-1-1",
+      collection_date: "1-1-2024",
       diagnosic_test_results: "Cholest SerPl-mCnc",
       results: "195",
       out_of_range: "...",
@@ -51,7 +51,7 @@ function LabResults({clientId}) {
       source: "AMD",
     },
     {
-      collection_date: "2024-1-1",
+      collection_date: "1-1-2024",
       diagnosic_test_results: "LDLc SerPl Calc-mCnc",
       results: "...",
       out_of_range: "115",
@@ -62,7 +62,7 @@ function LabResults({clientId}) {
       source: "AMD",
     },
     {
-      collection_date: "2024-1-1",
+      collection_date: "1-1-2024",
       diagnosic_test_results: "...",
       results: "..",
       out_of_range: "...",

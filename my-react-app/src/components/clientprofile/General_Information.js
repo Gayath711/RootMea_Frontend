@@ -46,7 +46,7 @@ const GeneralInformation = ({ id, isEdittable, clientData, handleFieldChange }) 
                                         <TextBox placeholder="Client Status" isEdittable={isEdittable} value={"Pending"} />
                                     </div>
                                     <div className="flex-1">
-                                        <DateInput placeholder="Client Date" isEdittable={isEdittable} value={"2022-10-01"} />
+                                        <DateInput placeholder="Client Date" isEdittable={isEdittable} value={"10-01-2022"} />
                                     </div>
                                 </div>
                                 <TextBox placeholder="Client Programs" isEdittable={isEdittable} value={"STOMP"} />

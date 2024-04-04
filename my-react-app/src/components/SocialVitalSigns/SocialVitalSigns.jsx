@@ -57,7 +57,7 @@ function SocialVitalSigns({ clientId }) {
   //   {
   //     domain: "Housing",
   //     risk: "high",
-  //     last_assessed: "2000-1-1",
+  //     last_assessed: "1-1-2000",
   //   },
   //   {
   //     domain: "Communication and Mobility",
@@ -72,7 +72,7 @@ function SocialVitalSigns({ clientId }) {
   //   {
   //     domain: "Housing",
   //     risk: "high",
-  //     last_assessed: "2000-1-1",
+  //     last_assessed: "1-1-2000",
   //   },
   //   {
   //     domain: "Communication and Mobility",
@@ -87,7 +87,7 @@ function SocialVitalSigns({ clientId }) {
   //   {
   //     domain: "Housing",
   //     risk: "high",
-  //     last_assessed: "2000-1-1",
+  //     last_assessed: "1-1-2000",
   //   },
   //   {
   //     domain: "Communication and Mobility",

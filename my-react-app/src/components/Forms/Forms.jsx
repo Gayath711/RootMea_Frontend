@@ -37,31 +37,31 @@ function Forms({clientId}) {
     {
       program: "ECM",
       form_name: "...",
-      date: "2000-1-1",
+      date: "1-1-2000",
       status: "Done",
     },
     {
       program: "Diabetes",
       form_name: "...",
-      date: "2000-1-1",
+      date: "1-1-2000",
       status: "Active",
     },
     {
       program: "STOMP",
       form_name: "...",
-      date: "2000-1-1",
+      date: "1-1-2000",
       status: "Pending",
     },
     {
       program: "Diabetes",
       form_name: "...",
-      date: "2000-1-1",
+      date: "1-1-2000",
       status: "Done",
     },
     {
       program: "ECM",
       form_name: "...",
-      date: "2000-1-1",
+      date: "1-1-2000",
       status: "Done",
     },
   ]);

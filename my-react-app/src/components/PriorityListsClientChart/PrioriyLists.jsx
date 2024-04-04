@@ -37,7 +37,7 @@ function PriorityLists({clientId}) {
       list_name: "...",
       working_on_this_list: "...",
       link_to_user_contact_info: "...",
-      status_date: "2000-1-1",
+      status_date: "1-1-2000",
       status: "Done",
     },
     {
@@ -45,7 +45,7 @@ function PriorityLists({clientId}) {
       list_name: "...",
       working_on_this_list: "...",
       link_to_user_contact_info: "...",
-      status_date: "2000-1-1",
+      status_date: "1-1-2000",
       status: "Active",
     },
     {
@@ -53,7 +53,7 @@ function PriorityLists({clientId}) {
       list_name: "...",
       working_on_this_list: "...",
       link_to_user_contact_info: "...",
-      status_date: "2000-1-1",
+      status_date: "1-1-2000",
       status: "Pending",
     },
     {
@@ -61,7 +61,7 @@ function PriorityLists({clientId}) {
       list_name: "...",
       working_on_this_list: "...",
       link_to_user_contact_info: "...",
-      status_date: "2000-1-1",
+      status_date: "1-1-2000",
       status: "Done",
     },
     {
@@ -69,7 +69,7 @@ function PriorityLists({clientId}) {
       list_name: "...",
       working_on_this_list: "...",
       link_to_user_contact_info: "...",
-      status_date: "2000-1-1",
+      status_date: "1-1-2000",
       status: "Done",
     },
     {
@@ -77,7 +77,7 @@ function PriorityLists({clientId}) {
       list_name: "...",
       working_on_this_list: "...",
       link_to_user_contact_info: "...",
-      status_date: "2000-1-1",
+      status_date: "1-1-2000",
       status: "Pending",
     },
     {
@@ -85,7 +85,7 @@ function PriorityLists({clientId}) {
       list_name: "...",
       working_on_this_list: "...",
       link_to_user_contact_info: "...",
-      status_date: "2000-1-1",
+      status_date: "1-1-2000",
       status: "Pending",
     },
     {
@@ -93,7 +93,7 @@ function PriorityLists({clientId}) {
       list_name: "...",
       working_on_this_list: "...",
       link_to_user_contact_info: "...",
-      status_date: "2000-1-1",
+      status_date: "1-1-2000",
       status: "Active",
     },
     {
@@ -101,7 +101,7 @@ function PriorityLists({clientId}) {
       list_name: "...",
       working_on_this_list: "...",
       link_to_user_contact_info: "...",
-      status_date: "2000-1-1",
+      status_date: "1-1-2000",
       status: "Active",
     },
     {
@@ -109,7 +109,7 @@ function PriorityLists({clientId}) {
       list_name: "...",
       working_on_this_list: "...",
       link_to_user_contact_info: "...",
-      status_date: "2000-1-1",
+      status_date: "1-1-2000",
       status: "Done",
     },
   ]);
