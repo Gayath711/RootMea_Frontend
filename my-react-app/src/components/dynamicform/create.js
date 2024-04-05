@@ -398,7 +398,17 @@ const togglePreview = () => {
                     <span style={{ fontWeight: 'bold', marginLeft: '10%' }}>Multiple Select</span>
                   </Button>
                 </p>
-              </div>              
+              </div>
+
+                     <div className='col-6 pt-4'>
+                <p draggable="true" onDragStart={e => handleDragStart(e, 'checkbox')} className="drag">
+                  <Button variant="info" style={{ display: 'flex', alignItems: 'center', width: '100%', textAlign: 'center' }}>
+                    <img src={file} alt="Text Icon" style={{ width: '15%', height: '15%', marginRight: '10px' }} />
+                    <span style={{ fontWeight: 'bold', marginLeft: '10%' }}>checkbox</span>
+                  </Button>
+                </p>
+              </div> 
+
               <div className='col-6 pt-4'>
                 <p draggable="true" onDragStart={e => handleDragStart(e, 'BYTEA')} className="drag">
                   <Button variant="info" style={{ display: 'flex', alignItems: 'center', width: '100%', textAlign: 'center' }}>
@@ -1078,6 +1088,7 @@ const togglePreview = () => {
                   break;
                 case 'my_enum_type':
                 case 'my_enum_typeb':
+                case 'checkbox':
         
 
                 inputElement = (
