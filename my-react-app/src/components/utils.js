@@ -61,13 +61,6 @@ export function getYearMonths(date = dayjs()) {
   return months;
 }
 
-/*
-const year = 2024; // or omit this argument to use the current year
-const yearMonths = getYearMonths(year);
-console.log(yearMonths);
-// Output: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
- */
-
 export function getTodayTime() {
   const today = dayjs().startOf("day");
   const times = [];
@@ -75,4 +68,28 @@ export function getTodayTime() {
     times.push(today.add(hour, "hour"));
   }
   return times;
+}
+
+export function getUpcomingEvents(eventList) {
+  // Get the current date and time
+  const currentDate = new Date();
+
+  // Filter the eventList to keep only upcoming events
+  const upcomingEvents = eventList.filter((event) => {
+    // Get the start date and time of the event
+    const eventStartDate = new Date(event.start.dateTime);
+
+    // Compare the start date and time of the event with the current date and time
+    return eventStartDate > currentDate;
+  });
+
+  // Sort the upcomingEvents array in ascending order based on the start date and time
+  upcomingEvents.sort((a, b) => {
+    const dateTimeA = new Date(a.start.dateTime).getTime();
+    const dateTimeB = new Date(b.start.dateTime).getTime();
+    return dateTimeA - dateTimeB;
+  });
+
+  // return the upcomingEvents array
+  return upcomingEvents;
 }

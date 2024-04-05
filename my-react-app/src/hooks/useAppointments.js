@@ -1,82 +1,61 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import apiURL from ".././apiConfig";
 
 function useAppointments() {
-  // Event List
   const [internalEvents, setInternalEvents] = useState([]);
   const [externalEvents, setExternalEvents] = useState([]);
-
-  // Loading State
   const [internalEventsLoading, setInternalEventsLoading] = useState(true);
-  const [externalEventsLoading, setEnternalEventsLoading] = useState(true);
-
-  function fetchGoogleEvents() {
-    axios
-      .get(`${apiURL}/rest/v1/calendar/events/`)
-      .then((response) => {
-        setEnternalEventsLoading(true);
-
-        let external = response.data.data
-          ? response.data.data.map((event) => {
-              return {
-                isExternal: true,
-                ...event,
-              };
-            })
-          : [];
-        setExternalEvents(external);
-        console.log(response.data.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching calendar events:", error);
-      })
-      .finally(() => {
-        setEnternalEventsLoading(false);
-      });
-  }
-
-  function fetchInternalEvents() {
-    axios
-      .get(`${apiURL}/django/calendar/events/`)
-      .then((response) => {
-        setInternalEventsLoading(true);
-
-        let internal = response.data
-          ? response.data.map((event) => {
-              return {
-                isExternal: false,
-                summary: event.summary,
-                start: {
-                  dateTime: event.start_datetime,
-                  // timeZone: "Asia/Kolkata",
-                },
-                end: {
-                  dateTime: event.end_datetime,
-                  // timeZone: "Asia/Kolkata", // need to check
-                },
-              };
-            })
-          : [];
-
-        setInternalEvents(internal);
-      })
-      .catch((error) => {
-        console.error("Error fetching calendar events:", error);
-      })
-      .finally(() => {
-        setInternalEventsLoading(false);
-      });
-  }
-
-  function fetchEvents() {
-    fetchGoogleEvents();
-    fetchInternalEvents();
-  }
+  const [externalEventsLoading, setExternalEventsLoading] = useState(true);
 
   useEffect(() => {
-    fetchEvents();
+    fetchData();
   }, []);
+
+  const fetchGoogleEvents = async () => {
+    try {
+      const response = await axios.get(`${apiURL}/rest/v1/calendar/events/`);
+      const external = response.data.data
+        ? response.data.data.map((event) => ({
+            isExternal: true,
+            ...event,
+          }))
+        : [];
+      setExternalEvents(external);
+    } catch (error) {
+      console.error("Error fetching calendar events:", error);
+    } finally {
+      setExternalEventsLoading(false);
+    }
+  };
+
+  const fetchInternalEvents = async () => {
+    try {
+      const response = await axios.get(`${apiURL}/django/calendar/events/`);
+      const internal = response.data
+        ? response.data.map((event) => ({
+            isExternal: false,
+            summary: event.summary,
+            start: {
+              dateTime: event.start_datetime,
+            },
+            end: {
+              dateTime: event.end_datetime,
+            },
+htmlLink : event.meeting_link,
+          }))
+        : [];
+      setInternalEvents(internal);
+    } catch (error) {
+      console.error("Error fetching calendar events:", error);
+    } finally {
+      setInternalEventsLoading(false);
+    }
+  };
+
+  const fetchData = async () => {
+    await Promise.all([fetchGoogleEvents(), fetchInternalEvents()]);
+  };
 
   return {
     internalEventsLoading,
@@ -86,7 +65,7 @@ function useAppointments() {
     eventList: [...internalEvents, ...externalEvents],
     fetchGoogleEvents,
     fetchInternalEvents,
-    fetchEvents,
+    fetchData,
   };
 }
 

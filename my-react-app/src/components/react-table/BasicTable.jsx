@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 
 // material-ui
 import {
@@ -329,75 +329,69 @@ function ReactTable({ columns, data, striped, type, top, defaultPageSize }) {
 
 // ==============================|| REACT TABLE - BASIC ||============================== //
 
-const BasicTable = ({
-  data,
-  striped,
-  title,
-  columns,
-  type,
-  defaultPageSize,
-}) => {
-  // const columns = useMemo(
-  //   () => [
-  //     {
-  //       Header: 'First Name',
-  //       accessor: 'firstName'
-  //     },
-  //     {
-  //       Header: 'Last Name',
-  //       accessor: 'lastName'
-  //     },
-  //     {
-  //       Header: 'Age',
-  //       accessor: 'age',
-  //       className: 'cell-right'
-  //     },
-  //     {
-  //       Header: 'Visits',
-  //       accessor: 'visits',
-  //       className: 'cell-right'
-  //     },
-  //     {
-  //       Header: 'Status',
-  //       accessor: 'status',
-  //       Cell: ({ value }) => {
-  //         switch (value) {
-  //           case 'Complicated':
-  //             return <Chip color="error" label="Complicated" size="small" variant="light" />;
-  //           case 'Relationship':
-  //             return <Chip color="success" label="Relationship" size="small" variant="light" />;
-  //           case 'Single':
-  //           default:
-  //             return <Chip color="info" label="Single" size="small" variant="light" />;
-  //         }
-  //       }
-  //     },
-  //     {
-  //       Header: 'Profile Progress',
-  //       accessor: 'progress',
-  //       // Cell: ({ value }) => <LinearWithLabel value={value} sx={{ minWidth: 75 }} />
-  //     }
-  //   ],
-  //   []
-  // );
+const BasicTable = React.memo(
+  ({ data, striped, title, columns, type, defaultPageSize }) => {
+    // const columns = useMemo(
+    //   () => [
+    //     {
+    //       Header: 'First Name',
+    //       accessor: 'firstName'
+    //     },
+    //     {
+    //       Header: 'Last Name',
+    //       accessor: 'lastName'
+    //     },
+    //     {
+    //       Header: 'Age',
+    //       accessor: 'age',
+    //       className: 'cell-right'
+    //     },
+    //     {
+    //       Header: 'Visits',
+    //       accessor: 'visits',
+    //       className: 'cell-right'
+    //     },
+    //     {
+    //       Header: 'Status',
+    //       accessor: 'status',
+    //       Cell: ({ value }) => {
+    //         switch (value) {
+    //           case 'Complicated':
+    //             return <Chip color="error" label="Complicated" size="small" variant="light" />;
+    //           case 'Relationship':
+    //             return <Chip color="success" label="Relationship" size="small" variant="light" />;
+    //           case 'Single':
+    //           default:
+    //             return <Chip color="info" label="Single" size="small" variant="light" />;
+    //         }
+    //       }
+    //     },
+    //     {
+    //       Header: 'Profile Progress',
+    //       accessor: 'progress',
+    //       // Cell: ({ value }) => <LinearWithLabel value={value} sx={{ minWidth: 75 }} />
+    //     }
+    //   ],
+    //   []
+    // );
 
-  return (
-    // <MainCard
-    //   content={false}
-    //   title={title}
-    //   // secondary={<CSVExport data={data.slice(0, 10)} filename={striped ? 'striped-table.csv' : 'basic-table.csv'} />}
-    // >
-    // <Stack direction="row" justifyContent="flex-end" alignItems="center" spacing={2}></Stack>
-    <ReactTable
-      className=""
-      type={type}
-      columns={columns}
-      data={data}
-      striped={striped}
-      defaultPageSize={defaultPageSize}
-    />
-    // </MainCard>
-  );
-};
-
+    return (
+      // <MainCard
+      //   content={false}
+      //   title={title}
+      //   // secondary={<CSVExport data={data.slice(0, 10)} filename={striped ? 'striped-table.csv' : 'basic-table.csv'} />}
+      // >
+      // <Stack direction="row" justifyContent="flex-end" alignItems="center" spacing={2}></Stack>
+      <ReactTable
+        className=""
+        type={type}
+        columns={columns}
+        data={data}
+        striped={striped}
+        defaultPageSize={defaultPageSize}
+      />
+      // </MainCard>
+    );
+  }
+);
 export default BasicTable;
