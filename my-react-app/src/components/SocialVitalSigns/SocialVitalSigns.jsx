@@ -148,10 +148,12 @@ function SocialVitalSigns({ clientId }) {
           <div className="text-[#28293B] text-xl">Social Vital Signs</div>
           <img src={ExternalLinkIcon} className="size-4" alt="link" />
         </div>
-        <RemoveCircleIcon
-          onClick={() => setOpen(!open)}
-          className="text-[#585A60] hover:cursor-pointer"
-        />
+        <div className="flex items-center gap-x-10">
+          <RemoveCircleIcon
+            onClick={() => setOpen(!open)}
+            className="text-[#585A60] hover:cursor-pointer"
+          />
+        </div>
       </div>
       {open && <Content data={data} columns={columns} />}
     </div>
