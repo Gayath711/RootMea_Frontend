@@ -149,13 +149,6 @@ function SocialVitalSigns({ clientId }) {
           <img src={ExternalLinkIcon} className="size-4" alt="link" />
         </div>
         <div className="flex items-center gap-x-10">
-          <Link
-            to={"/add-new-socialvitalsigns"}
-            className="px-3 py-2 text-sm bg-[#5BC4BF] text-white rounded-sm
-            font-medium"
-          >
-            Add New
-          </Link>
           <RemoveCircleIcon
             onClick={() => setOpen(!open)}
             className="text-[#585A60] hover:cursor-pointer"
