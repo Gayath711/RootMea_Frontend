@@ -19,11 +19,11 @@ const AppointmentItem = ({ id, event }) => {
 
   return (
     <>
-      <div className="flex justify-between w-100 px-3">
+      <div className="flex justify-between gap-x-2">
         <div className="flex gap-2">
           <div
             id={`appointment-${event.id ? event.id : id}`}
-            className="flex flex-col justify-center items-center w-[40px] h-[40px] sm:w-12 sm:h-12 bg-[#89D6DE] text-white"
+            className="flex flex-col justify-center items-center w-[40px] h-[40px] sm:w-12 sm:h-12 bg-[#89D6DE] text-white p-2"
           >
             <span className="text-[14px] sm:text-base">
               {new Date(event.start.dateTime).getDate()}
@@ -41,21 +41,22 @@ const AppointmentItem = ({ id, event }) => {
             <div className="text-[13px] sm:text-sm font-medium">
               {event.summary || "Untitled Appointment"}
             </div>
-            {event.creator && event.creator.email && (
-              <div className="text-[11px] sm:text-xs py-1">
-                Created by: {event.creator.email}
-              </div>
-            )}
+            <div className="text-[11px] sm:text-xs py-1 flex flex-wrap gap-1">
+              <span>Created by:</span>
+              <span className="sm:w-100 w-[125px] text-xs md:truncate">
+                {event.creator && event.creator.email
+                  ? event.creator.email
+                  : ""}
+              </span>
+            </div>
             <div className="text-[9px] sm:text-xs">
               {startTime} to {endTime}
             </div>
           </div>
         </div>
-        <div className="flex justify-end">
-          <button className="px-1 sm:px-4 py-1.5 rounded-sm text-white h-fit w-fit bg-[#43B09C] text-[10px] sm:text-xs font-medium">
-            Details
-          </button>
-        </div>
+        <button className="px-2.5 sm:px-4 py-1.5 rounded-sm text-white h-fit w-fit bg-[#43B09C] text-[10px] sm:text-xs font-medium">
+          Details
+        </button>
       </div>
     </>
   );
@@ -83,8 +84,8 @@ function Appointment() {
           <span className="text-[10px] sm:text-xs">New Appointment</span>
         </button>
       </div>
-      <hr id="appointment-4" className="w-11/12 mx-auto my-2" />
-      <div className="flex flex-col justify-between space-y-6 my-8 w-100">
+      <hr id="appointment-HR" className="w-11/12 mx-auto my-2" />
+      <div className="flex flex-col justify-between space-y-6 mx-3 my-8">
         {upcomingEvents.slice(0, 5).map((event, idx) => (
           <AppointmentItem key={event.id} event={event} id={idx} />
         ))}
