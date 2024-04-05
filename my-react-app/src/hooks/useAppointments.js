@@ -42,6 +42,7 @@ function useAppointments() {
             end: {
               dateTime: event.end_datetime,
             },
+htmlLink : event.meeting_link,
           }))
         : [];
       setInternalEvents(internal);
