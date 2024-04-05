@@ -151,6 +151,7 @@ const AddNewSocialVitalSigns = () => {
       <div className="grid grid-cols-12 grid-rows-2 gap-x-4 p-2">
         <div className="col-span-4 space-y-8">
           <SideBar
+            isQA={true}
             currentStage={stages[currentStageIndex]}
             stages={stages}
             handleStage={handleStage}

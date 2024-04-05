@@ -9,7 +9,7 @@ import SideBar from "./SideBar";
 import SvsContent from "./SvsContent";
 import Graph from "./Graph";
 import Stats from "./Stats";
-import apiURL from '../../apiConfig';
+import apiURL from "../../apiConfig";
 
 const SocialVitalSignsMain = () => {
   const { clientId } = useParams();
