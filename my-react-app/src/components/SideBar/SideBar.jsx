@@ -5,16 +5,25 @@ import LeftBarIcon4 from "../images/leftBarIcon4.svg";
 import LeftBarIcon5 from "../images/leftBarIcon5.svg";
 import LeftBarIcon6 from "../images/leftBarIcon6.svg";
 import LeftBarIcon7 from "../images/leftBarIcon7.svg";
+import { Link } from 'react-router-dom';
 
 const SideBar = () => {
   return (
     <div className="flex flex-col justify-center items-center space-y-12 pt-8 pb-24 bg-white shadow-2xl rounded-br-[2rem] sticky left-0 top-[100px]">
-      <button className="p-1 bg-[#D4EDEC]">
-        <img src={LeftBarIcon1} className="size-4" alt="icon1" />
-      </button>
+      
+    
+    <Link to="/form_builder"> {/* Link component for navigation */}
+    <button className="p-1 bg-[#D4EDEC]">
+      <img src={LeftBarIcon1} className="size-4" alt="icon1" />
+    </button>
+  </Link>
+
+
+  <Link to="/calendar"> {/* Link component for navigation */}
       <button className="p-1 bg-[#EAECEB]">
         <img src={LeftBarIcon2} className="size-4" alt="icon2" />
       </button>
+      </Link>
       <button className="p-1 bg-[#EAECEB]">
         <img src={LeftBarIcon3} className="size-4" alt="icon3" />
       </button>

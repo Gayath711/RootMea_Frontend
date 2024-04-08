@@ -3,6 +3,7 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import "./AppointmentStyles.css";
 import useAppointments from "../../hooks/useAppointments";
 import { getUpcomingEvents } from "../utils";
+import { Link } from 'react-router-dom';
 
 const AppointmentItem = ({ id, event }) => {
   // Extract start and end times
@@ -81,7 +82,8 @@ function Appointment() {
             id="appointment-3"
             className="text-white size-3 sm:size-4"
           />
-          <span className="text-[10px] sm:text-xs">New Appointment</span>
+           <Link to="/calendar"> 
+          <span className="text-[10px] sm:text-xs">New Appointment</span> </Link>
         </button>
       </div>
       <hr id="appointment-HR" className="w-11/12 mx-auto my-2" />

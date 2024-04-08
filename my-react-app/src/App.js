@@ -244,7 +244,7 @@ function App() {
                     element={<AddNewSocialVitalSigns />}
                   />
 
-                  <Route path="/create" element={<YourComponent />} />
+                  <Route path="/form_builder" element={<YourComponent />} />
 
                   <Route path="/Preview" element={<Preview />} />
                 </Routes>

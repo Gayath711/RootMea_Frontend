@@ -24,12 +24,14 @@ function NewPage() {
                 console.log(column.type);
                 console.log('column.name',column.name)
 
-                if (
-                    (column.type === "USER-DEFINED" || column.type === "ARRAY") &&
-                    (column.name.endsWith("_multiple") || column.name.endsWith("_checkbox"))
+                if ((column.type === "USER-DEFINED") ||
+                    ((column.type === "USER-DEFINED" || column.type === "ARRAY") &&
+                    (column.name.endsWith("_multiple") || column.name.endsWith("_checkbox")))
                 ) {
+                    
                     const enumType = `enum_type_${tableName}_${column.name}_enum_type`;
-                    try {
+
+                             try {
                         const response = await axios.get(`${apiURL}/get_enum_labels/`, {
                             params: {
                                 enum_type: enumType
@@ -161,6 +163,8 @@ function NewPage() {
     
 
         switch (column.type) {
+
+            
             case 'character varying': 
                 return (
                     <div key={column.name} className="mb-4">
@@ -256,6 +260,8 @@ function NewPage() {
                     </div>
                 );
                 default:
+
+                console.log(column.type)
 
                 // console.log(column.type)
                     
@@ -375,6 +381,9 @@ function NewPage() {
 
 
                     else {
+                        console.log("test")
+                        console.log("droplist",droplist)
+                        
                         return (
                           <div key={column.name} className="mb-4">
                             <label className="block mb-1">{label}</label>
