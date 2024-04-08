@@ -1,13 +1,38 @@
 import GreetingImage from "../images/greetingImg.svg";
 import DownArrowIcon from "../images/downArrow.svg";
 import "./GreetingCardStyles.css";
+import axios from "axios";
+import React, { useState, useEffect } from "react";
+import apiURL from '../../apiConfig';
 
 const GreetingCard = () => {
+
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    fetchUsername();
+  }, []);
+
+  const fetchUsername = async () => {
+    try {
+      const token = localStorage.getItem("access_token"); // Assuming you store the access token in localStorage
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const response = await axios.get(`${apiURL}/api/username`, config);
+      setUsername(response.data.username);
+    } catch (error) {
+      console.error("Error fetching username:", error);
+    }
+  };
+
   return (
     <div id="greeting-card-one" className="flex justify-between items-center shadow-lg p-6 bg-gradient-to-r from-[#D9F0EF] to-[#5BC4BF] rounded-md col-span-5">
       <div id="greeting-card-two">
         <div id="greeting-card-three" className="text-lg leading-7 tracking-normal font-medium">
-          Welcome
+          Welcome, {username}
         </div>
         <div id="greeting-card-four" className="text-sm my-4 font-light sm:w-[80%]">
           Get a snapshot of Roots member's overall picture of health and wellness

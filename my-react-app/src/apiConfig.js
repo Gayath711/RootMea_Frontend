@@ -14,6 +14,6 @@ let baseURL;
 // baseURL = "http://52.34.62.96";
 
 
-baseURL = "http://192.168.3.24:8000";
+baseURL = "http://localhost:8000";
 
 export default baseURL;
