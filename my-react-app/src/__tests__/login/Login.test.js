@@ -1,6 +1,6 @@
 import {render, screen} from '@testing-library/react';
 
-import LoginForm from '../../components/Login/Login';
+import LoginForm from '../../components/Login/Logins';
 
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
