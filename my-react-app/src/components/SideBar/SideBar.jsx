@@ -1,10 +1,10 @@
 import LeftBarIcon1 from "../images/leftBarIcon1.svg";
 import LeftBarIcon2 from "../images/leftBarIcon2.svg";
 import LeftBarIcon3 from "../images/leftBarIcon3.svg";
-import LeftBarIcon4 from "../images/leftBarIcon4.svg";
-import LeftBarIcon5 from "../images/leftBarIcon5.svg";
-import LeftBarIcon6 from "../images/leftBarIcon6.svg";
-import LeftBarIcon7 from "../images/leftBarIcon7.svg";
+import LeftBarIcon4 from "../images/client-profile-active.svg";
+import LeftBarIcon5 from "../images/calender-active.svg";
+import LeftBarIcon6 from "../images/form-active.svg";
+import LeftBarIcon7 from "../images/directory-active.svg";
 import { Link } from 'react-router-dom';
 
 const SideBar = () => {
@@ -54,7 +54,7 @@ const SideBar = () => {
       </button>
 
 
-      <button className="p-1 bg-[#EAECEB]">
+      <button className="p-1 bg-[#EAECEB] ">
         <img src={LeftBarIcon3} className="size-4" alt="icon6" />
       </button>
 

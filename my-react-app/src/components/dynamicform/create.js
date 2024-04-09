@@ -25,6 +25,7 @@ function DragDropDemo() {
  
   const [items, setItems] = useState([]);
   const [title, setTitle] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
 
   const [additionalDetails, setAdditionalDetails] = useState('');
 
@@ -196,8 +197,20 @@ const togglePreview = () => {
 
 
 
+  const handleTableNameChange = (e) => {
+    const value = e.target.value;
+
+    const hasSpecialCharacters = /[^\w\s]/.test(value);
+
+    if (hasSpecialCharacters) {
+      alert("Please remove special characters from the input.");
+      return;
+    }
 
 
+    const sanitizedValue = value.includes(' ') ? value.replace(/\s/g, '_') : value;
+    setTableName(sanitizedValue);
+  };
 
   return (
     <div className="container">
@@ -247,12 +260,13 @@ const togglePreview = () => {
   <label htmlFor="tableName" className="text-lg font-bold text-gray-800">
    Form name <span className="text-red-500">*</span>
   </label>
+  {alertMessage && <div className="alert">{alertMessage}</div>}
   <input
     type="text"
     id="tableName"
     value={tableName}
     placeholder="Enter Form name..."
-    onChange={(e) => setTableName(e.target.value)}
+    onChange={handleTableNameChange}
     className="border border-gray-300 rounded px-4 mt-2 py-2 w-96 focus:outline-none focus:border-green-500 transition-colors duration-300"
     style={{
       fontWeight: 'bold',
@@ -264,6 +278,10 @@ const togglePreview = () => {
     }}
   />
 </div>
+
+
+
+
 
 <div className="row pt-4" >
  
