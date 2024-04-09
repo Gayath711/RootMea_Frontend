@@ -1,11 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import "./AppointmentStyles.css";
 import useAppointments from "../../hooks/useAppointments";
 import { getUpcomingEvents } from "../utils";
 import { Link } from "react-router-dom";
+import AppointmentDetail from "./AppointmentDetail";
 
 const AppointmentItem = ({ id, event }) => {
+  const [showModal, setShowModal] = useState(false);
+
+  const toggleModal = () => {
+    setShowModal(!showModal);
+  };
+
   // Extract start and end times
   const startTime = new Date(event.start.dateTime).toLocaleTimeString([], {
     hour: "numeric",
@@ -39,9 +46,13 @@ const AppointmentItem = ({ id, event }) => {
             id={`appointment-${event.id ? event.id : id}`}
             className="space-y-0.5"
           >
-            <div className="text-[13px] sm:text-sm font-medium">
+            <Link
+              to="#"
+              target="_blank"
+              className="text-[13px] sm:text-sm font-medium"
+            >
               {event.summary || "Untitled Appointment"}
-            </div>
+            </Link>
             <div className="text-[11px] sm:text-xs py-1 flex flex-wrap gap-1">
               <span>Created by:</span>
               <span className="sm:w-100 w-[125px] text-xs md:truncate">
@@ -55,10 +66,17 @@ const AppointmentItem = ({ id, event }) => {
             </div>
           </div>
         </div>
-        <button className="px-2.5 sm:px-4 py-1.5 rounded-sm text-white h-fit w-fit bg-[#43B09C] text-[10px] sm:text-xs font-medium">
+        <button
+          onClick={() => setShowModal(true)}
+          className="px-2.5 sm:px-4 py-1.5 rounded-sm text-white h-fit w-fit bg-[#43B09C] text-[10px] sm:text-xs font-medium"
+        >
           Details
         </button>
       </div>
+
+      {showModal && (
+        <AppointmentDetail toggleModal={toggleModal} event={event} />
+      )}
     </>
   );
 };
