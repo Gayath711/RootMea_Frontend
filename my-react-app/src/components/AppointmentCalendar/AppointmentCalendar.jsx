@@ -9,6 +9,7 @@ import "./AppointmentCalendarStyles.css";
 
 import useAppointments from "../../hooks/useAppointments";
 import { getUpcomingEvents } from "../utils";
+import { Link } from "react-router-dom";
 
 function AppointmentCalendar() {
   const { eventList, fetchEvents } = useAppointments();
@@ -149,12 +150,13 @@ function AppointmentCalendar() {
           />
         </div>
         <div>
-          <button
+          <Link
+            to="/calendar"
             id="appointment-calendar-5"
             className="px-3 py-1 border-1 sm:border-2 rounded-sm border-[#EBAC88] text-[#CB6A69] text-[13px] font-medium leading-5"
           >
             Create New
-          </button>
+          </Link>
         </div>
       </div>
       <hr id="appointment-calendar-6" className="w-[98%] mx-auto my-2" />
