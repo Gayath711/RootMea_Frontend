@@ -197,6 +197,12 @@ let HOUSEING_QA = [
   {
     id: "housing-2",
     question:
+      "If “I have no housing” was selected, please specify your location?",
+    inputType: "Text",
+  },
+  {
+    id: "housing-3",
+    question:
       "Over the past 3 months, did you ever have to sleep in an emergency shelter, in a vehicle, or on the street or park, or stay temporarily with friends because of the lack of housing?",
     inputType: "Radio",
     options: [
@@ -364,102 +370,47 @@ let FINANCIAL_SECURITY_QA = [
 
   {
     id: "financial-security-4",
-    question: "Which of the following best describes the place you live now?",
+    question:
+      "Have you applied for or do you receive benefits or cash assistance from any of the following programs?",
     inputType: "GroupSelect",
     group: [
       {
         id: "financial-security-4-1",
         question: "Calworks Benefits (TANF)",
-        options: [
-          "Own a house or apartment",
-          "Rent a house or apartment",
-          "Hotel",
-          "A Treatment Facility or Group Home",
-          "An Emergency Shelter",
-          "Couch Surfing",
-          "I have no housing",
-        ],
+        options: ["Receiving", "Pending", "Applied & Denied", "Never Applied"],
       },
 
       {
         id: "financial-security-4-2",
         question: "Social Security Disability Insurance (SSI)",
-        options: [
-          "Own axtment",
-          "Renc or apartment",
-          "Hxsel",
-          "A Treasxscy or Group Home",
-          "cscAn Emergency Shelter",
-          "scscCouch Surfing",
-          "I havec no housing",
-        ],
+        options: ["Receiving", "Pending", "Applied & Denied", "Never Applied"],
       },
       {
         id: "financial-security-4-3",
         question: "General Assistance (GA)",
-        options: [
-          "Own a house or apartment",
-          "Rent a house or apartment",
-          "Hotel",
-          "A Treatment Facility or Group Home",
-          "An Emergency Shelter",
-          "Couch Surfing",
-          "I have no housing",
-        ],
+        options: ["Receiving", "Pending", "Applied & Denied", "Never Applied"],
       },
 
       {
         id: "financial-security-4-4",
         question: "CalFresh Benefits (SNAP)",
-        options: [
-          "Own axtment",
-          "Renc or apartment",
-          "Hxsel",
-          "A Treasxscy or Group Home",
-          "cscAn Emergency Shelter",
-          "scscCouch Surfing",
-          "I havec no housing",
-        ],
+        options: ["Receiving", "Pending", "Applied & Denied", "Never Applied"],
       },
       {
         id: "financial-security-4-1",
         question: "Women, Infant & Children Benefits (WIC)",
-        options: [
-          "Own a house or apartment",
-          "Rent a house or apartment",
-          "Hotel",
-          "A Treatment Facility or Group Home",
-          "An Emergency Shelter",
-          "Couch Surfing",
-          "I have no housing",
-        ],
+        options: ["Receiving", "Pending", "Applied & Denied", "Never Applied"],
       },
 
       {
         id: "financial-security-4-2",
         question: "Unemployment Benefits",
-        options: [
-          "Own axtment",
-          "Renc or apartment",
-          "Hxsel",
-          "A Treasxscy or Group Home",
-          "cscAn Emergency Shelter",
-          "scscCouch Surfing",
-          "I havec no housing",
-        ],
+        options: ["Receiving", "Pending", "Applied & Denied", "Never Applied"],
       },
       {
         id: "financial-security-4-3",
         question: "State Disability Insurance Benefits (SDI)",
-        options: [
-          "Own a house or apartment",
-          "Rent a house or apartment",
-          "Hotel",
-          "A Treatment Facility or Group Home",
-          "An Emergency Shelter",
-          "Couch Surfing",
-          "I have no housing",
-        ],
+        options: ["Receiving", "Pending", "Applied & Denied", "Never Applied"],
       },
 
       {
@@ -582,7 +533,7 @@ let HEALTHCARE_PREVENTIVE_QA = [
   },
   {
     id: "healthcare-preventive-9",
-    question: "When did you last see your dentist?",
+    question: "If yes, when did you last see your dentist?",
     inputType: "Text",
   },
   {
