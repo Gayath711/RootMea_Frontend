@@ -110,17 +110,17 @@ const AddNewSocialVitalSigns = () => {
     {
       stageIndex: 5,
       title: "Healthcare - Preventive",
-      qa: [],
+      qa: HEALTHCARE_PREVENTIVE_QA,
     },
     {
       stageIndex: 6,
       title: "Healthcare - General Health",
-      qa: [],
+      qa: HEALTHCARE_GENERAL_HEALTH_QA,
     },
     {
       stageIndex: 7,
       title: "Healthcare - Cardiovascular risk",
-      qa: [],
+      qa: HEALTHCARE_CARDIOVASCULAR_RISK_QA,
     },
   ];
 
@@ -171,108 +171,6 @@ const AddNewSocialVitalSigns = () => {
             goToPreviousStage={goToPreviousStage}
             goToNextStage={goToNextStage}
           />
-          {/* {contentToShow === "Housing" && (
-            <SvsQAContent
-              title={"Housing"}
-              questions={HOUSEING_QA}
-              data={answers}
-            />
-          )}
-          {contentToShow === "Food Access" && (
-            <SvsQAContent
-              title={"Food Access"}
-              questions={FOOD_ACCESS_QA}
-              data={answers}
-            />
-          )}
-          {contentToShow === "Financial Security" && (
-            <SvsQAContent
-              title={"Financial Security"}
-              questions={FINANCIAL_SECURITY_QA}
-              data={answers}
-            />
-          )}
-          {contentToShow === "Education/Employment" && (
-            <SvsQAContent
-              title={"Education/Employment"}
-              questions={EDUCATION_EMPLOYEMENT_QA}
-              data={answers}
-            />
-          )}
-          {contentToShow === "Communication and Mobility" && (
-            <SvsQAContent
-              title={"Communication and Mobility"}
-              questions={COMMUNICATIONN_AND_MOBILITY_QA}
-              data={answers}
-            />
-          )}
-          {contentToShow === "Healthcare - Preventive" && (
-            <SvsQAContent
-              title={"Healthcare - Preventive"}
-              questions={[]}
-              data={answers}
-            />
-          )}
-          {contentToShow === "Healthcare - General Health" && (
-            <SvsQAContent
-              title={"Healthcare - General Health"}
-              questions={[]}
-              data={answers}
-            />
-          )}
-          {contentToShow === "Healthcare - Cardiovascular  risk" && (
-            <SvsQAContent
-              title={"Healthcare - Cardiovascular risk"}
-              questions={[]}
-              data={answers}
-            />
-          )} */}
-          {/* {dataLoaded && (
-            <>
-              {contentToShow === "Financial Security" && (
-                <SvsContent
-                  title={"Financial Security"}
-                  questions={questions}
-                  data={answers}
-                />
-              )}
-              {contentToShow === "Education/Employment" && (
-                <SvsContent
-                  title={"Education/Employment"}
-                  questions={questions}
-                  data={answers}
-                />
-              )}
-              {contentToShow === "Communication and Mobility" && (
-                <SvsContent
-                  title={"Communication and Mobility"}
-                  questions={questions}
-                  data={answers}
-                />
-              )}
-              {contentToShow === "Healthcare - Preventive" && (
-                <SvsContent
-                  title={"Healthcare - Preventive"}
-                  questions={questions}
-                  data={answers}
-                />
-              )}
-              {contentToShow === "Healthcare - General Health" && (
-                <SvsContent
-                  title={"Healthcare - General Health"}
-                  questions={questions}
-                  data={answers}
-                />
-              )}
-              {contentToShow === "Healthcare - Cardiovascular  risk" && (
-                <SvsContent
-                  title={"Healthcare - Cardiovascular risk"}
-                  questions={questions}
-                  data={answers}
-                />
-              )}
-            </>
-          )} */}
         </div>
       </div>
     </div>
@@ -298,6 +196,12 @@ let HOUSEING_QA = [
   },
   {
     id: "housing-2",
+    question:
+      "If “I have no housing” was selected, please specify your location?",
+    inputType: "Text",
+  },
+  {
+    id: "housing-3",
     question:
       "Over the past 3 months, did you ever have to sleep in an emergency shelter, in a vehicle, or on the street or park, or stay temporarily with friends because of the lack of housing?",
     inputType: "Radio",
@@ -463,8 +367,70 @@ let FINANCIAL_SECURITY_QA = [
       "Every Day",
     ],
   },
+
   {
     id: "financial-security-4",
+    question:
+      "Have you applied for or do you receive benefits or cash assistance from any of the following programs?",
+    inputType: "GroupSelect",
+    group: [
+      {
+        id: "financial-security-4-1",
+        question: "Calworks Benefits (TANF)",
+        options: ["Receiving", "Pending", "Applied & Denied", "Never Applied"],
+      },
+
+      {
+        id: "financial-security-4-2",
+        question: "Social Security Disability Insurance (SSI)",
+        options: ["Receiving", "Pending", "Applied & Denied", "Never Applied"],
+      },
+      {
+        id: "financial-security-4-3",
+        question: "General Assistance (GA)",
+        options: ["Receiving", "Pending", "Applied & Denied", "Never Applied"],
+      },
+
+      {
+        id: "financial-security-4-4",
+        question: "CalFresh Benefits (SNAP)",
+        options: ["Receiving", "Pending", "Applied & Denied", "Never Applied"],
+      },
+      {
+        id: "financial-security-4-1",
+        question: "Women, Infant & Children Benefits (WIC)",
+        options: ["Receiving", "Pending", "Applied & Denied", "Never Applied"],
+      },
+
+      {
+        id: "financial-security-4-2",
+        question: "Unemployment Benefits",
+        options: ["Receiving", "Pending", "Applied & Denied", "Never Applied"],
+      },
+      {
+        id: "financial-security-4-3",
+        question: "State Disability Insurance Benefits (SDI)",
+        options: ["Receiving", "Pending", "Applied & Denied", "Never Applied"],
+      },
+
+      {
+        id: "financial-security-4-4",
+        question: "Rental Assistance Benefits (e.g. Section 8 housing)",
+        options: [
+          "Own axtment",
+          "Renc or apartment",
+          "Hxsel",
+          "A Treasxscy or Group Home",
+          "cscAn Emergency Shelter",
+          "scscCouch Surfing",
+          "I havec no housing",
+        ],
+      },
+    ],
+  },
+
+  {
+    id: "financial-security-5",
     question: "Review notes",
     inputType: "Text",
     options: [],
@@ -519,6 +485,158 @@ let COMMUNICATIONN_AND_MOBILITY_QA = [
   {
     id: "communication-and-mobility-6",
     question: "Review notes",
+    inputType: "Text",
+  },
+];
+
+let HEALTHCARE_PREVENTIVE_QA = [
+  {
+    id: "healthcare-preventive-1",
+    question: "Do you currently have health insurance?",
+    inputType: "Text",
+  },
+  {
+    id: "healthcare-preventive-2",
+    question: "What is the plan name?",
+    inputType: "Text",
+  },
+  {
+    id: "healthcare-preventive-3",
+    question: "Do you have a regular primary care doctor?",
+    inputType: "Text",
+  },
+  {
+    id: "healthcare-preventive-4",
+    question: "When did you last see your doctor?",
+    inputType: "Text",
+  },
+  {
+    id: "healthcare-preventive-5",
+    question: "What is the name of the doctor and location?",
+    inputType: "Text",
+  },
+  {
+    id: "healthcare-preventive-6",
+    question: "Have you had any of the following preventative screening tests?",
+    inputType: "Text",
+  },
+  {
+    id: "healthcare-preventive-7",
+    question:
+      "If selected any of the above screenings, please list the last year of screening?",
+    inputType: "Text",
+  },
+  {
+    id: "healthcare-preventive-8",
+    question: "Do you have a regular dentist?",
+    inputType: "Text",
+  },
+  {
+    id: "healthcare-preventive-9",
+    question: "If yes, when did you last see your dentist?",
+    inputType: "Text",
+  },
+  {
+    id: "healthcare-preventive-10",
+    question:
+      "Do you have a case manager or social worker who helps you manage your healthcare?",
+    inputType: "Text",
+  },
+  {
+    id: "healthcare-preventive-11",
+    question: "If yes, what is their name and location?",
+    inputType: "Text",
+  },
+  {
+    id: "healthcare-preventive-12",
+    question: "Preventative Care Need",
+    inputType: "Text",
+  },
+  {
+    id: "healthcare-preventive-13",
+    question: "Review notes",
+    inputType: "Text",
+  },
+];
+
+let HEALTHCARE_GENERAL_HEALTH_QA = [
+  {
+    id: "healthcare-general-health-2",
+    question: "In general, would you say your health is",
+    inputType: "Text",
+  },
+  {
+    id: "healthcare-general-health-3",
+    question:
+      "During the past month, how often did poor physical health keep you from doing your usual activities, work, or recreation?",
+    inputType: "Text",
+  },
+  {
+    id: "healthcare-general-health-4",
+    question:
+      "Over the past year, how many times did you go to the emergency room (regular or psych emergency)?",
+    inputType: "Text",
+  },
+  {
+    id: "healthcare-general-health-5",
+    question: "Health Care - General Health Risk",
+    inputType: "Text",
+  },
+  {
+    id: "healthcare-general-health-6",
+    question: "Review Notes",
+    inputType: "Text",
+  },
+];
+
+let HEALTHCARE_CARDIOVASCULAR_RISK_QA = [
+  {
+    id: "healthcare-cardiovascular-risk-1",
+    question:
+      "Have you ever been diagnosed with any of the following medical conditions? (check all that apply)?",
+    inputType: "Text",
+  },
+  {
+    id: "healthcare-cardiovascular-risk-2",
+    question:
+      "On average, how many days per week do you engage in moderate to strenuous exercise (like walking fast, running, jogging, dancing, swimming, biking, or other activities that cause a light or heavy sweat)?",
+    inputType: "Text",
+  },
+  {
+    id: "healthcare-cardiovascular-risk-3",
+    question:
+      "On average, how many minutes per day do you engage in moderate to strenuous exercise (like walking fast, running, jogging, dancing, swimming, biking, or other activities that cause a light or heavy sweat)?",
+    inputType: "Text",
+  },
+  {
+    id: "healthcare-cardiovascular-risk-4",
+    question: "Do you smoke cigarettes?",
+    inputType: "Text",
+  },
+  {
+    id: "healthcare-cardiovascular-risk-5",
+    question: "If yes, how many cigarettes do you smoke per day?",
+    inputType: "Text",
+  },
+  {
+    id: "healthcare-cardiovascular-risk-6",
+    question:
+      "Do you use any tobacco or nicotine products besides cigarettes, such as chewing tobacco, snuff, cigars, or e-cigarettes?",
+    inputType: "Text",
+  },
+  {
+    id: "healthcare-cardiovascular-risk-7",
+    question: "When was the last time you smoked?",
+    inputType: "Text",
+  },
+  {
+    id: "healthcare-cardiovascular-risk-8",
+    question: "How frequently do you smoke?",
+    inputType: "Text",
+  },
+  {
+    id: "healthcare-cardiovascular-risk-9",
+    question: "Review Notes",
     inputType: "Text",
   },
 ];
