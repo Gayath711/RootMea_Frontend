@@ -9,6 +9,31 @@ const EmergencyContact1 = ({ heading, isEdittable, clientData, handleFieldChange
     const toggleAccordion = () => {
         setIsOpen(!isOpen);
     };
+    //Drop down options
+    const relationshipOptions = [
+        { value: 'Parent', label: 'Parent' },
+        { value: 'Spouse', label: 'Spouse' },
+        { value: 'Child', label: 'Child' },
+        { value: 'Sibling', label: 'Sibling' },
+        { value: 'Friend', label: 'Friend' },
+        { value: 'Other', label: 'Other' }
+    ]
+
+    const cityOptions = [
+        { value: 'San Francisco', label: 'San Francisco' },
+        { value: 'San Jose', label: 'San Jose' },
+        { value: 'San Diego', label: 'San Diego' },
+        { value: 'Los Angeles', label: 'Los Angeles' },
+        { value: 'Houston', label: 'Houston' },
+        { value: 'Seattle', label: 'Seattle' }
+    ]
+
+    const stateOptions = [
+        { value: 'California', label: 'California' },
+        { value: 'Washington', label: 'Washington' },
+        { value: 'Texas', label: 'Texas' },
+    ]
+
     return (
         <div className="">
             <div className="border-1 border-gray-500/50 m-4">
@@ -27,8 +52,8 @@ const EmergencyContact1 = ({ heading, isEdittable, clientData, handleFieldChange
                                     handleChange={(e) => handleFieldChange('emergency_contact_1_email_address', e.target.value)} />
                             </div>
                             <div className="flex-1">
-                                <DropDown placeholder="Relationship" isEdittable={isEdittable} value={clientData.emergency_contact_1_relationship}
-                                    handleChange={(e) => handleFieldChange('emergency_contact_1_relationship', e.target.value)} />
+                                <DropDown placeholder="Relationship" options={relationshipOptions} isEdittable={isEdittable} value={clientData.emergency_contact_1_relationship}
+                                    handleChange={(e) => handleFieldChange('emergency_contact_1_relationship', e.value)} />
                             </div>
                         </div>
                         <div className="flex space-x-6">
@@ -41,15 +66,15 @@ const EmergencyContact1 = ({ heading, isEdittable, clientData, handleFieldChange
                                     handleChange={(e) => handleFieldChange('emergency_contact_1_address_line_2', e.target.value)} />
                             </div>
                             <div className="flex-1">
-                                <DropDown placeholder="City" isEdittable={isEdittable} value={clientData.emergency_contact_1_city}
-                                    handleChange={(e) => handleFieldChange('emergency_contact_1_city', e.target.value)} />
+                                <DropDown placeholder="City" options={cityOptions} isEdittable={isEdittable} value={clientData.emergency_contact_1_city}
+                                    handleChange={(e) => handleFieldChange('emergency_contact_1_city', e.value)} />
                             </div>
 
                         </div>
                         <div className="flex space-x-6">
                             <div className="flex-1">
-                                <DropDown placeholder="State" isEdittable={isEdittable} value={clientData.emergency_contact_1_state}
-                                    handleChange={(e) => handleFieldChange('emergency_contact_1_state', e.target.value)} />
+                                <DropDown placeholder="State" options={stateOptions} isEdittable={isEdittable} value={clientData.emergency_contact_1_state}
+                                    handleChange={(e) => handleFieldChange('emergency_contact_1_state', e.value)} />
                             </div>
                             <div className="flex-1">
                                 <TextBox placeholder="Zip Code" isEdittable={isEdittable} value={clientData.emergency_contact_1_zip}

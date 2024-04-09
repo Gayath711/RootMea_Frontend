@@ -12,6 +12,48 @@ const Demographics = ({ id, isEdittable, clientData, handleFieldChange }) => {
     const toggleAccordion = () => {
         setIsOpen(!isOpen);
     };
+    //Drop down options
+    const sexOptions = [
+        { value: 'Male', label: 'Male' },
+        { value: 'Female', label: 'Female' },
+        { value: 'Other', label: 'Other' },
+    ]
+
+    const ethinicityOptions = [
+        { value: 'Asian', label: 'Asian' },
+        { value: 'Black', label: 'Black' },
+        { value: 'Hispanic', label: 'Hispanic' },
+        { value: 'White', label: 'White' },
+        { value: 'Other', label: 'Other' },
+    ]
+
+    const currentPlaceOptions = [
+        { value: 'Home or Apartment', label: 'Home or Apartment' },
+        { value: 'Group Home', label: 'Group Home' },
+        { value: 'Car', label: 'Car' },
+    ]
+
+    const raceOptions = [
+        { value: 'White/Caucasian', label: 'White/Caucasian' },
+        { value: 'Native American', label: 'Native American' },
+        { value: 'Mixed Race', label: 'Mixed Race' },
+        { value: 'Other', label: 'Other' },
+    ]
+
+    const genderOptions = [
+        { value: 'Cisgender', label: 'Cisgender' },
+        { value: 'Transgender', label: 'Transgender' },
+        { value: 'Non-binary', label: 'Non-binary' },
+        { value: 'Other', label: 'Other' },
+    ]
+
+    const sexualOrientationOptions = [
+        { value: 'Heterosexual', label: 'Heterosexual' },
+        { value: 'Homosexual', label: 'Homosexual' },
+        { value: 'Bisexual', label: 'Bisexual' },
+        { value: 'Other', label: 'Other' },
+    ]
+
     return (
         <div className="border border-gray-300  bg-gray-50 rounded-md" id={`accordian-${id}`}>
             <div
@@ -44,8 +86,8 @@ const Demographics = ({ id, isEdittable, clientData, handleFieldChange }) => {
                                             handleChange={(e) => handleFieldChange('age', e.target.value)} />
                                     </div>
                                     <div className="flex-1">
-                                        <DropDown placeholder="Sex" isEdittable={isEdittable} value={clientData.sex}
-                                            handleChange={(e) => handleFieldChange('sex', e.target.value)} />
+                                        <DropDown placeholder="Sex" options={sexOptions} isEdittable={isEdittable} value={clientData.sex}
+                                            handleChange={(e) => handleFieldChange('sex', e.value)} />
                                     </div>
                                 </div>
                                 <div className="flex space-x-6">
@@ -58,42 +100,42 @@ const Demographics = ({ id, isEdittable, clientData, handleFieldChange }) => {
                                             handleChange={(e) => handleFieldChange('us_armed_forces', e.target.value)} />
                                     </div>
                                     <div className="flex-1">
-                                        <DropDown placeholder="Ethinicity" isEdittable={isEdittable} value={clientData.us_armed_forces}
-                                            handleChange={(e) => handleFieldChange('us_armed_forces', e.target.value)} />
+                                        <DropDown placeholder="Ethinicity" options={ethinicityOptions} isEdittable={isEdittable} value={clientData.us_armed_forces}
+                                            handleChange={(e) => handleFieldChange('ethnicity', e.value)} />
                                     </div>
                                 </div>
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <DropDown placeholder="Which Best describes the place you live now?" isEdittable={isEdittable} value={clientData.describe_the_place_you_live}
-                                            handleChange={(e) => handleFieldChange('describe_the_place_you_live', e.target.value)} />
+                                        <DropDown placeholder="Which Best describes the place you live now?" options={currentPlaceOptions} isEdittable={isEdittable} value={clientData.describe_the_place_you_live}
+                                            handleChange={(e) => handleFieldChange('describe_the_place_you_live', e.value)} />
                                     </div>
 
                                 </div>
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <DropDown placeholder="Race" isEdittable={isEdittable} value={clientData.race}
-                                            handleChange={(e) => handleFieldChange('race', e.target.value)} />
+                                        <DropDown placeholder="Race" options={raceOptions} isEdittable={isEdittable} value={clientData.race}
+                                            handleChange={(e) => handleFieldChange('race', e.value)} />
                                     </div>
                                     <div className="flex-1">
-                                        <DropDown placeholder="Other Race" isEdittable={isEdittable} value={clientData.other_race}
+                                        <TextBox placeholder="Other Race" isEdittable={isEdittable} value={clientData.other_race}
                                             handleChange={(e) => handleFieldChange('other_race', e.target.value)} />
                                     </div>
                                     <div className="flex-1">
-                                        <DropDown placeholder="Gender Identity" isEdittable={isEdittable} value={clientData.gender_identity}
-                                            handleChange={(e) => handleFieldChange('gender_identity', e.target.value)} />
+                                        <DropDown placeholder="Gender Identity" options={genderOptions} isEdittable={isEdittable} value={clientData.gender_identity}
+                                            handleChange={(e) => handleFieldChange('gender_identity', e.value)} />
                                     </div>
                                 </div>
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <DropDown placeholder="Other Gender Identity" isEdittable={isEdittable} value={clientData.other_gender_identity}
+                                        <TextBox placeholder="Other Gender Identity" isEdittable={isEdittable} value={clientData.other_gender_identity}
                                             handleChange={(e) => handleFieldChange('other_gender_identity', e.target.value)} />
                                     </div>
                                     <div className="flex-1">
-                                        <DropDown placeholder="Sexual Orientation" isEdittable={isEdittable} value={clientData.sexual_orientation}
-                                            handleChange={(e) => handleFieldChange('sexual_orientation', e.target.value)} />
+                                        <DropDown placeholder="Sexual Orientation" options={sexualOrientationOptions} isEdittable={isEdittable} value={clientData.sexual_orientation}
+                                            handleChange={(e) => handleFieldChange('sexual_orientation', e.value)} />
                                     </div>
                                     <div className="flex-1">
-                                        <DropDown placeholder="Other Sexual Orientation" isEdittable={isEdittable} value={clientData.other_sexual_orientation}
+                                        <TextBox placeholder="Other Sexual Orientation" isEdittable={isEdittable} value={clientData.other_sexual_orientation}
                                             handleChange={(e) => handleFieldChange('other_sexual_orientation', e.target.value)} />
                                     </div>
                                 </div>
