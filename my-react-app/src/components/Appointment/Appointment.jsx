@@ -1,11 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import "./AppointmentStyles.css";
 import useAppointments from "../../hooks/useAppointments";
 import { getUpcomingEvents } from "../utils";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import AppointmentDetail from "./AppointmentDetail";
 
 const AppointmentItem = ({ id, event }) => {
+  const [showModal, setShowModal] = useState(false);
+
+  const toggleModal = () => {
+    setShowModal(!showModal);
+  };
+
   // Extract start and end times
   const startTime = new Date(event.start.dateTime).toLocaleTimeString([], {
     hour: "numeric",
@@ -39,9 +46,13 @@ const AppointmentItem = ({ id, event }) => {
             id={`appointment-${event.id ? event.id : id}`}
             className="space-y-0.5"
           >
-            <div className="text-[13px] sm:text-sm font-medium">
+            <Link
+              to="#"
+              target="_blank"
+              className="text-[13px] sm:text-sm font-medium"
+            >
               {event.summary || "Untitled Appointment"}
-            </div>
+            </Link>
             <div className="text-[11px] sm:text-xs py-1 flex flex-wrap gap-1">
               <span>Created by:</span>
               <span className="sm:w-100 w-[125px] text-xs md:truncate">
@@ -55,10 +66,17 @@ const AppointmentItem = ({ id, event }) => {
             </div>
           </div>
         </div>
-        <button className="px-2.5 sm:px-4 py-1.5 rounded-sm text-white h-fit w-fit bg-[#43B09C] text-[10px] sm:text-xs font-medium">
+        <button
+          onClick={() => setShowModal(true)}
+          className="px-2.5 sm:px-4 py-1.5 rounded-sm text-white h-fit w-fit bg-[#43B09C] text-[10px] sm:text-xs font-medium"
+        >
           Details
         </button>
       </div>
+
+      {showModal && (
+        <AppointmentDetail toggleModal={toggleModal} event={event} />
+      )}
     </>
   );
 };
@@ -74,7 +92,8 @@ function Appointment() {
         <div id="appointment-1" className="text-lg font-medium">
           Upcoming
         </div>
-        <button
+        <Link
+          to="/calendar"
           id="appointment-2"
           className="flex justify-center items-center space-x-1 bg-[#5BC4BF] text-white px-2.5 py-1 sm:py-1.5 my-1.5 sm:my-0 text-xs rounded-sm"
         >
@@ -82,9 +101,9 @@ function Appointment() {
             id="appointment-3"
             className="text-white size-3 sm:size-4"
           />
-           <Link to="/calendar"> 
-          <span className="text-[10px] sm:text-xs">New Appointment</span> </Link>
-        </button>
+
+          <span className="text-[10px] sm:text-xs">New Appointment</span>
+        </Link>
       </div>
       <hr id="appointment-HR" className="w-11/12 mx-auto my-2" />
       <div className="flex flex-col justify-between space-y-6 mx-3 my-8">
