@@ -3,6 +3,7 @@ import React, { useState } from "react";
 
 import GoogleIcon from "../images/google_icon.svg";
 import CalendarIcon from "../images/calendar-boxed.svg";
+import InternalCalendarIcon from "../images/internal-meeting.svg";
 import EventModal from "./EventsModal";
 
 export default function Day({ day, rowIdx, savedEvents, isMonth, isWeek }) {
@@ -80,11 +81,11 @@ export default function Day({ day, rowIdx, savedEvents, isMonth, isWeek }) {
                 className={`flex flex-row gap-1 items-center w-full h-7 ${getTitleBackGround()} rounded-tl-sm rounded-tr-sm mx-1`}
               >
                 <img
-                  src={event.isExternal ? GoogleIcon : CalendarIcon}
+                  src={event.isExternal ? GoogleIcon : InternalCalendarIcon}
                   className={`${
                     event.isExternal
-                      ? "size-4 sm:size-5"
-                      : "size-3 sm:size-3 ms-1"
+                      ? "h-[16px] w-[16px] ms-1 bg-white rounded-full"
+                      : "h-[20px] w-[20px] ms-1"
                   }`}
                   alt="event-meet"
                 />
