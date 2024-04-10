@@ -6,7 +6,7 @@ import TextArea from "../common/TextArea";
 import OpenAccordianPNG from '../images/open-accordion.png';
 import ClosedAccordianPNG from '../images/closed-accordion.png';
 
-const AddressInformation = ({ id, isEdittable, clientData, handleFieldChange }) => {
+const AddressInformation = ({ id, isEdittable, clientData, handleFieldChange, errors }) => {
     const [isOpen, setIsOpen] = useState(true);
 
     const toggleAccordion = () => {
@@ -72,6 +72,7 @@ const AddressInformation = ({ id, isEdittable, clientData, handleFieldChange }) 
                                     <div className="flex-1">
                                         <TextBox placeholder="Valid Zip Code" isEdittable={isEdittable} value={clientData.zip_address_n_usual_location}
                                             handleChange={(e) => handleFieldChange('zip_address_n_usual_location', e.target.value)} />
+                                        {errors.zip_address_n_usual_location && <div className="text-red-500 text-xs pt-2">{errors.zip_address_n_usual_location}</div>}
                                     </div>
                                 </div>
                                 <div className="flex space-x-6">
