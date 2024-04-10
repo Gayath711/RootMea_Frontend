@@ -49,6 +49,7 @@ const ClientProfile = () => {
       .then(response => {
         setClientData(response.data);
         console.log(response.data.first_name)
+        console.log({ response });
       })
       .catch(error => {
         console.error('Error fetching Client Data:', error);
