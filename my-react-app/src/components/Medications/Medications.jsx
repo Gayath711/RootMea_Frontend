@@ -81,8 +81,8 @@ function Medications({ clientId, setShowModal, showModal }) {
           // Parse the date string
           const date = new Date(value);
           // Extract day, month, and year
-          const day = String(date.getDate()).padStart(2, '0');
-          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const day = String(date.getDate()).padStart(2, "0");
+          const month = String(date.getMonth() + 1).padStart(2, "0");
           const year = date.getFullYear();
           // Format date as "dd-mm-yyyy"
           return `${month}-${day}-${year}`;
@@ -95,8 +95,8 @@ function Medications({ clientId, setShowModal, showModal }) {
           // Parse the date string
           const date = new Date(value);
           // Extract day, month, and year
-          const day = String(date.getDate()).padStart(2, '0');
-          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const day = String(date.getDate()).padStart(2, "0");
+          const month = String(date.getMonth() + 1).padStart(2, "0");
           const year = date.getFullYear();
           // Format date as "dd-mm-yyyy"
           return `${month}-${day}-${year}`;
@@ -109,8 +109,8 @@ function Medications({ clientId, setShowModal, showModal }) {
           // Parse the date string
           const date = new Date(value);
           // Extract day, month, and year
-          const day = String(date.getDate()).padStart(2, '0');
-          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const day = String(date.getDate()).padStart(2, "0");
+          const month = String(date.getMonth() + 1).padStart(2, "0");
           const year = date.getFullYear();
           // Format date as "dd-mm-yyyy"
           return `${month}-${day}-${year}`;
@@ -160,6 +160,7 @@ function Medications({ clientId, setShowModal, showModal }) {
           <button
             className="px-3 py-2 text-sm bg-[#E4C3B1] text-white rounded-sm font-medium"
             onClick={() => {
+              setUpdate(false);
               setShowModal(true);
             }}
           >
@@ -177,7 +178,7 @@ function Medications({ clientId, setShowModal, showModal }) {
           toggleModal={toggleModal}
           clientId={clientId}
           fetchData={fetchData}
-          data={data}
+          data={update ? data : null}
           id={id}
           update={update}
         />

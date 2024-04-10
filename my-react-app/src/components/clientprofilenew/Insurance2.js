@@ -10,6 +10,15 @@ const Insurance = ({ heading, isEdittable, clientData, handleFieldChange }) => {
     const toggleAccordion = () => {
         setIsOpen(!isOpen);
     };
+    //Drop down options
+    const relationshipOptions = [
+        { value: 'Parent', label: 'Parent' },
+        { value: 'Spouse', label: 'Spouse' },
+        { value: 'Child', label: 'Child' },
+        { value: 'Sibling', label: 'Sibling' },
+        { value: 'Friend', label: 'Friend' },
+        { value: 'Other', label: 'Other' }
+    ]
     return (
         <div className="">
             <div className="border-1 border-gray-500/50 mx-4 mb-4">
@@ -36,7 +45,7 @@ const Insurance = ({ heading, isEdittable, clientData, handleFieldChange }) => {
                         </div>
                         <div className="flex space-x-6">
                             <div className="flex-1">
-                                <DropDown placeholder="Relation to Insured" isEdittable={isEdittable} value={clientData.insurance_secondary_relation_to_insured}
+                                <DropDown placeholder="Relation to Insured" options={relationshipOptions} isEdittable={isEdittable} value={clientData.insurance_secondary_relation_to_insured}
                                     handleChange={(e) => handleFieldChange('insurance_secondary_relation_to_insured', e.value)} />
                             </div>
                             <div className="flex-1">

@@ -12,11 +12,21 @@ const AddressInformation = ({ id, isEdittable, clientData, handleFieldChange }) 
     const toggleAccordion = () => {
         setIsOpen(!isOpen);
     };
-    const options = [
-        { value: 'Option 1', label: 'Option 1' },
-        { value: 'Option 2', label: 'Option 2' },
-        { value: 'Option 3', label: 'Option 3' }
+    const cityOptions = [
+        { value: 'San Francisco', label: 'San Francisco' },
+        { value: 'San Jose', label: 'San Jose' },
+        { value: 'San Diego', label: 'San Diego' },
+        { value: 'Los Angeles', label: 'Los Angeles' },
+        { value: 'Houston', label: 'Houston' },
+        { value: 'Seattle', label: 'Seattle' }
     ]
+
+    const stateOptions = [
+        { value: 'California', label: 'California' },
+        { value: 'Washington', label: 'Washington' },
+        { value: 'Texas', label: 'Texas' },
+    ]
+
     return (
         <div className="border border-gray-300  bg-gray-50 rounded-md" id={`accordian-${id}`}>
             <div
@@ -53,12 +63,12 @@ const AddressInformation = ({ id, isEdittable, clientData, handleFieldChange }) 
                                 </div>
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <DropDown placeholder="City" isEdittable={isEdittable} options={options} value={clientData.city_address_n_usual_location}
-                                            handleChange={(e) => handleFieldChange('city_address_n_usual_location', e.target.value)} />
+                                        <DropDown placeholder="City" options={cityOptions} isEdittable={isEdittable} value={clientData.city_address_n_usual_location}
+                                            handleChange={(e) => handleFieldChange('city_address_n_usual_location', e.value)} />
                                     </div>
                                     <div className="flex-1">
-                                        <DropDown placeholder="State" isEdittable={isEdittable} options={options} value={clientData.state_address_n_usual_location}
-                                            handleChange={(e) => handleFieldChange('state_address_n_usual_location', e.target.value)} />
+                                        <DropDown placeholder="State" options={stateOptions} isEdittable={isEdittable} value={clientData.state_address_n_usual_location}
+                                            handleChange={(e) => handleFieldChange('state_address_n_usual_location', e.value)} />
                                     </div>
                                     <div className="flex-1">
                                         <TextBox placeholder="Valid Zip Code" isEdittable={isEdittable} value={clientData.zip_address_n_usual_location}
