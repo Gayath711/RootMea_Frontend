@@ -201,17 +201,20 @@ const AddNewSocialVitalSigns = () => {
   const goToPreviousStage = () => {
     if (currentStageIndex > 0) {
       setCurrentStageIndex(currentStageIndex - 1);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
   const goToNextStage = () => {
     if (currentStageIndex < stages.length - 1) {
       setCurrentStageIndex(currentStageIndex + 1);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
   const handleStage = (stageIndex) => {
     setCurrentStageIndex(stageIndex);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleAnswers = (sectionID, questionID, value) => {
@@ -225,19 +228,19 @@ const AddNewSocialVitalSigns = () => {
 
   const handleSubmit = () => {
     // need to change endpoint
-    let endpoint = "/create_event/";
+    let endpoint = "/clientsvsfull/";
     let data = {
       client_id: clientId,
       ...answers,
     };
     axios
-      .post(`${apiURL}${endpoint}`, data)
+      .post(`${apiURL}/api${endpoint}`, data)
       .then((response) => {
         setShowAlert(true);
         window.scrollTo({ top: 0, behavior: "smooth" });
-        setTimeout(() => {
-          navigate(-1);
-        }, 3000);
+        // setTimeout(() => {
+        //   navigate(-1);
+        // }, 3000);
       })
       .catch((error) => {
         console.error("Error Submitting SVS Data:", error);
@@ -351,7 +354,8 @@ let FOOD_ACCESS_QA = [
     id: "vegetable_portions_per_day",
     question:
       "How many portions of vegetables, excluding potatoes, do you eat on a typical day? ",
-    inputType: "Text",
+    inputType: "Radio",
+    options: ["None", "One", "Two", "Three or more"],
   },
   {
     id: "primary_food_source",
@@ -370,7 +374,7 @@ let FOOD_ACCESS_QA = [
     question:
       "Within the past 12 months, we worried whether our food would run out before we got money to buy more?",
     inputType: "Radio",
-    options: ["Never", "Occasionally", "Sometimes", "Often"],
+    options: ["Never", "Sometimes", "Often"],
   },
   {
     id: "food_bought_didnt_last",
@@ -540,12 +544,12 @@ let FINANCIAL_SECURITY_QA = [
     ],
   },
 
-  {
-    id: "financial-security-5",
-    question: "Review notes",
-    inputType: "Text",
-    options: [],
-  },
+  // {
+  //   id: "financial-security-5",
+  //   question: "Review notes",
+  //   inputType: "Text",
+  //   options: [],
+  // },
 ];
 
 let COMMUNICATIONN_AND_MOBILITY_QA = [
@@ -604,7 +608,8 @@ let HEALTHCARE_PREVENTIVE_QA = [
   {
     id: "health_insurance",
     question: "Do you currently have health insurance?",
-    inputType: "Text",
+    inputType: "Radio",
+    options: ["Yes", "No"],
   },
   {
     id: "plan_name",
@@ -614,7 +619,8 @@ let HEALTHCARE_PREVENTIVE_QA = [
   {
     id: "primary_care_doc",
     question: "Do you have a regular primary care doctor?",
-    inputType: "Text",
+    inputType: "Radio",
+    options: ["Yes", "No"],
   },
   {
     id: "last_doc_visit",
@@ -640,7 +646,8 @@ let HEALTHCARE_PREVENTIVE_QA = [
   {
     id: "regular_dentist",
     question: "Do you have a regular dentist?",
-    inputType: "Text",
+    inputType: "Radio",
+    options: ["Yes", "No"],
   },
   {
     id: "last_dent_visit",
@@ -651,7 +658,8 @@ let HEALTHCARE_PREVENTIVE_QA = [
     id: "case_manager",
     question:
       "Do you have a case manager or social worker who helps you manage your healthcare?",
-    inputType: "Text",
+    inputType: "Radio",
+    options: ["Yes", "No"],
   },
   {
     id: "case_mgr_name_location",
@@ -674,19 +682,22 @@ let HEALTHCARE_GENERAL_HEALTH_QA = [
   {
     id: "gen_health",
     question: "In general, would you say your health is",
-    inputType: "Text",
+    inputType: "Radio",
+    options: ["Fair", "Very Good", "Good", "Poor"],
   },
   {
     id: "non_active_length",
     question:
       "During the past month, how often did poor physical health keep you from doing your usual activities, work, or recreation?",
-    inputType: "Text",
+    inputType: "Radio",
+    options: ["Never", "Some days"],
   },
   {
     id: "emergency_visit",
     question:
       "Over the past year, how many times did you go to the emergency room (regular or psych emergency)?",
-    inputType: "Text",
+    inputType: "Radio",
+    options: ["None", "Once", "Twice", "Three times", "Four or more times"],
   },
   // {
   //   id: "healthcare-general-health-5",
@@ -705,7 +716,27 @@ let HEALTHCARE_CARDIOVASCULAR_RISK_QA = [
     id: "med_diag",
     question:
       "Have you ever been diagnosed with any of the following medical conditions? (check all that apply)?",
-    inputType: "Text",
+    inputType: "Radio",
+    options: [
+      "Allergies",
+      "Anemia",
+      "Arthritis",
+      "Asthma",
+      "Cancer",
+      "Congestive heart failure",
+      "Diabetes",
+      "Emphysema",
+      "Heart disease",
+      "Hepatitis",
+      "High cholesterol",
+      "High blood pressure",
+      "Kidney disease",
+      "Chronic pain",
+      "Enlarged prostate",
+      "Seizure",
+      "Sexually transmitted disease",
+      "None",
+    ],
   },
   {
     id: "engage_exercise",
@@ -722,7 +753,8 @@ let HEALTHCARE_CARDIOVASCULAR_RISK_QA = [
   {
     id: "do_you_smoke",
     question: "Do you smoke cigarettes?",
-    inputType: "Text",
+    inputType: "Radio",
+    options: ["Yes", "No"],
   },
   {
     id: "cig_per_day",
@@ -733,7 +765,8 @@ let HEALTHCARE_CARDIOVASCULAR_RISK_QA = [
     id: "use_nicotine",
     question:
       "Do you use any tobacco or nicotine products besides cigarettes, such as chewing tobacco, snuff, cigars, or e-cigarettes?",
-    inputType: "Text",
+    inputType: "Radio",
+    options: ["Yes", "No"],
   },
   {
     id: "last_smoke",
