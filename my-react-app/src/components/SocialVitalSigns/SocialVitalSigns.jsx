@@ -150,7 +150,7 @@ function SocialVitalSigns({ clientId }) {
         <div className="flex items-center gap-x-10">
           {!dataLoading && data.length === 0 && (
             <Link
-              to="/add-new-socialvitalsigns"
+              to={`/addNewSocialVitalSigns/${clientId}`}
               className="px-3 py-2 text-sm bg-[#5BC4BF] text-white rounded-sm font-medium"
             >
               Add New
