@@ -30,6 +30,9 @@ import DraggableIcon from "../images/form_builder/draggable.svg";
 
 import GearIcon from "../images/form_builder/gears.svg";
 
+import DeleteIcon from "../images/delete.png";
+import DateInput from "./DateInput";
+
 export default function DragDropDemo() {
   const [showPreview, setShowPreview] = useState(false);
 
@@ -59,7 +62,7 @@ export default function DragDropDemo() {
       console.log("labelTitleList", labelTitleList);
 
       labelTitleList.forEach((element, index) => {
-        if (typeof element === "undefined" || element === "") {
+        if (typeof element === undefined || element === "") {
           undefinedIndices.push(index);
         }
       });
@@ -91,7 +94,8 @@ export default function DragDropDemo() {
       console.log(response.data);
       navigate("/createtableform");
     } catch (error) {
-      console.error("Error:", error.response.data.message);
+      console.error("Error:", { error });
+      // console.error("Error:", error.response.data.message);
       window.alert("An error occurred. Please try again later.");
     }
   };
@@ -104,14 +108,27 @@ export default function DragDropDemo() {
     setShowModal((prevState) => ({ ...prevState, [index]: false }));
   };
 
-  function handleDragStart(e, text) {
-    e.dataTransfer.setData("text/plain", text);
+  function handleDragStart(e, dataObj) {
+    try {
+      console.log({ dataObj });
+      let stringifiedData = JSON.stringify(dataObj);
+      console.log({ stringifiedData });
+      e.dataTransfer.setData("text/plain", stringifiedData);
+    } catch (e) {
+      console.log({ e });
+    }
   }
 
   function handleDrop(e) {
     e.preventDefault();
-    const text = e.dataTransfer.getData("text/plain");
-    const newItem = { type: text };
+    const eleDataString = e.dataTransfer.getData("text/plain");
+    const parsedData = JSON.parse(eleDataString);
+    const newItem = {
+      type: parsedData.type,
+      elementData: parsedData,
+    };
+
+    console.log({ eleDataString, newItem });
     setItems((prevItems) => [...prevItems, newItem]);
   }
 
@@ -308,7 +325,7 @@ export default function DragDropDemo() {
           {/* <div className="row">
             <label
               htmlFor="tableName"
-              className="text-lg font-bold text-gray-800"
+              className="text-xs font-bold text-gray-800"
             >
               Form name <span className="text-red-500">*</span>
             </label>
@@ -329,7 +346,7 @@ export default function DragDropDemo() {
                 fontSize: "16px", // Adjusting font size
               }}
             />
-          </div> 
+          </div>  */}
 
           <div className="row">
             <form role="form" className="w-3/4">
@@ -356,7 +373,7 @@ export default function DragDropDemo() {
                 />
               </div>
             </form>
-          </div>*/}
+          </div>
 
           <div className="row">
             {/* Draggable Elements */}
@@ -383,6 +400,7 @@ export default function DragDropDemo() {
                       groupName={group.name}
                       elements={group.elements}
                       handleDragStart={handleDragStart}
+                      elementGroupData={group}
                     />
                   ))}
                 </div>
@@ -394,12 +412,12 @@ export default function DragDropDemo() {
               <div className="flex flex-column border-2 border[#858585]">
                 <div className="w-100 bg-[#ECECEC]">
                   <div className="row p-4">
-                    <div className="col-sm-5 p-2">
+                    <div className="col-sm-12 p-2">
                       <label
                         htmlFor="tableName"
                         className="text-xs font-medium text-gray-500"
                       >
-                        Form name <span className="text-gray-500">*</span>
+                        Form name <span className="text-red-500">*</span>
                       </label>
                       {alertMessage && (
                         <div className="alert">{alertMessage}</div>
@@ -413,7 +431,7 @@ export default function DragDropDemo() {
                         className="border border-gray-300 rounded px-4 mt-2 py-2 w-100 focus:outline-none focus:border-green-500 transition-colors duration-300"
                       />
                     </div>
-                    <div className="col-sm-5 p-2">
+                    <div className="hidden col-sm-5 p-2">
                       <label
                         htmlFor="tableName"
                         className="text-xs font-medium text-gray-500"
@@ -440,15 +458,13 @@ export default function DragDropDemo() {
                   style={{
                     overflowY: "auto",
                     maxHeight: "calc(100vh - 56px)",
-                    minHeight: "calc(100vh - 56px)",
                   }}
                 >
                   {items.length === 0 ? (
                     <div
-                      className="w-100 h-100 flex flex-column items-center justify-center gap-2 p-2"
+                      className="w-100 h-100 flex flex-column items-center justify-center gap-2 p-2 pt-[40px]"
                       style={{
                         maxHeight: "calc(80vh - 56px)",
-                        minHeight: "calc(80vh - 56px)",
                       }}
                     >
                       <img
@@ -467,7 +483,7 @@ export default function DragDropDemo() {
                   ) : (
                     items.map((item, index) => {
                       const key = `${item.type}_${index}`;
-
+                      console.log({ swtI: item });
                       let inputElement;
                       switch (item.type) {
                         case "VARCHAR(250)":
@@ -514,7 +530,7 @@ export default function DragDropDemo() {
                                   variant="info"
                                   onClick={() => handleOpenModal(index)}
                                 >
-                                  Open Modal
+                                  Settings
                                 </Button>
 
                                 <Modal
@@ -583,7 +599,7 @@ export default function DragDropDemo() {
                                           }
                                           className="mr-2"
                                         />
-                                        Checkbox
+                                        Required
                                       </label>
                                     </div>
                                   </Modal.Body>
@@ -594,7 +610,7 @@ export default function DragDropDemo() {
                                         handleCloseModal(index);
                                         handleColumnTypeChange(
                                           index,
-                                          "VARCHAR(250)"
+                                          item.type
                                         );
                                         handleEnumChange(index, []);
                                       }}
@@ -649,7 +665,7 @@ export default function DragDropDemo() {
                                   variant="info"
                                   onClick={() => handleOpenModal(index)}
                                 >
-                                  Open Modal
+                                  Settings
                                 </Button>
 
                                 <Modal
@@ -719,7 +735,7 @@ export default function DragDropDemo() {
                                           }
                                           className="mr-2"
                                         />
-                                        Checkbox
+                                        Required
                                       </label>
                                     </div>
                                   </Modal.Body>
@@ -730,7 +746,7 @@ export default function DragDropDemo() {
                                         handleCloseModal(index);
                                         handleColumnTypeChange(
                                           index,
-                                          "INTEGER"
+                                          item.type
                                         );
                                         handleEnumChange(index, []);
                                       }}
@@ -787,7 +803,7 @@ export default function DragDropDemo() {
                                   variant="info"
                                   onClick={() => handleOpenModal(index)}
                                 >
-                                  Open Modal
+                                  Settings
                                 </Button>
 
                                 <Modal
@@ -857,7 +873,7 @@ export default function DragDropDemo() {
                                           }
                                           className="mr-2"
                                         />
-                                        Checkbox
+                                        Required
                                       </label>
                                     </div>
                                   </Modal.Body>
@@ -866,7 +882,10 @@ export default function DragDropDemo() {
                                       variant="info"
                                       onClick={() => {
                                         handleCloseModal(index);
-                                        handleColumnTypeChange(index, "TEXT");
+                                        handleColumnTypeChange(
+                                          index,
+                                          item.type
+                                        );
                                         handleEnumChange(index, []);
                                       }}
                                     >
@@ -922,7 +941,7 @@ export default function DragDropDemo() {
                                   variant="info"
                                   onClick={() => handleOpenModal(index)}
                                 >
-                                  Open Modal
+                                  Settings
                                 </Button>
 
                                 <Modal
@@ -992,7 +1011,7 @@ export default function DragDropDemo() {
                                           }
                                           className="mr-2"
                                         />
-                                        Checkbox
+                                        Required
                                       </label>
                                     </div>
                                   </Modal.Body>
@@ -1001,7 +1020,10 @@ export default function DragDropDemo() {
                                       variant="info"
                                       onClick={() => {
                                         handleCloseModal(index);
-                                        handleColumnTypeChange(index, "FLOAT");
+                                        handleColumnTypeChange(
+                                          index,
+                                          item.type
+                                        );
                                         handleEnumChange(index, []);
                                       }}
                                     >
@@ -1057,7 +1079,7 @@ export default function DragDropDemo() {
                                   variant="info"
                                   onClick={() => handleOpenModal(index)}
                                 >
-                                  Open Modal
+                                  Settings
                                 </Button>
 
                                 <Modal
@@ -1127,7 +1149,7 @@ export default function DragDropDemo() {
                                           }
                                           className="mr-2"
                                         />
-                                        Checkbox
+                                        Required
                                       </label>
                                     </div>
                                   </Modal.Body>
@@ -1138,7 +1160,7 @@ export default function DragDropDemo() {
                                         handleCloseModal(index);
                                         handleColumnTypeChange(
                                           index,
-                                          "BOOLEAN"
+                                          item.type
                                         );
                                         handleEnumChange(index, []);
                                       }}
@@ -1195,7 +1217,7 @@ export default function DragDropDemo() {
                                   variant="info"
                                   onClick={() => handleOpenModal(index)}
                                 >
-                                  Open Modal
+                                  Settings
                                 </Button>
 
                                 <Modal
@@ -1265,7 +1287,7 @@ export default function DragDropDemo() {
                                           }
                                           className="mr-2"
                                         />
-                                        Checkbox
+                                        Required
                                       </label>
                                     </div>
                                   </Modal.Body>
@@ -1274,7 +1296,10 @@ export default function DragDropDemo() {
                                       variant="info"
                                       onClick={() => {
                                         handleCloseModal(index);
-                                        handleColumnTypeChange(index, "BYTEA");
+                                        handleColumnTypeChange(
+                                          index,
+                                          item.type
+                                        );
                                         handleEnumChange(index, []);
                                       }}
                                     >
@@ -1309,12 +1334,16 @@ export default function DragDropDemo() {
                                     )}
                                   </label>
                                 </div>
-
-                                <input
+                                <DateInput
                                   type="date"
                                   className={`${widthList[index]} border border-gray-300 rounded px-4 py-2`}
                                   disabled
                                 />
+                                {/* <input
+                                  type="date"
+                                  className={`${widthList[index]} border border-gray-300 rounded px-4 py-2`}
+                                  disabled
+                                /> */}
                               </div>
                               <div className="col-auto">
                                 <button
@@ -1329,7 +1358,7 @@ export default function DragDropDemo() {
                                   variant="info"
                                   onClick={() => handleOpenModal(index)}
                                 >
-                                  Open Modal
+                                  Settings
                                 </Button>
 
                                 <Modal
@@ -1399,7 +1428,7 @@ export default function DragDropDemo() {
                                           }
                                           className="mr-2"
                                         />
-                                        Checkbox
+                                        Required
                                       </label>
                                     </div>
                                   </Modal.Body>
@@ -1410,7 +1439,7 @@ export default function DragDropDemo() {
                                         handleCloseModal(index);
                                         handleColumnTypeChange(
                                           index,
-                                          "TIMESTAMP"
+                                          item.type
                                         );
                                         handleEnumChange(index, []);
                                       }}
@@ -1461,14 +1490,13 @@ export default function DragDropDemo() {
                                   Remove
                                 </button>
                               </div>
-                              <div>
+                              <div className="pt-4 pb-4 px-4">
                                 <Button
                                   variant="info"
                                   onClick={() => handleOpenModal(index)}
                                 >
-                                  Open Modal
+                                  Settings
                                 </Button>
-
                                 <Modal
                                   show={showModal[index]}
                                   onHide={() => handleCloseModal(index)}
@@ -1477,48 +1505,84 @@ export default function DragDropDemo() {
                                     <Modal.Title>Modal title</Modal.Title>
                                   </Modal.Header>
                                   <Modal.Body>
-                                    <input
-                                      placeholder="Text title"
-                                      className={`w-full border border-gray-300 rounded px-4 py-2`}
-                                      value={labelTitleList[index] || ""}
-                                      onChange={(e) =>
-                                        handleTitleChange(index, e.target.value)
-                                      }
-                                    />
-                                    <select
-                                      className={`w-38 border border-gray-300 rounded px-4 py-2`}
-                                      value={widthList[index] || ""}
-                                      onChange={(e) =>
-                                        handleWidthChange(index, e.target.value)
-                                      }
-                                    >
-                                      <option value="">Select</option>
-                                      <option value="w-1/2">w-1/2</option>
-                                      <option value="w-1/4">w-1/4</option>
-                                      <option value="w-3/4">w-3/4</option>
-                                      <option value="w-full">w-full</option>
-                                    </select>
-                                    <input
-                                      type="checkbox"
-                                      checked={checkboxList[index] || false}
-                                      onChange={(e) =>
-                                        handleCheckboxChange(
-                                          index,
-                                          e.target.checked
-                                        )
-                                      }
-                                      className="ml-2"
-                                    />
+                                    <div className="pb-4">
+                                      <label
+                                        htmlFor="textTitle"
+                                        className="block mb-1"
+                                      >
+                                        Text Title
+                                      </label>
 
-                                    <input
-                                      type="text"
-                                      value={enumList[index] || ""}
-                                      onChange={(e) =>
-                                        handleEnumChange(index, e.target.value)
-                                      }
-                                      placeholder="Enter enum values separated by comma"
-                                      className="border border-gray-300 rounded px-4 py-2 mr-4"
-                                    />
+                                      <input
+                                        placeholder="Text title"
+                                        className={`w-full border border-gray-300 rounded px-4 py-2`}
+                                        value={labelTitleList[index] || ""}
+                                        onChange={(e) =>
+                                          handleTitleChange(
+                                            index,
+                                            e.target.value
+                                          )
+                                        }
+                                      />
+                                    </div>
+                                    <div className="pb-4">
+                                      <label
+                                        htmlFor="selectWidth"
+                                        className="block mb-1"
+                                      >
+                                        Width
+                                      </label>
+                                      <select
+                                        id="selectWidth"
+                                        className={`w-38 border border-gray-300 rounded px-4 py-2`}
+                                        value={widthList[index] || ""}
+                                        onChange={(e) =>
+                                          handleWidthChange(
+                                            index,
+                                            e.target.value
+                                          )
+                                        }
+                                      >
+                                        <option value="">Select</option>
+                                        <option value="w-1/2">w-1/2</option>
+                                        <option value="w-1/4">w-1/4</option>
+                                        <option value="w-3/4">w-3/4</option>
+                                        <option value="w-full">w-full</option>
+                                      </select>
+                                    </div>
+                                    <div className="pb-4">
+                                      <label className="inline-flex items-center">
+                                        Enum Options
+                                      </label>
+                                      <input
+                                        type="text"
+                                        value={enumList[index] || ""}
+                                        onChange={(e) =>
+                                          handleEnumChange(
+                                            index,
+                                            e.target.value
+                                          )
+                                        }
+                                        placeholder="Enter enum values separated by comma"
+                                        className="border border-gray-300 rounded px-4 py-2 mr-4 w-100"
+                                      />
+                                    </div>
+                                    <div className="pb-4">
+                                      <label className="inline-flex items-center">
+                                        <input
+                                          type="checkbox"
+                                          checked={checkboxList[index] || false}
+                                          onChange={(e) =>
+                                            handleCheckboxChange(
+                                              index,
+                                              e.target.checked
+                                            )
+                                          }
+                                          className="mr-2"
+                                        />
+                                        Required
+                                      </label>
+                                    </div>
                                   </Modal.Body>
                                   <Modal.Footer>
                                     <Button
@@ -1547,6 +1611,11 @@ export default function DragDropDemo() {
 
                       return (
                         <div key={key} className="drop-item">
+                          <div className="flex items-center justify-start">
+                            <span className="bg-teal-400 rounded-md p-1 px-2 m-1 text-xs text-black">
+                              {item.elementData.label}
+                            </span>
+                          </div>
                           {inputElement}
                           <button
                             className="remove"
@@ -1554,11 +1623,6 @@ export default function DragDropDemo() {
                           >
                             Remove
                           </button>
-                          <div className="flex items-center justify-end">
-                            <span className="bg-teal-400 rounded-md p-1 px-2 m-1 text-xs text-black">
-                              {item.type}
-                            </span>
-                          </div>
                         </div>
                       );
                     })
@@ -1602,17 +1666,15 @@ export default function DragDropDemo() {
   );
 }
 
-function ElementButton({
-  elementType,
-  elementLabel,
-  IconSrc,
-  handleDragStart,
-}) {
+function ElementButton(props) {
+  const { elementType, elementLabel, IconSrc, handleDragStart, elementData } =
+    props;
+
   return (
     <div className="col-6 my-2">
       <p
         draggable="true"
-        onDragStart={(e) => handleDragStart(e, elementType)}
+        onDragStart={(e) => handleDragStart(e, elementData)}
         className="drag"
       >
         <button className="rounded bg-slate-200 flex items-center gap-2 w-100 bg-[#EAECEB] p-2 hover:bg-teal-400 cursor-pointer">
@@ -1642,7 +1704,12 @@ function ElementButton({
   );
 }
 
-function ElementGroup({ groupName, elements, handleDragStart }) {
+function ElementGroup({
+  groupName,
+  elements,
+  handleDragStart,
+  elementGroupData,
+}) {
   return (
     <div>
       <p
@@ -1659,6 +1726,7 @@ function ElementGroup({ groupName, elements, handleDragStart }) {
             elementLabel={element.label}
             IconSrc={element.IconSrc}
             handleDragStart={handleDragStart}
+            elementData={element}
           />
         ))}
       </div>
