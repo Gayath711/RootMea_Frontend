@@ -18,12 +18,7 @@ const SideBar = () => {
     </button>
   </Link>
 
-  <Link to="/form_builder">
 
-  <button className="p-1 bg-[#EAECEB]">
-        <img src={LeftBarIcon6} className="size-4" alt="icon6" />
-      </button>
-      </Link>
 
 
   <Link to="/calendar"> 
@@ -31,6 +26,15 @@ const SideBar = () => {
         <img src={LeftBarIcon5} className="size-4" alt="icon5" />
       </button>
       </Link>
+
+
+      <Link to="/form_builder">
+
+<button className="p-1 bg-[#EAECEB]">
+      <img src={LeftBarIcon6} className="size-4" alt="icon6" />
+    </button>
+    </Link>
+    
 
       <Link to="/directory">
       <button className="p-1 bg-[#EAECEB]">

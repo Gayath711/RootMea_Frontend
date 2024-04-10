@@ -1036,6 +1036,7 @@ const togglePreview = () => {
               className={`${widthList[index]} border border-gray-300 rounded px-4 py-2`}
               disabled
             />
+            
             </div>
             <div className="col-auto">
               <button className="remove" onClick={() => handleRemove(index)}>Remove</button>
