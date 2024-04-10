@@ -108,13 +108,13 @@ const ContactInformation = ({ id, isEdittable, clientData, handleFieldChange }) 
                                                 handleChange={(e) => handleFieldChange('best_way_to_contact', e.value)} />
                                         </div>
                                         <div className="flex-1">
-                                            <DropDown placeholder="Primary Phone Number" options={primaryPhoneOptions} isEdittable={isEdittable} value={clientData.primary_phone}
+                                            <DropDown placeholder="Primary Phone Number" options={primaryPhoneOptions} isEdittable={isEdittable} value={clientData.primary_phone} print
                                                 handleChange={(e) => handleFieldChange('primary_phone', e.value)} />
                                         </div>
                                     </div>
                                     <div className="flex space-x-6">
                                         <div className="flex-1">
-                                            <DropDown placeholder="Preferred Language" options={preferredLanguageoptions} isEdittable={isEdittable} value={clientData.comfortable_language}
+                                            <DropDown placeholder="Preferred Language" options={preferredLanguageoptions} isEdittable={isEdittable} selectedOption={clientData.comfortable_language}
                                                 handleChange={(e) => handleFieldChange('comfortable_language', e.value)} />
                                         </div>
                                         <div className="flex-1">

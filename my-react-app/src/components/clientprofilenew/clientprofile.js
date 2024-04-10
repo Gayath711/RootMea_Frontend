@@ -122,7 +122,10 @@ const ClientProfile = () => {
 
   const [clientData, setClientData] = useState(initialValues);
   const [isHovered, setIsHovered] = useState(false);
-
+  const [errors, SetErrors] = useState({
+    first_name: '',
+    last_name: '',
+  })
 
   const handleClick = (accordionId) => {
     console.log("Inside handleClick")
@@ -161,13 +164,8 @@ const ClientProfile = () => {
       !clientData.last_name) {
       alert('Please fill out all mandatory fields and ensure ZIP code is at least 5 characters long and Social Security Number is 9 characters long.');
       return;
-    } else if (clientData.zip_address_n_usual_location && clientData.zip_address_n_usual_location.length < 5) {
-      alert('Please ensure ZIP code is at least 5 characters long.');
-      return;
-    } else if (clientData.social_security_number && clientData.social_security_number.length !== 9) {
-      alert('Please ensure Social Security Number is 9 characters long.');
-      return;
     }
+
     axios.post(`${apiURL}/clientinfo-api/`, clientData, {
       headers: {
         Authorization: `Bearer ${token}`

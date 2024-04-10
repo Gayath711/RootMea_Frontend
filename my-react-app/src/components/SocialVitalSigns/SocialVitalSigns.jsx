@@ -124,7 +124,7 @@ function SocialVitalSigns({ clientId }) {
         Header: "Actions",
         Cell: ({ row }) => (
           <Link
-            to={`/socialvitalsigns/${row.original.id}`}
+            to={`/socialvitalsigns/${clientId}`}
             state={`${row.original.domain}`}
           >
             <img src={EyeIcon} className="size-4 mx-auto" alt="view" />
