@@ -240,7 +240,7 @@ function App() {
                   />
 
                   <Route
-                    path="/add-new-socialvitalsigns/"
+                    path="/addNewSocialVitalSigns/:clientId"
                     element={<AddNewSocialVitalSigns />}
                   />
 

@@ -10,37 +10,37 @@ function SvsQAContent({
   goToNextStage,
   isStart,
   isEnd,
+  sectionID,
+  data: answers,
+  handleAnswers,
+  handleSubmit,
 }) {
   const [open, setOpen] = useState({});
-  const [answers, setAnswers] = useState({});
 
   const handleInputChange = (questionId, value) => {
-    setAnswers({
-      ...answers,
-      [questionId]: value,
-    });
+    handleAnswers(sectionID, questionId, value);
   };
 
-  const handleGroupSelectChange = (parentQID, questionId, value) => {
-    if (answers[parentQID]) {
-      setAnswers((prev) => {
-        return {
-          ...prev,
-          [parentQID]: { ...prev[parentQID], [questionId]: value },
-        };
-      });
-    } else {
-      let newValue = {};
-      newValue[questionId] = value;
+  // const handleGroupSelectChange = (parentQID, questionId, value) => {
+  //   if (answers[parentQID]) {
+  //     setAnswers((prev) => {
+  //       return {
+  //         ...prev,
+  //         [parentQID]: { ...prev[parentQID], [questionId]: value },
+  //       };
+  //     });
+  //   } else {
+  //     let newValue = {};
+  //     newValue[questionId] = value;
 
-      setAnswers((prev) => {
-        return {
-          ...prev,
-          [parentQID]: newValue,
-        };
-      });
-    }
-  };
+  //     setAnswers((prev) => {
+  //       return {
+  //         ...prev,
+  //         [parentQID]: newValue,
+  //       };
+  //     });
+  //   }
+  // };
 
   const toggleOpen = (index) => {
     setOpen((prev) => {
@@ -115,7 +115,7 @@ function SvsQAContent({
                           handleInputChange(question.id, e.target.value)
                         }
                         options={question.options}
-                        label="Sample 01"
+                        // label="Sample 01"
                       />
                     )}
 
@@ -133,8 +133,7 @@ function SvsQAContent({
                                     ""
                                   }
                                   onChange={(e) =>
-                                    handleGroupSelectChange(
-                                      question.id,
+                                    handleInputChange(
                                       eachSelect.id,
                                       e.target.value
                                     )
@@ -170,7 +169,7 @@ function SvsQAContent({
         </button>
         {isEnd ? (
           <button
-            onClick={() => {}}
+            onClick={handleSubmit}
             className=" w-[152px] h-[35px] px-3 py-1 text-[13px] font-medium leading-5 bg-[#5BC4BF] text-white rounded-sm font-medium"
           >
             Submit
