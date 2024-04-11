@@ -145,8 +145,8 @@ function Preview({
                         <div key={column.name} className="mb-4">
                             <label className="block mb-1">{label}</label>
                             <select
-                                value={column.name || ''}
-                                onChange={(event) => handleInputChange(event, column.name)}
+                                // value={column.name || ''}
+                                // onChange={(event) => handleInputChange(event, column.name)}
                                 className={`${column.width} border border-gray-300 rounded px-4 py-2`}
                             >
                                 <option value="">Select</option>
