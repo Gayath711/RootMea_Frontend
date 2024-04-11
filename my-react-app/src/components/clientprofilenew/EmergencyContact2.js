@@ -3,7 +3,7 @@ import { useState } from "react";
 import TextBox from "../common/TextBox";
 import DropDown from "../common/Dropdown";
 
-const EmergencyContact2 = ({ heading, isEdittable, clientData, handleFieldChange }) => {
+const EmergencyContact2 = ({ heading, isEdittable, clientData, handleFieldChange, errors }) => {
     const [isOpen, setIsOpen] = useState(true);
 
     const toggleAccordion = () => {
@@ -51,6 +51,7 @@ const EmergencyContact2 = ({ heading, isEdittable, clientData, handleFieldChange
                             <div className="flex-1">
                                 <TextBox placeholder="Email Address" isEdittable={isEdittable} value={clientData.emergency_contact_2_email_address}
                                     handleChange={(e) => handleFieldChange('emergency_contact_2_email_address', e.target.value)} />
+                                {errors.emergency_contact_2_email_address && <div className="text-red-500 text-xs pt-2">{errors.emergency_contact_2_email_address}</div>}
                             </div>
                             <div className="flex-1">
                                 <DropDown placeholder="Relationship" options={relationshipOptions} isEdittable={isEdittable} value={clientData.emergency_contact_2_relationship}
@@ -80,6 +81,7 @@ const EmergencyContact2 = ({ heading, isEdittable, clientData, handleFieldChange
                             <div className="flex-1">
                                 <TextBox placeholder="Zip Code" isEdittable={isEdittable} value={clientData.emergency_contact_2_zip}
                                     handleChange={(e) => handleFieldChange('emergency_contact_2_zip', e.target.value)} />
+                                {errors.emergency_contact_2_zip && <div className="text-red-500 text-xs pt-2">{errors.emergency_contact_2_zip}</div>}
                             </div>
                             <div className="flex-1">
                                 <TextBox placeholder="Phone Number" isEdittable={isEdittable} value={clientData.emergency_contact_2_phone}

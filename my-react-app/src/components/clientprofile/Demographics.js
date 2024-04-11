@@ -6,7 +6,7 @@ import DateInput from "../common/DateInput";
 import OpenAccordianPNG from '../images/open-accordion.png';
 import ClosedAccordianPNG from '../images/closed-accordion.png';
 
-const Demographics = ({ id, isEdittable, clientData, handleFieldChange }) => {
+const Demographics = ({ id, isEdittable, clientData, handleFieldChange, errors }) => {
     const [isOpen, setIsOpen] = useState(true);
 
     const toggleAccordion = () => {
@@ -84,6 +84,7 @@ const Demographics = ({ id, isEdittable, clientData, handleFieldChange }) => {
                                     <div className="flex-1">
                                         <TextBox placeholder="Age" isEdittable={isEdittable} value={clientData.age}
                                             handleChange={(e) => handleFieldChange('age', e.target.value)} />
+                                        {errors.age && <div className="text-red-500 text-xs pt-2">{errors.age}</div>}
                                     </div>
                                     <div className="flex-1">
                                         <DropDown placeholder="Sex" options={sexOptions} isEdittable={isEdittable} value={clientData.sex}
