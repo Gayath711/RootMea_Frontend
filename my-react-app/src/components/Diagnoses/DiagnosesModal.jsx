@@ -184,8 +184,12 @@ function DiagnosesModal({
             <div className="flex flex-row justify-end items-center pb-4">
               <div className="p-3">
                 <button
-                  type="cancel"
+                  type="button"
                   className="h-10 bg-[#43B09C] rounded text-xs text-white px-6 py-2"
+                  onClick={() => {
+                    disable = false;
+                    toggleModal();
+                  }}
                 >
                   Close
                 </button>
