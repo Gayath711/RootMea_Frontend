@@ -15,6 +15,7 @@ import PreferredPharmacy from './PreferredPharmacy';
 import InsuranceInformation from './InsuranceInformation';
 import SystemInformation from './SystemInformation';
 import AlertSuccess from '../common/AlertSuccess';
+import AlertError from '../common/AlertError'
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import EditPNG from '../images/edit.png';
@@ -112,6 +113,18 @@ const initialValues = {
   system_information_system_id: null
 };
 
+const errorInitialValues = {
+  first_name: '',
+  last_name: '',
+  email_address: '',
+  mobile_number: '',
+  emergency_contact_1_email_address: '',
+  emergency_contact_1_zip: '',
+  emergency_contact_2_email_address: '',
+  emergency_contact_2_zip: '',
+  age: '',
+  zip_address_n_usual_location: '',
+};
 
 const ClientProfile = () => {
   const { clientId } = useParams();
@@ -122,7 +135,7 @@ const ClientProfile = () => {
 
   const [clientData, setClientData] = useState(initialValues);
   const [isHovered, setIsHovered] = useState(false);
-
+  const [errors, setErrors] = useState(errorInitialValues);
 
   const handleClick = (accordionId) => {
     console.log("Inside handleClick")
@@ -147,42 +160,136 @@ const ClientProfile = () => {
     }));
   };
 
-  const [showAlert, setShowAlert] = useState(false);
-  const closeAlert = () => {
-    setShowAlert(false);
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [showErrorAlert, setShowErrorAlert] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const closeSuccessAlert = () => {
+    setShowSuccessAlert(false);
   }
- 
+
+  const closeErrorAlert = () => {
+    setShowErrorAlert(false);
+  }
+
 
   const handleSave = (event) => {
     event.preventDefault();
     console.log('Submitting clientData:', clientData);
-    if (!clientData.first_name || 
-      !clientData.middle_name || 
-      !clientData.last_name) {
-      alert('Please fill out all mandatory fields and ensure ZIP code is at least 5 characters long and Social Security Number is 9 characters long.');
+
+    setErrors(errorInitialValues)
+    setShowErrorAlert(false);
+    setShowSuccessAlert(false);
+
+    function validation() {
+      let errors = {}
+      let isValid = true;
+
+      console.log({ clientData })
+      if (!clientData.first_name) {
+        console.log({ clientData })
+        errors.first_name = "Mandatory field"
+        isValid = false;
+      }
+      if (!clientData.last_name) {
+        errors.last_name = "Mandatory field"
+        isValid = false;
+      }
+      if (clientData.email_address &&
+        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(clientData.email_address)
+      ) {
+        errors.email = "Invalid Email"
+        isValid = false;
+      }
+      if (clientData.mobile_number && isNaN(clientData.mobile_number)) {
+        errors.mobile_number = "Mobile must be a number"
+        isValid = false;
+      }
+
+      //Emergency contact 1
+      if (clientData.emergency_contact_1_email_address &&
+        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(clientData.emergency_contact_1_email_address)
+      ) {
+        errors.emergency_contact_1_email_address = "Invalid Email"
+        isValid = false;
+      }
+      if (clientData.emergency_contact_1_zip) {
+        if (isNaN(clientData.emergency_contact_1_zip)) {
+          errors.emergency_contact_1_zip = "Zip code must be a number"
+          isValid = false;
+        } else if (clientData.emergency_contact_1_zip.length > 5) {
+          errors.emergency_contact_1_zip = "Zip code cannot be more than 5 characters";
+          isValid = false;
+        }
+      }
+
+      //Emergency contact 2
+      if (clientData.emergency_contact_2_email_address &&
+        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(clientData.emergency_contact_2_email_address)
+      ) {
+        errors.emergency_contact_2_email_address = "Invalid Email"
+        isValid = false;
+      }
+      if (clientData.emergency_contact_2_zip) {
+        if (isNaN(clientData.emergency_contact_2_zip)) {
+          errors.emergency_contact_2_zip = "Zip code must be a number"
+          isValid = false;
+        } else if (clientData.emergency_contact_2_zip.length > 5) {
+          errors.emergency_contact_2_zip = "Zip code cannot be more than 5 characters";
+          isValid = false;
+        }
+      }
+
+      //Demographics
+      if (clientData.age && isNaN(clientData.age)) {
+        errors.age = "Age must be a number"
+        isValid = false;
+      }
+
+      //Address usual address
+      if (clientData.zip_address_n_usual_location) {
+        if (isNaN(clientData.zip_address_n_usual_location)) {
+          errors.zip_address_n_usual_location = "Zip code must be a number"
+          isValid = false;
+        } else if (clientData.zip_address_n_usual_location.length > 5) {
+          errors.zip_address_n_usual_location = "Zip code cannot be more than 5 characters";
+          isValid = false;
+        }
+      }
+
+      setErrors(errors);
+      return isValid;
+
+    }
+
+    // Validate
+    const isValid = validation();
+    if (!isValid) {
+      setShowErrorAlert(true);
+      setShowSuccessAlert(false);
       return;
-  } else if (clientData.zip_address_n_usual_location && clientData.zip_address_n_usual_location.length < 5) {
-      alert('Please ensure ZIP code is at least 5 characters long.');
-      return;
-  } else if (clientData.social_security_number && clientData.social_security_number.length !== 9) {
-      alert('Please ensure Social Security Number is 9 characters long.');
-      return;
-  }
+    }
+
     axios.post(`${apiURL}/clientinfo-api/`, clientData, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     })
-    .then(response => {
-        alert("Successfully created")
+      .then(response => {
         console.log('Data submitted successfully:', response.data);
         setClientData(initialValues);
-    })
-    .catch(error => {
+        setShowErrorAlert(false);
+        setShowSuccessAlert(true);
+        console.log({ initialValues });
+        console.log('After Submit:', clientData);
+      })
+      .catch(error => {
         console.error('Error submitting Client Data:', error);
-    });
-};
-  
+        setErrorMsg(error?.message)
+        setShowErrorAlert(true);
+        setShowSuccessAlert(false);
+      });
+  };
+
   function handleMouseEnter() {
     setTimeout(() => {
       setIsHovered(true);
@@ -191,43 +298,22 @@ const ClientProfile = () => {
 
   return (
     <div className="h-full bg-gray-50">
-      {showAlert && <AlertSuccess message="Saved successfully" handleClose={closeAlert} />}
+      {showSuccessAlert && <AlertSuccess message="Saved successfully" handleClose={closeSuccessAlert} />}
+      {showErrorAlert && <AlertError message={errorMsg || "Invalid form values"} handleClose={closeErrorAlert} />}
       <div className="bg-white p-4 shadow">
         <div className="flex justify-between mb-0 mt-4 pl-4">
           <div className='flex space-x-12'>
-            {/* {isEdittable && (<button onClick={handleEdit}>
-              <div className='flex flex-col items-center'>
-                <img
-                  // src={EditPNG} 
-                  src={isHovered ? EditGreenPNG : EditPNG}
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={() => setIsHovered(false)}
-                  class="w-6 h-6" />
-                {isHovered && <div className="text-green-800 text-base font-medium">Edit</div>}
-              </div>
-            </button>)}
-            {!isEdittable && (<button onClick={handleSave}>
-              <div className='flex flex-col items-center'>
-                <img
-                  // src={SavePNG} 
-                  src={isHovered ? SaveGreenPNG : SavePNG}
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={() => setIsHovered(false)}
-                  class="w-5 h-6" />
-                {isHovered && <div className="text-green-800 text-base font-medium">Save</div>}
-              </div>
-            </button>)} */}
             <button onClick={handleSave} className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full'>
-                Save
+              Save
             </button>
           </div>
           <div className='flex space-x-8'>
             <Link to={'/'}>
               <p className='text-green-700 font-medium'>Dashboard</p>
             </Link>
-            <Link to={`/clientchart/${clientId}`}>
+            {/* <Link to={`/clientchart/${clientId}`}>
               <p className='text-green-700 font-medium'>Client Chart</p>
-            </Link>
+            </Link> */}
             <p className='text-green-700 font-medium'>AMD Profile</p>
             <p className='text-green-700 font-medium pr-8'>Manage Program</p>
           </div>
@@ -242,13 +328,13 @@ const ClientProfile = () => {
               <GeneralInformation id={1} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
             </div>
             <div>
-              <ContactInformation id={2} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
+              <ContactInformation id={2} errors={errors} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
             </div>
             <div>
-              <Demographics id={3} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
+              <Demographics id={3} errors={errors} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
             </div>
             <div>
-              <AddressInformation id={4} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
+              <AddressInformation id={4} errors={errors} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
             </div>
             {/* <div>
               <CustomFields id={5} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />

@@ -10,17 +10,37 @@ function SvsQAContent({
   goToNextStage,
   isStart,
   isEnd,
+  sectionID,
+  data: answers,
+  handleAnswers,
+  handleSubmit,
 }) {
   const [open, setOpen] = useState({});
 
-  const [answers, setAnswers] = useState({});
-
   const handleInputChange = (questionId, value) => {
-    setAnswers({
-      ...answers,
-      [questionId]: value,
-    });
+    handleAnswers(sectionID, questionId, value);
   };
+
+  // const handleGroupSelectChange = (parentQID, questionId, value) => {
+  //   if (answers[parentQID]) {
+  //     setAnswers((prev) => {
+  //       return {
+  //         ...prev,
+  //         [parentQID]: { ...prev[parentQID], [questionId]: value },
+  //       };
+  //     });
+  //   } else {
+  //     let newValue = {};
+  //     newValue[questionId] = value;
+
+  //     setAnswers((prev) => {
+  //       return {
+  //         ...prev,
+  //         [parentQID]: newValue,
+  //       };
+  //     });
+  //   }
+  // };
 
   const toggleOpen = (index) => {
     setOpen((prev) => {
@@ -34,9 +54,11 @@ function SvsQAContent({
         {title}
       </div>
       {questions.map((question, index) => (
-        <div className="flex flex-col border-1 border-[#5BC4BF] m-4 rounded">
+        <div
+          className="flex flex-col border-1 border-[#5BC4BF] m-4 rounded"
+          key={index}
+        >
           <div
-            key={index}
             className={`flex flex-row justify-between items-center rounded-t ${
               open[index] ? "bg-[#89D6DE]" : ""
             } bg-opacity-50`}
@@ -85,6 +107,46 @@ function SvsQAContent({
                         placeholder={question.question}
                       />
                     )}
+                    {question.inputType === "Select" && (
+                      <SelectInput
+                        id={question.id}
+                        value={answers[question.id] || ""}
+                        onChange={(e) =>
+                          handleInputChange(question.id, e.target.value)
+                        }
+                        options={question.options}
+                        // label="Sample 01"
+                      />
+                    )}
+
+                    {question.inputType === "GroupSelect" && (
+                      <>
+                        <div className="grid grid-cols-2 gap-4">
+                          {question.group.map((eachSelect) => {
+                            return (
+                              <div>
+                                <SelectInput
+                                  id={eachSelect.id}
+                                  value={
+                                    (answers[question.id] &&
+                                      answers[question.id][eachSelect.id]) ||
+                                    ""
+                                  }
+                                  onChange={(e) =>
+                                    handleInputChange(
+                                      eachSelect.id,
+                                      e.target.value
+                                    )
+                                  }
+                                  options={eachSelect.options}
+                                  label={eachSelect.question}
+                                />
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </>
+                    )}
                   </div>
                 </form>
               </div>
@@ -107,7 +169,7 @@ function SvsQAContent({
         </button>
         {isEnd ? (
           <button
-            onClick={() => {}}
+            onClick={handleSubmit}
             className=" w-[152px] h-[35px] px-3 py-1 text-[13px] font-medium leading-5 bg-[#5BC4BF] text-white rounded-sm font-medium"
           >
             Submit
@@ -156,6 +218,47 @@ const TextInput = ({ id, value, onChange, placeholder = "" }) => {
         value={value}
         onChange={onChange}
       />
+    </div>
+  );
+};
+
+const SelectInput = ({ id, value, onChange, options, label }) => {
+  const [open, setOpen] = useState(false);
+
+  const toggleDropdown = () => {
+    setOpen(!open);
+  };
+
+  return (
+    <div className="relative flex flex-column gap-2">
+      <label htmlFor={id} className="text-xs ms-1">
+        {label}
+      </label>
+      <div className="relative">
+        <select
+          className="form-control px-3 py-[0.8rem] text-xs placeholder-gray-400 border-1 border-teal-500 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-teal-400 focus:border-teal-400"
+          id={id}
+          value={value}
+          onChange={onChange}
+          onClick={toggleDropdown}
+        >
+          <option disabled value={""}>
+            Select
+          </option>
+          {options.map((option, index) => (
+            <option key={index} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+        <img
+          src={NextIcon}
+          className={`absolute right-2 top-1/2 transform -translate-y-1/2 ${
+            open ? "-rotate-90" : "rotate-90"
+          } w-4 h-4 pointer-events-none`}
+          alt="dropdown"
+        />
+      </div>
     </div>
   );
 };

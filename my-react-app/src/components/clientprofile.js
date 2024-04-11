@@ -17,6 +17,7 @@ import SystemInformation from './clientprofile/SystemInformation';
 import PrimaryButton from './common/PrimaryButton'
 import SecondaryButton from './common/SecondaryButton'
 import AlertSuccess from './common/AlertSuccess';
+import AlertError from './common/AlertError';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import EditPNG from './images/edit.png';
@@ -49,11 +50,27 @@ const ClientProfile = () => {
       .then(response => {
         setClientData(response.data);
         console.log(response.data.first_name)
+        console.log({ response });
       })
       .catch(error => {
         console.error('Error fetching Client Data:', error);
       });
   }, []);
+
+  const errorInitialValues = {
+    first_name: '',
+    last_name: '',
+    email_address: '',
+    mobile_number: '',
+    emergency_contact_1_email_address: '',
+    emergency_contact_1_zip: '',
+    emergency_contact_2_email_address: '',
+    emergency_contact_2_zip: '',
+    age: '',
+    zip_address_n_usual_location: '',
+  };
+
+  const [errors, setErrors] = useState(errorInitialValues);
 
   const handleClick = (accordionId) => {
     console.log("Inside handleClick")
@@ -67,8 +84,10 @@ const ClientProfile = () => {
   }
 
   const handleEdit = () => {
-    setIsEdittable(false)
-    setIsHovered(false)
+    setIsEdittable(false);
+    setIsHovered(false);
+    setShowSuccessAlert(false);
+    setShowErrorAlert(false);
   }
 
   const handleFieldChange = (field, value) => {
@@ -78,13 +97,119 @@ const ClientProfile = () => {
     }));
   };
 
-  const [showAlert, setShowAlert] = useState(false);
-  const closeAlert = () => {
-    setShowAlert(false);
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [showErrorAlert, setShowErrorAlert] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const closeSuccessAlert = () => {
+    setShowSuccessAlert(false);
   }
+
+  const closeErrorAlert = () => {
+    setShowErrorAlert(false);
+  }
+
   const handleSave = () => {
     setIsHovered(false)
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    setShowSuccessAlert(false);
+    setShowErrorAlert(false);
+
+    setErrors(errorInitialValues)
+    setShowErrorAlert(false);
+    setShowSuccessAlert(false);
+
+    function validation() {
+      let errors = {}
+      let isValid = true;
+
+      console.log({ clientData })
+      if (!clientData.first_name) {
+        console.log({ clientData })
+        errors.first_name = "Mandatory field"
+        isValid = false;
+      }
+      if (!clientData.last_name) {
+        errors.last_name = "Mandatory field"
+        isValid = false;
+      }
+      if (clientData.email_address &&
+        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(clientData.email_address)
+      ) {
+        errors.email = "Invalid Email"
+        isValid = false;
+      }
+      if (clientData.mobile_number && isNaN(clientData.mobile_number)) {
+        errors.mobile_number = "Mobile must be a number"
+        isValid = false;
+      }
+
+      //Emergency contact 1
+      if (clientData.emergency_contact_1_email_address &&
+        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(clientData.emergency_contact_1_email_address)
+      ) {
+        errors.emergency_contact_1_email_address = "Invalid Email"
+        isValid = false;
+      }
+      if (clientData.emergency_contact_1_zip) {
+        if (isNaN(clientData.emergency_contact_1_zip)) {
+          errors.emergency_contact_1_zip = "Zip code must be a number"
+          isValid = false;
+        } else if (clientData.emergency_contact_1_zip.length > 5) {
+          errors.emergency_contact_1_zip = "Zip code cannot be more than 5 characters";
+          isValid = false;
+        }
+      }
+
+      //Emergency contact 2
+      if (clientData.emergency_contact_2_email_address &&
+        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(clientData.emergency_contact_2_email_address)
+      ) {
+        errors.emergency_contact_2_email_address = "Invalid Email"
+        isValid = false;
+      }
+      if (clientData.emergency_contact_2_zip) {
+        if (isNaN(clientData.emergency_contact_2_zip)) {
+          errors.emergency_contact_2_zip = "Zip code must be a number"
+          isValid = false;
+        } else if (clientData.emergency_contact_2_zip.length > 5) {
+          errors.emergency_contact_2_zip = "Zip code cannot be more than 5 characters";
+          isValid = false;
+        }
+      }
+
+      //Demographics
+      if (clientData.age && isNaN(clientData.age)) {
+        errors.age = "Age must be a number"
+        isValid = false;
+      }
+
+      //Address usual address
+      if (clientData.zip_address_n_usual_location) {
+        if (isNaN(clientData.zip_address_n_usual_location)) {
+          errors.zip_address_n_usual_location = "Zip code must be a number"
+          isValid = false;
+        } else if (clientData.zip_address_n_usual_location.length > 5) {
+          errors.zip_address_n_usual_location = "Zip code cannot be more than 5 characters";
+          isValid = false;
+        }
+      }
+
+      setErrors(errors);
+      return isValid;
+
+    }
+
+    // Validate
+    const isValid = validation();
+    if (!isValid) {
+      console.log({ errors })
+      setShowErrorAlert(true);
+      setShowSuccessAlert(false);
+      return;
+    }
+
+
     // Perform API request to update client data
     axios.put(`${apiURL}/clientinfo-api/${clientId}`, clientData, {
       headers: {
@@ -95,10 +220,14 @@ const ClientProfile = () => {
         console.log('Client data updated successfully:', response.data);
         // Optionally, you can set isEditable back to true if needed
         setIsEdittable(true);
-        setShowAlert(true);
+        setShowErrorAlert(false);
+        setShowSuccessAlert(true);
       })
       .catch(error => {
         console.error('Error updating Client Data:', error);
+        setErrorMsg(error?.message)
+        setShowErrorAlert(true);
+        setShowSuccessAlert(false);
       });
   };
   function handleMouseEnter() {
@@ -109,7 +238,8 @@ const ClientProfile = () => {
 
   return (
     <div className="h-full bg-gray-50">
-      {showAlert && <AlertSuccess message="Saved successfully" handleClose={closeAlert} />}
+      {showSuccessAlert && <AlertSuccess message="Saved successfully" handleClose={closeSuccessAlert} />}
+      {showErrorAlert && <AlertError message={errorMsg || "Invalid form values"} handleClose={closeErrorAlert} />}
       <div className="bg-white p-4 shadow">
         <div className="flex justify-between mb-0 mt-4 pl-4">
           <div className='flex space-x-12'>
@@ -180,13 +310,13 @@ const ClientProfile = () => {
               <GeneralInformation id={1} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
             </div>
             <div>
-              <ContactInformation id={2} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
+              <ContactInformation id={2} errors={errors} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
             </div>
             <div>
-              <Demographics id={3} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
+              <Demographics id={3} errors={errors} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
             </div>
             <div>
-              <AddressInformation id={4} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
+              <AddressInformation id={4} errors={errors} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
             </div>
             {/* <div>
               <CustomFields id={5} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />

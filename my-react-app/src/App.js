@@ -240,11 +240,11 @@ function App() {
                   />
 
                   <Route
-                    path="/add-new-socialvitalsigns/"
+                    path="/addNewSocialVitalSigns/:clientId"
                     element={<AddNewSocialVitalSigns />}
                   />
 
-                  <Route path="/create" element={<YourComponent />} />
+                  <Route path="/form_builder" element={<YourComponent />} />
 
                   <Route path="/Preview" element={<Preview />} />
                 </Routes>

@@ -10,6 +10,7 @@ import GroupIcon2 from "./images/groupIcon2.svg";
 import SettingIcon from "./images/settingIcon.svg";
 import ProfileIcon from "./images/profileIcon.svg";
 import apiURL from '.././apiConfig';
+import { Link } from 'react-router-dom';
 
 const Navbar = ({ onLogout, isMinimized, toggleSidebar }) => {
   const navigate = useNavigate(); // Initialize navigate function
@@ -63,7 +64,9 @@ const Navbar = ({ onLogout, isMinimized, toggleSidebar }) => {
     <nav id="navBar" className="px-4 shadow-lg bg-white z-20 relative w-full">
       <div className="flex justify-between">
         <div className="flex justify-center items-center">
-          <img src={Logo} className="size-24 py-2" alt="logo" />
+        <Link to="/">
+  <img src={Logo} className="size-24 py-2" alt="logo" />
+</Link>
           <button className="mx-4">
             <img src={MenuIcon} className="size-5" alt="menu" />
           </button>

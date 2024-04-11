@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ClosePNG from "../images/close.png";
 import GoogleIcon from "../images/google_icon.svg";
 import CalendarIcon from "../images/calendar-boxed.svg";
+import InternalCalendarIcon from "../images/internal-meeting.svg";
 
 import dayjs from "dayjs";
 
@@ -42,7 +43,9 @@ const EventModal = ({ eventDate, toggleModal, events = [] }) => {
                       className={`flex flex-row gap-1 items-start w-full rounded-tl-sm rounded-tr-sm mx-1`}
                     >
                       <img
-                        src={event.isExternal ? GoogleIcon : CalendarIcon}
+                        src={
+                          event.isExternal ? GoogleIcon : InternalCalendarIcon
+                        }
                         className={
                           event.isExternal
                             ? "size-4 sm:size-5"

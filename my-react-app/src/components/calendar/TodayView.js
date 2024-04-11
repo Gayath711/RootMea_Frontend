@@ -3,6 +3,7 @@ import dayjs from "dayjs";
 import { getTodayTime } from "../utils";
 import GoogleIcon from "../images/google_icon.svg";
 import CalendarIcon from "../images/calendar-boxed.svg";
+import InternalCalendarIcon from "../images/internal-meeting.svg";
 
 export default function TodayView({ savedEvents }) {
   const todayTimes = getTodayTime();
@@ -99,9 +100,11 @@ function TimeBlock({ time, savedEvents }) {
                   className={`flex flex-row gap-1 items-center w-full h-7 rounded-tl-sm rounded-tr-sm mx-1 ${getTitleBackGround()}`}
                 >
                   <img
-                    src={event.isExternal ? GoogleIcon : CalendarIcon}
+                    src={event.isExternal ? GoogleIcon : InternalCalendarIcon}
                     className={
-                      event.isExternal ? "size-4 sm:size-5" : "size-3 sm:size-3"
+                      event.isExternal
+                        ? "h-[16px] w-[16px] ms-1 bg-white rounded-full"
+                        : "h-[20px] w-[20px] ms-1"
                     }
                     alt="event-meet"
                   />

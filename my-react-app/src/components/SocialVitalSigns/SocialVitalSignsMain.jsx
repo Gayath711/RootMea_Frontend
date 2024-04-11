@@ -27,6 +27,7 @@ const SocialVitalSignsMain = () => {
     client_id: 5,
   };
 
+  console.log({ clientId });
   const token = localStorage.getItem("access_token");
   // const location = useLocation();
   // const { domain } = location?.state;
@@ -75,7 +76,7 @@ const SocialVitalSignsMain = () => {
   }, [clientId]);
 
   useEffect(() => {
-    setContentToShow(location.state);
+    setContentToShow(location.state || "Housing");
     console.log("contentToShow", contentToShow);
   }, []);
 
