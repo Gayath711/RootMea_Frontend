@@ -253,7 +253,7 @@ export default function DragDropDemo() {
       name: "Multi Elements",
       elements: [
         { type: "my_enum_type", label: "Dropdown", IconSrc: Drop_down_Icon },
-        // { type: "my_enum_typeb", label: "Multiple Select", IconSrc: file },
+        { type: "my_enum_typeb", label: "Multiple Select",  Drop_down_Icon },
         { type: "checkbox", label: "Checkbox", IconSrc: Check_box_Icon },
       ],
     },
