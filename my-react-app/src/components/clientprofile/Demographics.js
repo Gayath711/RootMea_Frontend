@@ -87,7 +87,7 @@ const Demographics = ({ id, isEdittable, clientData, handleFieldChange, errors }
                                         {errors.age && <div className="text-red-500 text-xs pt-2">{errors.age}</div>}
                                     </div>
                                     <div className="flex-1">
-                                        <DropDown placeholder="Sex" options={sexOptions} isEdittable={isEdittable} value={clientData.sex}
+                                        <DropDown placeholder="Sex" options={sexOptions} isEdittable={isEdittable} selectedOption={clientData.sex}
                                             handleChange={(e) => handleFieldChange('sex', e.value)} />
                                     </div>
                                 </div>
@@ -101,20 +101,20 @@ const Demographics = ({ id, isEdittable, clientData, handleFieldChange, errors }
                                             handleChange={(e) => handleFieldChange('us_armed_forces', e.target.value)} />
                                     </div>
                                     <div className="flex-1">
-                                        <DropDown placeholder="Ethinicity" options={ethinicityOptions} isEdittable={isEdittable} value={clientData.us_armed_forces}
+                                        <DropDown placeholder="Ethinicity" options={ethinicityOptions} isEdittable={isEdittable} selectedOption={clientData.us_armed_forces}
                                             handleChange={(e) => handleFieldChange('ethnicity', e.value)} />
                                     </div>
                                 </div>
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <DropDown placeholder="Which Best describes the place you live now?" options={currentPlaceOptions} isEdittable={isEdittable} value={clientData.describe_the_place_you_live}
+                                        <DropDown placeholder="Which Best describes the place you live now?" options={currentPlaceOptions} isEdittable={isEdittable} selectedOption={clientData.describe_the_place_you_live}
                                             handleChange={(e) => handleFieldChange('describe_the_place_you_live', e.value)} />
                                     </div>
 
                                 </div>
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <DropDown placeholder="Race" options={raceOptions} isEdittable={isEdittable} value={clientData.race}
+                                        <DropDown placeholder="Race" options={raceOptions} isEdittable={isEdittable} selectedOption={clientData.race}
                                             handleChange={(e) => handleFieldChange('race', e.value)} />
                                     </div>
                                     <div className="flex-1">
@@ -122,7 +122,7 @@ const Demographics = ({ id, isEdittable, clientData, handleFieldChange, errors }
                                             handleChange={(e) => handleFieldChange('other_race', e.target.value)} />
                                     </div>
                                     <div className="flex-1">
-                                        <DropDown placeholder="Gender Identity" options={genderOptions} isEdittable={isEdittable} value={clientData.gender_identity}
+                                        <DropDown placeholder="Gender Identity" options={genderOptions} isEdittable={isEdittable} selectedOption={clientData.gender_identity}
                                             handleChange={(e) => handleFieldChange('gender_identity', e.value)} />
                                     </div>
                                 </div>
@@ -132,7 +132,7 @@ const Demographics = ({ id, isEdittable, clientData, handleFieldChange, errors }
                                             handleChange={(e) => handleFieldChange('other_gender_identity', e.target.value)} />
                                     </div>
                                     <div className="flex-1">
-                                        <DropDown placeholder="Sexual Orientation" options={sexualOrientationOptions} isEdittable={isEdittable} value={clientData.sexual_orientation}
+                                        <DropDown placeholder="Sexual Orientation" options={sexualOrientationOptions} isEdittable={isEdittable} selectedOption={clientData.sexual_orientation}
                                             handleChange={(e) => handleFieldChange('sexual_orientation', e.value)} />
                                     </div>
                                     <div className="flex-1">
