@@ -231,13 +231,13 @@ function Preview({
             <form>
               {tableColumns.map((column) => renderInputField(column))}
               <div className="text-center mt-6">
-                {/* <button
+                <button disabled
              type="submit"
          className="bg-Teal-500 hover:bg-Teal-700 text-block font-bold py-2 px-4 rounded mb-4 mr-2 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-Teal-500"
             style={{ borderRadius: "3px", background: "#9CDADA" }}
          >
          Submit
-              </button> */}
+              </button>
               </div>
             </form>
           )}
