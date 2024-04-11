@@ -85,7 +85,12 @@ function DiagnosesModal({
               <p className="text-gray-600 font-semibold">
                 {disable ? "Diagnoses Details" : "Add New Diagnoses"}
               </p>
-              <button onClick={toggleModal} className="">
+              <button
+                onClick={() => {
+                  disable = false;
+                  toggleModal();
+                }}
+              >
                 <img src={ClosePNG} className="w-4 h-4"></img>
               </button>
             </header>

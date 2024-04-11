@@ -47,7 +47,7 @@ const DateInput = ({ name, id, placeholder, width = 340, height = '7vh', isEditt
                 onChange={handleDateChange}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
-                dateFormat="yyyy-MM-dd"
+                dateFormat="MM-dd-yyyy"
                 className="
                 custom-datepicker
                 px-2 border-1

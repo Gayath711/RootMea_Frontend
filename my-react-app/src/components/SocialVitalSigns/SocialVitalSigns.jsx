@@ -124,7 +124,7 @@ function SocialVitalSigns({ clientId }) {
         Header: "Actions",
         Cell: ({ row }) => (
           <Link
-            to={`/socialvitalsigns/${row.original.id}`}
+            to={`/socialvitalsigns/${clientId}`}
             state={`${row.original.domain}`}
           >
             <img src={EyeIcon} className="size-4 mx-auto" alt="view" />
@@ -150,7 +150,7 @@ function SocialVitalSigns({ clientId }) {
         <div className="flex items-center gap-x-10">
           {!dataLoading && data.length === 0 && (
             <Link
-              to="/add-new-socialvitalsigns"
+              to={`/addNewSocialVitalSigns/${clientId}`}
               className="px-3 py-2 text-sm bg-[#5BC4BF] text-white rounded-sm font-medium"
             >
               Add New

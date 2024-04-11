@@ -122,7 +122,10 @@ const ClientProfile = () => {
 
   const [clientData, setClientData] = useState(initialValues);
   const [isHovered, setIsHovered] = useState(false);
-
+  const [errors, SetErrors] = useState({
+    first_name: '',
+    last_name: '',
+  })
 
   const handleClick = (accordionId) => {
     console.log("Inside handleClick")
@@ -151,38 +154,33 @@ const ClientProfile = () => {
   const closeAlert = () => {
     setShowAlert(false);
   }
- 
+
 
   const handleSave = (event) => {
     event.preventDefault();
     console.log('Submitting clientData:', clientData);
-    if (!clientData.first_name || 
-      !clientData.middle_name || 
+    if (!clientData.first_name ||
+      !clientData.middle_name ||
       !clientData.last_name) {
       alert('Please fill out all mandatory fields and ensure ZIP code is at least 5 characters long and Social Security Number is 9 characters long.');
       return;
-  } else if (clientData.zip_address_n_usual_location && clientData.zip_address_n_usual_location.length < 5) {
-      alert('Please ensure ZIP code is at least 5 characters long.');
-      return;
-  } else if (clientData.social_security_number && clientData.social_security_number.length !== 9) {
-      alert('Please ensure Social Security Number is 9 characters long.');
-      return;
-  }
+    }
+
     axios.post(`${apiURL}/clientinfo-api/`, clientData, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     })
-    .then(response => {
+      .then(response => {
         alert("Successfully created")
         console.log('Data submitted successfully:', response.data);
         setClientData(initialValues);
-    })
-    .catch(error => {
+      })
+      .catch(error => {
         console.error('Error submitting Client Data:', error);
-    });
-};
-  
+      });
+  };
+
   function handleMouseEnter() {
     setTimeout(() => {
       setIsHovered(true);
@@ -218,16 +216,16 @@ const ClientProfile = () => {
               </div>
             </button>)} */}
             <button onClick={handleSave} className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full'>
-                Save
+              Save
             </button>
           </div>
           <div className='flex space-x-8'>
             <Link to={'/'}>
               <p className='text-green-700 font-medium'>Dashboard</p>
             </Link>
-            <Link to={`/clientchart/${clientId}`}>
+            {/* <Link to={`/clientchart/${clientId}`}>
               <p className='text-green-700 font-medium'>Client Chart</p>
-            </Link>
+            </Link> */}
             <p className='text-green-700 font-medium'>AMD Profile</p>
             <p className='text-green-700 font-medium pr-8'>Manage Program</p>
           </div>

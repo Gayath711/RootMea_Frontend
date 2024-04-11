@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import React, { useState, useEffect } from "react";
 import DateInput from "./DateInput";
+import Select from 'react-select';
 
 function Preview({
   items,
@@ -19,7 +20,7 @@ function Preview({
   const handleClick = async () => {
     const undefinedIndices = [];
     labelTitleList.forEach((element, index) => {
-      if (typeof element === "undefined" || element === "") {
+      if (typeof element === undefined || element === "") {
         undefinedIndices.push(index);
       }
     });
@@ -137,6 +138,53 @@ function Preview({
             />
           </div>
         );
+        
+        
+                case 'my_enum_type':
+                    return (
+                        <div key={column.name} className="mb-4">
+                            <label className="block mb-1">{label}</label>
+                            <select
+                                value={column.name || ''}
+                                onChange={(event) => handleInputChange(event, column.name)}
+                                className={`${column.width} border border-gray-300 rounded px-4 py-2`}
+                            >
+                                <option value="">Select</option>
+                                {tableColumns.enumList && column.enumList.map(option => (
+                                    <option key={option} value={option}>{option}</option>
+                                ))}
+                            </select>
+                        </div>
+                    );
+                case "my_enum_typeb":
+                    return (
+                        <div key={column.name} className="mb-4">
+                            <label className="block mb-1">{label}</label>
+                            <Select
+                                options={column.enumList && column.enumList.map(option => ({ value: option, label: option }))}
+                                isMulti
+                                className={`${column.width} border border-gray-300 rounded px-4 py-2`}
+                                placeholder="Select"
+                            />
+                        </div>
+                    );
+                case "checkbox":
+                    return (
+                        <div key={column.name} className="mb-4">
+                            <label className="block mb-1">{label}</label>
+                            {enumList && enumList.map(option => (
+                                <div key={option}>
+                                    <input
+                                        type="checkbox"
+                                        id={option}
+                                        value={option}
+                                    />
+                                    <label htmlFor={option}>{option}</label>
+                                </div>
+                            ))}
+                        </div>
+                    );
+
 
       default:
         return (
