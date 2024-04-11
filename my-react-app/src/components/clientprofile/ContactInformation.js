@@ -219,7 +219,7 @@ const ContactInformation = ({
                       placeholder="Preferred Language"
                       options={preferredLanguageoptions}
                       isEdittable={isEdittable}
-                      value={clientData.comfortable_language}
+                      selectedOption={clientData.comfortable_language}
                       handleChange={(e) =>
                         handleFieldChange("comfortable_language", e.value)
                       }

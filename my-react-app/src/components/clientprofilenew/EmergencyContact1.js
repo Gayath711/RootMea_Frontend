@@ -54,7 +54,7 @@ const EmergencyContact1 = ({ heading, isEdittable, clientData, handleFieldChange
                                 {errors.emergency_contact_1_email_address && <div className="text-red-500 text-xs pt-2">{errors.emergency_contact_1_email_address}</div>}
                             </div>
                             <div className="flex-1">
-                                <DropDown placeholder="Relationship" options={relationshipOptions} isEdittable={isEdittable} value={clientData.emergency_contact_1_relationship}
+                                <DropDown placeholder="Relationship" options={relationshipOptions} isEdittable={isEdittable} selectedOption={clientData.emergency_contact_1_relationship}
                                     handleChange={(e) => handleFieldChange('emergency_contact_1_relationship', e.value)} />
                             </div>
                         </div>
