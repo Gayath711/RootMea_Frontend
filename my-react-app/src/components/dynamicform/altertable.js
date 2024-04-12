@@ -11,6 +11,7 @@ function AlterTable({ onAddColumn }) {
   const [newColumnType, setNewColumnType] = useState("VARCHAR(250)");
   const [newColumnOptions, setNewColumnOptions] = useState([]);
   const [newColumnWidth, setNewColumnWidth] = useState("");
+  const [isRequired, setIsRequired] = useState(false); // Step 1: State for checkbox
 
   const fetchTableStructure = async () => {
     try {
@@ -29,10 +30,8 @@ function AlterTable({ onAddColumn }) {
 
   const handleInputChange = (event, columnName) => {
     if (columnName === "width") {
-      // If the input is for width, update the width state
       setNewColumnWidth(event.target.value);
     } else {
-      // For other inputs, update the formData state
       setFormData({
         ...formData,
         [columnName]: event.target.value,
@@ -110,6 +109,7 @@ function AlterTable({ onAddColumn }) {
               ? newColumnOptions
               : undefined,
           width: newColumnWidth,
+          required: isRequired, // Include required flag
         }
       );
 
@@ -126,6 +126,7 @@ function AlterTable({ onAddColumn }) {
         setNewColumnType("VARCHAR(250)");
         setNewColumnOptions([]);
         setNewColumnWidth("");
+        setIsRequired(false); // Reset checkbox state after adding column
       } else {
         console.error("Failed to add column:", response.statusText);
       }
@@ -392,6 +393,20 @@ function AlterTable({ onAddColumn }) {
                 />
               </div>
             )}
+
+            {/* Step 2: Checkbox for indicating if column is required */}
+            <div className="mb-4">
+              <label className="block mb-1 text-gray-700">
+                Required Column
+                <input
+                  type="checkbox"
+                  checked={isRequired}
+                  onChange={(e) => setIsRequired(e.target.checked)}
+                  className="ml-2"
+                />
+              </label>
+            </div>
+
             <button
               type="button"
               onClick={handleAddColumn}
