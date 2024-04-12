@@ -10,7 +10,7 @@ function AlterTable({ onAddColumn }) {
   const [newColumnTitle, setNewColumnTitle] = useState("");
   const [newColumnType, setNewColumnType] = useState("VARCHAR(250)");
   const [newColumnOptions, setNewColumnOptions] = useState([]);
-  const [required, setRequired] = useState(false);
+  const [newColumnWidth, setNewColumnWidth] = useState("");
 
   const fetchTableStructure = async () => {
     try {
@@ -28,10 +28,16 @@ function AlterTable({ onAddColumn }) {
   };
 
   const handleInputChange = (event, columnName) => {
-    setFormData({
-      ...formData,
-      [columnName]: event.target.value,
-    });
+    if (columnName === "width") {
+      // If the input is for width, update the width state
+      setNewColumnWidth(event.target.value);
+    } else {
+      // For other inputs, update the formData state
+      setFormData({
+        ...formData,
+        [columnName]: event.target.value,
+      });
+    }
   };
 
   const handleFetchStructure = async (clickedTableName) => {
@@ -42,6 +48,11 @@ function AlterTable({ onAddColumn }) {
       );
       if (response.headers["content-type"].includes("application/json")) {
         setTableColumns(response.data.columns);
+        // Scroll to the table form heading
+        const tableFormHeading = document.getElementById("tableFormHeading");
+        if (tableFormHeading) {
+          tableFormHeading.scrollIntoView({ behavior: "smooth" });
+        }
       } else {
         console.error("Unexpected response format:", response);
       }
@@ -93,11 +104,12 @@ function AlterTable({ onAddColumn }) {
           nullable: true,
           name: newColumnTitle,
           options:
-            newColumnType === "Dropdown" ||
-            newColumnType === "Multiple Select" ||
-            newColumnType === "Checkbox"
+            newColumnType === "DROPDOWN" ||
+            newColumnType === "MULTIPLESELECT" ||
+            newColumnType === "CHECKBOX"
               ? newColumnOptions
               : undefined,
+          width: newColumnWidth,
         }
       );
 
@@ -107,11 +119,13 @@ function AlterTable({ onAddColumn }) {
           columnName: newColumnName,
           columnTitle: newColumnTitle,
           columnType: newColumnType,
+          columnWidth: newColumnWidth,
         };
         onAddColumn(newColumn);
         setNewColumnTitle("");
         setNewColumnType("VARCHAR(250)");
         setNewColumnOptions([]);
+        setNewColumnWidth("");
       } else {
         console.error("Failed to add column:", response.statusText);
       }
@@ -206,6 +220,7 @@ function AlterTable({ onAddColumn }) {
       <div className="container mx-auto px-4">
         <hr className="my-6" style={{ borderTop: "1px solid #ccc" }} />
         <h2
+          id="tableFormHeading"
           className="text-xl font-bold mb-4"
           style={{ color: "#333", borderBottom: "2px solid #333" }}
         >
@@ -223,59 +238,57 @@ function AlterTable({ onAddColumn }) {
                   <textarea
                     value={formData[column.name] || ""}
                     onChange={(event) => handleInputChange(event, column.name)}
-                    className="border border-gray-300 rounded px-4 py-2 w-full focus:outline-none focus:border-blue-500"
+                    className={`border border-gray-300 rounded px-4 py-2 w-full ${
+                      column.width || ""
+                    } focus:outline-none focus:border-blue-500`}
                   />
                 ) : column.type === "TEXTAREA" ? (
                   <textarea
                     value={formData[column.name] || ""}
                     onChange={(event) => handleInputChange(event, column.name)}
-                    className="border border-gray-300 rounded px-4 py-2 w-full focus:outline-none focus:border-blue-500"
+                    className={`border border-gray-300 rounded px-4 py-2 w-full ${
+                      column.width || ""
+                    } focus:outline-none focus:border-blue-500`}
                   />
-                ) : column.type === "DECIMAL" ? (
+                ) : column.type === "DECIMAL" || column.type === "INTEGER" ? (
                   <input
-                    type="number"
-                    step="0.1"
+                    type={column.type === "DECIMAL" ? "number" : "text"}
+                    step={column.type === "DECIMAL" ? "0.1" : undefined}
                     value={formData[column.name] || ""}
                     onChange={(event) => handleInputChange(event, column.name)}
-                    className="border border-gray-300 rounded px-4 py-2 w-full focus:outline-none focus:border-blue-500"
-                  />
-                ) : column.type === "INTEGER" ? (
-                  <input
-                    type="number"
-                    value={formData[column.name] || ""}
-                    onChange={(event) => handleInputChange(event, column.name)}
-                    className="border border-gray-300 rounded px-4 py-2 w-full focus:outline-none focus:border-blue-500"
+                    className={`border border-gray-300 rounded px-4 py-2 w-full ${
+                      column.width || ""
+                    } focus:outline-none focus:border-blue-500`}
                   />
                 ) : column.type === "BOOLEAN" ? (
                   <select
                     value={formData[column.name] || ""}
                     onChange={(event) => handleInputChange(event, column.name)}
-                    className="border border-gray-300 rounded px-4 py-2 w-full focus:outline-none focus:border-blue-500"
+                    className={`border border-gray-300 rounded px-4 py-2 w-full ${
+                      column.width || ""
+                    } focus:outline-none focus:border-blue-500`}
                   >
                     <option value="">Select</option>
                     <option value="true">Yes</option>
                     <option value="false">No</option>
                   </select>
-                ) : column.type === "FILE" ? (
+                ) : column.type === "FILE" || column.type === "IMAGE" ? (
                   <input
                     type="file"
-                    accept="*/*"
+                    accept={column.type === "IMAGE" ? "image/*" : "*/*"}
                     onChange={(event) => handleInputChange(event, column.name)}
-                    className="border border-gray-300 rounded px-4 py-2 w-full focus:outline-none focus:border-blue-500"
-                  />
-                ) : column.type === "IMAGE" ? (
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(event) => handleInputChange(event, column.name)}
-                    className="border border-gray-300 rounded px-4 py-2 w-full focus:outline-none focus:border-blue-500"
+                    className={`border border-gray-300 rounded px-4 py-2 w-full ${
+                      column.width || ""
+                    } focus:outline-none focus:border-blue-500`}
                   />
                 ) : column.type === "DATETIME" ? (
                   <input
                     type="datetime-local"
                     value={formData[column.name] || ""}
                     onChange={(event) => handleInputChange(event, column.name)}
-                    className="border border-gray-300 rounded px-4 py-2 w-full focus:outline-none focus:border-blue-500"
+                    className={`border border-gray-300 rounded px-4 py-2 w-full ${
+                      column.width || ""
+                    } focus:outline-none focus:border-blue-500`}
                   />
                 ) : column.type === "DROPDOWN" ||
                   column.type === "MULTIPLESELECT" ||
@@ -283,7 +296,9 @@ function AlterTable({ onAddColumn }) {
                   <select
                     value={formData[column.name] || ""}
                     onChange={(event) => handleInputChange(event, column.name)}
-                    className="border border-gray-300 rounded px-4 py-2 w-full focus:outline-none focus:border-blue-500"
+                    className={`border border-gray-300 rounded px-4 py-2 w-full ${
+                      column.width || ""
+                    } focus:outline-none focus:border-blue-500`}
                   >
                     <option value="">Select</option>
                     {column.options.map((option, index) => (
@@ -297,7 +312,9 @@ function AlterTable({ onAddColumn }) {
                     type="text"
                     value={formData[column.name] || ""}
                     onChange={(event) => handleInputChange(event, column.name)}
-                    className="border border-gray-300 rounded px-4 py-2 w-full focus:outline-none focus:border-blue-500"
+                    className={`border border-gray-300 rounded px-4 py-2 w-full ${
+                      column.width || ""
+                    } focus:outline-none focus:border-blue-500`}
                   />
                 )}
 
@@ -342,6 +359,20 @@ function AlterTable({ onAddColumn }) {
                 <option value="DROPDOWN">Dropdown</option>
                 <option value="MULTIPLESELECT">Multiple Select</option>
                 <option value="CHECKBOX">Checkbox</option>
+              </select>
+            </div>
+            <div className="mb-4">
+              <label className="block mb-1 text-gray-700">Column Width</label>
+              <select
+                value={newColumnWidth}
+                onChange={(event) => handleInputChange(event, "width")}
+                className="border border-gray-300 rounded px-4 py-2 w-full focus:outline-none focus:border-blue-500"
+              >
+                <option value="">Select</option>
+                <option value="w-1/2">w-1/2</option>
+                <option value="w-1/4">w-1/4</option>
+                <option value="w-3/4">w-3/4</option>
+                <option value="w-full">w-full</option>
               </select>
             </div>
             {(newColumnType === "DROPDOWN" ||
