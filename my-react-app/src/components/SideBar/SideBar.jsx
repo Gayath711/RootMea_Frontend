@@ -13,7 +13,7 @@ const SideBar = () => {
       
     
     <Link to="/">
-    <button className="p-1 bg-[#D4EDEC]">
+    <button className="p-1 bg-[#D4EDEC]" title="Home">
       <img src={LeftBarIcon1} className="size-4" alt="icon1" />
     </button>
   </Link>
@@ -22,7 +22,7 @@ const SideBar = () => {
 
 
   <Link to="/calendar"> 
-      <button  className="p-1 bg-[#D4EDEC]">
+      <button  className="p-1 bg-[#D4EDEC]" title="Calendar">
         <img src={LeftBarIcon5} className="size-4" alt="icon5" />
       </button>
       </Link>
@@ -30,14 +30,14 @@ const SideBar = () => {
 
       <Link to="/form_builder">
 
-<button className="p-1 bg-[#EAECEB]">
+<button className="p-1 bg-[#EAECEB]" title="Form Builder">
       <img src={LeftBarIcon6} className="size-4" alt="icon6" />
     </button>
     </Link>
     
 
       <Link to="/directory">
-      <button className="p-1 bg-[#EAECEB]">
+      <button className="p-1 bg-[#EAECEB]" title="Directory">
         <img src={LeftBarIcon7} className="size-4" alt="icon7" />
       </button>
 
@@ -46,19 +46,19 @@ const SideBar = () => {
       <Link to="/clientprofilenew">
 
   
-      <button className="p-1 bg-[#EAECEB]">
+      <button className="p-1 bg-[#EAECEB]" title="Client Profile">
         <img src={LeftBarIcon4} className="size-4" alt="icon4" />
       </button>
 
       </Link>
 
 
-      <button className="p-1 bg-[#EAECEB]">
+      <button className="p-1 bg-[#EAECEB]" title="Another Link">
         <img src={LeftBarIcon2} className="size-4" alt="icon2" />
       </button>
 
 
-      <button className="p-1 bg-[#EAECEB] ">
+      <button className="p-1 bg-[#EAECEB] " title="Yet Another Link">
         <img src={LeftBarIcon3} className="size-4" alt="icon6" />
       </button>
 
