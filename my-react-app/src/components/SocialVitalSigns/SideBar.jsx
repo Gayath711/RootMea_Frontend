@@ -17,13 +17,21 @@ function SideBarForQA({
             key={idx}
             id={stage.stageIndex}
             className={`flex flex-row justify-between items-center p-3 hover:cursor-pointer ${
+              stages.length === idx + 1 ? "border-b-[0px]" : "border-b-[1px]"
+            } border-[#5BC4BF] ${
               currentStage.title === stage.title ? "text-[#5BC4BF]" : ""
             }`}
             onClick={() => handleStage(stage.stageIndex)}
           >
             <div className="text-xs font-normal">{stage.title}</div>
             <div>
-              <img src={NextIcon} className="mx-auto opacity-50" alt="next" />
+              <img
+                src={NextIcon}
+                className={`opacity-50 ${
+                  currentStage.title === stage.title ? "rotate-90" : ""
+                } hover:cursor-pointer mx-2`}
+                alt="next"
+              />
             </div>
           </div>
         );

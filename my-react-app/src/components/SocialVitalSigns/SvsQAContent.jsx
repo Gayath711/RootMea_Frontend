@@ -51,12 +51,12 @@ function SvsQAContent({
 
   return (
     <div className="bg-white flex flex-col border-1 border-[#5BC4BF] rounded">
-      <div className="bg-[#89D6DE] bg-opacity-50 px-4 py-2 border-b border-[#5BC4BF]">
+      <div className="bg-[#89D6DE] bg-opacity-50 px-4 py-2 mb-3 border-b border-[#5BC4BF]">
         {title}
       </div>
       {questions.map((question, index) => (
         <div
-          className="flex flex-col border-1 border-[#5BC4BF] m-4 rounded"
+          className="flex flex-col border-1 border-[#5BC4BF] m-4 my-2 mt-3 rounded"
           key={index}
         >
           <div
@@ -68,10 +68,10 @@ function SvsQAContent({
             <div className="p-3 text-xs text-wrap w-[80%]">
               {question.question}
             </div>
-            <div>
+            <div className="mx-2">
               <img
                 src={NextIcon}
-                className={`mx-auto opacity-50 ${
+                className={`opacity-50 ${
                   open[index] ? "-rotate-90" : "rotate-90"
                 } p-2 hover:cursor-pointer`}
                 alt="next"
@@ -84,7 +84,7 @@ function SvsQAContent({
               <div className="w-[99.99%] mx-auto border-b border-[#5BC4BF] " />
               <div className="p-3 text-xs">
                 <form>
-                  <div className="flex flex-column gap-2">
+                  <div className="flex flex-column gap-3">
                     {question.inputType === "Radio" &&
                       question.options.map((option) => (
                         <RadioInput
@@ -156,7 +156,7 @@ function SvsQAContent({
         </div>
       ))}
 
-      <div className="flex items-center justify-center gap-3 my-8">
+      <div className="flex items-center justify-center gap-3 my-8 mt-4">
         <button
           disabled={isStart}
           onClick={goToPreviousStage}
