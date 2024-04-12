@@ -129,7 +129,7 @@ function MedicationsModal({
                 placeholder="Status"
                 options={options}
                 borderColor="#5BC4BF"
-                value={medicationData?.status}
+                selectedOption={medicationData?.status}
                 handleChange={(e) => handleChange("status", e.value)}
               />
             </div>
@@ -167,8 +167,9 @@ function MedicationsModal({
           <div className="flex flex-row justify-between items-center pb-4">
             <div className="p-3">
               <button
-                type="cancel"
+                type="button"
                 className="h-10 border-1 border-[#43B09C] rounded text-xs  px-6 py-2"
+                onClick={() => toggleModal()}
               >
                 Cancel
               </button>

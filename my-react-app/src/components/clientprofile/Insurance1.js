@@ -45,7 +45,7 @@ const Insurance = ({ heading, isEdittable, clientData, handleFieldChange }) => {
                         </div>
                         <div className="flex space-x-6">
                             <div className="flex-1">
-                                <DropDown placeholder="Relation to Insured" options={relationshipOptions} isEdittable={isEdittable} value={clientData.insurance_primary_relation_to_insured}
+                                <DropDown placeholder="Relation to Insured" options={relationshipOptions} isEdittable={isEdittable} selectedOption={clientData.insurance_primary_relation_to_insured}
                                     handleChange={(e) => handleFieldChange('insurance_primary_relation_to_insured', e.value)} />
                             </div>
                             <div className="flex-1">

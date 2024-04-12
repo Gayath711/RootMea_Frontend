@@ -63,11 +63,11 @@ const AddressInformation = ({ id, isEdittable, clientData, handleFieldChange, er
                                 </div>
                                 <div className="flex space-x-6">
                                     <div className="flex-1">
-                                        <DropDown placeholder="City" options={cityOptions} isEdittable={isEdittable} value={clientData.city_address_n_usual_location}
+                                        <DropDown placeholder="City" options={cityOptions} isEdittable={isEdittable} selectedOption={clientData.city_address_n_usual_location}
                                             handleChange={(e) => handleFieldChange('city_address_n_usual_location', e.value)} />
                                     </div>
                                     <div className="flex-1">
-                                        <DropDown placeholder="State" options={stateOptions} isEdittable={isEdittable} value={clientData.state_address_n_usual_location}
+                                        <DropDown placeholder="State" options={stateOptions} isEdittable={isEdittable} selectedOption={clientData.state_address_n_usual_location}
                                             handleChange={(e) => handleFieldChange('state_address_n_usual_location', e.value)} />
                                     </div>
                                     <div className="flex-1">
