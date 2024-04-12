@@ -19,6 +19,7 @@ function SvsQAContent({
 
   const handleInputChange = (questionId, value) => {
     handleAnswers(sectionID, questionId, value);
+    console.log({ sectionID, questionId, value });
   };
 
   // const handleGroupSelectChange = (parentQID, questionId, value) => {
@@ -59,9 +60,10 @@ function SvsQAContent({
           key={index}
         >
           <div
+            onClick={() => toggleOpen(index)}
             className={`flex flex-row justify-between items-center rounded-t ${
               open[index] ? "bg-[#89D6DE]" : ""
-            } bg-opacity-50`}
+            } bg-opacity-50 cursor-pointer`}
           >
             <div className="p-3 text-xs text-wrap w-[80%]">
               {question.question}
@@ -69,7 +71,6 @@ function SvsQAContent({
             <div>
               <img
                 src={NextIcon}
-                onClick={() => toggleOpen(index)}
                 className={`mx-auto opacity-50 ${
                   open[index] ? "-rotate-90" : "rotate-90"
                 } p-2 hover:cursor-pointer`}
@@ -128,9 +129,9 @@ function SvsQAContent({
                                 <SelectInput
                                   id={eachSelect.id}
                                   value={
-                                    (answers[question.id] &&
-                                      answers[question.id][eachSelect.id]) ||
-                                    ""
+                                    answers[eachSelect.id]
+                                      ? answers[eachSelect.id]
+                                      : ""
                                   }
                                   onChange={(e) =>
                                     handleInputChange(
