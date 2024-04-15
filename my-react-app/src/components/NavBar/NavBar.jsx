@@ -91,7 +91,7 @@ const Navbar = ({ onLogout, isMinimized, toggleSidebar }) => {
           <button className="p-1 bg-[#EAECEB]">
             <img src={SettingIcon} className="size-4" alt="settings" />
           </button>
-          <button className="p-1 bg-[#EAECEB]" onClick={handleClick}>
+          <button className="p-1 bg-[#EAECEB]" onClick={handleClick} id="profileButton">
             <img src={ProfileIcon} className="size-4" alt="profile" />
           </button>
           <Menu
@@ -110,11 +110,11 @@ const Navbar = ({ onLogout, isMinimized, toggleSidebar }) => {
             }}
             className="mt-7"
           >
-            <MenuItem onClick={() => navigate("/UserProfile")}>
+            <MenuItem onClick={() => navigate("/UserProfile")} id="user-profile-menu">
               Profile
             </MenuItem>
-            <MenuItem onClick={handleClose}>My account</MenuItem>
-            <MenuItem onClick={logout}>Logout</MenuItem>
+            <MenuItem onClick={handleClose} id="my-account-menu">My account</MenuItem>
+            <MenuItem onClick={logout} id="logout-menu">Logout</MenuItem>
           </Menu>
         </div>
       </div>
