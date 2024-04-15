@@ -9,7 +9,7 @@ function useAppointments() {
   const [externalEventsLoading, setExternalEventsLoading] = useState(true);
 
   useEffect(() => {
-    fetchData();
+    fetchEvents();
   }, []);
 
   const fetchGoogleEvents = async () => {
@@ -42,7 +42,7 @@ function useAppointments() {
             end: {
               dateTime: event.end_datetime,
             },
-htmlLink : event.meeting_link,
+            htmlLink: event.meeting_link,
           }))
         : [];
       setInternalEvents(internal);
@@ -53,7 +53,7 @@ htmlLink : event.meeting_link,
     }
   };
 
-  const fetchData = async () => {
+  const fetchEvents = async () => {
     await Promise.all([fetchGoogleEvents(), fetchInternalEvents()]);
   };
 
@@ -65,7 +65,7 @@ htmlLink : event.meeting_link,
     eventList: [...internalEvents, ...externalEvents],
     fetchGoogleEvents,
     fetchInternalEvents,
-    fetchData,
+    fetchEvents,
   };
 }
 

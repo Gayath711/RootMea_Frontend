@@ -19,7 +19,7 @@ const options = {
 const Tag = ({ text }) => {
   return (
     <div
-      className={`${options[text]} text-center text-xs px-3 py-0.5 mx-auto w-fit`}
+      className={`${options[text]} text-center text-xs w-[70px] mx-auto py-1 rounded-[2px]`}
     >
       {text}
     </div>

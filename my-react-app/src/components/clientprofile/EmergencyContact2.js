@@ -53,7 +53,7 @@ const EmergencyContact2 = ({ heading, isEdittable, clientData, handleFieldChange
                                 {errors.emergency_contact_2_email_address && <div className="text-red-500 text-xs pt-2">{errors.emergency_contact_2_email_address}</div>}
                             </div>
                             <div className="flex-1">
-                                <DropDown placeholder="Relationship" options={relationshipOptions} isEdittable={isEdittable} value={clientData.emergency_contact_2_relationship}
+                                <DropDown placeholder="Relationship" options={relationshipOptions} isEdittable={isEdittable} selectedOption={clientData.emergency_contact_2_relationship}
                                     handleChange={(e) => handleFieldChange('emergency_contact_2_relationship', e.value)} />
                             </div>
                         </div>
@@ -67,14 +67,14 @@ const EmergencyContact2 = ({ heading, isEdittable, clientData, handleFieldChange
                                     handleChange={(e) => handleFieldChange('emergency_contact_2_address_line_2', e.target.value)} />
                             </div>
                             <div className="flex-1">
-                                <DropDown placeholder="City" options={cityOptions} isEdittable={isEdittable} value={clientData.emergency_contact_2_city}
+                                <DropDown placeholder="City" options={cityOptions} isEdittable={isEdittable} selectedOption={clientData.emergency_contact_2_city}
                                     handleChange={(e) => handleFieldChange('emergency_contact_2_city', e.value)} />
                             </div>
 
                         </div>
                         <div className="flex space-x-6">
                             <div className="flex-1">
-                                <DropDown placeholder="State" options={stateOptions} isEdittable={isEdittable} value={clientData.emergency_contact_2_state}
+                                <DropDown placeholder="State" options={stateOptions} isEdittable={isEdittable} selectedOption={clientData.emergency_contact_2_state}
                                     handleChange={(e) => handleFieldChange('emergency_contact_2_state', e.value)} />
                             </div>
                             <div className="flex-1">

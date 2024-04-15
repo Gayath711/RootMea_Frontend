@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import "./create.css";
 import { Modal, Button } from "react-bootstrap";
 
@@ -253,7 +253,11 @@ export default function DragDropDemo() {
       name: "Multi Elements",
       elements: [
         { type: "my_enum_type", label: "Dropdown", IconSrc: Drop_down_Icon },
-        { type: "my_enum_typeb", label: "Multiple Select",  IconSrc: Drop_down_Icon },
+        {
+          type: "my_enum_typeb",
+          label: "Multiple Select",
+          IconSrc: Drop_down_Icon,
+        },
         { type: "checkbox", label: "Checkbox", IconSrc: Check_box_Icon },
       ],
     },
@@ -266,6 +270,21 @@ export default function DragDropDemo() {
       ],
     },
   ];
+
+  const filteredElementGroups = useMemo(() => {
+    let searchQueryLower = searchQuery.toLocaleLowerCase();
+
+    return elementGroups.map((eachGroup) => {
+      return {
+        ...eachGroup,
+        elements: eachGroup.elements.filter((eachElement) => {
+          return eachElement.label
+            .toLocaleLowerCase()
+            .includes(searchQueryLower);
+        }),
+      };
+    });
+  }, [searchQuery]);
 
   return (
     <div className="container">
@@ -281,7 +300,7 @@ export default function DragDropDemo() {
           <nav className="navbar navbar-light bg-light justify-content-between">
             <a>
               <button
-                className="bg-[#5BC4BF] text-white hover:bg-teal-700 font-bold  p-2 px-4 rounded transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500  text-xs"
+                className="bg-[#5BC4BF] text-white hover:bg-teal-700 font-medium  p-3 px-4 rounded transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500  text-sm"
                 onClick={togglePreview}
               >
                 Toggle Preview
@@ -291,14 +310,14 @@ export default function DragDropDemo() {
               <a>
                 <Link
                   to="/createtableform"
-                  className="bg-[#5BC4BF] text-white hover:bg-teal-700 font-bold p-2 px-4 m-1 rounded transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500  text-xs"
+                  className="bg-[#5BC4BF] text-white hover:bg-teal-700 font-medium p-3 px-4 m-1 rounded transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm"
                 >
                   Available Forms
                 </Link>
               </a>
               <Link
                 to="/alterTable"
-                className="bg-[#5BC4BF] text-white hover:bg-teal-700 font-bold p-2 px-4 m-1 rounded transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500  text-xs"
+                className="bg-[#5BC4BF] text-white hover:bg-teal-700 font-medium p-3 px-4 m-1 rounded transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500  text-sm"
               >
                 Alter Available Forms
               </Link>
@@ -349,7 +368,7 @@ export default function DragDropDemo() {
           </div>  */}
 
           <div className="row">
-            <form role="form" className="w-3/4">
+            <form role="form" className="w-100">
               <div className="form-group">
                 <input
                   className="form-control border border-gray-300 rounded px-4 mt-2 py-2 focus:outline-none focus:border-green-500 transition-colors duration-300"
@@ -394,15 +413,23 @@ export default function DragDropDemo() {
 
                 {/* Element Box  */}
                 <div id="modules" className="bg-[#F9F9F9]">
-                  {elementGroups.map((group, index) => (
-                    <ElementGroup
-                      key={index}
-                      groupName={group.name}
-                      elements={group.elements}
-                      handleDragStart={handleDragStart}
-                      elementGroupData={group}
-                    />
-                  ))}
+                  {filteredElementGroups.map((group, index) => {
+                    console.log({ group });
+
+                    if (group.elements.length > 0) {
+                      return (
+                        <ElementGroup
+                          key={index}
+                          groupName={group.name}
+                          elements={group.elements}
+                          handleDragStart={handleDragStart}
+                          elementGroupData={group}
+                        />
+                      );
+                    } else {
+                      return null;
+                    }
+                  })}
                 </div>
               </div>
             </div>
@@ -1677,7 +1704,7 @@ function ElementButton(props) {
         onDragStart={(e) => handleDragStart(e, elementData)}
         className="drag"
       >
-        <button className="rounded bg-slate-200 flex items-center gap-2 w-100 bg-[#EAECEB] p-2 hover:bg-teal-400 cursor-pointer">
+        <button className="rounded bg-slate-200 flex items-center gap-2 w-100 bg-[#EAECEB] p-2 py-2.5 hover:bg-teal-400 cursor-pointer">
           <img src={IconSrc} alt="Icon" className="h-[14.06px] w-[14.06px]" />
           <span className="text-xs font-medium">{elementLabel}</span>
         </button>
