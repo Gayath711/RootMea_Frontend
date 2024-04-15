@@ -14,7 +14,7 @@ const options = {
 const Tag = ({ text }) => {
   return (
     <div
-      className={`${options[text]} text-center text-xs px-3 py-0.5 mx-auto w-fit`}
+      className={`${options[text]} text-center text-xs w-[70px] mx-auto py-1 rounded-[2px]`}
     >
       {text?.charAt(0)?.toUpperCase() + text?.slice(1)}
     </div>
@@ -128,14 +128,14 @@ function EncounterNotes({ clientId }) {
         accessor: "staff_name",
         align: "left",
       },
-      {
-        Header: "Facility",
-        accessor: "facility",
-      },
-      {
-        Header: "Note type",
-        accessor: "note_type",
-      },
+      // {
+      //   Header: "Facility",
+      //   accessor: "facility",
+      // },
+      // {
+      //   Header: "Note type",
+      //   accessor: "note_type",
+      // },
       {
         Header: "Encounter Type",
         accessor: "encounter_type",
@@ -151,9 +151,9 @@ function EncounterNotes({ clientId }) {
       {
         Header: "Actions",
         Cell: ({ row }) => (
-          <div className="flex gap-x-1 items-center mx-auto">
-            <img src={EditIcon} className="size-4 mx-auto" alt="edit" />
-            <img src={EyeIcon} className="size-4 mx-auto" alt="view" />
+          <div className="flex gap-x-3 items-center mx-auto justify-center">
+            <img src={EditIcon} className="size-4" alt="edit" />
+            <img src={EyeIcon} className="size-4" alt="view" />
           </div>
         ),
       },

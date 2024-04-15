@@ -47,6 +47,7 @@ function Activities() {
         <ActivityItem />
         <ActivityItem />
         <ActivityItem />
+        <ActivityItem />
       </div>
     </div>
   );
