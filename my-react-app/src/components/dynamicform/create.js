@@ -31,8 +31,7 @@ import DraggableIcon from "../images/form_builder/draggable.svg";
 import GearIcon from "../images/form_builder/gears.svg";
 
 import DeleteIcon from "../images/delete.png";
-import DateInput from "./DateInput";
-
+import DateInput from "./FormElements/DateInput";
 export default function DragDropDemo() {
   const [showPreview, setShowPreview] = useState(false);
 

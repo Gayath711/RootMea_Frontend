@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
+import FormLabel from "./FormLabel";
 import "react-datepicker/dist/react-datepicker.css";
 
 function DateInput({
   type,
+  label,
   value = null,
   onChange = () => {},
   className,
+  required,
   disabled,
   stateless,
 }) {
@@ -25,8 +28,8 @@ function DateInput({
 
   if (stateless) {
     return (
-      <div>
-        {/* <label htmlFor="dateInput">Select a date:</label> */}
+      <div className="m-1">
+        <FormLabel required={required}>{label}</FormLabel>
         <DatePicker
           showIcon
           id="dateInput"
@@ -47,8 +50,8 @@ function DateInput({
   }
 
   return (
-    <div>
-      {/* <label htmlFor="dateInput">Select a date:</label> */}
+    <div className="m-1">
+      <FormLabel required={required}>{label}</FormLabel>
       <DatePicker
         showIcon
         id="dateInput"

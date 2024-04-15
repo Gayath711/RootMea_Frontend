@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import apiURL from "../../apiConfig";
 import Swal from "sweetalert2";
 import Select from "react-select";
-import DateInput from "./DateInput";
+import DateInput from "./FormElements/DateInput";
 
 function NewPage() {
   const { tableName } = useParams();
@@ -253,7 +253,6 @@ function NewPage() {
               onChange={(event) => handleInputChange(event, column.name)}
               className={`${column.width} border border-gray-300 rounded px-4 py-2`}
             />
-            
           </div>
         );
       default:
