@@ -14,7 +14,10 @@ import apiURL from "../../../apiConfig";
 
 function FormCanvas() {
   const { setNodeRef } = useDroppable({
-    id: "form-builder-drop-zone",
+    id: "designer-drop-area",
+    data: {
+      isDesignerDropArea: true,
+    },
   });
 
   const {

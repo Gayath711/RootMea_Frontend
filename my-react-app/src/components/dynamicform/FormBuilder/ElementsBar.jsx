@@ -67,12 +67,14 @@ function ElementsBar({ elementGroups = [] }) {
 export default ElementsBar;
 
 function ElementButton(props) {
-  const { elementType, elementLabel, IconSrc, handleDragStart, elementData } =
-    props;
+  const { elementType, elementLabel, IconSrc, elementData } = props;
 
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: elementType,
-    data: elementData,
+    data: {
+      element: elementData,
+      isDesignerBtnElement: true,
+    },
   });
   const style = {
     transform: CSS.Translate.toString(transform),

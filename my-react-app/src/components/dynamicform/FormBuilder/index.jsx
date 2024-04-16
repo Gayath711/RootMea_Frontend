@@ -31,11 +31,13 @@ import {
 import FieldProperty from "./FieldProperty";
 import FormHeader from "./FormHeader";
 import FormPreview from "./FormPreview";
+import DragOverlayWrapper from "./DragOverlayWrapper";
 
 function RenderFormBuilder() {
   const {
     elements: items,
     addElement,
+    removeElement,
     setSelectedElement,
     togglePreview,
     showPreview,
@@ -240,77 +242,156 @@ function RenderFormBuilder() {
     // },
   ];
 
-  const onDragStart = (event) => {
-    console.log({ OnDragStart: event });
-  };
-  const onDragMove = (event) => {
-    console.log({ onDragMove: event });
-  };
-  const onDragOver = (event) => {
-    console.log({ onDragOver: event });
-  };
+  // const onDragStart = (event) => {
+  //   console.log({ OnDragStart: event });
+  // };
+  // const onDragMove = (event) => {
+  //   console.log({ onDragMove: event });
+  // };
+  // const onDragOver = (event) => {
+  //   console.log({ onDragOver: event });
+  // };
+  // const onDragEndX = (event) => {
+  //   const { over, active } = event;
+  //   if (
+  //     over &&
+  //     over.id === "form-builder-drop-zone" &&
+  //     active.data &&
+  //     active.data.current
+  //   ) {
+  //     let newItem = active.data.current;
+  //     addElement(items.length, newItem);
+  //   }
+
+  //   if (
+  //     over &&
+  //     over.id !== "form-builder-drop-zone" &&
+  //     over.data &&
+  //     over.data.current &&
+  //     active.data &&
+  //     active.data.current
+  //   ) {
+  //     let newItem = active.data.current;
+  //     let indexToInsert = parseInt(over.data.current.index);
+  //     addElement(indexToInsert, newItem);
+  //   }
+  // };
+  // const onDragCancel = () => {};
+
   const onDragEnd = (event) => {
-    const { over, active } = event;
-    if (
-      over &&
-      over.id === "form-builder-drop-zone" &&
-      active.data &&
-      active.data.current
-    ) {
-      let newItem = active.data.current;
-      addElement(items.length, newItem);
+    let elements = items;
+    const { active, over } = event;
+    if (!active || !over) return;
+
+    const isDesignerBtnElement = active.data?.current?.isDesignerBtnElement;
+    const isDroppingOverDesignerDropArea =
+      over.data?.current?.isDesignerDropArea;
+
+    const droppingSidebarBtnOverDesignerDropArea =
+      isDesignerBtnElement && isDroppingOverDesignerDropArea;
+
+    // First scenario
+    if (droppingSidebarBtnOverDesignerDropArea) {
+      const newElement = active.data?.current?.element;
+
+      addElement(elements.length, newElement);
+      return;
     }
 
-    if (
-      over &&
-      over.id !== "form-builder-drop-zone" &&
-      over.data &&
-      over.data.current &&
-      active.data &&
-      active.data.current
-    ) {
-      let newItem = active.data.current;
-      let indexToInsert = parseInt(over.data.current.index);
-      addElement(indexToInsert, newItem);
+    const isDroppingOverDesignerElementTopHalf =
+      over.data?.current?.isTopHalfDesignerElement;
+
+    const isDroppingOverDesignerElementBottomHalf =
+      over.data?.current?.isBottomHalfDesignerElement;
+
+    const isDroppingOverDesignerElement =
+      isDroppingOverDesignerElementTopHalf ||
+      isDroppingOverDesignerElementBottomHalf;
+
+    const droppingSidebarBtnOverDesignerElement =
+      isDesignerBtnElement && isDroppingOverDesignerElement;
+
+    // Second scenario
+    if (droppingSidebarBtnOverDesignerElement) {
+      const newElement = active.data?.current?.element;
+
+      const overElementIndex = over.data?.current?.index;
+
+      let indexForNewElement = overElementIndex; // i assume i'm on top-half
+      if (isDroppingOverDesignerElementBottomHalf) {
+        indexForNewElement = overElementIndex + 1;
+      }
+
+      addElement(indexForNewElement, newElement);
+      return;
     }
+
+    // Third scenario
+    // const isDraggingDesignerElement = active.data?.current?.isDesignerElement;
+
+    // const draggingDesignerElementOverAnotherDesignerElement =
+    //   isDroppingOverDesignerElement && isDraggingDesignerElement;
+
+    // if (draggingDesignerElementOverAnotherDesignerElement) {
+    //   const activeElementIndex = active.data?.current?.index;
+    //   const overElementIndex = over.data?.current?.index;
+
+    //   // const activeElementIndex = elements.findIndex((el) => el.id === activeId);
+
+    //   // const overElementIndex = elements.findIndex((el) => el.id === overId);
+
+    //   if (activeElementIndex === -1 || overElementIndex === -1) {
+    //     throw new Error("element not found");
+    //   }
+
+    //   const activeElement = { ...elements[activeElementIndex] };
+    //   removeElement(activeElementIndex);
+
+    //   let indexForNewElement = overElementIndex; // i assume i'm on top-half
+    //   if (isDroppingOverDesignerElementBottomHalf) {
+    //     indexForNewElement = overElementIndex + 1;
+    //   }
+
+    //   addElement(indexForNewElement, activeElement);
+    // }
   };
-  const onDragCancel = () => {};
 
   console.log({ items });
 
   return (
     <DndContext
-      onDragStart={onDragStart}
-      onDragMove={onDragMove}
-      onDragOver={onDragOver}
+      // onDragStart={onDragStart}
+      // onDragMove={onDragMove}
+      // onDragOver={onDragOver}
       onDragEnd={onDragEnd}
-      onDragCancel={onDragCancel}
+      // onDragCancel={onDragCancel}
       autoScroll
     >
-      <SortableContext items={items} strategy={verticalListSortingStrategy}>
-        {/* Form Header  */}
-        <FormHeader />
-        {/* Form Builder */}
-        <div className="row">
-          {/* Draggable Elements */}
-          <div className="col-sm-4 p-2">
-            <ElementsBar elementGroups={elementGroups} />
-          </div>
-
-          {/* Form Drop Zone */}
-          <div className="col-sm-5 p-2">
-            <FormCanvas items={items} />
-          </div>
-
-          {/* Selected Element Property */}
-
-          <div className="col-sm-3 p-2">
-            <FieldProperty />
-          </div>
+      {/* <SortableContext items={items} strategy={verticalListSortingStrategy}> */}
+      {/* Form Header  */}
+      <FormHeader />
+      {/* Form Builder */}
+      <div className="row">
+        {/* Draggable Elements */}
+        <div className="col-sm-4 p-2">
+          <ElementsBar elementGroups={elementGroups} />
         </div>
-        {/* Form Preview */}
-        {showPreview && <FormPreview />}
-      </SortableContext>
+
+        {/* Form Drop Zone */}
+        <div className="col-sm-5 p-2">
+          <FormCanvas items={items} />
+        </div>
+
+        {/* Selected Element Property */}
+
+        <div className="col-sm-3 p-2">
+          <FieldProperty />
+        </div>
+      </div>
+      {/* Form Preview */}
+      {showPreview && <FormPreview />}
+      {/* </SortableContext> */}
+      {/* <DragOverlayWrapper /> */}
     </DndContext>
   );
 }
