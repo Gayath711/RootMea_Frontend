@@ -44,7 +44,7 @@ import SocialVitalSignsMain from "./components/SocialVitalSigns/SocialVitalSigns
 import Preview from "./components/dynamicform/preview";
 import YourComponent from "./components/dynamicform/create";
 import AddNewSocialVitalSigns from "./components/SocialVitalSigns/AddNewSocialVitalSigns";
-
+import CarePlanView from "./components/CarePlanView/CarePlan";
 function App() {
   // Retrieve isLoggedIn state from localStorage on initial render
   // const [isLoggedIn, setIsLoggedIn] = useState(
@@ -247,6 +247,8 @@ function App() {
                   <Route path="/form_builder" element={<YourComponent />} />
 
                   <Route path="/Preview" element={<Preview />} />
+                  <Route path="/care-plan" element={<CarePlanView />} />
+
                 </Routes>
               </div>
             </div>
