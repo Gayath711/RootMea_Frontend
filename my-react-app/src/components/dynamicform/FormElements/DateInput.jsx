@@ -53,6 +53,7 @@ function DateInput({
     <div className="m-1">
       <FormLabel required={required}>{label}</FormLabel>
       <DatePicker
+        className="border"
         showIcon
         id="dateInput"
         selected={dateValue}

@@ -17,93 +17,116 @@ import DraggableIcon from "../../images/form_builder/draggable.svg";
 import ElementsBar from "./ElementsBar";
 import FormCanvas from "./FormCanvas";
 
-function FormBuilder() {
-  const [items, setItems] = useState([
-    {
-      type: "VARCHAR(250)",
-      label: "Text",
-      IconSrc: Single_line_text_Icon,
-      props: {
-        type: "text",
-        label: "New Text",
-        placeholder: "Enter new text",
-        required: false,
-        disabled: false,
-      },
-    },
-    {
-      type: "TEXT",
-      label: "TextArea",
-      IconSrc: Text_area_Icon,
-      props: {
-        type: "text",
-        label: "New Text Area",
-        placeholder: "Enter new text",
-        required: false,
-        disabled: false,
-      },
-    },
-    {
-      type: "INTEGER",
-      label: "Number",
-      IconSrc: Number_Icon,
-      props: {
-        type: "number",
-        label: "New Number",
-        placeholder: "Enter a number",
-        required: false,
-        disabled: false,
-      },
-    },
+// DND Kit
 
-    {
-      type: "TIMESTAMP",
-      label: "Date and Time",
-      IconSrc: Date_and_time_Icon,
-      props: {
-        type: "date",
-        label: "New Date",
-        required: false,
-        disabled: false,
-      },
-    },
-    {
-      type: "my_enum_type",
-      label: "Dropdown",
-      IconSrc: Drop_down_Icon,
-      props: {
-        type: "text",
-        label: "New Drop Down",
-        required: false,
-        disabled: true,
-        options: ["option-1", "option-2", "option-3"],
-      },
-    },
-    {
-      type: "my_enum_typeb",
-      label: "Multiple Select",
-      IconSrc: Drop_down_Icon,
-      props: {
-        type: "text",
-        label: "New Multi select",
-        required: false,
-        disabled: true,
-        options: ["option-1", "option-2", "option-3"],
-      },
-    },
-    {
-      type: "checkbox",
-      label: "Checkbox",
-      IconSrc: Check_box_Icon,
-      props: {
-        type: "text",
-        label: "New Check box",
-        required: false,
-        disabled: true,
-        options: ["option-1", "option-2", "option-3"],
-      },
-    },
-  ]);
+import { DndContext } from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import {
+  FormBuilderContextProvider,
+  useFormBuilderContext,
+} from "./Context/FormBuilderContext";
+import FieldProperty from "./FieldProperty";
+import FormHeader from "./FormHeader";
+import FormPreview from "./FormPreview";
+
+function RenderFormBuilder() {
+  const {
+    elements: items,
+    addElement,
+    setSelectedElement,
+    togglePreview,
+    showPreview,
+  } = useFormBuilderContext();
+
+  // const [items, setItems] = useState([
+  //   {
+  //     type: "VARCHAR(250)",
+  //     label: "Text",
+  //     IconSrc: Single_line_text_Icon,
+  //     props: {
+  //       type: "text",
+  //       label: "New Text",
+  //       placeholder: "Enter new text",
+  //       required: false,
+  //       disabled: false,
+  //     },
+  //   },
+  //   {
+  //     type: "TEXT",
+  //     label: "TextArea",
+  //     IconSrc: Text_area_Icon,
+  //     props: {
+  //       type: "text",
+  //       label: "New Text Area",
+  //       placeholder: "Enter new text",
+  //       required: false,
+  //       disabled: false,
+  //     },
+  //   },
+  //   {
+  //     type: "INTEGER",
+  //     label: "Number",
+  //     IconSrc: Number_Icon,
+  //     props: {
+  //       type: "number",
+  //       label: "New Number",
+  //       placeholder: "Enter a number",
+  //       required: false,
+  //       disabled: false,
+  //     },
+  //   },
+
+  //   {
+  //     type: "TIMESTAMP",
+  //     label: "Date and Time",
+  //     IconSrc: Date_and_time_Icon,
+  //     props: {
+  //       type: "date",
+  //       label: "New Date",
+  //       required: false,
+  //       disabled: false,
+  //     },
+  //   },
+  //   {
+  //     type: "my_enum_type",
+  //     label: "Dropdown",
+  //     IconSrc: Drop_down_Icon,
+  //     props: {
+  //       type: "text",
+  //       label: "New Drop Down",
+  //       required: false,
+  //       disabled: true,
+  //       options: ["option-1", "option-2", "option-3"],
+  //     },
+  //   },
+  //   {
+  //     type: "my_enum_typeb",
+  //     label: "Multiple Select",
+  //     IconSrc: Drop_down_Icon,
+  //     props: {
+  //       type: "text",
+  //       label: "New Multi select",
+  //       required: false,
+  //       disabled: true,
+  //       options: ["option-1", "option-2", "option-3"],
+  //     },
+  //   },
+  //   {
+  //     type: "checkbox",
+  //     label: "Checkbox",
+  //     IconSrc: Check_box_Icon,
+  //     props: {
+  //       type: "text",
+  //       label: "New Check box",
+  //       required: false,
+  //       disabled: true,
+  //       options: ["option-1", "option-2", "option-3"],
+  //     },
+  //   },
+  // ]);
 
   // Define your element groups and their corresponding elements
   const elementGroups = [
@@ -169,30 +192,30 @@ function FormBuilder() {
     {
       name: "Multi Elements",
       elements: [
-        {
-          type: "my_enum_type",
-          label: "Dropdown",
-          IconSrc: Drop_down_Icon,
-          props: {
-            type: "text",
-            label: "New Drop Down",
-            required: false,
-            disabled: true,
-            options: ["option-1", "option-2", "option-3"],
-          },
-        },
-        {
-          type: "my_enum_typeb",
-          label: "Multiple Select",
-          IconSrc: Drop_down_Icon,
-          props: {
-            type: "text",
-            label: "New Multi select",
-            required: false,
-            disabled: true,
-            options: ["option-1", "option-2", "option-3"],
-          },
-        },
+        // {
+        //   type: "my_enum_type",
+        //   label: "Dropdown",
+        //   IconSrc: Drop_down_Icon,
+        //   props: {
+        //     type: "text",
+        //     label: "New Drop Down",
+        //     required: false,
+        //     disabled: true,
+        //     options: ["option-1", "option-2", "option-3"],
+        //   },
+        // },
+        // {
+        //   type: "my_enum_typeb",
+        //   label: "Multiple Select",
+        //   IconSrc: Drop_down_Icon,
+        //   props: {
+        //     type: "text",
+        //     label: "New Multi select",
+        //     required: false,
+        //     disabled: true,
+        //     options: ["option-1", "option-2", "option-3"],
+        //   },
+        // },
         {
           type: "checkbox",
           label: "Checkbox",
@@ -201,7 +224,7 @@ function FormBuilder() {
             type: "text",
             label: "New Check box",
             required: false,
-            disabled: true,
+            disabled: false,
             options: ["option-1", "option-2", "option-3"],
           },
         },
@@ -216,18 +239,87 @@ function FormBuilder() {
     //   ],
     // },
   ];
-  return (
-    <div className="row">
-      {/* Draggable Elements */}
-      <div className="col-sm-4 p-2">
-        <ElementsBar elementGroups={elementGroups} />
-      </div>
 
-      {/* Form Drop Zone */}
-      <div className="col-sm-8 p-2">
-        <FormCanvas items={items} />
-      </div>
-    </div>
+  const onDragStart = (event) => {
+    console.log({ OnDragStart: event });
+  };
+  const onDragMove = (event) => {
+    console.log({ onDragMove: event });
+  };
+  const onDragOver = (event) => {
+    console.log({ onDragOver: event });
+  };
+  const onDragEnd = (event) => {
+    const { over, active } = event;
+    if (
+      over &&
+      over.id === "form-builder-drop-zone" &&
+      active.data &&
+      active.data.current
+    ) {
+      let newItem = active.data.current;
+      addElement(items.length, newItem);
+    }
+
+    if (
+      over &&
+      over.id !== "form-builder-drop-zone" &&
+      over.data &&
+      over.data.current &&
+      active.data &&
+      active.data.current
+    ) {
+      let newItem = active.data.current;
+      let indexToInsert = parseInt(over.data.current.index);
+      addElement(indexToInsert, newItem);
+    }
+  };
+  const onDragCancel = () => {};
+
+  console.log({ items });
+
+  return (
+    <DndContext
+      onDragStart={onDragStart}
+      onDragMove={onDragMove}
+      onDragOver={onDragOver}
+      onDragEnd={onDragEnd}
+      onDragCancel={onDragCancel}
+      autoScroll
+    >
+      <SortableContext items={items} strategy={verticalListSortingStrategy}>
+        {/* Form Header  */}
+        <FormHeader />
+        {/* Form Builder */}
+        <div className="row">
+          {/* Draggable Elements */}
+          <div className="col-sm-4 p-2">
+            <ElementsBar elementGroups={elementGroups} />
+          </div>
+
+          {/* Form Drop Zone */}
+          <div className="col-sm-5 p-2">
+            <FormCanvas items={items} />
+          </div>
+
+          {/* Selected Element Property */}
+
+          <div className="col-sm-3 p-2">
+            <FieldProperty />
+          </div>
+        </div>
+        {/* Form Preview */}
+        {showPreview && <FormPreview />}
+      </SortableContext>
+    </DndContext>
+  );
+}
+
+function FormBuilder() {
+  return (
+    <FormBuilderContextProvider>
+      <RenderFormBuilder />
+    </FormBuilderContextProvider>
   );
 }
 

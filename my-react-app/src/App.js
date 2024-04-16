@@ -45,6 +45,8 @@ import Preview from "./components/dynamicform/preview";
 import YourComponent from "./components/dynamicform/create";
 import AddNewSocialVitalSigns from "./components/SocialVitalSigns/AddNewSocialVitalSigns";
 
+import FormView from "./components/dynamicform/FormView/";
+
 function App() {
   // Retrieve isLoggedIn state from localStorage on initial render
   // const [isLoggedIn, setIsLoggedIn] = useState(
@@ -204,7 +206,7 @@ function App() {
                   />
                   <Route
                     path="/createtableform/:tableName"
-                    element={<NewPage />}
+                    element={<FormView />}
                   />
                   <Route path="/alterTable" element={<AlterTable />} />
                   <Route
@@ -217,23 +219,6 @@ function App() {
                     element={<ClientProfileNew />}
                   />
 
-                  <Route
-                    path="/create_form"
-                    element={<CreateTableComponent />}
-                  />
-                  <Route
-                    path="/createtableform"
-                    element={<CreateTableForm />}
-                  />
-                  <Route
-                    path="/createtableform/:tableName"
-                    element={<NewPage />}
-                  />
-                  <Route path="/alterTable" element={<AlterTable />} />
-                  <Route
-                    path="/BulkUploadComponent/:tableName"
-                    element={<BulkUploadComponent />}
-                  />
                   <Route
                     path="/socialvitalsigns/:clientId"
                     element={<SocialVitalSignsMain />}

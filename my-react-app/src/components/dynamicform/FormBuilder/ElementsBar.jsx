@@ -1,5 +1,8 @@
 import React, { useState, useMemo } from "react";
 
+import { useDraggable } from "@dnd-kit/core";
+import { CSS } from "@dnd-kit/utilities";
+
 function ElementsBar({ elementGroups = [] }) {
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -42,8 +45,6 @@ function ElementsBar({ elementGroups = [] }) {
       {/* Element Box  */}
       <div id="modules" className="bg-[#F9F9F9]">
         {filteredElementGroups.map((group, index) => {
-          console.log({ group });
-
           if (group.elements.length > 0) {
             return (
               <ElementGroup
@@ -69,36 +70,22 @@ function ElementButton(props) {
   const { elementType, elementLabel, IconSrc, handleDragStart, elementData } =
     props;
 
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: elementType,
+    data: elementData,
+  });
+  const style = {
+    transform: CSS.Translate.toString(transform),
+  };
+
   return (
     <div className="col-6 my-2">
-      <p
-        draggable="true"
-        onDragStart={(e) => handleDragStart(e, elementData)}
-        className="drag"
-      >
+      <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
         <button className="rounded bg-slate-200 flex items-center gap-2 w-100 bg-[#EAECEB] p-2 py-2.5 hover:bg-teal-400 cursor-pointer">
           <img src={IconSrc} alt="Icon" className="h-[14.06px] w-[14.06px]" />
           <span className="text-xs font-medium">{elementLabel}</span>
         </button>
-        {/* <Button
-            variant="info"
-            className="bg-gray-400"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              width: "100%",
-              textAlign: "center",
-            }}
-          >
-            <img src={IconSrc} alt="Icon" className="h-[14.06px] w-[14.06px]" />
-            <span
-              className="text-xs"
-              style={{ fontWeight: "bold", marginLeft: "10%" }}
-            >
-              {elementLabel}
-            </span>
-          </Button> */}
-      </p>
+      </div>
     </div>
   );
 }
