@@ -94,9 +94,9 @@ function Documents({clientId}) {
       {
         Header: "Actions",
         Cell: ({ row }) => (
-          <div className="flex gap-x-1 items-center mx-auto">
-            <img src={EditIcon} className="size-4 mx-auto" alt="edit" />
-            <img src={EyeIcon} className="size-4 mx-auto" alt="view" />
+          <div className="flex gap-x-3 items-center mx-auto justify-center">
+            <img src={EditIcon} className="size-4" alt="edit" />
+            <img src={EyeIcon} className="size-4" alt="view" />
           </div>
         ),
       },
