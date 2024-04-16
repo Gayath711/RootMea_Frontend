@@ -115,7 +115,7 @@ const CalendarMain = () => {
       )}
       <div className={`space-y-5 m-5 ${showModal ? "opacity-50" : ""}`}>
         <div className="flex flex-row justify-between items-end">
-          <div className="text-gray-900 text-2xl font-medium">Calendar</div>
+          <div className="text-gray-900 text-2xl font-medium" id="calendarPage">Calendar</div>
           <button
             className="w-54 h-12 bg-[#43B09C] rounded text-xs text-white p-3"
             onClick={toggleModal}
