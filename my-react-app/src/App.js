@@ -247,7 +247,7 @@ function App() {
                   <Route path="/form_builder" element={<YourComponent />} />
 
                   <Route path="/Preview" element={<Preview />} />
-                  <Route path="/care-plan" element={<CarePlanView />} />
+                  <Route path="/care-plan/:clientId" element={<CarePlanView />} />
 
                 </Routes>
               </div>
