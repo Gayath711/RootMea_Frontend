@@ -46,7 +46,7 @@ const SideBar = () => {
       <Link to="/clientprofilenew">
 
   
-      <button className="p-1 bg-[#EAECEB]" id="client-profile-new" title="Client Profile">
+      <button className="p-1 bg-[#EAECEB]" id="client-profile-new" title="New Client">
         <img src={LeftBarIcon4} className="size-4" alt="icon4" />
       </button>
 

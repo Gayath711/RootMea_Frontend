@@ -31,7 +31,9 @@ import DraggableIcon from "../images/form_builder/draggable.svg";
 import GearIcon from "../images/form_builder/gears.svg";
 
 import DeleteIcon from "../images/delete.png";
-import DateInput from "./DateInput";
+import DateInput from "./FormElements/DateInput";
+
+import FormBuilder from "./FormBuilder";
 
 export default function DragDropDemo() {
   const [showPreview, setShowPreview] = useState(false);
@@ -414,8 +416,6 @@ export default function DragDropDemo() {
                 {/* Element Box  */}
                 <div id="modules" className="bg-[#F9F9F9]">
                   {filteredElementGroups.map((group, index) => {
-                    console.log({ group });
-
                     if (group.elements.length > 0) {
                       return (
                         <ElementGroup

@@ -28,7 +28,7 @@ function ClientGoal() {
 
     try {
       const response = await axios.get(
-        `${apiURL}/clientgoal-api?search=${searchQuery}`,
+        `${apiURL}/api/client-goals/`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -56,6 +56,9 @@ function ClientGoal() {
         Header: "D.O.B",
         accessor: "dob",
         Cell: ({ value }) => {
+
+          if (!value) return "";
+
           // Parse the date string
           const date = new Date(value);
           // Extract day, month, and year
@@ -68,7 +71,7 @@ function ClientGoal() {
       },
       {
         Header: "Goal",
-        accessor: "goal",
+        accessor: "smart_goal_summary",
       },
       {
         Header: "Problem",
@@ -76,12 +79,15 @@ function ClientGoal() {
       },
       {
         Header: "Status",
-        accessor: "status",
+        accessor: "goal_status",
       },
       {
         Header: "Status Date",
-        accessor: "status_date",
+        accessor: "goal_date",
         Cell: ({ value }) => {
+
+          if (!value) return "";
+
           // Parse the date string
           const date = new Date(value);
           // Extract day, month, and year
@@ -96,6 +102,9 @@ function ClientGoal() {
         Header: "Created Date",
         accessor: "care_plan_created_date",
         Cell: ({ value }) => {
+
+          if (!value) return "";
+          
           // Parse the date string
           const date = new Date(value);
           // Extract day, month, and year
