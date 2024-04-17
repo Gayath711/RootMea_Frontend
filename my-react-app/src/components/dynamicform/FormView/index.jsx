@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import { motion } from "framer-motion";
-import apiURL from "../../apiConfig";
+import apiURL from "../../../apiConfig";
 import Swal from "sweetalert2";
 import Select from "react-select";
-import DateInput from "./FormElements/DateInput";
+import DateInput from "../FormElements/DateInput";
+import InputElement from "../FormElements/InputElement";
+import TextAreaElement from "../FormElements/TextAreaElement";
+import CheckBoxElement from "../FormElements/CheckBoxElement";
 
-function NewPage() {
+export default function FormView() {
   const { tableName } = useParams();
-
   const [tableColumns, setTableColumns] = useState([]);
   const [formData, setFormData] = useState({});
   const [tableHeaders, setTableHeaders] = useState([]);
-
   const [droplist, setDroplist] = useState({});
 
   useEffect(() => {
@@ -170,7 +170,7 @@ function NewPage() {
         return (
           <div key={column.name} className="mb-4">
             <label className="block mb-1">{label}</label>
-            <input
+            <InputElement
               type="text"
               value={formData[column.name] || ""}
               onChange={(event) => handleInputChange(event, column.name)}
@@ -182,7 +182,7 @@ function NewPage() {
         return (
           <div key={column.name} className="mb-4">
             <label className="block mb-1">{label}</label>
-            <input
+            <InputElement
               type="number"
               value={formData[column.name] || ""}
               onChange={(event) => handleInputChange(event, column.name)}
@@ -195,7 +195,7 @@ function NewPage() {
         return (
           <div key={column.name} className="mb-4">
             <label className="block mb-1">{label}</label>
-            <textarea
+            <TextAreaElement
               value={formData[column.name] || ""}
               onChange={(event) => handleInputChange(event, column.name)}
               className={`${column.width} border border-gray-300 rounded px-4 py-2`}
@@ -206,7 +206,7 @@ function NewPage() {
         return (
           <div key={column.name} className="mb-4">
             <label className="block mb-1">{label}</label>
-            <input
+            <InputElement
               type="number" // Use type "number" for input validation
               step="any" // Allow floating-point numbers
               value={formData[column.name] || ""}
@@ -234,7 +234,7 @@ function NewPage() {
         return (
           <div key={column.name} className="mb-4">
             <label className="block mb-1">{label}</label>
-            <input
+            <InputElement
               type="file"
               accept=".png, .jpg, .jpeg, .pdf"
               onChange={(event) => handleInputChange(event, column.name)}
@@ -348,11 +348,11 @@ function NewPage() {
           console.log("checkbox_enum_type okkk");
           // console.log(droplist[key])
           return (
-            <div key={column.name} className="mb-4">
+            <div key={column.name} className="mb-4 flex flex-column gap-2">
               <label className="block mb-1">{label}</label>
               {droplist[key] &&
                 droplist[key].map((option) => (
-                  <div key={option}>
+                  <div key={option} className="flex gap-2">
                     <input
                       type="checkbox"
                       id={option}
@@ -418,7 +418,7 @@ function NewPage() {
           <div>
             <ul className="grid grid-cols-1 gap-4">
               {tableHeaders.map((header, index) => (
-                <motion.li
+                <div
                   key={index}
                   className="p-4 bg-white rounded-lg shadow-md"
                   whileHover={{ scale: 1.05 }}
@@ -429,7 +429,7 @@ function NewPage() {
                   <h3 className="text-base font-medium text-gray-700">
                     {header[3]}
                   </h3>
-                </motion.li>
+                </div>
               ))}
             </ul>
           </div>
@@ -455,5 +455,3 @@ function NewPage() {
     </div>
   );
 }
-
-export default NewPage;
