@@ -443,6 +443,7 @@ export default function DragDropDemo() {
                       <label
                         htmlFor="tableName"
                         className="text-xs font-medium text-gray-500"
+                        id="formName"
                       >
                         Form name <span className="text-red-500">*</span>
                       </label>

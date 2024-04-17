@@ -41,8 +41,8 @@ const TopStats =() => {
             </div>
             <hr id="top-stats-5" className="w-11/12 mx-auto my-2" />
             <div id="top-stats-6" className="flex justify-around text-3xl font-semibold my-10">
-                <div id="top-stats-7" className="mx-auto my-auto p-3 rounded-md bg-[#D9F0EF] text-[#43B09C]"><span>{clientCount}</span></div>
-                <div id="top-stats-8" className="mx-auto my-auto p-3 rounded-md bg-[#E6EAED] text-[#1F4B51]"><span>{programCount}</span></div>
+                <div id="top-stats-7" className="mx-auto my-auto p-3 rounded-md bg-[#D9F0EF] text-[#43B09C]" id="clientCount"><span>{clientCount}</span></div>
+                <div id="top-stats-8" className="mx-auto my-auto p-3 rounded-md bg-[#E6EAED] text-[#1F4B51]" id="programCount"><span>{programCount}</span></div>
             </div>
             <div id="top-stats-9" className="flex justify-around items-center">
                 <div id="top-stats-10" className="flex items-center">

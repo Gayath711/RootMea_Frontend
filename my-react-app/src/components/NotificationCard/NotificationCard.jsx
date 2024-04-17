@@ -21,7 +21,7 @@ const NotificationTile = () => {
           <AccessTimeIcon className="size-2 text-[#1F4B51]" />
           <span className="text-[#1F4B51]">10:30 A.M</span>
         </span>
-        <button className="bg-[#5BC4BF] text-xs text-white px-3 sm:px-4 py-1.5 w-fit rounded-sm">
+        <button className="bg-[#5BC4BF] text-xs text-white px-3 sm:px-4 py-1.5 w-fit rounded-sm" id="notification-details">
           Details
         </button>
       </span>
@@ -37,7 +37,7 @@ function NotificationCard() {
     <div className="bg-white rounded-md shadow-md xl:w-full min-[320px]:w-full">
       <div className="flex justify-between items-center px-6 !pt-6 sm:pt-2">
         <div className="text-xl flex items-center space-x-3 font-medium py-1">
-          <div>Notifications</div>
+          <div id="notificationsLabel">Notifications</div>
           <img src={FilterIcon} className="size-4" alt="filter" />
         </div>
         <button>
