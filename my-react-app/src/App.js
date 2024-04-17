@@ -44,8 +44,9 @@ import SocialVitalSignsMain from "./components/SocialVitalSigns/SocialVitalSigns
 import Preview from "./components/dynamicform/preview";
 import YourComponent from "./components/dynamicform/create";
 import AddNewSocialVitalSigns from "./components/SocialVitalSigns/AddNewSocialVitalSigns";
-
 import FormView from "./components/dynamicform/FormView/";
+import CarePlanView from "./components/CarePlanView/CarePlan";
+
 import FormBuilder from "./components/dynamicform/FormBuilder";
 
 function App() {
@@ -238,6 +239,7 @@ function App() {
                   <Route path="/form_builder_new" element={<FormBuilder />} />
 
                   <Route path="/Preview" element={<Preview />} />
+                  <Route path="/care-plan" element={<CarePlanView />} />
                 </Routes>
               </div>
             </div>
