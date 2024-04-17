@@ -65,7 +65,7 @@ export default function TextInputProperty() {
           onChange={handlePropsChange}
         />
 
-        <InputElement
+        {/* <InputElement
           className="m-0 p-0"
           type="number"
           name="rows"
@@ -75,7 +75,7 @@ export default function TextInputProperty() {
           onChange={(e) => {
             if (e.target.value >= 0) handlePropsChange(e);
           }}
-        />
+        /> */}
 
         <CheckBoxElement
           options={[
