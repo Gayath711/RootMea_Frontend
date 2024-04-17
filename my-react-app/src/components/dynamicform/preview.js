@@ -115,7 +115,7 @@ function Preview({
             </select>
           </div>
         );
-      case "BYTA":
+      case "BYTEA":
         return (
           <div key={column.name} className="mb-4">
             <label className="block mb-1">{label}</label>
@@ -140,6 +140,8 @@ function Preview({
         );
 
       case "my_enum_type":
+        let options = column.enum.length > 0 ? column.enum.split(",") : [];
+
         return (
           <div key={column.name} className="mb-4">
             <label className="block mb-1">{label}</label>
@@ -149,27 +151,26 @@ function Preview({
               className={`${column.width} border border-gray-300 rounded px-4 py-2`}
             >
               <option value="">Select</option>
-              {tableColumns.enumList &&
-                column.enumList.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
+              {options.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
             </select>
           </div>
         );
       case "my_enum_typeb":
+        let my_enum_typeb_options =
+          column.enum.length > 0 ? column.enum.split(",") : [];
+
         return (
           <div key={column.name} className="mb-4">
             <label className="block mb-1">{label}</label>
             <Select
-              options={
-                column.enumList &&
-                column.enumList.map((option) => ({
-                  value: option,
-                  label: option,
-                }))
-              }
+              options={my_enum_typeb_options.map((option) => ({
+                value: option,
+                label: option,
+              }))}
               isMulti
               className={`${column.width} border border-gray-300 rounded px-4 py-2`}
               placeholder="Select"
@@ -177,16 +178,18 @@ function Preview({
           </div>
         );
       case "checkbox":
+        let checkbox_options =
+          column.enum.length > 0 ? column.enum.split(",") : [];
+
         return (
           <div key={column.name} className="mb-4">
             <label className="block mb-1">{label}</label>
-            {enumList &&
-              enumList.map((option) => (
-                <div key={option}>
-                  <input type="checkbox" id={option} value={option} />
-                  <label htmlFor={option}>{option}</label>
-                </div>
-              ))}
+            {checkbox_options.map((option) => (
+              <div key={option}>
+                <input type="checkbox" id={option} value={option} />
+                <label htmlFor={option}>{option}</label>
+              </div>
+            ))}
           </div>
         );
 
