@@ -16,7 +16,7 @@ const LoginForm = () => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [showSuccessAlert, setSuccessShowAlert] = useState(false);
   const [showErrorAlert, setErrorShowAlert] = useState(false);
-  const [staySignedIn, setStaySignedIn] = useState(false);
+  // const [staySignedIn, setStaySignedIn] = useState(false);
 
   const [successMsg, setSuccessMsg] = useState(false);
   const [errorMsg, setErrorMsg] = useState(false);
@@ -260,7 +260,7 @@ const LoginForm = () => {
               </div>
               <div className="flex flex-row justify-between pt-3 px-4 pb-12">
                 <div className="flex flex-row space-x-4">
-                  <div data-testid="stay-signed-in" className="w-6 h-3 relative hover:cursor-pointer" onClick={() => { localStorage.setItem("StaySignedIn", !staySignedIn); setStaySignedIn(!staySignedIn); }}>
+                  {/* <div data-testid="stay-signed-in" className="w-6 h-3 relative hover:cursor-pointer" onClick={() => { localStorage.setItem("StaySignedIn", !staySignedIn); setStaySignedIn(!staySignedIn); }}>
                     {staySignedIn ? (
                       <div data-testid="yes-signed-in" id="yes-signed-in">
                         <div className="w-8 h-4 left-0 top-0 absolute bg-[#0F7235] opacity-80 rounded-xl" />
@@ -273,7 +273,7 @@ const LoginForm = () => {
                   </div>
                   <div className="text-black-500 text-xs font-normal">
                     Stay Signed In
-                  </div>
+                  </div> */}
                 </div>
                 <div
                   data-testid="reset-password-click"
