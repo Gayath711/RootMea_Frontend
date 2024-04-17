@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import apiURL from "../../apiConfig";
+import ReactModal from "react-modal";
 
 function AlterTable({ onAddColumn }) {
   const [tableName, setTableName] = useState("");
@@ -12,6 +13,15 @@ function AlterTable({ onAddColumn }) {
   const [newColumnOptions, setNewColumnOptions] = useState([]);
   const [newColumnWidth, setNewColumnWidth] = useState("");
   const [isRequired, setIsRequired] = useState(false); // Step 1: State for checkbox
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleModalOpen = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
 
   const fetchTableStructure = async () => {
     try {
@@ -114,19 +124,20 @@ function AlterTable({ onAddColumn }) {
       );
 
       if (response.status === 200) {
-        await fetchTableStructure();
-        const newColumn = {
-          columnName: newColumnName,
-          columnTitle: newColumnTitle,
-          columnType: newColumnType,
-          columnWidth: newColumnWidth,
-        };
-        onAddColumn(newColumn);
+        // Reset the state variables for the modal fields
         setNewColumnTitle("");
         setNewColumnType("VARCHAR(250)");
         setNewColumnOptions([]);
         setNewColumnWidth("");
         setIsRequired(false); // Reset checkbox state after adding column
+
+        // Close the modal
+        setIsModalOpen(false);
+
+        // Fetch table structure
+        await fetchTableStructure();
+
+        console.log("Column added successfully");
       } else {
         console.error("Failed to add column:", response.statusText);
       }
@@ -331,17 +342,6 @@ function AlterTable({ onAddColumn }) {
 
             <div className="mb-4">
               <label className="block mb-1 text-gray-700">
-                New Column Title
-              </label>
-              <input
-                type="text"
-                value={newColumnTitle}
-                onChange={(e) => setNewColumnTitle(e.target.value)}
-                className="border border-gray-300 rounded px-4 py-2 w-full focus:outline-none focus:border-blue-500"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block mb-1 text-gray-700">
                 New Column Type
               </label>
               <select
@@ -361,6 +361,17 @@ function AlterTable({ onAddColumn }) {
                 <option value="MULTIPLESELECT">Multiple Select</option>
                 <option value="CHECKBOX">Checkbox</option>
               </select>
+            </div>
+            {/* <div className="mb-4">
+              <label className="block mb-1 text-gray-700">
+                New Column Title
+              </label>
+              <input
+                type="text"
+                value={newColumnTitle}
+                onChange={(e) => setNewColumnTitle(e.target.value)}
+                className="border border-gray-300 rounded px-4 py-2 w-full focus:outline-none focus:border-blue-500"
+              />
             </div>
             <div className="mb-4">
               <label className="block mb-1 text-gray-700">Column Width</label>
@@ -394,7 +405,6 @@ function AlterTable({ onAddColumn }) {
               </div>
             )}
 
-            {/* Step 2: Checkbox for indicating if column is required */}
             <div className="mb-4">
               <label className="block mb-1 text-gray-700">
                 Required Column
@@ -405,15 +415,86 @@ function AlterTable({ onAddColumn }) {
                   className="ml-2"
                 />
               </label>
-            </div>
-
+            </div> */}
             <button
+              type="button"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              onClick={handleModalOpen}
+            >
+              Settings
+            </button>
+            <ReactModal
+              isOpen={isModalOpen}
+              onRequestClose={handleModalClose}
+              contentLabel="Add New Column"
+              className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50"
+              overlayClassName="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50"
+            >
+              <div className="bg-white rounded-lg p-8 w-1/2">
+                {/* Modal content */}
+                <h2 className="text-xl font-bold mb-4">Add New Column</h2>
+                <div className="mb-4">
+                  <label className="block mb-1 text-gray-700">
+                    New Column Title
+                  </label>
+                  <input
+                    type="text"
+                    value={newColumnTitle}
+                    onChange={(e) => setNewColumnTitle(e.target.value)}
+                    className="border border-gray-300 rounded px-4 py-2 w-full focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block mb-1 text-gray-700">
+                    Column Width
+                  </label>
+                  <select
+                    value={newColumnWidth}
+                    onChange={(event) => handleInputChange(event, "width")}
+                    className="border border-gray-300 rounded px-4 py-2 w-full focus:outline-none focus:border-blue-500"
+                  >
+                    <option value="">Select</option>
+                    <option value="w-1/2">w-1/2</option>
+                    <option value="w-1/4">w-1/4</option>
+                    <option value="w-3/4">w-3/4</option>
+                    <option value="w-full">w-full</option>
+                  </select>
+                </div>
+                <div className="mb-4">
+                  <label className="block mb-1 text-gray-700">
+                    Required Column
+                    <input
+                      type="checkbox"
+                      checked={isRequired}
+                      onChange={(e) => setIsRequired(e.target.checked)}
+                      className="ml-2"
+                    />
+                  </label>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleAddColumn}
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                >
+                  Add Column
+                </button>
+                <button
+                  type="button"
+                  onClick={handleModalClose}
+                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-2"
+                >
+                  Close
+                </button>
+              </div>
+            </ReactModal>
+
+            {/* <button
               type="button"
               onClick={handleAddColumn}
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             >
               Add Column
-            </button>
+            </button> */}
           </form>
         )}
       </div>
