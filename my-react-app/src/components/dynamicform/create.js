@@ -288,10 +288,6 @@ export default function DragDropDemo() {
     });
   }, [searchQuery]);
 
-  if (true) {
-    return <FormBuilder />;
-  }
-
   return (
     <div className="container">
       <div className="row my-4">
