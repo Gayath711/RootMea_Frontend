@@ -7,6 +7,7 @@ import CarePlanImg from "../images/carePlan.svg";
 import { Checkbox } from "@mui/material";
 import { useWindowSize } from "../Utils/windowResize";
 import apiURL from '../../apiConfig';
+import { Link } from 'react-router-dom';
 
 function ClientGoal() {
 
@@ -104,7 +105,7 @@ function ClientGoal() {
         Cell: ({ value }) => {
 
           if (!value) return "";
-          
+
           // Parse the date string
           const date = new Date(value);
           // Extract day, month, and year
@@ -117,8 +118,10 @@ function ClientGoal() {
       },
       {
         Header: "Care Plan",
-        Cell: () => (
-          <img src={CarePlanImg} className="size-6 mx-auto" alt="client" />
+        Cell: ({ row }) => (
+          <Link to={`/care-plan/${row.original.care_plan_id}`}> {/* Pass care plan ID to the care plan page */}
+            <img src={CarePlanImg} className="size-6 mx-auto" alt="client" />
+          </Link>
         ),
       },
     ],

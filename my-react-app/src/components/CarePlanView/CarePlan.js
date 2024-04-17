@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
+import apiURL from '../../apiConfig';
+
 
 const CarePlanForm = () => {
   const [carePlan, setCarePlan] = useState(null);
+  const { clientId } = useParams();
 
   useEffect(() => {
     // Fetch care plan data from API
     const fetchCarePlan = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/client-care-plans/1/');
+        console.log(`${apiURL}}/client-care-plans/${clientId}`,"care-plan-url")
+        const response = await axios.get(`${apiURL}/client-care-plans/${clientId}`);
         setCarePlan(response.data);
       } catch (error) {
         console.error('Error fetching care plan:', error);
@@ -23,14 +28,17 @@ const CarePlanForm = () => {
       {carePlan && (
         <div>
           <h2>Care Plan</h2>
+          <p>Client Name: {carePlan.client_information.first_name} {carePlan.client_information.last_name}</p>
+          <p>Preferred Pronouns: {carePlan.client_information.preferred_pronouns}</p>
+          <p>Date of Birth: {carePlan.client_information.date_of_birth}</p>
+          <p>System ID: {carePlan.system_id}</p>
+          <p>Primary Phone: {carePlan.client_information.primary_phone}</p>
+          <p>Email: {carePlan.client_information.email_address}</p>
           <p>User Name: {carePlan.user_name}</p>
           <p>Facility: {carePlan.facility}</p>
           <p>Program: {carePlan.program}</p>
-          <p>Client Name: {carePlan.client_information.first_name} {carePlan.client_information.last_name}</p>
-          <p>Date of Birth: {carePlan.client_information.date_of_birth}</p>
-          <p>Preferred Pronouns: {carePlan.client_information.preferred_pronouns}</p>
-          <p>Primary Phone: {carePlan.client_information.primary_phone}</p>
-          <p>Email Address: {carePlan.client_information.email_address}</p>
+          <p>Care Plan Template: {carePlan.care_plan_template}</p>
+          <p>created Date: {carePlan.created_date}</p>
           
           <br></br>
           <br></br>
