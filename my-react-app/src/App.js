@@ -48,6 +48,7 @@ import FormView from "./components/dynamicform/FormView/";
 import CarePlanView from "./components/CarePlanView/CarePlan";
 
 import FormBuilder from "./components/dynamicform/FormBuilder";
+import ProgramDirectory from "./components/ProgramDirectory";
 
 function App() {
   // Retrieve isLoggedIn state from localStorage on initial render
@@ -239,8 +240,17 @@ function App() {
                   <Route path="/form_builder_new" element={<FormBuilder />} />
 
                   <Route path="/Preview" element={<Preview />} />
-                  <Route path="/care-plan/:clientId" element={<CarePlanView />} />
+                  <Route
+                    path="/care-plan/:clientId"
+                    element={<CarePlanView />}
+                  />
 
+                  {/* Program Directory  */}
+
+                  <Route
+                    path="/program-directory"
+                    element={<ProgramDirectory />}
+                  />
                 </Routes>
               </div>
             </div>
