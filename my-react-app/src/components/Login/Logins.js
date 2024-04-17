@@ -16,7 +16,7 @@ const LoginForm = () => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [showSuccessAlert, setSuccessShowAlert] = useState(false);
   const [showErrorAlert, setErrorShowAlert] = useState(false);
-  const [staySignedIn, setStaySignedIn] = useState(false);
+  // const [staySignedIn, setStaySignedIn] = useState(false);
 
   const [successMsg, setSuccessMsg] = useState(false);
   const [errorMsg, setErrorMsg] = useState(false);
@@ -151,7 +151,9 @@ const LoginForm = () => {
                     Enter Roots Email Address
                   </div>
                   <input
-                    class="border-b border-gray-800  focus:outline-none px-2 py-1 w-full mb-2"
+                    data-testid="reset-email-address"
+                    id="reset-email-address"
+                    className="border-b border-gray-800  focus:outline-none px-2 py-1 w-full mb-2"
                     {...register("email", {
                       required: "Email Address is required",
                       pattern: {
@@ -168,6 +170,8 @@ const LoginForm = () => {
                   <div className="flex w-full justify-evenly pb-5 pt-12">
                     <div className="p-3">
                       <button
+                        data-testid="reset-cancel"
+                        id="reset-cancel"
                         className="w-28 h-8 border-1 border-[#0F7235] text-md rounded-sm"
                         onClick={() => {
                           setIsFlipped(!isFlipped);
@@ -178,6 +182,8 @@ const LoginForm = () => {
                     </div>
                     <div className="p-3">
                       <button
+                        data-testid="reset-submit"
+                        id="reset-submit"
                         type="submit"
                         className="w-28 h-8 border-1 bg-[#0F7235] text-white text-md rounded-sm"
                       >
@@ -217,6 +223,8 @@ const LoginForm = () => {
                     Enter Roots Email Address
                   </div>
                   <input
+                    data-testid="login-email-address"
+                    id="login-email-address"
                     className="border-b border-gray-800 focus:outline-none px-2 py-1 w-full mb-2"
                     {...registerLogin("userEmail", {
                       required: "Email Address is required",
@@ -235,6 +243,8 @@ const LoginForm = () => {
                     Enter Roots Password
                   </div>
                   <input
+                    data-testid="login-password"
+                    id="login-password"
                     type="password"
                     className="border-b border-gray-800 focus:outline-none px-2 py-1 w-full mb-2"
                     {...registerLogin("password", {
@@ -250,22 +260,24 @@ const LoginForm = () => {
               </div>
               <div className="flex flex-row justify-between pt-3 px-4 pb-12">
                 <div className="flex flex-row space-x-4">
-                  <div className="w-6 h-3 relative hover:cursor-pointer" onClick={() => { localStorage.setItem("StaySignedIn", !staySignedIn); setStaySignedIn(!staySignedIn); }}>
+                  {/* <div data-testid="stay-signed-in" className="w-6 h-3 relative hover:cursor-pointer" onClick={() => { localStorage.setItem("StaySignedIn", !staySignedIn); setStaySignedIn(!staySignedIn); }}>
                     {staySignedIn ? (
-                      <div>
+                      <div data-testid="yes-signed-in" id="yes-signed-in">
                         <div className="w-8 h-4 left-0 top-0 absolute bg-[#0F7235] opacity-80 rounded-xl" />
                         <div className="w-4 h-4 left-4 top-0 absolute rounded-full border border-black" />
                       </div>
                     ) : (
-                      <div><div className="w-8 h-4 left-0 top-0 absolute bg-zinc-300 rounded-xl" />
+                      <div data-testid="no-signed-in" id="no-signed-in"><div className="w-8 h-4 left-0 top-0 absolute bg-zinc-300 rounded-xl" />
                         <div className="w-4 h-4 left-0 top-0 absolute rounded-full border border-black" />
                       </div>)}
                   </div>
                   <div className="text-black-500 text-xs font-normal">
                     Stay Signed In
-                  </div>
+                  </div> */}
                 </div>
                 <div
+                  data-testid="reset-password-click"
+                  id="reset-password-click"
                   className="text-black-500 text-xs font-normal hover:cursor-pointer"
                   onClick={() => {
                     // (e) => {
@@ -281,6 +293,8 @@ const LoginForm = () => {
               </div>
               <div className="flex flex-col items-center pb-5">
                 <button
+                  data-testid="login-in-button"
+                  id="login-in-button"
                   type="submit"
                   className="w-36 h-10 border-1 bg-[#0F7235] text-white text-md rounded-sm"
                 >

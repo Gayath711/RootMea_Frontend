@@ -303,7 +303,7 @@ const ClientProfile = () => {
       <div className="bg-white p-4 shadow">
         <div className="flex justify-between mb-0 mt-4 pl-4">
           <div className='flex space-x-12'>
-            <button onClick={handleSave} className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full'>
+            <button onClick={handleSave} className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full' id="saveClientProfile">
               Save
             </button>
           </div>
