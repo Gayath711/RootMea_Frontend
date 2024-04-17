@@ -59,6 +59,9 @@ function PriorityList() {
         Header: "Latest Edit",
         accessor: "last_edited_by_me",
         Cell: ({ value }) => {
+
+          if (!value) return "";
+          
           // Parse the date string
           const date = new Date(value);
           // Extract day, month, and year

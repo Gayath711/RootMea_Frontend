@@ -42,6 +42,9 @@ function PriorityListMyPrograms() {
         Header: "Latest Edit",
         accessor: "latestEdit",
         Cell: ({ value }) => {
+
+          if (!value) return "";
+          
           // Parse the date string
           const date = new Date(value);
           // Extract day, month, and year

@@ -78,6 +78,9 @@ function Medications({ clientId, setShowModal, showModal }) {
         Header: "Updated Date",
         accessor: "last_updated_date",
         Cell: ({ value }) => {
+
+          if (!value) return "";
+
           // Parse the date string
           const date = new Date(value);
           // Extract day, month, and year
@@ -92,6 +95,9 @@ function Medications({ clientId, setShowModal, showModal }) {
         Header: "Start Date",
         accessor: "start_date",
         Cell: ({ value }) => {
+
+          if (!value) return "";
+          
           // Parse the date string
           const date = new Date(value);
           // Extract day, month, and year
@@ -106,6 +112,9 @@ function Medications({ clientId, setShowModal, showModal }) {
         Header: "Stop Date",
         accessor: "stop_date",
         Cell: ({ value }) => {
+
+          if (!value) return "";
+
           // Parse the date string
           const date = new Date(value);
           // Extract day, month, and year

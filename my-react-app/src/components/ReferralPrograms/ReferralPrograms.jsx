@@ -91,6 +91,9 @@ function ReferralPrograms() {
         Header: "Closed Date",
         accessor: "date_closed",
         Cell: ({ value }) => {
+
+          if (!value) return "";
+          
           // Parse the date string
           const date = new Date(value);
           // Extract day, month, and year

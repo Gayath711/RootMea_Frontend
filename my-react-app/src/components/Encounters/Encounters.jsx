@@ -60,6 +60,9 @@ function Encounters() {
         accessor: "date",
         align: "left",
         Cell: ({ value }) => {
+
+          if (!value) return "";
+          
           // Parse the date string
           const date = new Date(value);
           // Extract day, month, and year
