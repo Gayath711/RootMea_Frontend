@@ -49,6 +49,7 @@ import CarePlanView from "./components/CarePlanView/CarePlan";
 
 import FormBuilder from "./components/dynamicform/FormBuilder";
 import ProgramDirectory from "./components/ProgramDirectory";
+import StaffDirectory from "./components/StaffDirectory";
 
 function App() {
   // Retrieve isLoggedIn state from localStorage on initial render
@@ -251,6 +252,8 @@ function App() {
                     path="/program-directory"
                     element={<ProgramDirectory />}
                   />
+
+                  <Route path="/staff-directory" element={<StaffDirectory />} />
                 </Routes>
               </div>
             </div>
