@@ -99,6 +99,9 @@ function MyPanel() {
         Header: "D.O.B",
         accessor: "date_of_birth",
         Cell: ({ value }) => {
+
+          if (!value) return "";
+
           // Parse the date string
           const date = new Date(value);
           // Extract day, month, and year
@@ -121,6 +124,9 @@ function MyPanel() {
         Header: "Date Assigned",
         accessor: "date_assigned",
         Cell: ({ value }) => {
+
+          if (!value) return "";
+          
           // Parse the date string
           const date = new Date(value);
           // Extract day, month, and year
