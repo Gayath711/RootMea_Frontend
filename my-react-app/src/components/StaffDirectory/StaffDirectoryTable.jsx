@@ -3,8 +3,8 @@ import { DataGrid } from "@mui/x-data-grid";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Select from "react-select";
-
 import SearchIcon from "../images/search.svg";
+import { Link } from "react-router-dom";
 
 function createData(
   Link,
@@ -99,9 +99,12 @@ export default function StaffDirectoryTable() {
                 renderCell: (params) => {
                   return (
                     <>
-                      <a href="#" className="text-[#5BC4BF]">
+                      <Link
+                        to={`/staff-directory/${params.row.Link}`}
+                        className="text-[#5BC4BF]"
+                      >
                         {params.row.Link}
-                      </a>
+                      </Link>
                     </>
                   );
                 },
