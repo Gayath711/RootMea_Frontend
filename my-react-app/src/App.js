@@ -51,6 +51,7 @@ import FormBuilder from "./components/dynamicform/FormBuilder";
 import ProgramDirectory from "./components/ProgramDirectory";
 import StaffDirectory from "./components/StaffDirectory";
 import StaffRecord from "./components/StaffDirectory/StaffRecord";
+import ProgramRecord from "./components/ProgramDirectory/ProgramRecord";
 
 function App() {
   // Retrieve isLoggedIn state from localStorage on initial render
@@ -253,7 +254,10 @@ function App() {
                     path="/program-directory"
                     element={<ProgramDirectory />}
                   />
-
+                  <Route
+                    path="/program-directory/:record"
+                    element={<ProgramRecord />}
+                  />
                   <Route path="/staff-directory" element={<StaffDirectory />} />
                   <Route
                     path="/staff-directory/:record"
