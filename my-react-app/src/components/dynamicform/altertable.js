@@ -124,7 +124,7 @@ function AlterTable({ onAddColumn }) {
         {
           column_name: newColumnName,
           data_type: newColumnType,
-          nullable: true,
+          nullable: !isRequired, // Invert isRequired to set nullable status
           name: newColumnTitle,
           options:
             newColumnType === "DROPDOWN" ||
@@ -133,7 +133,7 @@ function AlterTable({ onAddColumn }) {
               ? newColumnOptions
               : undefined,
           width: newColumnWidth,
-          required: isRequired, // Include required flag
+          required: isRequired,
         }
       );
 
@@ -161,7 +161,8 @@ function AlterTable({ onAddColumn }) {
   };
 
   const updateColumnTitle = (title, required) => {
-    return required ? `${title} *` : title;
+    // return required ? `${title} *` : title;
+    return title;
   };
 
   const handleCheckboxChange = (event) => {
@@ -520,8 +521,11 @@ function AlterTable({ onAddColumn }) {
               onClick={handleAddColumn}
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             >
+            
               Add Column
-            </button> */}
+            </button> 
+            <div> 
+            */}
           </form>
         )}
       </div>
