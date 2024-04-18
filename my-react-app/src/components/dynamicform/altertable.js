@@ -84,6 +84,20 @@ function AlterTable({ onAddColumn }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Check if any required fields are empty
+    const requiredColumns = tableColumns.filter((column) => column.required);
+    const emptyRequiredColumns = requiredColumns.filter(
+      (column) => !formData[column.name]
+    );
+
+    if (emptyRequiredColumns.length > 0) {
+      // If any required fields are empty, display an error message or prevent form submission
+      console.error("Required fields are empty:", emptyRequiredColumns);
+      return;
+    }
+
+    // Proceed with form submission if all required fields are filled
     await fetchTableStructure();
   };
 
@@ -144,6 +158,19 @@ function AlterTable({ onAddColumn }) {
     } catch (error) {
       console.error("Error adding column:", error);
     }
+  };
+
+  const updateColumnTitle = (title, required) => {
+    return required ? `${title} *` : title;
+  };
+
+  const handleCheckboxChange = (event) => {
+    setIsRequired(event.target.checked);
+    setNewColumnTitle(updateColumnTitle(newColumnTitle, event.target.checked));
+  };
+
+  const handleTitleChange = (event) => {
+    setNewColumnTitle(updateColumnTitle(event.target.value, isRequired));
   };
 
   useEffect(() => {
@@ -421,7 +448,7 @@ function AlterTable({ onAddColumn }) {
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
               onClick={handleModalOpen}
             >
-              Settings
+              Add Column Details
             </button>
             <ReactModal
               isOpen={isModalOpen}
@@ -440,7 +467,7 @@ function AlterTable({ onAddColumn }) {
                   <input
                     type="text"
                     value={newColumnTitle}
-                    onChange={(e) => setNewColumnTitle(e.target.value)}
+                    onChange={handleTitleChange}
                     className="border border-gray-300 rounded px-4 py-2 w-full focus:outline-none focus:border-blue-500"
                   />
                 </div>
@@ -466,7 +493,7 @@ function AlterTable({ onAddColumn }) {
                     <input
                       type="checkbox"
                       checked={isRequired}
-                      onChange={(e) => setIsRequired(e.target.checked)}
+                      onChange={handleCheckboxChange}
                       className="ml-2"
                     />
                   </label>
