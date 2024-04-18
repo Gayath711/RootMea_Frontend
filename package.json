@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@mui/x-data-grid": "^7.2.0",
     "dayjs": "^1.11.10",
     "framer-motion": "^11.0.15",
     "react-loader-spinner": "^6.1.6",
