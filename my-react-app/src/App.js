@@ -255,12 +255,12 @@ function App() {
                     element={<ProgramDirectory />}
                   />
                   <Route
-                    path="/program-directory/:record"
+                    path="/program-directory/:recordid"
                     element={<ProgramRecord />}
                   />
                   <Route path="/staff-directory" element={<StaffDirectory />} />
                   <Route
-                    path="/staff-directory/:record"
+                    path="/staff-directory/:recordid"
                     element={<StaffRecord />}
                   />
                 </Routes>

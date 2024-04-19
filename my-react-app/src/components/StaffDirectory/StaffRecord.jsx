@@ -1,29 +1,83 @@
-import React from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import axios from "axios";
+import apiURL from "../../apiConfig";
 
 export default function StaffRecord() {
+  const { recordid } = useParams();
+  const token = localStorage.getItem("access_token");
+
+  const [recordData, setRecordData] = useState({});
+  const [loadingData, setLoadingData] = useState(true);
+
+  useEffect(() => {
+    fetchData();
+  }, [recordid]);
+
+  const fetchData = () => {
+    axios
+      .get(`${apiURL}/api/users/${recordid}/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setLoadingData(true);
+        setRecordData(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching SVS Questions:", error);
+      })
+      .finally(() => {
+        setLoadingData(false);
+      });
+  };
+  const assignedProgramTableRows = useMemo(() => {
+    if (JSON.stringify(recordData) === "{}" || loadingData) {
+      return [];
+    }
+    return recordData.profile
+      ? recordData.profile.program.map((item) => {
+          return {
+            id: item.id,
+            ProgramName: item.program || "",
+            linkToProgram: "link to program",
+            AssignedToProgramDate: item.date_joined || "",
+          };
+        })
+      : [];
+  }, [recordData, loadingData]);
+
+  let staffName = `${recordData.first_name || ""} ${
+    recordData.last_name || ""
+  }`;
+  let StaffTitle = recordData.profile?.position || "";
+
   return (
     <div class="container mx-auto sm:grid-cols-12 md:grid-cols-7 shadow p-0">
       <div className="w-100 bg-[#5BC4BF] text-white p-2.5 px-4">Staff Name</div>
       <div className="flex flex-column gap-4 p-4">
-        <StaffDetail />
-        <AssignedProgramTable />
+        <StaffDetail staffName={staffName} staffTitle={StaffTitle} />
+        <AssignedProgramTable
+          loadingData={loadingData}
+          rows={assignedProgramTableRows}
+        />
         <AssignedPriorityListsTable />
       </div>
     </div>
   );
 }
 
-const StaffDetail = () => {
+const StaffDetail = ({ staffName = "", staffTitle = "" }) => {
   return (
     <div className="grid grid-cols-2 gap-4">
       <div className="col-span-1">
         <p className="text-base m-0 p-0 flex gap-2 items-center">
-          <span className="fw-medium">Staff Title:</span>
-          <span className="fw-bold">[Staff Tittle]</span>
+          <span className="fw-medium">{staffName}:</span>
+          <span className="fw-bold">{staffTitle}</span>
         </p>
       </div>
       <div className="col-span-1">
@@ -53,39 +107,40 @@ const StaffDetail = () => {
   );
 };
 
-const AssignedProgramTable = () => {
-  const rows = [
-    {
-      id: 1,
-      ProgramName: "John",
-      linkToProgram: "link to program",
-      AssignedToProgramDate: "02/18/2024",
-    },
-    {
-      id: 2,
-      ProgramName: "John",
-      linkToProgram: "link to program",
-      AssignedToProgramDate: "02/18/2024",
-    },
-    {
-      id: 3,
-      ProgramName: "John",
-      linkToProgram: "link to program",
-      AssignedToProgramDate: "02/18/2024",
-    },
-    {
-      id: 4,
-      ProgramName: "John",
-      linkToProgram: "link to program",
-      AssignedToProgramDate: "02/18/2024",
-    },
-  ];
+const AssignedProgramTable = ({ rows, loadingData }) => {
+  // const rows = [
+  //   {
+  //     id: 1,
+  //     ProgramName: "John",
+  //     linkToProgram: "link to program",
+  //     AssignedToProgramDate: "02/18/2024",
+  //   },
+  //   {
+  //     id: 2,
+  //     ProgramName: "John",
+  //     linkToProgram: "link to program",
+  //     AssignedToProgramDate: "02/18/2024",
+  //   },
+  //   {
+  //     id: 3,
+  //     ProgramName: "John",
+  //     linkToProgram: "link to program",
+  //     AssignedToProgramDate: "02/18/2024",
+  //   },
+  //   {
+  //     id: 4,
+  //     ProgramName: "John",
+  //     linkToProgram: "link to program",
+  //     AssignedToProgramDate: "02/18/2024",
+  //   },
+  // ];
 
   return (
     <Box sx={{ width: "100%", my: 1 }}>
       <div className="flex flex-column gap-2 w-100 ">
         <p className="mb-2 fw-medium text-base">Assigned Programs</p>
         <DataGrid
+          loading={loadingData}
           rows={rows}
           columns={[
             {
@@ -102,7 +157,10 @@ const AssignedProgramTable = () => {
               renderCell: (params) => {
                 return (
                   <>
-                    <Link to="#" className="text-[#2F9384]">
+                    <Link
+                      to={`/program-directory/${params.row.id}`}
+                      className="text-[#2F9384]"
+                    >
                       {params.row.linkToProgram}
                     </Link>
                   </>
@@ -204,7 +262,10 @@ const AssignedPriorityListsTable = () => {
               renderCell: (params) => {
                 return (
                   <>
-                    <Link to="#" className="text-[#5BC4BF]">
+                    <Link
+                      to={`/program-directory/${params.row.id}`}
+                      className="text-[#5BC4BF]"
+                    >
                       {params.row.linkToProgram}
                     </Link>
                   </>
