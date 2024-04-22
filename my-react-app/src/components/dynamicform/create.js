@@ -28,6 +28,7 @@ import Text_area_Icon from "../images/form_builder/text_area.svg";
 import Radio_button_Icon from "../images/form_builder/radio_button.svg";
 import DraggableIcon from "../images/form_builder/draggable.svg";
 import TrashIcon from "../images/form_builder/trash.svg";
+import SwitchIcon from "../images/form_builder/switch.svg";
 
 import GearIcon from "../images/form_builder/gears.svg";
 
@@ -238,13 +239,12 @@ export default function DragDropDemo() {
         { type: "VARCHAR(250)", label: "Text", IconSrc: Single_line_text_Icon },
         { type: "TEXT", label: "TextArea", IconSrc: Text_area_Icon },
         { type: "INTEGER", label: "Number", IconSrc: Number_Icon },
+        { type: "FLOAT", label: "Decimal", IconSrc: Number_Icon },
       ],
     },
     {
       name: "Date Elements",
       elements: [
-        // { type: "FLOAT", label: "Decimal", IconSrc: file },
-        // { type: "BOOLEAN", label: "Boolean", IconSrc: file },
         {
           type: "TIMESTAMP",
           label: "Date and Time",
@@ -256,6 +256,7 @@ export default function DragDropDemo() {
       name: "Multi Elements",
       elements: [
         { type: "my_enum_type", label: "Dropdown", IconSrc: Drop_down_Icon },
+        { type: "BOOLEAN", label: "Yes/No", IconSrc: SwitchIcon },
         {
           type: "my_enum_typeb",
           label: "Multiple Select",
@@ -1158,7 +1159,9 @@ export default function DragDropDemo() {
                                           )
                                         }
                                       >
-                                        <option value="">Select</option>
+                                        <option value="" disabled>
+                                          Select
+                                        </option>
                                         <option value="w-1/2">w-1/2</option>
                                         <option value="w-1/4">w-1/4</option>
                                         <option value="w-3/4">w-3/4</option>
