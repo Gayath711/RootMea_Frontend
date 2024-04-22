@@ -1584,7 +1584,7 @@ export default function DragDropDemo() {
                                     </div>
                                     <div className="pb-4">
                                       <EnumOptionsComponent
-                                        label="Enum Options"
+                                        label="Options"
                                         value={enumList[index] || ""}
                                         setValue={(value) =>
                                           handleEnumChange(index, value)
