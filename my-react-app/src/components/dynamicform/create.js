@@ -1759,7 +1759,14 @@ function ElementGroup({
 }
 
 const EnumOptionsComponent = ({ value, setValue }) => {
-  const [enumOptions, setEnumOptions] = useState(["aa", "bb", "cc"]);
+  const [enumOptions, setEnumOptions] = useState([]);
+
+  const isEnumOptionsHasValue =
+    enumOptions.length > 0
+      ? enumOptions[enumOptions.length - 1].length > 0
+        ? true
+        : false
+      : false;
 
   const onChangeVal = (e) => {
     if (e.target.value[e.target.value.length - 1] !== ",") {
@@ -1772,12 +1779,17 @@ const EnumOptionsComponent = ({ value, setValue }) => {
   };
 
   const onAddNewOption = () => {
-    setEnumOptions((prev) => {
-      let updatedEle = [...prev];
-      updatedEle.push("");
+    // console.log("..");
+    // console.log({ enumOptions, isEnumOptionsHasValue });
 
-      return updatedEle;
-    });
+    if (isEnumOptionsHasValue) {
+      setEnumOptions((prev) => {
+        let updatedEle = [...prev];
+        updatedEle.push("");
+
+        return updatedEle;
+      });
+    }
   };
 
   const onRemoveOption = (idx) => {
@@ -1798,7 +1810,8 @@ const EnumOptionsComponent = ({ value, setValue }) => {
   }, []);
 
   useEffect(() => {
-    let arrayOfValues = enumOptions.join(",");
+    let hasValue = enumOptions.filter(Boolean);
+    let arrayOfValues = hasValue.join(",");
     setValue(arrayOfValues);
   }, [enumOptions]);
 
@@ -1851,6 +1864,7 @@ const EnumOptionsComponent = ({ value, setValue }) => {
       <button
         className="mx-auto bg-[#5BC4BF] text-white hover:bg-teal-700 font-bold mt-2.5 p-2 px-4 rounded transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500  text-xs"
         onClick={onAddNewOption}
+        disabled={!isEnumOptionsHasValue}
       >
         Add Option
       </button>
