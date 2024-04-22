@@ -19,7 +19,7 @@ export default function StaffRecord() {
 
   const fetchData = () => {
     axios
-      .get(`${apiURL}/api/users/${recordid}/`, {
+      .get(`${apiURL}/api/users/${recordid}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -58,7 +58,9 @@ export default function StaffRecord() {
 
   return (
     <div class="container mx-auto sm:grid-cols-12 md:grid-cols-7 shadow p-0">
-      <div className="w-100 bg-[#5BC4BF] text-white p-2.5 px-4">Staff Name</div>
+      <div className="w-100 bg-[#5BC4BF] text-white p-2.5 px-4">
+        {staffName}
+      </div>
       <div className="flex flex-column gap-4 p-4">
         <StaffDetail staffName={staffName} staffTitle={StaffTitle} />
         <AssignedProgramTable
@@ -76,7 +78,7 @@ const StaffDetail = ({ staffName = "", staffTitle = "" }) => {
     <div className="grid grid-cols-2 gap-4">
       <div className="col-span-1">
         <p className="text-base m-0 p-0 flex gap-2 items-center">
-          <span className="fw-medium">{staffName}:</span>
+          <span className="fw-medium">Staff Title :</span>
           <span className="fw-bold">{staffTitle}</span>
         </p>
       </div>
@@ -88,7 +90,6 @@ const StaffDetail = ({ staffName = "", staffTitle = "" }) => {
         />
       </div>
       <div className="col-span-1">
-        {" "}
         <input
           type="text"
           placeholder="Email"

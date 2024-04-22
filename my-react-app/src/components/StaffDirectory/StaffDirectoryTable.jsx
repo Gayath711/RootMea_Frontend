@@ -7,6 +7,19 @@ import SearchIcon from "../images/search.svg";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import apiURL from "../../apiConfig";
+import { styled } from "@mui/material/styles";
+
+const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
+  "& .MuiDataGrid-sortIcon": {
+    opacity: 1,
+    color: "white",
+  },
+  "& .MuiDataGrid-menuIconButton": {
+    opacity: 1,
+    color: "white",
+  },
+}));
+
 // function createData(
 //   Link,
 //   LastName,
@@ -197,7 +210,7 @@ export default function StaffDirectoryTable() {
             searchText={searchText}
             handleSearchText={handleSearchText}
           />
-          <DataGrid
+          <StyledDataGrid
             loading={loadingData}
             rows={rows}
             columns={[
