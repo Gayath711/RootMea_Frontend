@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import "./create.css";
 import { Modal, Button } from "react-bootstrap";
 
@@ -27,6 +27,7 @@ import Single_line_text_Icon from "../images/form_builder/single_line_text.svg";
 import Text_area_Icon from "../images/form_builder/text_area.svg";
 import Radio_button_Icon from "../images/form_builder/radio_button.svg";
 import DraggableIcon from "../images/form_builder/draggable.svg";
+import TrashIcon from "../images/form_builder/trash.svg";
 
 import GearIcon from "../images/form_builder/gears.svg";
 
@@ -1579,20 +1580,12 @@ export default function DragDropDemo() {
                                       </select>
                                     </div>
                                     <div className="pb-4">
-                                      <label className="inline-flex items-center">
-                                        Enum Options
-                                      </label>
-                                      <input
-                                        type="text"
+                                      <EnumOptionsComponent
+                                        label="Enum Options"
                                         value={enumList[index] || ""}
-                                        onChange={(e) =>
-                                          handleEnumChange(
-                                            index,
-                                            e.target.value
-                                          )
+                                        setValue={(value) =>
+                                          handleEnumChange(index, value)
                                         }
-                                        placeholder="Enter enum values separated by comma"
-                                        className="border border-gray-300 rounded px-4 py-2 mr-4 w-100"
                                       />
                                     </div>
                                     <div className="pb-4">
@@ -1761,3 +1754,103 @@ function ElementGroup({
     </div>
   );
 }
+
+const EnumOptionsComponent = ({ value, setValue }) => {
+  const [enumOptions, setEnumOptions] = useState(["aa", "bb", "cc"]);
+
+  const onChangeVal = (e) => {
+    if (e.target.value[e.target.value.length - 1] !== ",") {
+      setEnumOptions((prev) => {
+        const updatedItems = [...prev];
+        updatedItems[e.target.name] = e.target.value;
+        return [...updatedItems];
+      });
+    }
+  };
+
+  const onAddNewOption = () => {
+    setEnumOptions((prev) => {
+      let updatedEle = [...prev];
+      updatedEle.push("");
+
+      return updatedEle;
+    });
+  };
+
+  const onRemoveOption = (idx) => {
+    setEnumOptions((prev) => {
+      let updatedEle = [...prev];
+      updatedEle = updatedEle.filter((_, index) => {
+        return idx !== index;
+      });
+
+      return updatedEle;
+    });
+  };
+
+  useEffect(() => {
+    let arrayOfValues = value.split(",");
+    setEnumOptions(arrayOfValues);
+    return () => {};
+  }, []);
+
+  useEffect(() => {
+    let arrayOfValues = enumOptions.join(",");
+    setValue(arrayOfValues);
+  }, [enumOptions]);
+
+  return (
+    <div className="flex flex-column gap-2">
+      <label className="inline-flex items-center">Enum Options</label>
+      {enumOptions.length > 0
+        ? enumOptions.map((item, idx) => (
+            <div className="flex items-center gap-1">
+              <input
+                type="text"
+                onChange={onChangeVal}
+                value={enumOptions[idx]}
+                name={idx}
+                placeholder={`Enter Option ${idx + 1}`}
+                className="border border-gray-300 rounded px-4 py-2 mr-4 w-100 placeholder:text-sm"
+              />
+
+              <button
+                onClick={() => {
+                  onRemoveOption(idx);
+                }}
+                className="flex items-center justify-center p-2 text-white rounded-full focus:outline-none hover:bg-red-100"
+              >
+                <img src={TrashIcon} alt="trash" className="w-4 h-4" />
+              </button>
+            </div>
+          ))
+        : ["newItem"].map((item, idx) => (
+            <div className="flex items-center gap-1">
+              <input
+                type="text"
+                onChange={onChangeVal}
+                value={enumOptions[idx]}
+                name={idx}
+                placeholder={`Enter Option ${idx + 1}`}
+                className="border border-gray-300 rounded px-4 py-2 mr-4 w-100 placeholder:text-sm"
+              />
+
+              <button
+                onClick={() => {
+                  onRemoveOption(idx);
+                }}
+                className="hidden flex items-center justify-center p-2 text-white rounded-full focus:outline-none hover:bg-red-100"
+              >
+                <img src={TrashIcon} alt="trash" className="w-4 h-4" />
+              </button>
+            </div>
+          ))}
+      <button
+        className="mx-auto bg-[#5BC4BF] text-white hover:bg-teal-700 font-bold mt-2.5 p-2 px-4 rounded transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500  text-xs"
+        onClick={onAddNewOption}
+      >
+        Add Option
+      </button>
+    </div>
+  );
+};
