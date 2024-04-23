@@ -14,6 +14,9 @@ function AlterTable({ onAddColumn }) {
   const [newColumnWidth, setNewColumnWidth] = useState("");
   const [isRequired, setIsRequired] = useState(false); // Step 1: State for checkbox
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modifiedColumnTitle, setModifiedColumnTitle] = useState("");
+  const [isTitleModalOpen, setIsTitleModalOpen] = useState(false);
+  const [selectedColumn, setSelectedColumn] = useState(null);
 
   const handleModalOpen = () => {
     setIsModalOpen(true);
@@ -172,6 +175,50 @@ function AlterTable({ onAddColumn }) {
 
   const handleTitleChange = (event) => {
     setNewColumnTitle(updateColumnTitle(event.target.value, isRequired));
+  };
+
+  const openTitleModal = (column) => {
+    console.log("Selected column:", column);
+
+    setSelectedColumn(column);
+    setModifiedColumnTitle(column.column_fullname);
+    setIsTitleModalOpen(true);
+  };
+
+  const closeTitleModal = () => {
+    setIsTitleModalOpen(false);
+  };
+
+  const handleTitleInputChange = (event) => {
+    setModifiedColumnTitle(event.target.value);
+  };
+
+  const submitModifiedTitle = async () => {
+    try {
+      console.log("Modified Column Title:", modifiedColumnTitle);
+      const response = await axios.patch(
+        `${apiURL}/get_table_structure/${tableName}/${selectedColumn.name}`,
+        {
+          new_title: modifiedColumnTitle, // Send the new_title field
+        }
+      );
+
+      if (response.status === 200) {
+        setIsTitleModalOpen(false);
+        const updatedColumns = tableColumns.map((column) => {
+          if (column.name === selectedColumn.name) {
+            return { ...column, column_fullname: modifiedColumnTitle };
+          }
+          return column;
+        });
+        setTableColumns(updatedColumns); // Update the local state with modified column title
+        console.log("Column title updated successfully");
+      } else {
+        console.error("Failed to update column title:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error updating column title:", error);
+    }
   };
 
   useEffect(() => {
@@ -357,6 +404,13 @@ function AlterTable({ onAddColumn }) {
                     } focus:outline-none focus:border-blue-500`}
                   />
                 )}
+                <button
+                  type="button"
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
+                  onClick={() => openTitleModal(column)} // Pass 'column' as argument
+                >
+                  Edit Title
+                </button>
 
                 <button
                   type="button"
@@ -384,7 +438,7 @@ function AlterTable({ onAddColumn }) {
                 <option value="BOOLEAN">Boolean</option>
                 <option value="FILE">File</option>
                 <option value="IMAGE">Image</option>
-                <option value="DATETIME">DateTime</option>
+                <option value="TIMESTAMP">DateTime</option>
                 <option value="DROPDOWN">Dropdown</option>
                 <option value="MULTIPLESELECT">Multiple Select</option>
                 <option value="CHECKBOX">Checkbox</option>
@@ -509,6 +563,43 @@ function AlterTable({ onAddColumn }) {
                 <button
                   type="button"
                   onClick={handleModalClose}
+                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-2"
+                >
+                  Close
+                </button>
+              </div>
+            </ReactModal>
+
+            <ReactModal
+              isOpen={isTitleModalOpen}
+              onRequestClose={closeTitleModal}
+              contentLabel="Modify Column Title"
+              className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50"
+              overlayClassName="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50"
+            >
+              <div className="bg-white rounded-lg p-8 w-1/3">
+                <h2 className="text-xl font-bold mb-4">Modify Column Title</h2>
+                <div className="mb-4">
+                  <label className="block mb-1 text-gray-700">
+                    New Column Title
+                  </label>
+                  <input
+                    type="text"
+                    value={modifiedColumnTitle}
+                    onChange={handleTitleInputChange}
+                    className="border border-gray-300 rounded px-4 py-2 w-full focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={submitModifiedTitle}
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                >
+                  Update Title
+                </button>
+                <button
+                  type="button"
+                  onClick={closeTitleModal}
                   className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-2"
                 >
                   Close
