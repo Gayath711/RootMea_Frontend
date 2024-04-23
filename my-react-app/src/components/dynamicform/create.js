@@ -1811,8 +1811,18 @@ const EnumOptionsComponent = ({ label = "", value, setValue }) => {
 
   useEffect(() => {
     let hasValue = enumOptions.filter(Boolean);
-    let arrayOfValues = hasValue.join(",");
+    let uniqueValues = [...new Set(hasValue)];
+    // setEnumOptions(uniqueValues);
+    // console.log({ hasValue, uniqueValues });
+    let arrayOfValues = uniqueValues.join(",");
     setValue(arrayOfValues);
+  }, [enumOptions]);
+
+  useEffect(() => {
+    let uniqueValues = [...new Set(enumOptions)];
+    if (uniqueValues.length !== enumOptions.length) {
+      setEnumOptions(uniqueValues);
+    }
   }, [enumOptions]);
 
   return (
