@@ -38,43 +38,43 @@ function MedicalVitalSigns({clientId}) {
   const [data, setData] = useState([
     {
       measure: "Blood Pressure (Syst/Diast)",
-      date_time: "...",
+      value: "...",
     },
     {
       measure: "Heart Rate (Beats per minute)",
-      date_time: "...",
+      value: "...",
     },
     {
       measure: "Respiration (Breaths per minute)",
-      date_time: "...",
+      value: "...",
     },
     {
-      measure: "Blood Pressure (Syst/Diast)",
-      date_time: "...",
+      measure: "Weight (Pounds)",
+      value: "...",
     },
     {
-      measure: "Heart Rate (Beats per minute)",
-      date_time: "...",
+      measure: "Height (Inches)",
+      value: "...",
     },
     {
-      measure: "Respiration (Breaths per minute)",
-      date_time: "...",
+      measure: "BMI (Index)",
+      value: "...",
     },
     {
-      measure: "Blood Pressure (Syst/Diast)",
-      date_time: "...",
+      measure: "Smoked tobacco in last 30 days (Syst/Diast)",
+      value: "...",
     },
     {
-      measure: "Respiration (Breaths per minute)",
-      date_time: "...",
+      measure: "Other nicotine in last 30 days",
+      value: "...",
     },
     {
-      measure: "Heart Rate (Beats per minute)",
-      date_time: "...",
+      measure: "Date",
+      value: "...",
     },
     {
-      measure: "Respiration (Breaths per minute)",
-      date_time: "...",
+      measure: "Source",
+      value: "...",
     },
   ]);
 
@@ -86,11 +86,11 @@ function MedicalVitalSigns({clientId}) {
         align: "left",
       },
       {
-        Header: "Date/Time",
-        accessor: "date_time",
+        Header: "Value",
+        accessor: "value",
       },
       {
-        Header: "Date/Time",
+        Header: "Value",
         Cell: ({ row }) => (
             "..."
         )
