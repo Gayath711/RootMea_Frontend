@@ -3,14 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import Logo from "./images/logo.svg";
+import Logo2 from "./images/logo-full-h.jpg";
 import MenuIcon from "./images/menuIcon.svg";
 import GroupIcon from "./images/groupIcon.svg";
 import GroupIcon2 from "./images/groupIcon2.svg";
 import SettingIcon from "./images/settingIcon.svg";
 import ProfileIcon from "./images/profileIcon.svg";
-import apiURL from '.././apiConfig';
-import { Link } from 'react-router-dom';
+import apiURL from ".././apiConfig";
+import { Link } from "react-router-dom";
 
 const Navbar = ({ onLogout, isMinimized, toggleSidebar }) => {
   const navigate = useNavigate(); // Initialize navigate function
@@ -64,9 +64,9 @@ const Navbar = ({ onLogout, isMinimized, toggleSidebar }) => {
     <nav id="navBar" className="px-4 shadow-lg bg-white z-20 relative w-full">
       <div className="flex justify-between">
         <div className="flex justify-center items-center">
-        <Link to="/">
-  <img src={Logo} className="size-24 py-2" alt="logo" />
-</Link>
+          <Link to="/">
+            <img src={Logo2} className="size-24 py-2" alt="logo" />
+          </Link>
           <button className="mx-4">
             <img src={MenuIcon} className="size-5" alt="menu" />
           </button>
@@ -105,7 +105,9 @@ const Navbar = ({ onLogout, isMinimized, toggleSidebar }) => {
             }}
             className="mt-7"
           >
-            <MenuItem onClick={() => navigate('/UserProfile')}>Profile</MenuItem>
+            <MenuItem onClick={() => navigate("/UserProfile")}>
+              Profile
+            </MenuItem>
             <MenuItem onClick={handleClose}>My account</MenuItem>
             <MenuItem onClick={logout}>Logout</MenuItem>
           </Menu>

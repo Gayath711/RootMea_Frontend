@@ -6,7 +6,8 @@ import { useForm } from "react-hook-form";
 import { TailSpin } from "react-loader-spinner";
 import { BeatLoader } from "react-spinners";
 
-import RootsLogo from "../../image/root.png";
+// import RootsLogo from "../../image/root.png";
+import RootsLogo from "../images/logo-full-v.png";
 import apiURL from "../.././apiConfig";
 import PasswordReset from "./PasswordReset";
 import AlertSuccess from "../common/AlertSuccess";
@@ -81,9 +82,8 @@ const LoginForm = () => {
       console.error("Login error:", error);
     }
 
-    console.log("Login")
-  }
-
+    console.log("Login");
+  };
 
   const handlePasswordReset = (resetData) => {
     console.log(resetData);
@@ -138,10 +138,11 @@ const LoginForm = () => {
             <form onSubmit={handleSubmit(handlePasswordReset)}>
               <div style={{ transform: "rotateY(180deg)" }}>
                 <div
-                  className={`flex flex-col items-center space-y-0 pb-5 ${showSuccessAlert || showErrorAlert ? "pt-0" : "pt-5"
-                    }`}
+                  className={`flex flex-col items-center space-y-0 pb-5 ${
+                    showSuccessAlert || showErrorAlert ? "pt-0" : "pt-5"
+                  }`}
                 >
-                  <img className="w-24 h-20" src={RootsLogo} />
+                  <img className="w-24 h-100" src={RootsLogo} />
                   <div className="font-medium text-2xl pt-3">
                     Reset Password
                   </div>
@@ -197,7 +198,9 @@ const LoginForm = () => {
           </div>
         ) : (
           <div
-            className={`w-96 h-fit flex flex-col bg-white rounded shadow ${showErrorAlert ? "pt-0" : "pt-5"}`}
+            className={`w-96 h-fit flex flex-col bg-white rounded shadow ${
+              showErrorAlert ? "pt-0" : "pt-5"
+            }`}
             style={{
               transformStyle: "preserve-3d",
               transition: "transform 0.5s",
@@ -205,7 +208,7 @@ const LoginForm = () => {
             }}
           >
             {showErrorAlert && (
-              <div >
+              <div>
                 <AlertError message={errorMsg} handleClose={closeErrorAlert} />{" "}
               </div>
             )}
@@ -214,7 +217,11 @@ const LoginForm = () => {
                 <img className="w-24 h-20" src={RootsLogo} />
                 <div className="font-medium text-2xl pt-3">Welcome</div>
                 {isLoading && (
-                  <BeatLoader className="opacity-75" color="#0F7235" size={25} />
+                  <BeatLoader
+                    className="opacity-75"
+                    color="#0F7235"
+                    size={25}
+                  />
                 )}
               </div>
               <div className="">
