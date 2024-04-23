@@ -3,15 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import Logo from "../images/logo.svg";
+import Logo from "../images/logo-full-h.jpg";
 import MenuIcon from "../images/menuIcon.svg";
 import GroupIcon from "../images/groupIcon.svg";
 import GroupIcon2 from "../images/groupIcon2.svg";
 import SettingIcon from "../images/settingIcon.svg";
 import ProfileIcon from "../images/profileIcon.svg";
 import { useWindowSize } from "../Utils/windowResize";
-import apiURL from '../../apiConfig';
-
+import apiURL from "../../apiConfig";
 
 const Navbar = ({ onLogout, isMinimized, toggleSidebar }) => {
   const navigate = useNavigate(); // Initialize navigate function
@@ -20,8 +19,7 @@ const Navbar = ({ onLogout, isMinimized, toggleSidebar }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
-  const {width} = useWindowSize();
-
+  const { width } = useWindowSize();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -69,20 +67,22 @@ const Navbar = ({ onLogout, isMinimized, toggleSidebar }) => {
     <nav id="navBar" className="px-4 shadow-lg bg-white z-20 relative w-full">
       <div className="flex justify-between">
         <div className="flex justify-center items-center">
-        <Link to="/">
-  <img src={Logo} className="size-24 py-2" alt="logo" />
-</Link>
+          <Link to="/">
+            <img src={Logo} className="w-28 h-100 py-2" alt="logo" />
+          </Link>
           <button className="mx-4">
             <img src={MenuIcon} className="size-4 sm:size-5" alt="menu" />
           </button>
-          {width > 600 &&(<div className="flex items-center mx-2 bg-[#F5F5F5] p-3 py-2 space-x-3">
-            <img src={GroupIcon} className="size-5" alt="search" />
-            <input
-              type="text"
-              placeholder="Search here"
-              className="bg-[#F5F5F5] text-sm text-[#1F4B51] p-1 font-medium w-44"
-            />
-          </div>)}
+          {width > 600 && (
+            <div className="flex items-center mx-2 bg-[#F5F5F5] p-3 py-2 space-x-3">
+              <img src={GroupIcon} className="size-5" alt="search" />
+              <input
+                type="text"
+                placeholder="Search here"
+                className="bg-[#F5F5F5] text-sm text-[#1F4B51] p-1 font-medium w-44"
+              />
+            </div>
+          )}
         </div>
         <div className="flex justify-center items-center space-x-6 sm:space-x-12 mx-0.5">
           <button className="p-1 bg-[#EAECEB]">
@@ -91,7 +91,11 @@ const Navbar = ({ onLogout, isMinimized, toggleSidebar }) => {
           <button className="p-1 bg-[#EAECEB]">
             <img src={SettingIcon} className="size-4" alt="settings" />
           </button>
-          <button className="p-1 bg-[#EAECEB]" onClick={handleClick} id="profileButton">
+          <button
+            className="p-1 bg-[#EAECEB]"
+            onClick={handleClick}
+            id="profileButton"
+          >
             <img src={ProfileIcon} className="size-4" alt="profile" />
           </button>
           <Menu
@@ -110,11 +114,18 @@ const Navbar = ({ onLogout, isMinimized, toggleSidebar }) => {
             }}
             className="mt-7"
           >
-            <MenuItem onClick={() => navigate("/UserProfile")} id="user-profile-menu">
+            <MenuItem
+              onClick={() => navigate("/UserProfile")}
+              id="user-profile-menu"
+            >
               Profile
             </MenuItem>
-            <MenuItem onClick={handleClose} id="my-account-menu">My account</MenuItem>
-            <MenuItem onClick={logout} id="logout-menu">Logout</MenuItem>
+            <MenuItem onClick={handleClose} id="my-account-menu">
+              My account
+            </MenuItem>
+            <MenuItem onClick={logout} id="logout-menu">
+              Logout
+            </MenuItem>
           </Menu>
         </div>
       </div>

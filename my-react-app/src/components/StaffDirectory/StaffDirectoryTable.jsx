@@ -7,6 +7,19 @@ import SearchIcon from "../images/search.svg";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import apiURL from "../../apiConfig";
+import { styled } from "@mui/material/styles";
+
+const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
+  "& .MuiDataGrid-sortIcon": {
+    opacity: 1,
+    color: "white",
+  },
+  "& .MuiDataGrid-menuIconButton": {
+    opacity: 1,
+    color: "white",
+  },
+}));
+
 // function createData(
 //   Link,
 //   LastName,
@@ -86,80 +99,7 @@ import apiURL from "../../apiConfig";
 export default function StaffDirectoryTable() {
   const token = localStorage.getItem("access_token");
   const [loadingData, setLoadingData] = useState(true);
-  const [recordData, setRecordData] = useState([
-    {
-      id: 3,
-      first_name: "Alice",
-      last_name: "Johnson",
-      email: "alice.johnson@rootsclinic.org",
-      last_login: null,
-      is_active: true,
-      profile: {
-        phone_no: "+1-555-345-6789",
-        position: null,
-        facility: "",
-        program: ["STI", "Asthma"],
-        supervisor_first_name: "arrun",
-        supervisor_last_name: "prasaath",
-        supervisor_title: null,
-        supervisor_email: "arrun@dataterrain.com",
-      },
-    },
-    {
-      id: 1,
-      first_name: "arrun",
-      last_name: "prasaath",
-      email: "arrun@dataterrain.com",
-      last_login: "2024-04-17T17:51:01.236789Z",
-      is_active: true,
-      profile: {
-        phone_no: "+1-555-123-4567",
-        position: null,
-        facility: "",
-        program: [],
-        supervisor_first_name: "",
-        supervisor_last_name: "",
-        supervisor_title: "",
-        supervisor_email: "",
-      },
-    },
-    {
-      id: 4,
-      first_name: "David",
-      last_name: "Brown",
-      email: "david.brown@rootsclinic.org",
-      last_login: null,
-      is_active: true,
-      profile: {
-        phone_no: "2345124",
-        position: null,
-        facility: "",
-        program: [],
-        supervisor_first_name: "Alice",
-        supervisor_last_name: "Johnson",
-        supervisor_title: null,
-        supervisor_email: "alice.johnson@rootsclinic.org",
-      },
-    },
-    {
-      id: 2,
-      first_name: "John",
-      last_name: "Smith",
-      email: "john.smith@rootsclinic.org",
-      last_login: null,
-      is_active: true,
-      profile: {
-        phone_no: "+1-555-234-5678",
-        position: null,
-        facility: "",
-        program: [],
-        supervisor_first_name: "arrun",
-        supervisor_last_name: "prasaath",
-        supervisor_title: null,
-        supervisor_email: "arrun@dataterrain.com",
-      },
-    },
-  ]);
+  const [recordData, setRecordData] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [selectedValue, setSelectedValue] = useState(null);
 
@@ -208,6 +148,9 @@ export default function StaffDirectoryTable() {
   let rowData = useMemo(
     () =>
       recordData.map((item) => {
+        const programValue =
+          item.profile?.program.length > 0 ? item.profile?.program[0] : "";
+
         return {
           id: item.id,
           Link: `Record ${item.id}`,
@@ -218,6 +161,15 @@ export default function StaffDirectoryTable() {
           LastActivityDate: item.last_login || "",
           SystemStatus: item.is_active || null,
           PositionTitle: item.profile?.position || "",
+          PrimaryFacility: item.profile?.facility || "",
+          Program: programValue,
+          Supervisor: `${item.profile?.supervisor_first_name || " "} ${
+            item.profile?.supervisor_last_name || " "
+          }`,
+
+          SupervisorTitle: item.profile?.supervisor_title || "",
+          SupervisorEmail: item.profile?.supervisor_email || "",
+          Action: "",
         };
       }),
     [recordData]
@@ -258,7 +210,7 @@ export default function StaffDirectoryTable() {
             searchText={searchText}
             handleSearchText={handleSearchText}
           />
-          <DataGrid
+          <StyledDataGrid
             loading={loadingData}
             rows={rows}
             columns={[
@@ -368,6 +320,66 @@ export default function StaffDirectoryTable() {
                 headerClassName:
                   "bg-[#5BC4BF] text-white font-medium text-center w-100",
               },
+
+              {
+                field: "PrimaryFacility",
+                headerName: "Primary Facility",
+                align: "left",
+                headerAlign: "left",
+                flex: 1,
+                headerClassName:
+                  "bg-[#5BC4BF] text-white font-medium text-center w-100",
+              },
+
+              {
+                field: "Program",
+                headerName: "Program",
+                align: "left",
+                headerAlign: "left",
+                flex: 1,
+                headerClassName:
+                  "bg-[#5BC4BF] text-white font-medium text-center w-100",
+              },
+
+              {
+                field: "Supervisor",
+                headerName: "Supervisor",
+                align: "left",
+                headerAlign: "left",
+                flex: 1,
+                headerClassName:
+                  "bg-[#5BC4BF] text-white font-medium text-center w-100",
+              },
+
+              {
+                field: "SupervisorTitle",
+                headerName: "Supervisor Title",
+                align: "left",
+                headerAlign: "left",
+                flex: 1,
+                headerClassName:
+                  "bg-[#5BC4BF] text-white font-medium text-center w-100",
+              },
+
+              {
+                field: "SupervisorEmail",
+                headerName: "Supervisor Email",
+                align: "left",
+                headerAlign: "left",
+                flex: 1,
+                headerClassName:
+                  "bg-[#5BC4BF] text-white font-medium text-center w-100",
+              },
+
+              {
+                field: "Action",
+                headerName: "Action",
+                align: "left",
+                headerAlign: "left",
+                flex: 1,
+                headerClassName:
+                  "bg-[#5BC4BF] text-white font-medium text-center w-100",
+              },
             ]}
             initialState={{
               pagination: {
@@ -439,3 +451,80 @@ function TableActions({
     </div>
   );
 }
+
+// DUMMY DATA
+
+// [
+//   {
+//     id: 3,
+//     first_name: "Alice",
+//     last_name: "Johnson",
+//     email: "alice.johnson@rootsclinic.org",
+//     last_login: null,
+//     is_active: true,
+//     profile: {
+//       phone_no: "+1-555-345-6789",
+//       position: null,
+//       facility: "",
+//       program: ["STI", "Asthma"],
+//       supervisor_first_name: "arrun",
+//       supervisor_last_name: "prasaath",
+//       supervisor_title: null,
+//       supervisor_email: "arrun@dataterrain.com",
+//     },
+//   },
+//   {
+//     id: 1,
+//     first_name: "arrun",
+//     last_name: "prasaath",
+//     email: "arrun@dataterrain.com",
+//     last_login: "2024-04-17T17:51:01.236789Z",
+//     is_active: true,
+//     profile: {
+//       phone_no: "+1-555-123-4567",
+//       position: null,
+//       facility: "",
+//       program: [],
+//       supervisor_first_name: "",
+//       supervisor_last_name: "",
+//       supervisor_title: "",
+//       supervisor_email: "",
+//     },
+//   },
+//   {
+//     id: 4,
+//     first_name: "David",
+//     last_name: "Brown",
+//     email: "david.brown@rootsclinic.org",
+//     last_login: null,
+//     is_active: true,
+//     profile: {
+//       phone_no: "2345124",
+//       position: null,
+//       facility: "",
+//       program: [],
+//       supervisor_first_name: "Alice",
+//       supervisor_last_name: "Johnson",
+//       supervisor_title: null,
+//       supervisor_email: "alice.johnson@rootsclinic.org",
+//     },
+//   },
+//   {
+//     id: 2,
+//     first_name: "John",
+//     last_name: "Smith",
+//     email: "john.smith@rootsclinic.org",
+//     last_login: null,
+//     is_active: true,
+//     profile: {
+//       phone_no: "+1-555-234-5678",
+//       position: null,
+//       facility: "",
+//       program: ["XXX", "YYYY"],
+//       supervisor_first_name: "arrun",
+//       supervisor_last_name: "prasaath",
+//       supervisor_title: null,
+//       supervisor_email: "arrun@dataterrain.com",
+//     },
+//   },
+// ]
