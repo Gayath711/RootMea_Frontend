@@ -43,7 +43,7 @@ export default function ProgramRecord() {
     return recordData.primary_contact.map((item) => {
       return {
         id: item.id,
-        StaffName: item.first_name || "",
+        StaffName: `${item?.first_name || " "} ${item?.last_name || " "}`,
         StaffTitle: item.profile?.position || "",
         StaffEmail: item.email || "",
         StaffPhone: item.email || "",
@@ -60,7 +60,7 @@ export default function ProgramRecord() {
     return recordData.client_matter_contact.map((item) => {
       return {
         id: item.id,
-        StaffName: item.first_name || "",
+        StaffName: `${item?.first_name || " "} ${item?.last_name || " "}`,
         StaffTitle: item.profile?.position || "",
         StaffEmail: item.email || "",
         StaffPhone: item.email || "",
@@ -76,7 +76,7 @@ export default function ProgramRecord() {
     return recordData.team_members.map((item) => {
       return {
         id: item.id,
-        StaffName: item.first_name || "",
+        StaffName: `${item?.first_name || " "} ${item?.last_name || " "}`,
         StaffTitle: item.profile?.position || "",
         StaffEmail: item.email || "",
         StaffPhone: item.email || "",
@@ -94,6 +94,8 @@ export default function ProgramRecord() {
         <ProgramDetail
           dptName={recordData.department_name}
           progName={recordData.name}
+          description={recordData?.description}
+          eligibility={recordData?.description}
           loadingData={loadingData}
         />
         <PrimaryContactManagementTable
@@ -114,7 +116,12 @@ export default function ProgramRecord() {
   );
 }
 
-const ProgramDetail = ({ loadingData, dptName = "", progName = "" }) => {
+const ProgramDetail = ({
+  loadingData,
+  dptName = "",
+  description = "",
+  eligibility = "",
+}) => {
   return (
     <div className="grid grid-cols-2 gap-4">
       <div className="col-span-1 my-2">
@@ -127,7 +134,8 @@ const ProgramDetail = ({ loadingData, dptName = "", progName = "" }) => {
         <textarea
           rows={4}
           style={{ resize: "none" }}
-          placeholder="Description.."
+          value={description}
+          // placeholder="Description.."
           className={`placeholder:text-sm appearance-none border-1 border-[#5BC4BF] rounded w-full p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
         />
       </div>
@@ -135,7 +143,8 @@ const ProgramDetail = ({ loadingData, dptName = "", progName = "" }) => {
         <textarea
           rows={4}
           style={{ resize: "none" }}
-          placeholder="Eligibility.."
+          value={eligibility}
+          // placeholder="Eligibility.."
           className={`placeholder:text-sm appearance-none border-1 border-[#5BC4BF] rounded w-full p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
         />
       </div>
