@@ -19,7 +19,7 @@ export default function ProgramRecord() {
 
   const fetchData = () => {
     axios
-      .get(`${apiURL}/api/resources/program/${recordid}/`, {
+      .get(`${apiURL}/api/resources/program/${recordid}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -44,7 +44,7 @@ export default function ProgramRecord() {
       return {
         id: item.id,
         StaffName: item.first_name || "",
-        StaffTitle: item.profile.position || "",
+        StaffTitle: item.profile?.position || "",
         StaffEmail: item.email || "",
         StaffPhone: item.email || "",
         LinkToContactCard: "Link to contact card",
@@ -61,7 +61,7 @@ export default function ProgramRecord() {
       return {
         id: item.id,
         StaffName: item.first_name || "",
-        StaffTitle: item.profile.position || "",
+        StaffTitle: item.profile?.position || "",
         StaffEmail: item.email || "",
         StaffPhone: item.email || "",
         LinkToContactCard: "Link to contact card",
@@ -77,7 +77,7 @@ export default function ProgramRecord() {
       return {
         id: item.id,
         StaffName: item.first_name || "",
-        StaffTitle: item.profile.position || "",
+        StaffTitle: item.profile?.position || "",
         StaffEmail: item.email || "",
         StaffPhone: item.email || "",
         LinkToContactCard: "Link to contact card",
