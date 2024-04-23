@@ -1758,7 +1758,7 @@ function ElementGroup({
   );
 }
 
-const EnumOptionsComponent = ({ value, setValue }) => {
+const EnumOptionsComponent = ({ label = "", value, setValue }) => {
   const [enumOptions, setEnumOptions] = useState([]);
 
   const isEnumOptionsHasValue =
@@ -1811,13 +1811,23 @@ const EnumOptionsComponent = ({ value, setValue }) => {
 
   useEffect(() => {
     let hasValue = enumOptions.filter(Boolean);
-    let arrayOfValues = hasValue.join(",");
+    let uniqueValues = [...new Set(hasValue)];
+    // setEnumOptions(uniqueValues);
+    // console.log({ hasValue, uniqueValues });
+    let arrayOfValues = uniqueValues.join(",");
     setValue(arrayOfValues);
+  }, [enumOptions]);
+
+  useEffect(() => {
+    let uniqueValues = [...new Set(enumOptions)];
+    if (uniqueValues.length !== enumOptions.length) {
+      setEnumOptions(uniqueValues);
+    }
   }, [enumOptions]);
 
   return (
     <div className="flex flex-column gap-2">
-      <label className="inline-flex items-center">Enum Options</label>
+      {label && <label className="inline-flex items-center">{label}</label>}
       {enumOptions.length > 0
         ? enumOptions.map((item, idx) => (
             <div className="flex items-center gap-1">
