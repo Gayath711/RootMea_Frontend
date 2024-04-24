@@ -171,4 +171,4 @@ function AppointmentCalendar() {
   );
 }
 
-export default AppointmentCalendar;
+export default React.memo(AppointmentCalendar);
