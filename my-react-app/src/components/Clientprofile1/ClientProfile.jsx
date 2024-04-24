@@ -6,7 +6,7 @@ import ProfileIcon from "../images/profileIcon2.svg";
 import BadgeIcon from "../images/badge.svg";
 import "./ClientProfileStyles.css";
 
-const FormInput = ({ title, label, value }) => {
+const FormInput = ({ title, label, value, disabled = false, ...restProps }) => {
   return (
     <div>
       <label htmlFor={label} className="text-xs text-[#585A60]">
@@ -17,13 +17,14 @@ const FormInput = ({ title, label, value }) => {
         name={label}
         value={value}
         className="w-full rounded-sm text-xs p-2.5"
+        disabled={disabled}
+        {...restProps}
       />
     </div>
   );
 };
 
-const Content = ({data}) => {
-
+const Content = ({ data }) => {
   // Function to format date as 'mm-dd-yyyy'
   const formatDate = (dateString) => {
     if (!dateString) return ""; // Return empty string if date is null or undefined
@@ -31,53 +32,98 @@ const Content = ({data}) => {
     const month = date.getMonth() + 1; // Months are zero indexed
     const day = date.getDate();
     const year = date.getFullYear();
-    return `${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}-${year}`;
+    return `${month.toString().padStart(2, "0")}-${day
+      .toString()
+      .padStart(2, "0")}-${year}`;
   };
-  
+
+  const formData = [
+    {
+      title: "Preferred Name",
+      label: "preferredName",
+      value: data?.nickname_preferred_name || "",
+      disabled: true,
+    },
+    {
+      title: "Pronouns",
+      label: "pronouns",
+      value: data?.preferred_pronouns || "",
+      disabled: true,
+    },
+    {
+      title: "Date of Birth",
+      label: "dateOfBirth",
+      value: formatDate(data?.date_of_birth) || "",
+      disabled: true,
+    },
+    {
+      title: "Language",
+      label: "language",
+      value: data?.comfortable_language || "",
+      disabled: true,
+    },
+    {
+      title: "Primary Phone",
+      label: "primaryPhone",
+      value: data?.mobile_number || "",
+      disabled: true,
+    },
+    {
+      title: "Email",
+      label: "email",
+      value: data?.email_address || "",
+      disabled: true,
+    },
+    {
+      title: "Insurance",
+      label: "insurance",
+      value: data?.insurance_primary_carrier_name || "",
+      disabled: true,
+    },
+    {
+      title: "Insurance ID",
+      label: "insuranceId",
+      value: data?.insurance_primary_subscriber_id || "",
+      disabled: true,
+    },
+    {
+      title: "Navigator",
+      label: "navigator",
+      value: data?.navigator_name || "",
+      disabled: true,
+    },
+    {
+      title: "Program",
+      label: "program",
+      value: data?.program_name || "",
+      disabled: true,
+    },
+    {
+      title: "Other Programs",
+      label: "otherProgram",
+      value: data?.other_programs || "",
+      disabled: true,
+    },
+  ];
+
   return (
     <>
       <hr className="w-[99%] mx-auto text-[#bababa]" />
       <div className="grid grid-cols-10 my-3">
         <div className="col-span-8 grid grid-cols-4 gap-4 p-4 ml-3 bg-[#D4EDEC] rounded-md">
-          <FormInput
-            title={"Preferred Name"}
-            label={"preferredName"}
-            value={data?.nickname_preferred_name || ""}
-          />
-          <FormInput title={"Pronouns"} label={"pronouns"} value={data?.preferred_pronouns || ""} />
-          <FormInput
-            title={"Date of Birth"}
-            label={"dateOfBirth"}
-            value={formatDate(data?.date_of_birth) || ""}
-          />
-          <FormInput title={"Language"} label={"language"} value={data?.comfortable_language || ""} />
-          <FormInput
-            title={"Primary Phone"}
-            label={"primaryPhone"}
-            value={data?.mobile_number || ""}
-          />
-          <FormInput title={"Email"} label={"email"} value={data?.email_address || ""} />
-          <FormInput
-            title={"Insurance"}
-            label={"insurance"}
-            value={data?.insurance_primary_carrier_name || ""}
-          />
-          <FormInput title={"Insurance ID"} label={"insuranceId"} value={data?.insurance_primary_subscriber_id || ""} />
-          <FormInput
-            title={"Navigator"}
-            label={"navigator"}
-            value={data?.navigator_name || ""}
-          />
-          <FormInput
-            title={"Program"}
-            label={"program"}
-            value={data?.program_name || ""}
-          />
-          <FormInput
-            title={"Other Programs"}
-            label={"otherProgram"}
-            value={data?.other_programs || ""}
-          />
+          {formData.map((item, index) => {
+            const { title, label, value, ...restProps } = item;
+
+            return (
+              <FormInput
+                key={index}
+                title={title}
+                label={label}
+                value={value}
+                {...restProps}
+              />
+            );
+          })}
         </div>
         <div className="col-span-2 mx-3 bg-[#5BC4BF] rounded-md">
           <div className="w-full relative">
