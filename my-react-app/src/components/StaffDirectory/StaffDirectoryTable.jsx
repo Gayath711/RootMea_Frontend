@@ -9,6 +9,9 @@ import axios from "axios";
 import apiURL from "../../apiConfig";
 import { styled } from "@mui/material/styles";
 
+import EditPNG from "../images/edit.png";
+import DeletePNG from "../images/delete.png";
+
 const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
   "& .MuiDataGrid-sortIcon": {
     opacity: 1,
@@ -219,6 +222,7 @@ export default function StaffDirectoryTable() {
                 headerName: "Link",
                 flex: 1,
                 headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                minWidth: 100,
                 renderCell: (params) => {
                   return (
                     <>
@@ -237,12 +241,14 @@ export default function StaffDirectoryTable() {
                 headerName: "Last Name",
                 flex: 1,
                 headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                minWidth: 150,
               },
               {
                 field: "FirstName",
                 headerName: "First Name",
                 flex: 1,
                 headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                minWidth: 150,
               },
               {
                 field: "PhoneNumber",
@@ -250,6 +256,7 @@ export default function StaffDirectoryTable() {
                 flex: 1,
                 filterable: true,
                 headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                minWidth: 150,
               },
               {
                 field: "RootsEmailAddress",
@@ -257,6 +264,7 @@ export default function StaffDirectoryTable() {
                 flex: 1,
                 sortable: true,
                 headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                minWidth: 250,
               },
               {
                 field: "LastActivityDate",
@@ -266,6 +274,7 @@ export default function StaffDirectoryTable() {
                 flex: 1,
                 headerClassName:
                   "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                minWidth: 150,
                 renderCell: (params) => {
                   let date = params.row.LastActivityDate
                     ? new Date(params.row.LastActivityDate).toLocaleDateString()
@@ -283,6 +292,7 @@ export default function StaffDirectoryTable() {
                 headerAlign: "center",
 
                 headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                minWidth: 150,
                 renderCell: (params) => {
                   const {
                     row: { SystemStatus },
@@ -319,6 +329,7 @@ export default function StaffDirectoryTable() {
                 flex: 1,
                 headerClassName:
                   "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                minWidth: 200,
               },
 
               {
@@ -329,6 +340,7 @@ export default function StaffDirectoryTable() {
                 flex: 1,
                 headerClassName:
                   "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                minWidth: 150,
               },
 
               {
@@ -339,6 +351,7 @@ export default function StaffDirectoryTable() {
                 flex: 1,
                 headerClassName:
                   "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                minWidth: 150,
               },
 
               {
@@ -349,6 +362,7 @@ export default function StaffDirectoryTable() {
                 flex: 1,
                 headerClassName:
                   "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                minWidth: 150,
               },
 
               {
@@ -359,6 +373,7 @@ export default function StaffDirectoryTable() {
                 flex: 1,
                 headerClassName:
                   "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                minWidth: 200,
               },
 
               {
@@ -369,16 +384,55 @@ export default function StaffDirectoryTable() {
                 flex: 1,
                 headerClassName:
                   "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                minWidth: 250,
               },
 
               {
                 field: "Action",
                 headerName: "Action",
                 align: "left",
-                headerAlign: "left",
+                headerAlign: "center",
                 flex: 1,
                 headerClassName:
                   "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                minWidth: 150,
+                renderCell: (params) => {
+                  return (
+                    <>
+                      <div
+                        className="text-[#5BC4BF] flex items-center justify-evenly"
+                        style={{ height: "100%" }}
+                      >
+                        <img src={EditPNG} className="w-5 h-5" />
+                        <img src={DeletePNG} className="w-5 h-5" />
+                      </div>
+                    </>
+                  );
+                },
+                // renderCell: (params) => {
+                //   return (
+                //     <>
+                //       <Link
+                //         to={`/staff-directory/${params.row.id}`}
+                //         className="text-[#2F9384]"
+                //       >
+                //         {/* {params.row.linkToProgram} */}
+                //         <div className="flex flex-row items-center">
+                //           <img
+                //             src={EditPNG}
+                //             className="w-5 h-5"
+                //             style={{ display: "block", margin: "0 auto" }}
+                //           />
+                //           <img
+                //             src={DeletePNG}
+                //             className="w-5 h-5"
+                //             style={{ display: "block", margin: "0 auto" }}
+                //           />
+                //         </div>
+                //       </Link>
+                //     </>
+                //   );
+                // },
               },
             ]}
             initialState={{

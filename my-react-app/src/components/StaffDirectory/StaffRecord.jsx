@@ -6,6 +6,8 @@ import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import apiURL from "../../apiConfig";
 
+import EditPNG from "../images/edit.png";
+
 export default function StaffRecord() {
   const { recordid } = useParams();
   const token = localStorage.getItem("access_token");
@@ -55,6 +57,11 @@ export default function StaffRecord() {
     recordData.last_name || ""
   }`;
   let StaffTitle = recordData.profile?.position || "";
+  let phoneNumber = recordData.profile?.phone_no || "";
+  let email = recordData?.email || "";
+  let supervisorName = `${recordData.profile?.supervisor_first_name || ""} ${
+    recordData.profile?.supervisor_last_name || ""
+  }`;
 
   return (
     <div class="container mx-auto sm:grid-cols-12 md:grid-cols-7 shadow p-0">
@@ -62,7 +69,12 @@ export default function StaffRecord() {
         {staffName}
       </div>
       <div className="flex flex-column gap-4 p-4">
-        <StaffDetail staffName={staffName} staffTitle={StaffTitle} />
+        <StaffDetail
+          staffTitle={StaffTitle}
+          phoneNumber={phoneNumber}
+          email={email}
+          supervisorName={supervisorName}
+        />
         <AssignedProgramTable
           loadingData={loadingData}
           rows={assignedProgramTableRows}
@@ -73,7 +85,12 @@ export default function StaffRecord() {
   );
 }
 
-const StaffDetail = ({ staffName = "", staffTitle = "" }) => {
+const StaffDetail = ({
+  staffTitle = "",
+  phoneNumber = "",
+  email = "",
+  supervisorName = "",
+}) => {
   return (
     <div className="grid grid-cols-2 gap-4">
       <div className="col-span-1">
@@ -85,6 +102,7 @@ const StaffDetail = ({ staffName = "", staffTitle = "" }) => {
       <div className="col-span-1">
         <input
           type="text"
+          value={phoneNumber}
           placeholder="Phone Number"
           className={`placeholder:text-sm appearance-none border-1 border-[#5BC4BF] rounded w-full p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
         />
@@ -92,6 +110,7 @@ const StaffDetail = ({ staffName = "", staffTitle = "" }) => {
       <div className="col-span-1">
         <input
           type="text"
+          value={email}
           placeholder="Email"
           className={`placeholder:text-sm appearance-none border-1 border-[#5BC4BF] rounded w-full p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
         />
@@ -100,6 +119,7 @@ const StaffDetail = ({ staffName = "", staffTitle = "" }) => {
         {" "}
         <input
           type="text"
+          value={supervisorName}
           placeholder="Supervisor"
           className={`placeholder:text-sm appearance-none border-1 border-[#5BC4BF] rounded w-full p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
         />
@@ -196,28 +216,28 @@ const AssignedPriorityListsTable = () => {
   const rows = [
     {
       id: 1,
-      ProgramName: "John",
+      ProgramName: "Advocacy",
       PriorityListName: "list Name",
       ListActivityDate: "02/18/2024",
       linkToProgram: "link to program",
     },
     {
       id: 2,
-      ProgramName: "John",
+      ProgramName: "Community Health Education/Communication",
       PriorityListName: "list Name",
       ListActivityDate: "02/18/2024",
       linkToProgram: "link to program",
     },
     {
       id: 3,
-      ProgramName: "John",
+      ProgramName: "Asthma",
       PriorityListName: "list Name",
       ListActivityDate: "02/18/2024",
       linkToProgram: "link to program",
     },
     {
       id: 4,
-      ProgramName: "John",
+      ProgramName: "Advocacy & Community Capacity Building",
       PriorityListName: "list Name",
       ListActivityDate: "02/18/2024",
       linkToProgram: "link to program",
@@ -263,12 +283,14 @@ const AssignedPriorityListsTable = () => {
               renderCell: (params) => {
                 return (
                   <>
-                    <Link
+                    {/* <Link
                       to={`/program-directory/${params.row.id}`}
                       className="text-[#5BC4BF]"
-                    >
+                    > */}
+                    <div className="text-[#5BC4BF]">
                       {params.row.linkToProgram}
-                    </Link>
+                    </div>
+                    {/* </Link> */}
                   </>
                 );
               },
