@@ -13,11 +13,6 @@ import PasswordReset from "./PasswordReset";
 import AlertSuccess from "../common/AlertSuccess";
 import AlertError from "../common/AlertError";
 
-import {
-  fetchUserPermissions,
-  UserInfoSelector,
-} from "../../store/slices/userInfoSlice";
-
 const LoginForm = () => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [showSuccessAlert, setSuccessShowAlert] = useState(false);
@@ -81,8 +76,6 @@ const LoginForm = () => {
         }
         setErrorShowAlert(true);
         setIsLoading(false);
-
-        dispatch(fetchUserPermissions());
         // }
       });
     } catch (error) {

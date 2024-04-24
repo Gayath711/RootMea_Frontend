@@ -11,7 +11,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchClientsInfoAsync } from "../../store/slices/clientsInfoSlice";
 import { useWindowSize } from "../Utils/windowResize";
 import "./MyPanelStyles.css";
-import usePermission from "../../hooks/usePermission";
 
 function getRandomDate(dates) {
   const randomIndex = Math.floor(Math.random() * dates.length);
@@ -24,8 +23,6 @@ function getRandomProgram(programs) {
 }
 
 function MyPanel() {
-  const { isUserInfoLoading, IS_STAFF } = usePermission();
-
   const { width } = useWindowSize();
 
   const programs = ["ECM", "Diabetes", "STOMP"];
@@ -102,6 +99,7 @@ function MyPanel() {
         Header: "D.O.B",
         accessor: "date_of_birth",
         Cell: ({ value }) => {
+
           if (!value) return "";
 
           // Parse the date string
@@ -126,8 +124,9 @@ function MyPanel() {
         Header: "Date Assigned",
         accessor: "date_assigned",
         Cell: ({ value }) => {
-          if (!value) return "";
 
+          if (!value) return "";
+          
           // Parse the date string
           const date = new Date(value);
           // Extract day, month, and year
@@ -189,7 +188,6 @@ function MyPanel() {
           />
         </div>
         <div className="space-x-2">
-          {!isUserInfoLoading && !IS_STAFF && (
             <Link to={`/clientprofilenew`}>
               <button
                 className="px-3 py-1 text-[13px] font-medium leading-5 bg-[#5BC4BF] text-white rounded-sm font-medium"
@@ -198,13 +196,12 @@ function MyPanel() {
                 Add New
               </button>
             </Link>
-          )}
-          <button
-            id="my-panel-5"
-            className="px-3 py-1 border-1 sm:border-2 rounded-sm border-[#2F9384] text-[13px] font-medium leading-5 text-[#2F9384]"
-          >
-            View all
-          </button>
+            <button
+              id="my-panel-5"
+              className="px-3 py-1 border-1 sm:border-2 rounded-sm border-[#2F9384] text-[13px] font-medium leading-5 text-[#2F9384]"
+            >
+              View all
+            </button>
         </div>
       </div>
       <hr id="my-panel-6" className="w-[98%] mx-auto my-2" />

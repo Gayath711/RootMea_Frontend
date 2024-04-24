@@ -18,7 +18,6 @@ import Week from "./week";
 import YearView from "./YearView";
 import TodayView from "./TodayView";
 import useAppointments from "../../hooks/useAppointments";
-import usePermission from "../../hooks/usePermission";
 
 const CalendarMain = () => {
   // console.table(getMonth(3));
@@ -106,8 +105,6 @@ const CalendarMain = () => {
     }
   };
 
-  const { isUserInfoLoading, IS_CARE_PLAN_ADMIN } = usePermission();
-
   return (
     <div className="">
       {showAlert && (
@@ -118,17 +115,13 @@ const CalendarMain = () => {
       )}
       <div className={`space-y-5 m-5 ${showModal ? "opacity-50" : ""}`}>
         <div className="flex flex-row justify-between items-end">
-          <div className="text-gray-900 text-2xl font-medium" id="calendarPage">
-            Calendar
-          </div>
-          {!isUserInfoLoading && !IS_CARE_PLAN_ADMIN && (
-            <button
-              className="w-54 h-12 bg-[#43B09C] rounded text-xs text-white p-3"
-              onClick={toggleModal}
-            >
-              Add new appointment
-            </button>
-          )}
+          <div className="text-gray-900 text-2xl font-medium" id="calendarPage">Calendar</div>
+          <button
+            className="w-54 h-12 bg-[#43B09C] rounded text-xs text-white p-3"
+            onClick={toggleModal}
+          >
+            Add new appointment
+          </button>
         </div>
         <div className="flex flex-col bg-white border-1 border-teal-400 rounded-md p-10 space-y-3">
           <CalendarHeader
