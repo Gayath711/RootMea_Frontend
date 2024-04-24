@@ -17,23 +17,37 @@ import ReferralPrograms from "../../components/ReferralPrograms/ReferralPrograms
 import AppointmentCalendar from "../../components/AppointmentCalendar/AppointmentCalendar";
 import Encounters from "../../components/Encounters/Encounters";
 
+import { useSelector } from "react-redux";
+import usePermission from "../../hooks/usePermission";
+
 function Dashboard({ onLogout }) {
   const { width } = useWindowSize();
   console.log(width);
 
+  const { isUserLoading, IS_PRIORITY_LIST_ADMIN } = usePermission();
+
+  if (isUserLoading) {
+    return (
+      <div className="w-[80vw] h-[80vh] flex items-center justify-center">
+        <span>Loading...</span>
+      </div>
+    );
+  }
+
   return (
     <>
-      {
-        width > 600 && width < 1100 &&
+      {width > 600 && width < 1100 && (
         <div className="mx-2.5 sm:mx-0 grid gap-y-7 !mr-3">
           <div className="grid sm:grid-cols-11 grid-cols-1 sm:gap-7 gap-y-3">
             <div className="sm:col-span-11 col-span-full">
               <GreetingCard />
-            </div>
-            <div className="sm:col-span-11 flex flex-wrap justify-between gap-4">
-              <TopStats />
-              <SocialVital />
-            </div>
+            </div>{" "}
+            {!IS_PRIORITY_LIST_ADMIN && (
+              <div className="sm:col-span-11 flex flex-wrap justify-between gap-4">
+                <TopStats />
+                <SocialVital />
+              </div>
+            )}
           </div>
           <div className="grid grid-cols-1 sm:gap-7 gap-y-3">
             <MyPanel />
@@ -50,19 +64,22 @@ function Dashboard({ onLogout }) {
               <Encounters />
             </div>
             <div className="col-span-8 grid grid-cols-1 gap-y-7">
-              <Activities /> 
+              <Activities />
               <NotificationCard />
             </div>
           </div>
         </div>
-      }
-      {
-        (width < 600 || width > 1100) &&
+      )}
+      {(width < 600 || width > 1100) && (
         <div className="mx-2.5 sm:mx-0 grid gap-y-3">
           <div className="grid sm:grid-cols-11 grid-cols-1 sm:gap-4 gap-y-3">
             <GreetingCard />
-            <TopStats />
-            <SocialVital />
+            {!IS_PRIORITY_LIST_ADMIN && (
+              <>
+                <TopStats />
+                <SocialVital />
+              </>
+            )}
           </div>
           <div className="grid sm:grid-cols-11 grid-cols-1 sm:gap-4 gap-y-3">
             <MyPanel />
@@ -90,12 +107,11 @@ function Dashboard({ onLogout }) {
                   <Activities />
                   <NotificationCard />
                 </>
-
               )}
             </div>
           </div>
         </div>
-      }
+      )}
     </>
   );
 }

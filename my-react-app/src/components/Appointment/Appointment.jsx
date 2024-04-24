@@ -5,6 +5,7 @@ import useAppointments from "../../hooks/useAppointments";
 import { getUpcomingEvents } from "../utils";
 import { Link } from "react-router-dom";
 import AppointmentDetail from "./AppointmentDetail";
+import usePermission from "../../hooks/usePermission";
 
 const AppointmentItem = ({ id, event }) => {
   const [showModal, setShowModal] = useState(false);
@@ -83,6 +84,7 @@ const AppointmentItem = ({ id, event }) => {
 
 function Appointment() {
   const { eventList, fetchEvents } = useAppointments();
+  const { isUserInfoLoading, IS_CARE_PLAN_ADMIN } = usePermission();
 
   let upcomingEvents = getUpcomingEvents(eventList);
 
@@ -92,18 +94,20 @@ function Appointment() {
         <div id="appointment-1" className="text-lg font-medium">
           Upcoming
         </div>
-        <Link
-          to="/calendar"
-          id="appointment-2"
-          className="flex justify-center items-center space-x-1 bg-[#5BC4BF] text-white px-2.5 py-1 sm:py-1.5 my-1.5 sm:my-0 text-xs rounded-sm"
-        >
-          <AddCircleIcon
-            id="appointment-3"
-            className="text-white size-3 sm:size-4"
-          />
+        {!isUserInfoLoading && !IS_CARE_PLAN_ADMIN && (
+          <Link
+            to="/calendar"
+            id="appointment-2"
+            className="flex justify-center items-center space-x-1 bg-[#5BC4BF] text-white px-2.5 py-1 sm:py-1.5 my-1.5 sm:my-0 text-xs rounded-sm"
+          >
+            <AddCircleIcon
+              id="appointment-3"
+              className="text-white size-3 sm:size-4"
+            />
 
-          <span className="text-[10px] sm:text-xs">New Appointment</span>
-        </Link>
+            <span className="text-[10px] sm:text-xs">New Appointment</span>
+          </Link>
+        )}
       </div>
       <hr id="appointment-HR" className="w-11/12 mx-auto my-2" />
       <div className="flex flex-col justify-between space-y-6 mx-3 my-8">

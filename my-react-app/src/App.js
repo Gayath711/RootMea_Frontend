@@ -53,6 +53,11 @@ import StaffDirectory from "./components/StaffDirectory";
 import StaffRecord from "./components/StaffDirectory/StaffRecord";
 import ProgramRecord from "./components/ProgramDirectory/ProgramRecord";
 
+import {
+  UserInfoSelector,
+  fetchUserPermissions,
+} from "./store/slices/userInfoSlice";
+
 function App() {
   // Retrieve isLoggedIn state from localStorage on initial render
   // const [isLoggedIn, setIsLoggedIn] = useState(
@@ -74,10 +79,16 @@ function App() {
   //   }
   // });
 
+  // const isLoggedIn = useSelector((state) => {
+  //   console.log(state);
+  //   return state.auth.isLoggedIn;
+  // });
+
   const isLoggedIn = useSelector((state) => {
     console.log(state);
     return state.auth.isLoggedIn;
   });
+
   const dispatch = useDispatch();
 
   // useEffect(() => {
@@ -105,6 +116,36 @@ function App() {
     // permissions: ["admin"],
   });
   console.log("user", user);
+
+  // to get the user permissions
+
+  useEffect(() => {
+    dispatch(fetchUserPermissions());
+  }, []);
+
+  // const state = useSelector((state) => state);
+
+  // console.log({ RS: state });
+
+  // const {
+  //   loading: userInfoLoading,
+  //   error: userInfoError,
+  //   userType,
+  // } = useSelector((state) => {
+  //   return {
+  //     userType: state.userInfo.userType,
+  //     loading: state.userInfo.loading,
+  //     error: state.userInfo.error,
+  //   };
+  // });
+
+  // if (userInfoLoading) {
+  //   return (
+  //     <div className="w-[100vw] h-[100vh] flex items-center justify-center">
+  //       <span className="text-xs">Loading...</span>
+  //     </div>
+  //   );
+  // }
 
   return (
     <Router>
