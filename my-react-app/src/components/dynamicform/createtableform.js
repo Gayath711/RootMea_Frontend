@@ -16,6 +16,10 @@ import file1 from '../../image/file1.png';
 import date from '../../image/date.png';
 import apiURL from '../../apiConfig';
 
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
+import Button from 'react-bootstrap/Button';
+
 initMDB({ Input, Ripple });
 
 function CreateTableForm() {
@@ -150,23 +154,58 @@ function CreateTableForm() {
               <div key={index} className="card border-success row col-2" style={{ maxWidth: '18rem', margin: '20px' }}>
                 <div className="card-header bg-transparent border-success">
                   <div className='row justify-content-center'>
-                    <div className='col-4 text-center'>
+
+                    
+                  <OverlayTrigger
+      placement="top"
+      overlay={<Tooltip id="disabled-tooltip">Edit</Tooltip>}
+    >
+                     <div className='col-4 text-center'>
                       <a href={`/createtableform/${matchedTableName}`}>
                         <img src={edit} alt="Edit" className="img-fluid" style={{ width: '40px', height: '40px' }} />
                       </a>
                     </div>
-                    <div className='col-4 text-center'>
+    </OverlayTrigger>
+
+
+
+
+  
+
+
+
+
+                    <OverlayTrigger
+      placement="top"
+      overlay={<Tooltip id="disabled-tooltip">Share</Tooltip>}
+    >
+      <div className='col-4 text-center'>
                       <button type="button" onClick={() => handleShare(matchedTableName)}>
                         <img src={share} alt="Share" className="img-fluid" style={{ width: '40px', height: '40px' }} />
                       </button>
                     </div>
-                    <div className='col-4 text-center'>
+    </OverlayTrigger>
+
+
+
+
+                    <OverlayTrigger
+      placement="top"
+      overlay={<Tooltip id="disabled-tooltip">Bulk Upload</Tooltip>}
+    >
+       <div className='col-4 text-center'>
                       <a href={`/BulkUploadComponent/${matchedTableName}`}>
                         <img src={bulk} alt="Bulk" className="img-fluid" style={{ width: '40px', height: '40px' }} />
                       </a>
                     </div>
+    </OverlayTrigger>
+
+
+               
                   </div>
                 </div>
+
+
                 <div className="card-body text-success">
                   <div style={{ textAlign: 'center' }}>
                   <h5 className="card-title" style={{fontWeight: 'bold'}}>{cleanedTableName.charAt(0).toUpperCase() + cleanedTableName.slice(1)}</h5>
@@ -177,20 +216,48 @@ function CreateTableForm() {
                     </a>
                   </div>
                 </div>
+
+
                 <div className="card-footer bg-transparent border-success">
+
+
                   <div className='row justify-content-center'>
-                    <div className='col-6 text-center'>
+            
+
+                    <OverlayTrigger
+      placement="top"
+      overlay={<Tooltip id="disabled-tooltip">Form created date 25-04-2024</Tooltip>}
+    >
+          <div className='col-6 text-center'>
                       <img src={date} alt="Date" style={{ width: '40px', height: '40px' }} />
                     </div>
-                    <div className='col-6 text-center'>
+
+    </OverlayTrigger>
+
+
+
+                 
+
+                    <OverlayTrigger
+      placement="top"
+      overlay={<Tooltip id="disabled-tooltip">Form Data Download</Tooltip>}
+    >
+        <div className='col-6 text-center'>
                       <button type="button" onClick={() => handledownload(matchedTableName)}>
                         <img src={down} alt="Download" style={{ width: '40px', height: '40px' }} />
                       </button>
                     </div>
+    </OverlayTrigger>
+
+
                   </div>
                 </div>
+
+
               </div>
             );
+
+            
           })}
         </div>
       </div>
