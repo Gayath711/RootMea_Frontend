@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShare, faDownload, faUpload, faSearch } from '@fortawesome/free-solid-svg-icons';
 
@@ -44,29 +45,53 @@ function CreateTableForm() {
     tableName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const staticurl = `${apiURL}/`;
+  const currentURL = window.location.href;
+
+
+  const staticurl = `${currentURL}`;
 
   const handleShare = async (tableName) => {
-
-    const url = `${staticurl}createtableform/${tableName}`;
+    const url = `${staticurl}/${tableName}`;
     try {
-      if (navigator.share) {
-        const url = `${staticurl}createtableform/${tableName}`;
-        await navigator.share({
-          title: 'Share Table Form',
-          text: 'Check out this table form',
-          url: url
-        });
-        console.log('Shared successfully');
-      } else {
-        throw new Error('Web Share API is not supported in this browser');
-      }
+        if (navigator.share) {
+            await navigator.share({
+                title: 'Share Table Form',
+                text: 'Check out this table form',
+                url: url
+            });
+            console.log('Shared successfully');
+        } else {
+            throw new Error('Web Share API is not supported in this browser');
+        }
     } catch (error) {
-      console.error('Error sharing:', error);
-      alert(`Share Not supported for http only work for https, copy this URL: ${url}`);
-
+        console.error('Error sharing:', error);
+      
+        Swal.fire({
+            title: "Copy to Clipboard",
+            text: "Click below to copy the URL to clipboard:",
+            input: 'text',
+            inputValue: url,
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "Copy",
+            cancelButtonText: "Cancel",
+            inputReadOnly: true,
+            allowOutsideClick: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                navigator.clipboard.writeText(url)
+                    .then(() => {
+                        Swal.fire("Copied!", "URL copied to clipboard.", "success");
+                    })
+                    .catch(err => {
+                        console.error('Unable to copy URL to clipboard: ', err);
+                        Swal.fire("Error", "Failed to copy URL to clipboard.", "error");
+                    });
+            }
+        });
     }
-  };
+};
+
 
   
 
