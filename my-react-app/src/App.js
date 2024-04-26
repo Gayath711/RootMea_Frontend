@@ -122,11 +122,11 @@ function App() {
             {/* <Sidebar isMinimized={isMinimized} toggleSidebar={toggleSidebar} /> */}
             {/* <div className='flex-1'> */}
             <div className="flex justify-between lg:pr-10">
-              {/* {width > 640 && (
+              {width > 640 && (
                 <div id="sideBar" style={{ zIndex: 50 }} className="w-[4%]">
                   <SideBar />
                 </div>
-              )} */}
+              )}
               <div className="sm:w-[94%] py-8 sm:py-10 space-y-7">
                 <Routes>
                   <Route path="/" element={<Dashboard />} />
