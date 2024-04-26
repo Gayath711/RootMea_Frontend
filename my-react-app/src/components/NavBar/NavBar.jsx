@@ -12,12 +12,26 @@ import ProfileIcon from "../images/profileIcon.svg";
 import { useWindowSize } from "../Utils/windowResize";
 import apiURL from "../../apiConfig";
 
-const Navbar = ({ onLogout, isMinimized, toggleSidebar }) => {
+import { useSelector, useDispatch } from "react-redux";
+import {
+  toggleSidebar,
+  selectIsSidebarExpanded,
+} from "../../store/slices/utilsSlice";
+
+const Navbar = ({ onLogout, isMinimized }) => {
   const navigate = useNavigate(); // Initialize navigate function
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [profileType, setProfileType] = useState(null);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+
+  const isSidebarExpanded = useSelector(selectIsSidebarExpanded);
+  const dispatch = useDispatch();
+
+  const handleToggleSidebar = () => {
+    let payload = isSidebarExpanded ? false : true;
+    dispatch(toggleSidebar(payload));
+  };
 
   const { width } = useWindowSize();
 
@@ -73,7 +87,15 @@ const Navbar = ({ onLogout, isMinimized, toggleSidebar }) => {
           <Link to="/">
             <img src={Logo} className="w-28 h-100 py-2" alt="logo" />
           </Link>
-          <button className="mx-4">
+          <button
+            className="mx-4"
+            style={{
+              transform: isSidebarExpanded
+                ? "rotateY(180deg)"
+                : "rotateY(0deg)",
+            }}
+            onClick={handleToggleSidebar}
+          >
             <img src={MenuIcon} className="size-4 sm:size-5" alt="menu" />
           </button>
           {width > 600 && (

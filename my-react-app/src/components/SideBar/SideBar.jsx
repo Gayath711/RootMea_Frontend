@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
+import { useSelector, useDispatch } from "react-redux";
+import {
+  toggleSidebar,
+  selectIsSidebarExpanded,
+} from "../../store/slices/utilsSlice";
+
 import DashboardActive from "../images/side_bar/dashboard-active.png";
 import DashboardInActive from "../images/side_bar/dashboard-inactive.png";
 
@@ -72,25 +78,31 @@ let sidebarLinks = [
 const Sidebar = () => {
   const location = useLocation();
 
-  const [isExpand, setIsExpand] = useState(false);
   // const [showTitle, setShowTitle] = useState(false);
+
+  const isSidebarExpanded = useSelector(selectIsSidebarExpanded);
+  const dispatch = useDispatch();
+
+  const handleToggleSidebar = (payload) => {
+    dispatch(toggleSidebar(payload));
+  };
 
   return (
     <div
       onMouseEnter={() => {
-        setIsExpand(true);
+        handleToggleSidebar(true);
         // setShowTitle(true);
       }}
       onMouseLeave={() => {
-        setIsExpand(false);
+        handleToggleSidebar(false);
         // setShowTitle(false);
       }}
       style={{
-        width: `${isExpand ? "140px" : "50px"}`,
+        width: `${isSidebarExpanded ? "140px" : "50px"}`,
         transition: "all ease 0.3s",
       }}
       className={`flex flex-col ${
-        isExpand ? "justify-start px-3" : "items-center"
+        isSidebarExpanded ? "justify-start px-3" : "items-center"
       } space-y-12 pt-8 pb-24 bg-white shadow-2xl rounded-br-[2rem] sticky left-0 top-[12%]`}
     >
       {sidebarLinks.map((link, index) => {
@@ -133,14 +145,14 @@ const Sidebar = () => {
                 </span>
               )} */}
 
-              {isExpand && (
+              {isSidebarExpanded && (
                 <span
                   className="text-xs truncate"
                   style={{
-                    transform: !isExpand
+                    transform: !isSidebarExpanded
                       ? "translateX(-50px)"
                       : "translateX(0px)",
-                    opacity: isExpand ? "1" : "0",
+                    opacity: isSidebarExpanded ? "1" : "0",
                     transition: "all ease-out 0.3s",
                   }}
                 >
