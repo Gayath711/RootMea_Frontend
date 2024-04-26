@@ -7,6 +7,10 @@ import SearchIcon from "../images/search.svg";
 import axios from "axios";
 import apiURL from "../../apiConfig";
 import { Link, useParams } from "react-router-dom";
+
+import ViewPNG from "../images/view.png";
+import EditPNG from "../images/edit.png";
+import DeletePNG from "../images/delete.png";
 // function createData(
 //   Link,
 //   ProgramName,
@@ -240,6 +244,7 @@ export default function ProgramListTable() {
                 headerName: "Link",
                 flex: 1,
                 headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                minWidth: 50,
                 renderCell: (params) => {
                   return (
                     <>
@@ -258,12 +263,14 @@ export default function ProgramListTable() {
                 headerName: "Program Name",
                 flex: 1,
                 headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                minWidth: 150,
               },
               {
                 field: "Department",
                 headerName: "Department",
                 flex: 1,
                 headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                minWidth: 150,
               },
               {
                 field: "Description",
@@ -271,6 +278,7 @@ export default function ProgramListTable() {
                 flex: 1,
                 filterable: true,
                 headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                minWidth: 200,
               },
               {
                 field: "Eligibility",
@@ -278,25 +286,52 @@ export default function ProgramListTable() {
                 flex: 1,
                 sortable: true,
                 headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                minWidth: 200,
               },
               {
-                field: "ManagementAdminContacts",
-                headerName: "Management Admin Contacts",
-                align: "center",
+                field: "Action",
+                headerName: "Action",
+                align: "left",
                 headerAlign: "center",
                 flex: 1,
                 headerClassName:
                   "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                minWidth: 150,
+                renderCell: (params) => {
+                  return (
+                    <>
+                      <div
+                        className="text-[#5BC4BF] flex items-center justify-evenly"
+                        style={{ height: "100%" }}
+                      >
+                        <img src={ViewPNG} className="w-5 h-5" />
+                        <img src={EditPNG} className="w-5 h-5" />
+                        <img src={DeletePNG} className="w-5 h-5" />
+                      </div>
+                    </>
+                  );
+                },
               },
-              {
-                field: "ClientMattersContacts",
-                headerName: "Client Matters Contacts",
-                align: "center",
-                headerAlign: "center",
-                flex: 1,
-                headerClassName:
-                  "bg-[#5BC4BF] text-white font-medium text-center w-100",
-              },
+              // {
+              //   field: "ManagementAdminContacts",
+              //   headerName: "Management Admin Contacts",
+              //   align: "center",
+              //   headerAlign: "center",
+              //   flex: 1,
+              //   headerClassName:
+              //     "bg-[#5BC4BF] text-white font-medium text-center w-100",
+              //   minWidth: 150,
+              // },
+              // {
+              //   field: "ClientMattersContacts",
+              //   headerName: "Client Matters Contacts",
+              //   align: "center",
+              //   headerAlign: "center",
+              //   flex: 1,
+              //   headerClassName:
+              //     "bg-[#5BC4BF] text-white font-medium text-center w-100",
+              //   minWidth: 150,
+              // },
             ]}
             initialState={{
               pagination: {
