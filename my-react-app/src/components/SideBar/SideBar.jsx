@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import DashboardActive from "../images/side_bar/dashboard-active.png";
@@ -23,7 +23,7 @@ let sidebarLinks = [
   {
     id: "dashboard-page",
     to: "/",
-    title: "Home",
+    title: "Dashboard",
     activeImageSrc: DashboardActive,
     inactiveImageSrc: DashboardInActive,
     isActive: false,
@@ -55,13 +55,13 @@ let sidebarLinks = [
   {
     id: "client-profile-new",
     to: "/clientprofilenew",
-    title: "New Client",
+    title: "Client Profile",
     activeImageSrc: NewClientActive,
     inactiveImageSrc: NewClientInActive,
     isActive: false,
   },
   {
-    title: "Yet Another Link",
+    title: "Log out",
     to: "/#",
     activeImageSrc: YetAnotherLinkActive,
     inactiveImageSrc: YetAnotherLinkInActive,
@@ -72,8 +72,27 @@ let sidebarLinks = [
 const Sidebar = () => {
   const location = useLocation();
 
+  const [isExpand, setIsExpand] = useState(false);
+  // const [showTitle, setShowTitle] = useState(false);
+
   return (
-    <div className="flex flex-col justify-center items-center space-y-12 pt-8 pb-24 bg-white shadow-2xl rounded-br-[2rem] sticky left-0 top-[100px]">
+    <div
+      onMouseEnter={() => {
+        setIsExpand(true);
+        // setShowTitle(true);
+      }}
+      onMouseLeave={() => {
+        setIsExpand(false);
+        // setShowTitle(false);
+      }}
+      style={{
+        width: `${isExpand ? "150px" : "50px"}`,
+        transition: "all ease 0.3s",
+      }}
+      className={`flex flex-col ${
+        isExpand ? "justify-start px-3" : "items-center"
+      } space-y-12 pt-8 pb-24 bg-white shadow-2xl rounded-br-[2rem] sticky left-0 top-[100px]`}
+    >
       {sidebarLinks.map((link, index) => {
         const isActive = location.pathname === link.to;
         const bgColor = isActive ? "#D4EDEC" : "#EAECEB";
@@ -94,13 +113,41 @@ const Sidebar = () => {
             //   }
             // }}
           >
-            <img
-              className={`p-1 bg-[${bgColor}] size-6`}
-              id={link.id}
-              src={isActive ? link.activeImageSrc : link.inactiveImageSrc}
-              alt={`icon${index + 1}`}
-              title={link.title}
-            />
+            <div className="flex items-center gap-2 justify-start w-100">
+              <img
+                className={`p-1 bg-[${bgColor}] size-6`}
+                id={link.id}
+                src={isActive ? link.activeImageSrc : link.inactiveImageSrc}
+                alt={`icon${index + 1}`}
+                title={link.title}
+              />
+              {/* {isExpand && (
+                <span
+                  className="text-xs"
+                  style={{
+                    opacity: isExpand ? "1" : "0",
+                    transition: "all ease-out 1s",
+                  }}
+                >
+                  {link.title}
+                </span>
+              )} */}
+
+              {isExpand && (
+                <span
+                  className="text-xs truncate"
+                  style={{
+                    transform: !isExpand
+                      ? "translateX(-50px)"
+                      : "translateX(0px)",
+                    opacity: isExpand ? "1" : "0",
+                    transition: "all ease-out 0.3s",
+                  }}
+                >
+                  {link.title}
+                </span>
+              )}
+            </div>
           </Link>
         );
       })}
