@@ -64,7 +64,10 @@ const Navbar = ({ onLogout, isMinimized, toggleSidebar }) => {
   };
 
   return (
-    <nav id="navBar" className="px-4 shadow-lg bg-white z-20 relative w-full">
+    <nav
+      id="navBar"
+      className="px-4 shadow-md bg-white z-20 relative w-full z-[50]"
+    >
       <div className="flex justify-between">
         <div className="flex justify-center items-center">
           <Link to="/">

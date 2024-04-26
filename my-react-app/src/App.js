@@ -121,13 +121,13 @@ function App() {
             {/* <div className='flex min-h-screen'> */}
             {/* <Sidebar isMinimized={isMinimized} toggleSidebar={toggleSidebar} /> */}
             {/* <div className='flex-1'> */}
-            <div className="flex justify-between lg:pr-10">
+            <div className="flex w-100">
               {width > 640 && (
-                <div id="sideBar" style={{ zIndex: 50 }} className="w-[4%]">
+                <div id="sideBarX" style={{ zIndex: 40 }} className="">
                   <SideBar />
                 </div>
               )}
-              <div className="sm:w-[94%] py-8 sm:py-10 space-y-7">
+              <div className="mx-4 py-8 sm:py-10 space-y-7 w-100">
                 <Routes>
                   <Route path="/" element={<Dashboard />} />
                   {/* <Route path="/clientprofile" element={<Dashboard />} /> */}

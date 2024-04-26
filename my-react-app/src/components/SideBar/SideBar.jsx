@@ -86,12 +86,12 @@ const Sidebar = () => {
         // setShowTitle(false);
       }}
       style={{
-        width: `${isExpand ? "150px" : "50px"}`,
+        width: `${isExpand ? "140px" : "50px"}`,
         transition: "all ease 0.3s",
       }}
       className={`flex flex-col ${
         isExpand ? "justify-start px-3" : "items-center"
-      } space-y-12 pt-8 pb-24 bg-white shadow-2xl rounded-br-[2rem] sticky left-0 top-[100px]`}
+      } space-y-12 pt-8 pb-24 bg-white shadow-2xl rounded-br-[2rem] sticky left-0 top-[12%]`}
     >
       {sidebarLinks.map((link, index) => {
         const isActive = location.pathname === link.to;
