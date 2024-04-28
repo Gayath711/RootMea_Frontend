@@ -7,6 +7,8 @@ import CheckBoxElement from "../FormElements/CheckBoxElement";
 import TextInputProperty from "./Property/TextInputProperty";
 import DateTimeProperty from "./Property/DateTimeProperty";
 import CheckBoxProperty from "./Property/CheckBoxProperty";
+import FileInputProperty from "./Property/FileInputProperty";
+import SelectProperty from "./Property/SelectProperty";
 
 function FieldProperty(props) {
   const { selectedElement, elements, updateElement } = useFormBuilderContext();
@@ -57,6 +59,12 @@ function FieldProperty(props) {
           return <TextInputProperty />;
         }
         break;
+      case "BYTEA":
+      case "BYTEA2":
+        {
+          return <FileInputProperty />;
+        }
+        break;
       case "TEXT":
         {
           return <TextInputProperty />;
@@ -70,6 +78,12 @@ function FieldProperty(props) {
       case "TIMESTAMP":
         {
           return <DateTimeProperty />;
+        }
+        break;
+      case "my_enum_type":
+      case "my_enum_typeb":
+        {
+          return <SelectProperty />;
         }
         break;
 

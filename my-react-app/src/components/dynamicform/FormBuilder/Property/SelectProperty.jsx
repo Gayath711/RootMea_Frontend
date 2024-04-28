@@ -5,7 +5,7 @@ import InputElement from "../../FormElements/InputElement";
 import CheckBoxElement from "../../FormElements/CheckBoxElement";
 import EnumOptionsComponent from "./EnumOptionsProperty";
 
-export default function CheckBoxProperty() {
+export default function SelectProperty() {
   const { selectedElement, elements, updateElement } = useFormBuilderContext();
   const fieldElement = elements[selectedElement];
 

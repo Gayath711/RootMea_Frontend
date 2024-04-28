@@ -79,9 +79,14 @@ function FormCanvas() {
         alert("Please fill lables of all fields");
       } else {
         const columns = items.map((item) => {
+          let type = item.type;
+          if (item.type === "BYTEA2") {
+            type = "BYTEA";
+          }
+
           return {
             name: item.props.label,
-            type: item.type,
+            type: type,
             notNull: item.props.required,
             width: item.props.width || "w-full",
             enum: item.props.options ? item.props.options.join(",") : [],

@@ -14,6 +14,8 @@ import DateInput from "../FormElements/DateInput";
 import { useFormBuilderContext } from "./Context/FormBuilderContext";
 import ActionContextMenu from "./ActionContextMenu";
 import { useDraggable, useDroppable } from "@dnd-kit/core";
+import SelectElement from "../FormElements/SelectElement";
+import MultiSelectElement from "../FormElements/MultiSelectElement";
 
 function FieldElement({ field, index, id, preview }) {
   const { setSelectedElement, selectedElement } = useFormBuilderContext();
@@ -24,6 +26,8 @@ function FieldElement({ field, index, id, preview }) {
     case "VARCHAR(250)":
     case "INTEGER":
     case "FLOAT":
+    case "BYTEA":
+    case "BYTEA2":
       {
         inputElement = <InputElement {...field.props} />;
       }
@@ -41,6 +45,16 @@ function FieldElement({ field, index, id, preview }) {
     case "TIMESTAMP":
       {
         inputElement = <DateInput {...field.props} />;
+      }
+      break;
+    case "my_enum_type":
+      {
+        inputElement = <SelectElement {...field.props} />;
+      }
+      break;
+    case "my_enum_typeb":
+      {
+        inputElement = <MultiSelectElement {...field.props} />;
       }
       break;
 

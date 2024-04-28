@@ -206,30 +206,28 @@ function RenderFormBuilder() {
     {
       name: "Multi Elements",
       elements: [
-        // {
-        //   type: "my_enum_type",
-        //   label: "Dropdown",
-        //   IconSrc: Drop_down_Icon,
-        //   props: {
-        //     type: "text",
-        //     label: "New Drop Down",
-        //     required: false,
-        //     disabled: true,
-        //     options: ["option-1", "option-2", "option-3"],
-        //   },
-        // },
-        // {
-        //   type: "my_enum_typeb",
-        //   label: "Multiple Select",
-        //   IconSrc: Drop_down_Icon,
-        //   props: {
-        //     type: "text",
-        //     label: "New Multi select",
-        //     required: false,
-        //     disabled: true,
-        //     options: ["option-1", "option-2", "option-3"],
-        //   },
-        // },
+        {
+          type: "my_enum_type",
+          label: "Dropdown",
+          IconSrc: Drop_down_Icon,
+          props: {
+            label: "New Drop Down",
+            required: false,
+            disabled: false,
+            options: ["option-1", "option-2", "option-3"],
+          },
+        },
+        {
+          type: "my_enum_typeb",
+          label: "Multiple Select",
+          IconSrc: Drop_down_Icon,
+          props: {
+            label: "New Multi select",
+            required: false,
+            disabled: false,
+            options: ["option-1", "option-2", "option-3"],
+          },
+        },
         {
           type: "checkbox",
           label: "Checkbox",
@@ -245,13 +243,35 @@ function RenderFormBuilder() {
       ],
     },
 
-    // {
-    //   name: "Media Elements",
-    //   elements: [
-    //     { type: "BYTEA", label: "Image Upload", IconSrc: Image_upload_Icon },
-    //     { type: "BYTEA", label: "File Upload", IconSrc: Attachments_Icon },
-    //   ],
-    // },
+    {
+      name: "Media Elements",
+      elements: [
+        {
+          type: "BYTEA",
+          label: "Image Upload",
+          IconSrc: Image_upload_Icon,
+          props: {
+            type: "file",
+            accept: ".png, .jpg, .jpeg, .pdf",
+            label: "Image Upload",
+            required: false,
+            disabled: false,
+          },
+        },
+        {
+          type: "BYTEA2",
+          label: "File Upload",
+          IconSrc: Attachments_Icon,
+          props: {
+            type: "file",
+            accept: ".png, .jpg, .jpeg, .pdf",
+            label: "File Upload",
+            required: false,
+            disabled: false,
+          },
+        },
+      ],
+    },
   ];
 
   // const onDragStart = (event) => {

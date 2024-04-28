@@ -3,9 +3,8 @@ import { useFormBuilderContext } from "../Context/FormBuilderContext";
 
 import InputElement from "../../FormElements/InputElement";
 import CheckBoxElement from "../../FormElements/CheckBoxElement";
-import EnumOptionsComponent from "./EnumOptionsProperty";
 
-export default function CheckBoxProperty() {
+export default function FileInputProperty() {
   const { selectedElement, elements, updateElement } = useFormBuilderContext();
   const fieldElement = elements[selectedElement];
 
@@ -40,18 +39,6 @@ export default function CheckBoxProperty() {
     updateElement(selectedElement, updatedElement);
   };
 
-  const handleEnumChange = (enumValues) => {
-    const updatedElement = {
-      ...fieldElement,
-      props: {
-        ...fieldElement.props,
-        options: enumValues.split(","),
-      },
-    };
-
-    updateElement(selectedElement, updatedElement);
-  };
-
   return (
     <div className="flex flex-column gap-3">
       <div className="flex flex-column gap-3 border-b-2 pb-3">
@@ -66,11 +53,8 @@ export default function CheckBoxProperty() {
         />
       </div>
       <div className="flex flex-column gap-3 pb-3">
-        <EnumOptionsComponent
-          label="Options"
-          value={fieldElement.props.options || ""}
-          setValue={handleEnumChange}
-        />
+        {/* <p className="text-[14px] font-medium mx-1">{`${fieldElement.label} properties`}</p> */}
+
         <CheckBoxElement
           options={[
             {
