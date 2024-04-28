@@ -171,12 +171,24 @@ function RenderFormBuilder() {
             disabled: false,
           },
         },
+        {
+          type: "FLOAT",
+          label: "Decimal",
+          IconSrc: Number_Icon,
+          props: {
+            type: "number",
+            label: "New Decimal",
+            placeholder: "Enter a Decimal",
+            step: "0.01",
+            required: false,
+            disabled: false,
+          },
+        },
       ],
     },
     {
       name: "Date Elements",
       elements: [
-        // { type: "FLOAT", label: "Decimal", IconSrc: file },
         // { type: "BOOLEAN", label: "Boolean", IconSrc: file },
         {
           type: "TIMESTAMP",

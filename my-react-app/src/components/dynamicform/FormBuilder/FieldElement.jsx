@@ -23,6 +23,7 @@ function FieldElement({ field, index, id, preview }) {
   switch (field.type) {
     case "VARCHAR(250)":
     case "INTEGER":
+    case "FLOAT":
       {
         inputElement = <InputElement {...field.props} />;
       }
