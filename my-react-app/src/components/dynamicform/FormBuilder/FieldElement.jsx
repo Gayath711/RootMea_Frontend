@@ -47,6 +47,7 @@ function FieldElement({ field, index, id, preview }) {
         inputElement = <DateInput {...field.props} />;
       }
       break;
+    case "BOOLEAN":
     case "my_enum_type":
       {
         inputElement = <SelectElement {...field.props} />;
@@ -149,6 +150,7 @@ function FieldElementWrapper({ index, field, children }) {
       // }}
       onClick={(e) => {
         console.log("clickedd...");
+        console.log({ index });
         e.stopPropagation();
         setSelectedElement(index);
       }}

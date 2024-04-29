@@ -9,6 +9,7 @@ import DateTimeProperty from "./Property/DateTimeProperty";
 import CheckBoxProperty from "./Property/CheckBoxProperty";
 import FileInputProperty from "./Property/FileInputProperty";
 import SelectProperty from "./Property/SelectProperty";
+import BooleanProperty from "./Property/BooleanProperty";
 
 function FieldProperty(props) {
   const { selectedElement, elements, updateElement } = useFormBuilderContext();
@@ -54,6 +55,7 @@ function FieldProperty(props) {
   const renderProperty = () => {
     switch (fieldElement.type) {
       case "VARCHAR(250)":
+      case "FLOAT":
       case "INTEGER":
         {
           return <TextInputProperty />;
@@ -78,6 +80,11 @@ function FieldProperty(props) {
       case "TIMESTAMP":
         {
           return <DateTimeProperty />;
+        }
+        break;
+      case "BOOLEAN":
+        {
+          return <BooleanProperty />;
         }
         break;
       case "my_enum_type":

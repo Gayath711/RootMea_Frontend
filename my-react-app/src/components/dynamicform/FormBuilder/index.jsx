@@ -189,7 +189,6 @@ function RenderFormBuilder() {
     {
       name: "Date Elements",
       elements: [
-        // { type: "BOOLEAN", label: "Boolean", IconSrc: file },
         {
           type: "TIMESTAMP",
           label: "Date and Time",
@@ -217,6 +216,18 @@ function RenderFormBuilder() {
             options: ["option-1", "option-2", "option-3"],
           },
         },
+        {
+          type: "BOOLEAN",
+          label: "Yes/No",
+          IconSrc: Drop_down_Icon,
+          props: {
+            label: "New Yes/No",
+            required: false,
+            disabled: false,
+            options: ["Yes", "No"],
+          },
+        },
+
         {
           type: "my_enum_typeb",
           label: "Multiple Select",
@@ -389,6 +400,7 @@ function RenderFormBuilder() {
   };
 
   console.log({ items });
+  console.log({ showPreview });
 
   return (
     <DndContext
@@ -403,23 +415,25 @@ function RenderFormBuilder() {
       {/* Form Header  */}
       <FormHeader />
       {/* Form Builder */}
-      <div className="row">
-        {/* Draggable Elements */}
-        <div className="col-sm-4 p-2">
-          <ElementsBar elementGroups={elementGroups} />
-        </div>
+      {!showPreview && (
+        <div className="row">
+          {/* Draggable Elements */}
+          <div className="col-sm-4 p-2">
+            <ElementsBar elementGroups={elementGroups} />
+          </div>
 
-        {/* Form Drop Zone */}
-        <div className="col-sm-5 p-2">
-          <FormCanvas items={items} />
-        </div>
+          {/* Form Drop Zone */}
+          <div className="col-sm-5 p-2">
+            <FormCanvas items={items} />
+          </div>
 
-        {/* Selected Element Property */}
+          {/* Selected Element Property */}
 
-        <div className="col-sm-3 p-2">
-          <FieldProperty />
+          <div className="col-sm-3 p-2">
+            <FieldProperty />
+          </div>
         </div>
-      </div>
+      )}
       {/* Form Preview */}
       {showPreview && <FormPreview />}
       {/* </SortableContext> */}

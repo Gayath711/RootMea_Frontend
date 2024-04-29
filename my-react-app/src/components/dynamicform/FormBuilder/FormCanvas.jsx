@@ -80,8 +80,14 @@ function FormCanvas() {
       } else {
         const columns = items.map((item) => {
           let type = item.type;
+          let enumOpt = item.props.options ? item.props.options.join(",") : [];
+
           if (item.type === "BYTEA2") {
             type = "BYTEA";
+          }
+
+          if (item.type === "BOOLEAN") {
+            enumOpt = [];
           }
 
           return {
@@ -89,7 +95,7 @@ function FormCanvas() {
             type: type,
             notNull: item.props.required,
             width: item.props.width || "w-full",
-            enum: item.props.options ? item.props.options.join(",") : [],
+            enum: enumOpt,
           };
         });
 
