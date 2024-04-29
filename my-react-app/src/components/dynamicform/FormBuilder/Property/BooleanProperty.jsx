@@ -1,21 +1,13 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React from "react";
 import { useFormBuilderContext } from "../Context/FormBuilderContext";
 
 import InputElement from "../../FormElements/InputElement";
 import CheckBoxElement from "../../FormElements/CheckBoxElement";
 import EnumOptionsComponent from "./EnumOptionsProperty";
 
-export default function SelectProperty() {
-  const {
-    selectedElement,
-    selectedFieldElement: fieldElement,
-    elements,
-    updateElement,
-  } = useFormBuilderContext();
-  // const [fieldElement, setFieldElement] = useState(elements[selectedElement]);
-  // useEffect(() => {
-  //   setFieldElement(elements[selectedElement]);
-  // }, [selectedElement]);
+export default function BooleanProperty() {
+  const { selectedElement, elements, updateElement } = useFormBuilderContext();
+  const fieldElement = elements[selectedElement];
 
   const handlePropsChange = (e) => {
     const {
@@ -60,10 +52,6 @@ export default function SelectProperty() {
     updateElement(selectedElement, updatedElement);
   };
 
-  if (!fieldElement) {
-    return null;
-  }
-
   return (
     <div className="flex flex-column gap-3">
       <div className="flex flex-column gap-3 border-b-2 pb-3">
@@ -78,11 +66,6 @@ export default function SelectProperty() {
         />
       </div>
       <div className="flex flex-column gap-3 pb-3">
-        <EnumOptionsComponent
-          label="Options"
-          value={fieldElement.props.options || ""}
-          setValue={handleEnumChange}
-        />
         <CheckBoxElement
           options={[
             {
