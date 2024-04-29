@@ -387,53 +387,53 @@ export default function StaffDirectoryTable() {
                 minWidth: 250,
               },
 
-              {
-                field: "Action",
-                headerName: "Action",
-                align: "left",
-                headerAlign: "center",
-                flex: 1,
-                headerClassName:
-                  "bg-[#5BC4BF] text-white font-medium text-center w-100",
-                minWidth: 150,
-                renderCell: (params) => {
-                  return (
-                    <>
-                      <div
-                        className="text-[#5BC4BF] flex items-center justify-evenly"
-                        style={{ height: "100%" }}
-                      >
-                        <img src={EditPNG} className="w-5 h-5" />
-                        <img src={DeletePNG} className="w-5 h-5" />
-                      </div>
-                    </>
-                  );
-                },
-                // renderCell: (params) => {
-                //   return (
-                //     <>
-                //       <Link
-                //         to={`/staff-directory/${params.row.id}`}
-                //         className="text-[#2F9384]"
-                //       >
-                //         {/* {params.row.linkToProgram} */}
-                //         <div className="flex flex-row items-center">
-                //           <img
-                //             src={EditPNG}
-                //             className="w-5 h-5"
-                //             style={{ display: "block", margin: "0 auto" }}
-                //           />
-                //           <img
-                //             src={DeletePNG}
-                //             className="w-5 h-5"
-                //             style={{ display: "block", margin: "0 auto" }}
-                //           />
-                //         </div>
-                //       </Link>
-                //     </>
-                //   );
-                // },
-              },
+              // {
+              //   field: "Action",
+              //   headerName: "Action",
+              //   align: "left",
+              //   headerAlign: "center",
+              //   flex: 1,
+              //   headerClassName:
+              //     "bg-[#5BC4BF] text-white font-medium text-center w-100",
+              //   minWidth: 150,
+              //   renderCell: (params) => {
+              //     return (
+              //       <>
+              //         <div
+              //           className="text-[#5BC4BF] flex items-center justify-evenly"
+              //           style={{ height: "100%" }}
+              //         >
+              //           <img src={EditPNG} className="w-5 h-5" />
+              //           <img src={DeletePNG} className="w-5 h-5" />
+              //         </div>
+              //       </>
+              //     );
+              //   },
+              // renderCell: (params) => {
+              //   return (
+              //     <>
+              //       <Link
+              //         to={`/staff-directory/${params.row.id}`}
+              //         className="text-[#2F9384]"
+              //       >
+              //         {/* {params.row.linkToProgram} */}
+              //         <div className="flex flex-row items-center">
+              //           <img
+              //             src={EditPNG}
+              //             className="w-5 h-5"
+              //             style={{ display: "block", margin: "0 auto" }}
+              //           />
+              //           <img
+              //             src={DeletePNG}
+              //             className="w-5 h-5"
+              //             style={{ display: "block", margin: "0 auto" }}
+              //           />
+              //         </div>
+              //       </Link>
+              //     </>
+              //   );
+              // },
+              // },
             ]}
             initialState={{
               pagination: {
@@ -460,7 +460,7 @@ function TableActions({
 }) {
   return (
     <div className="grid grid-cols-4 justify-between gap-2 w-100 mt-1 mb-4">
-      <div className="col-start-1 col-span-1">
+      {/* <div className="col-start-1 col-span-1">
         <Select
           name={"selector"}
           options={selectorList}
@@ -491,7 +491,7 @@ function TableActions({
           }}
           menuPortalTarget={document.body}
         />
-      </div>
+      </div> */}
       <div className="col-end-5 col-span-1 flex gap-1 items-center border-b-2 border-[#5BC4BF]">
         <img src={SearchIcon} className="w-[20px] h-100" />
         <input
