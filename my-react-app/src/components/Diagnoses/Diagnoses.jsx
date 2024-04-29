@@ -72,16 +72,18 @@ function Diagnoses({ clientId, setShowModal, showModal }) {
       {
         Header: "Comments",
         accessor: "comments",
+        align: "left",
       },
       {
         Header: "Last Updated By",
         accessor: "last_updated_by",
+        align: "left",
       },
       {
         Header: "Last Updated Date",
         accessor: "last_updated_date",
+        align: "left",
         Cell: ({ value }) => {
-
           if (!value) return "";
 
           // Parse the date string
@@ -97,8 +99,8 @@ function Diagnoses({ clientId, setShowModal, showModal }) {
       {
         Header: "Start Date",
         accessor: "start_date",
+        align: "left",
         Cell: ({ value }) => {
-
           if (!value) return "";
 
           // Parse the date string
@@ -114,10 +116,10 @@ function Diagnoses({ clientId, setShowModal, showModal }) {
       {
         Header: "Stop Date",
         accessor: "stop_date",
+        align: "left",
         Cell: ({ value }) => {
-
           if (!value) return "";
-          
+
           // Parse the date string
           const date = new Date(value);
           // Extract day, month, and year

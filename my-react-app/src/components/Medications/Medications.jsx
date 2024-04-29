@@ -69,16 +69,18 @@ function Medications({ clientId, setShowModal, showModal }) {
       {
         Header: "Comment",
         accessor: "comments",
+        align: "left",
       },
       {
         Header: "Updated By",
         accessor: "last_updated_by",
+        align: "left",
       },
       {
         Header: "Updated Date",
         accessor: "last_updated_date",
+        align: "left",
         Cell: ({ value }) => {
-
           if (!value) return "";
 
           // Parse the date string
@@ -94,10 +96,10 @@ function Medications({ clientId, setShowModal, showModal }) {
       {
         Header: "Start Date",
         accessor: "start_date",
+        align: "left",
         Cell: ({ value }) => {
-
           if (!value) return "";
-          
+
           // Parse the date string
           const date = new Date(value);
           // Extract day, month, and year
@@ -111,8 +113,8 @@ function Medications({ clientId, setShowModal, showModal }) {
       {
         Header: "Stop Date",
         accessor: "stop_date",
+        align: "left",
         Cell: ({ value }) => {
-
           if (!value) return "";
 
           // Parse the date string
