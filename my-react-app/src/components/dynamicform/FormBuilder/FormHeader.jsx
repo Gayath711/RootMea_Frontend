@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useFormBuilderContext } from "./Context/FormBuilderContext";
 
 function FormHeader() {
-  const { formDetail, togglePreview, handleTitle, handleDesc } =
+  const { formDetail, showPreview, togglePreview, handleTitle, handleDesc } =
     useFormBuilderContext();
 
   return (
@@ -41,32 +41,34 @@ function FormHeader() {
           </div>
         </div>
       </div>
-      <div className="row">
-        <form role="form" className="w-100">
-          <div className="form-group">
-            <input
-              className="form-control border border-gray-300 rounded px-4 mt-2 py-2 focus:outline-none focus:border-green-500 transition-colors duration-300"
-              type="text"
-              name="name"
-              placeholder="Title"
-              value={formDetail.title}
-              onChange={(e) => handleTitle(e.target.value)}
-              style={{ marginBottom: "10px" }}
-            />
-          </div>
-          <div className="form-group">
-            <textarea
-              className="form-control border border-gray-300 rounded px-4 mt-2 py-2 focus:outline-none focus:border-green-500 transition-colors duration-300"
-              type="text"
-              name="blah"
-              placeholder="Additional details here"
-              value={formDetail.description}
-              onChange={(e) => handleDesc(e.target.value)}
-              style={{ marginBottom: "10px" }}
-            />
-          </div>
-        </form>
-      </div>
+      {!showPreview && (
+        <div className="row">
+          <form role="form" className="w-100">
+            <div className="form-group">
+              <input
+                className="form-control border border-gray-300 rounded px-4 mt-2 py-2 focus:outline-none focus:border-green-500 transition-colors duration-300"
+                type="text"
+                name="name"
+                placeholder="Title"
+                value={formDetail.title}
+                onChange={(e) => handleTitle(e.target.value)}
+                style={{ marginBottom: "10px" }}
+              />
+            </div>
+            <div className="form-group">
+              <textarea
+                className="form-control border border-gray-300 rounded px-4 mt-2 py-2 focus:outline-none focus:border-green-500 transition-colors duration-300"
+                type="text"
+                name="blah"
+                placeholder="Additional details here"
+                value={formDetail.description}
+                onChange={(e) => handleDesc(e.target.value)}
+                style={{ marginBottom: "10px" }}
+              />
+            </div>
+          </form>
+        </div>
+      )}
     </>
   );
 }
