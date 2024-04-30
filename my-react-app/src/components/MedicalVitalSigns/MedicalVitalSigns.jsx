@@ -23,17 +23,17 @@ const Content = ({ data, columns }) => {
   return (
     <>
       <hr className="w-[99%] mx-auto text-[#bababa]" />
-      <BasicTable
-        type={"medicalVitalSigns"}
-        defaultPageSize={10}
-        columns={columns}
-        data={data}
-      />
+        <BasicTable
+          type={"medicalVitalSigns"}
+          defaultPageSize={10}
+          columns={columns}
+          data={data}
+        />
     </>
   );
 };
 
-function MedicalVitalSigns({ clientId }) {
+function MedicalVitalSigns({clientId}) {
   const [open, setOpen] = useState(true);
   const [data, setData] = useState([
     {
@@ -88,11 +88,12 @@ function MedicalVitalSigns({ clientId }) {
       {
         Header: "Value",
         accessor: "value",
-        align: "left",
       },
       {
         Header: "Value",
-        Cell: ({ row }) => "...",
+        Cell: ({ row }) => (
+            "..."
+        )
       },
     ],
     []
@@ -101,16 +102,11 @@ function MedicalVitalSigns({ clientId }) {
   return (
     <div
       id="clientChartClientProfile"
-      className={`bg-white rounded-md shadow-sm flex flex-col ${
-        open ? "h-full" : ""
-      }`}
+      className={`bg-white rounded-md shadow-sm flex flex-col ${open ? "h-full" : ""}`}
     >
       <div className="flex justify-between p-3">
         <div className="flex gap-4 items-center">
-          <div className="text-[#28293B] text-xl">
-            Medical Vital Signs{" "}
-            <span className="italic text-xs">[from AMD]</span>
-          </div>
+          <div className="text-[#28293B] text-xl">Medical Vital Signs <span className="italic text-xs">[from AMD]</span></div>
           <img src={ExternalLinkIcon} className="size-4" alt="link" />
         </div>
         <RemoveCircleIcon

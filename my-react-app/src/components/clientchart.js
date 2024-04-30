@@ -1,31 +1,34 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 
-import Accordion from "react-bootstrap/Accordion";
-import "./css/clientchart.css";
-import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
-import Card from "react-bootstrap/Card";
-import { useNavigate } from "react-router-dom";
-import MedicationTable from "./medicationTable"; // Import the new component
-import { useParams } from "react-router-dom";
+import Accordion from 'react-bootstrap/Accordion';
+import './css/clientchart.css'
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
+import { useNavigate } from 'react-router-dom';
+import MedicationTable from './medicationTable'; // Import the new component
+import { useParams } from 'react-router-dom';
 
-import ClientDetails from "./clientchart/clientdetails";
-import SocialVitalSigns from "./clientchart/socialvitalsigns";
-import Diagnosis from "./clientchart/diagnosis";
-import Medications from "./clientchart/medications";
-import AlertSuccess from "./common/AlertSuccess";
-import apiURL from ".././apiConfig";
+import ClientDetails from './clientchart/clientdetails';
+import SocialVitalSigns from './clientchart/socialvitalsigns';
+import Diagnosis from './clientchart/diagnosis';
+import Medications from './clientchart/medications';
+import AlertSuccess from './common/AlertSuccess';
+import apiURL from '.././apiConfig'
 
 function ClientChart() {
+
   const { clientId } = useParams();
-  const token = localStorage.getItem("access_token");
+  const token = localStorage.getItem('access_token');
 
   const [client, setClient] = useState([]);
   const [clientMedicationData, setClientMedicationData] = useState([]);
   const [clientDiagnosesData, setClientDiagnosesData] = useState([]);
-  const [clientSVSData, setClientSVSData] = useState({});
+  const [clientSVSData, setClientSVSData] = useState({
+
+  });
   const [showModal, setShowModal] = useState(false);
 
   const navigate = useNavigate();
@@ -33,69 +36,66 @@ function ClientChart() {
   const [showAlert, setShowAlert] = useState(false);
   const closeAlert = () => {
     setShowAlert(false);
-  };
+  }
 
   useEffect(() => {
-    axios
-      .get(`${apiURL}/clientinfo-api/${clientId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
+    axios.get(`${apiURL}/clientinfo-api/${clientId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then(response => {
         setClient(response.data);
         console.log(response.data);
       })
-      .catch((error) => {
-        console.error("Error fetching Client SVS Data:", error);
+      .catch(error => {
+        console.error('Error fetching Client SVS Data:', error);
       });
   }, []);
 
+
   useEffect(() => {
-    axios
-      .get(`${apiURL}/clientsvs-api/${clientId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
+    axios.get(`${apiURL}/clientsvs-api/${clientId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then(response => {
         setClientSVSData(response.data);
         console.log(response.data);
       })
-      .catch((error) => {
-        console.error("Error fetching Client SVS Data:", error);
+      .catch(error => {
+        console.error('Error fetching Client SVS Data:', error);
       });
   }, []);
 
   useEffect(() => {
-    axios
-      .get(`${apiURL}/clientmedication-api/${clientId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
+    axios.get(`${apiURL}/clientmedication-api/${clientId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then(response => {
         setClientMedicationData(response.data);
         console.log(response.data);
       })
-      .catch((error) => {
-        console.error("Error fetching Client Medication Data:", error);
+      .catch(error => {
+        console.error('Error fetching Client Medication Data:', error);
       });
   }, []);
 
   useEffect(() => {
-    axios
-      .get(`${apiURL}/clientdiagnoses-api/${clientId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
+    axios.get(`${apiURL}/clientdiagnoses-api/${clientId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then(response => {
         setClientDiagnosesData(response.data);
         console.log(response.data);
       })
-      .catch((error) => {
-        console.error("Error fetching Client Diagnoses Data:", error);
+      .catch(error => {
+        console.error('Error fetching Client Diagnoses Data:', error);
       });
   }, []);
 
@@ -109,60 +109,53 @@ function ClientChart() {
 
   const handleViewEditClick = (page, clientID) => {
     // Redirect to the new page with the medication data
-    if (page === "medication") {
+    if (page === 'medication') {
       navigate(`/medication-details/${clientID}`);
-    } else if (page === "diagnosis") {
+    }
+    else if (page === 'diagnosis') {
       navigate(`/diagnosis_details/${clientID}`);
     }
   };
 
   const getColorByRisk = (risk) => {
     switch (risk) {
-      case "Low":
-        return "green";
-      case "Medium":
-        return "yellow";
-      case "High":
-        return "red";
-      case "No":
-        return "green";
-      case "Yes":
-        return "red";
+      case 'Low':
+        return 'green';
+      case 'Medium':
+        return 'yellow';
+      case 'High':
+        return 'red';
+      case 'No':
+        return 'green';
+      case 'Yes':
+        return 'red';
       default:
-        return "white"; // or any default color
+        return 'white'; // or any default color
     }
   };
 
+
   return (
     <div className="w-screen bg-gray-50">
-      {showAlert && (
-        <AlertSuccess message="Saved successfully" handleClose={closeAlert} />
-      )}
+      {showAlert && <AlertSuccess message="Saved successfully" handleClose={closeAlert} />}
       <div className="bg-white p-4 shadow">
-        <div className="flex justify-between mb-4 mt-4 pl-4">
-          <div className="flex flex-row space-x-12">
-            <div
-              className="text-gray-800 text-2xl font-medium"
-              style={{
-                fontFamily: "Roboto Mono",
-              }}
-            >
-              Client Chart
-            </div>
+        <div className='flex justify-between mb-4 mt-4 pl-4'>
+          <div className='flex flex-row space-x-12'>
+            <div className="text-gray-800 text-2xl font-medium font-['Poppins']">Client Chart</div>
             {/* <img src={EditPNG} class="w-6 h-6" />
             <img src={SavePNG} class="w-5 h-6" /> */}
           </div>
-          <div className="flex space-x-8">
-            <Link to={"/"}>
-              <p className="text-green-700 font-medium">Dashboard</p>
+          <div className='flex space-x-8'>
+            <Link to={'/'}>
+              <p className='text-green-700 font-medium'>Dashboard</p>
             </Link>
-            <p className="text-green-700 font-medium">AMD Profile</p>
-            <p className="text-green-700 font-medium pr-8">Manage Program</p>
+            <p className='text-green-700 font-medium'>AMD Profile</p>
+            <p className='text-green-700 font-medium pr-8'>Manage Program</p>
           </div>
         </div>
         <div class="border-b border-green-800 mt-2 mb-4"></div>
-        <div className="flex">
-          <div class="w-full px-2 space-y-6">
+        <div className='flex'>
+          <div class="w-full px-2 space-y-6" >
             <div>
               <ClientDetails clientData={client} />
             </div>
@@ -170,21 +163,19 @@ function ClientChart() {
               <SocialVitalSigns clientSVSData={clientSVSData} />
             </div>
             <div>
-              <Diagnosis
-                clientDiagnosesData={clientDiagnosesData}
-                setShowAlert={setShowAlert}
-              />
+              <Diagnosis clientDiagnosesData={clientDiagnosesData} setShowAlert={setShowAlert} />
             </div>
             <div>
-              <Medications
-                clientMedicationData={clientMedicationData}
-                setShowAlert={setShowAlert}
-              />
+              <Medications clientMedicationData={clientMedicationData} setShowAlert={setShowAlert} />
             </div>
           </div>
+
         </div>
       </div>
     </div>
+
+
+
 
     // <div className='flex flex-col px-3 mt-2'>
     //   <div className='flex flex-row justify-between pb-8 mt-3'>
@@ -280,6 +271,7 @@ function ClientChart() {
     //           </Card.Body>
     //         </Card>
 
+
     //             </Accordion.Body>
     //           </Accordion.Item>
     //         </Accordion>
@@ -358,6 +350,8 @@ function ClientChart() {
     //                       */}
     //                     </React.Fragment>
     //                   ))}
+
+
 
     //                 </tbody>
     //                 </table>

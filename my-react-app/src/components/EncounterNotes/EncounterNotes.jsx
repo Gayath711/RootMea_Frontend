@@ -26,12 +26,12 @@ const Content = ({ data, columns }) => {
   return (
     <>
       <hr className="w-[99%] mx-auto text-[#bababa]" />
-      <BasicTable
-        type={"encounterNotes"}
-        defaultPageSize={10}
-        columns={columns}
-        data={data}
-      />
+        <BasicTable
+          type={"encounterNotes"}
+          defaultPageSize={10}
+          columns={columns}
+          data={data}
+        />
     </>
   );
 };
@@ -139,12 +139,10 @@ function EncounterNotes({ clientId }) {
       {
         Header: "Encounter Type",
         accessor: "encounter_type",
-        align: "left",
       },
       {
         Header: "Encounter Date",
         accessor: "encounter_date",
-        align: "left",
       },
       {
         Header: "Status",
@@ -166,9 +164,7 @@ function EncounterNotes({ clientId }) {
   return (
     <div
       id="clientChartClientProfile"
-      className={`bg-white rounded-md shadow-sm flex flex-col ${
-        open ? "h-full" : ""
-      }`}
+      className={`bg-white rounded-md shadow-sm flex flex-col ${open ? "h-full" : ""}`}
     >
       <div className="flex justify-between p-3">
         <div className="flex gap-4 items-center">

@@ -10,12 +10,16 @@ const Content = ({ data, columns }) => {
   return (
     <>
       <hr className="w-[99%] mx-auto text-[#bababa]" />
-      <BasicTable type={"documents"} columns={columns} data={data} />
+        <BasicTable
+          type={"documents"}
+          columns={columns}
+          data={data}
+        />
     </>
   );
 };
 
-function Documents({ clientId }) {
+function Documents({clientId}) {
   const [open, setOpen] = useState(true);
   const [data, setData] = useState([
     {
@@ -70,27 +74,22 @@ function Documents({ clientId }) {
       {
         Header: "Doc Name",
         accessor: "doc_name",
-        align: "left",
       },
       {
         Header: "Program",
         accessor: "program",
-        align: "left",
       },
       {
         Header: "Uploaded by",
         accessor: "uploaded_by",
-        align: "left",
       },
       {
         Header: "Doc Date",
         accessor: "doc_date",
-        align: "left",
       },
       {
         Header: "Uploaded Date",
         accessor: "uploaded_date",
-        align: "left",
       },
       {
         Header: "Actions",
@@ -108,9 +107,7 @@ function Documents({ clientId }) {
   return (
     <div
       id="clientChartClientProfile"
-      className={`bg-white rounded-md shadow-sm flex flex-col ${
-        open ? "h-full" : ""
-      }`}
+      className={`bg-white rounded-md shadow-sm flex flex-col ${open ? "h-full" : ""}`}
     >
       <div className="flex justify-between p-3">
         <div className="flex gap-4 items-center">
