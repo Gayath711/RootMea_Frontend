@@ -26,17 +26,17 @@ const Content = ({ data, columns }) => {
   return (
     <>
       <hr className="w-[99%] mx-auto text-[#bababa]" />
-        <BasicTable
-          type={"referrals"}
-          defaultPageSize={3}
-          columns={columns}
-          data={data}
-        />
+      <BasicTable
+        type={"referrals"}
+        defaultPageSize={3}
+        columns={columns}
+        data={data}
+      />
     </>
   );
 };
 
-function Referrals({clientId}) {
+function Referrals({ clientId }) {
   const [open, setOpen] = useState(true);
   const [data, setData] = useState([
     {
@@ -78,22 +78,27 @@ function Referrals({clientId}) {
       {
         Header: "Referred by",
         accessor: "referred_by",
+        align: "left",
       },
       {
         Header: "Notes",
         accessor: "notes",
+        align: "left",
       },
       {
         Header: "Date",
         accessor: "date",
+        align: "left",
       },
       {
         Header: "Time",
         accessor: "time",
+        align: "left",
       },
       {
         Header: "Activity No",
         accessor: "activity_no",
+        align: "left",
       },
       {
         Header: "Status",
@@ -112,7 +117,9 @@ function Referrals({clientId}) {
   return (
     <div
       id="clientChartClientProfile"
-      className={`bg-white rounded-md shadow-sm flex flex-col ${open ? "h-full" : ""}`}
+      className={`bg-white rounded-md shadow-sm flex flex-col ${
+        open ? "h-full" : ""
+      }`}
     >
       <div className="flex justify-between p-3">
         <div className="flex gap-4 items-center">

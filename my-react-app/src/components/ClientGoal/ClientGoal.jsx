@@ -6,13 +6,12 @@ import BasicTable from "../react-table/BasicTable";
 import CarePlanImg from "../images/carePlan.svg";
 import { Checkbox } from "@mui/material";
 import { useWindowSize } from "../Utils/windowResize";
-import apiURL from '../../apiConfig';
-import { Link } from 'react-router-dom';
+import apiURL from "../../apiConfig";
+import { Link } from "react-router-dom";
 
 function ClientGoal() {
-
   const [data, setData] = useState([]);
-  const {width} = useWindowSize();
+  const { width } = useWindowSize();
 
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -28,14 +27,11 @@ function ClientGoal() {
     }
 
     try {
-      const response = await axios.get(
-        `${apiURL}/api/client-goals/`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`${apiURL}/api/client-goals/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       setData(response.data);
       console.log(data);
@@ -56,15 +52,15 @@ function ClientGoal() {
       {
         Header: "D.O.B",
         accessor: "dob",
+        align: "left",
         Cell: ({ value }) => {
-
           if (!value) return "";
 
           // Parse the date string
           const date = new Date(value);
           // Extract day, month, and year
-          const day = String(date.getDate()).padStart(2, '0');
-          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const day = String(date.getDate()).padStart(2, "0");
+          const month = String(date.getMonth() + 1).padStart(2, "0");
           const year = date.getFullYear();
           // Format date as "dd-mm-yyyy"
           return `${month}-${day}-${year}`;
@@ -73,10 +69,12 @@ function ClientGoal() {
       {
         Header: "Goal",
         accessor: "smart_goal_summary",
+        align: "left",
       },
       {
         Header: "Problem",
         accessor: "problem",
+        align: "left",
       },
       {
         Header: "Status",
@@ -85,15 +83,15 @@ function ClientGoal() {
       {
         Header: "Status Date",
         accessor: "goal_date",
+        align: "left",
         Cell: ({ value }) => {
-
           if (!value) return "";
 
           // Parse the date string
           const date = new Date(value);
           // Extract day, month, and year
-          const day = String(date.getDate()).padStart(2, '0');
-          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const day = String(date.getDate()).padStart(2, "0");
+          const month = String(date.getMonth() + 1).padStart(2, "0");
           const year = date.getFullYear();
           // Format date as "dd-mm-yyyy"
           return `${month}-${day}-${year}`;
@@ -102,15 +100,15 @@ function ClientGoal() {
       {
         Header: "Created Date",
         accessor: "care_plan_created_date",
+        align: "left",
         Cell: ({ value }) => {
-
           if (!value) return "";
 
           // Parse the date string
           const date = new Date(value);
           // Extract day, month, and year
-          const day = String(date.getDate()).padStart(2, '0');
-          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const day = String(date.getDate()).padStart(2, "0");
+          const month = String(date.getMonth() + 1).padStart(2, "0");
           const year = date.getFullYear();
           // Format date as "dd-mm-yyyy"
           return `${month}-${day}-${year}`;
@@ -119,7 +117,9 @@ function ClientGoal() {
       {
         Header: "Care Plan",
         Cell: ({ row }) => (
-          <Link to={`/care-plan/${row.original.care_plan_id}`}> {/* Pass care plan ID to the care plan page */}
+          <Link to={`/care-plan/${row.original.care_plan_id}`}>
+            {" "}
+            {/* Pass care plan ID to the care plan page */}
             <img src={CarePlanImg} className="size-6 mx-auto" alt="client" />
           </Link>
         ),
@@ -132,7 +132,9 @@ function ClientGoal() {
     <div className="xl:w-full bg-white rounded-md shadow-md flex flex-col min-[320px]:w-full">
       <div className="flex justify-between items-center mx-3 sm:mx-4 mt-6">
         <div className="flex items-center space-x-1 sm:space-x-4">
-          <span className="text-[16px] sm:text-lg font-medium" id="clientGoal">Client Goals</span>
+          <span className="text-[16px] sm:text-lg font-medium" id="clientGoal">
+            Client Goals
+          </span>
           <img src={ExternalLinkIcon} className="size-3 sm:size-4" alt="link" />
         </div>
         <div className="flex items-center space-x-1 sm:space-x-4 text-[8px] sm:text-xs">
@@ -145,7 +147,8 @@ function ClientGoal() {
                 padding: width < 600 ? "3px" : "5px",
               }}
               inputProps={{ "aria-label": "controlled" }}
-              /><span className="text-[#2F9384]">Active</span>
+            />
+            <span className="text-[#2F9384]">Active</span>
           </label>
           <label htmlFor="client-goal-active" className="flex items-center">
             <Checkbox
@@ -156,7 +159,8 @@ function ClientGoal() {
                 padding: "5px",
               }}
               inputProps={{ "aria-label": "controlled" }}
-            /><span className="text-[#7397B5]">Completed</span>
+            />
+            <span className="text-[#7397B5]">Completed</span>
           </label>
           <button className="px-3 py-1 border-1 sm:border-2 rounded-sm border-[#7397B5] text-[13px] font-medium leading-5 sm:text-xs text-[#28293B]">
             View all

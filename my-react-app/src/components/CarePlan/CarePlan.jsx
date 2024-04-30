@@ -26,17 +26,17 @@ const Content = ({ data, columns }) => {
   return (
     <>
       <hr className="w-[99%] mx-auto text-[#bababa]" />
-        <BasicTable
-          type={"carePlan"}
-          defaultPageSize={3}
-          columns={columns}
-          data={data}
-        />
+      <BasicTable
+        type={"carePlan"}
+        defaultPageSize={3}
+        columns={columns}
+        data={data}
+      />
     </>
   );
 };
 
-function CarePlan({clientId}) {
+function CarePlan({ clientId }) {
   const [open, setOpen] = useState(true);
   const [data, setData] = useState([
     {
@@ -87,10 +87,12 @@ function CarePlan({clientId}) {
       {
         Header: "User name",
         accessor: "username",
+        align: "left",
       },
       {
         Header: "Problems addressed",
         accessor: "problems_addressed",
+        align: "left",
       },
       {
         Header: "Approval status",
@@ -99,18 +101,22 @@ function CarePlan({clientId}) {
       {
         Header: "Approval status Date",
         accessor: "approval_status_date",
+        align: "left",
       },
       {
         Header: "Date Created",
         accessor: "date_created",
+        align: "left",
       },
       {
         Header: "Goal 1 Problem",
         accessor: "goal_1_problem",
+        align: "left",
       },
       {
         Header: "Goal 2 Problem",
         accessor: "goal_2_problem",
+        align: "left",
       },
       {
         Header: "Goal 1 status",
@@ -136,7 +142,9 @@ function CarePlan({clientId}) {
   return (
     <div
       id="clientChartClientProfile"
-      className={`bg-white rounded-md shadow-sm flex flex-col ${open ? "h-full" : ""}`}
+      className={`bg-white rounded-md shadow-sm flex flex-col ${
+        open ? "h-full" : ""
+      }`}
     >
       <div className="flex justify-between p-3">
         <div className="flex gap-4 items-center">
