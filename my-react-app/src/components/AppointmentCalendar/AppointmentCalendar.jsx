@@ -132,83 +132,51 @@ function AppointmentCalendar({ from }) {
     setData(data);
   }, [upcomingEvents]);
 
-  console.count("appointmentCalendae");
-
-  // const [data, setData] = useState([
-  //   {
-  //     time: "9 a.m - 10 a.m",
-  //     clientTopic: "Team Meeting",
-  //     descriptions: "Care plan review",
-  //     encounterMode: "...",
-  //   },
-  //   {
-  //     time: "9 a.m - 10 a.m",
-  //     clientTopic: "Team Meeting",
-  //     descriptions: "Care plan review",
-  //     encounterMode: "...",
-  //   },
-  //   {
-  //     time: "9 a.m - 10 a.m",
-  //     clientTopic: "Team Meeting",
-  //     descriptions: "Care plan review",
-  //     encounterMode: "...",
-  //   },
-  //   {
-  //     time: "9 a.m - 10 a.m",
-  //     clientTopic: "Team Meeting",
-  //     descriptions: "Care plan review",
-  //     encounterMode: "...",
-  //   },
-  //   {
-  //     time: "9 a.m - 10 a.m",
-  //     clientTopic: "Team Meeting",
-  //     descriptions: "Care plan review",
-  //     encounterMode: "...",
-  //   },
-  // ]);
-
-  const columns = [
-    {
-      Header: "Time",
-      accessor: "time",
-      align: "left",
-    },
-    {
-      Header: "Client Topic",
-      accessor: "clientTopic",
-      align: "left",
-    },
-    {
-      Header: "Descriptions",
-      accessor: "descriptions",
-      align: "left",
-    },
-    {
-      Header: "Encounter Mode",
-      accessor: "encounterMode",
-    },
-    {
-      Header: "Encounter Note",
-      accessor: "encounterNote",
-      Cell: ({ row }) => (
-        <div className="mx-auto flex justify-around items-center">
-          <img src={DocumentAddIcon} alt="add" />
-          <img src={EditIcon} alt="edit" />
-          <img src={EyeIcon} alt="view" />
-        </div>
-      ),
-    },
-    {
-      Header: "Action",
-      accessor: "action",
-      Cell: ({ row }) => (
-        <div className="mx-auto flex justify-around space-x-2 items-center">
-          <img src={EditIcon} alt="edit" />
-          <img src={EyeIcon} alt="view" />
-        </div>
-      ),
-    },
-  ];
+  const columns = useMemo(
+    () => [
+      {
+        Header: "Time",
+        accessor: "time",
+        align: "left",
+      },
+      {
+        Header: "Client Topic",
+        accessor: "clientTopic",
+        align: "left",
+      },
+      {
+        Header: "Descriptions",
+        accessor: "descriptions",
+        align: "left",
+      },
+      {
+        Header: "Encounter Mode",
+        accessor: "encounterMode",
+      },
+      {
+        Header: "Encounter Note",
+        accessor: "encounterNote",
+        Cell: ({ row }) => (
+          <div className="mx-auto flex justify-around items-center">
+            <img src={DocumentAddIcon} alt="add" />
+            <img src={EditIcon} alt="edit" />
+            <img src={EyeIcon} alt="view" />
+          </div>
+        ),
+      },
+      {
+        Header: "Action",
+        accessor: "action",
+        Cell: ({ row }) => (
+          <div className="mx-auto flex justify-around space-x-2 items-center">
+            <img src={EditIcon} alt="edit" />
+            <img src={EyeIcon} alt="view" />
+          </div>
+        ),
+      },
+    ],
+    []
+  );
 
   return (
     <div className="w-full bg-white rounded-md shadow-md flex flex-col">
