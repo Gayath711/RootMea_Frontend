@@ -4,13 +4,16 @@ import './css/encounternote.css';
 const EncounterNote = () => {
 
   const [selectedOption, setSelectedOption] = useState("");
+  const [userData, setUserData] = useState(null);
+  const [profileTypeData, setProfileTypeData] = useState(null);
+
   const handleSelectChange = (e) => {
     setSelectedOption(e.target.value);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission logic here
+  
   };
 
 
@@ -74,6 +77,59 @@ const EncounterNote = () => {
   const handleRemoveFile4 = (id) => {
     setFiles4(prevFiles => prevFiles.filter(file => file.id !== id));
   };
+
+
+
+
+
+
+
+    useEffect(() => {
+      // Retrieve token from local storage
+      const access_token = localStorage.getItem('access_token');
+  
+      // Function to fetch user data
+      const fetchUserData = async () => {
+        try {
+          const response = await fetch('http://localhost:8000/api/username', {
+            headers: {
+              Authorization: `Bearer ${access_token}` // Include token in the request headers
+            }
+          });
+          const data = await response.json();
+          setUserData(data);
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+      };
+  
+      // Function to fetch profile type data
+      const fetchProfileTypeData = async () => {
+        try {
+          const response = await fetch('http://localhost:8000/profile-type/', {
+            headers: {
+              Authorization: `Bearer ${access_token}` // Include token in the request headers
+            }
+          });
+          const data = await response.json();
+          setProfileTypeData(data);
+        } catch (error) {
+          console.error('Error fetching profile type data:', error);
+        }
+      };
+  
+      // Call the fetch functions
+      fetchUserData();
+      fetchProfileTypeData();
+    }, []);
+
+
+    console.log(profileTypeData)
+    console.log(userData)
+
+
+
+
 
   return (
     <form onSubmit={handleSubmit}>
@@ -146,8 +202,19 @@ const EncounterNote = () => {
               <div className="input-group-prepend">
                 <span className="input-group-text" id="basic-addon1">Staff Name <span style={{ color: 'red' }}>*</span> </span>
               </div>
-              <input type="text" className="form-control" id="basic-url1" aria-describedby="basic-addon1" />
-            </div>
+
+              {userData && ( // Check if userData exists before accessing its properties
+        <input
+          type="text"
+          className="form-control"
+          id="basic-url1"
+          aria-describedby="basic-addon1"
+          value={userData.username}
+          disabled
+        />
+      )}
+
+                       </div>
           </div>
           <div className="col-md-6">
             <div className="input-group mb-3">
