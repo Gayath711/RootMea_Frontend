@@ -26,12 +26,12 @@ const Content = ({ data, columns }) => {
   return (
     <>
       <hr className="w-[99%] mx-auto text-[#bababa]" />
-        <BasicTable type={"forms"} columns={columns} data={data} />
+      <BasicTable type={"forms"} columns={columns} data={data} />
     </>
   );
 };
 
-function Forms({clientId}) {
+function Forms({ clientId }) {
   const [open, setOpen] = useState(true);
   const [data, setData] = useState([
     {
@@ -76,10 +76,12 @@ function Forms({clientId}) {
       {
         Header: "Form Name",
         accessor: "form_name",
+        align: "left",
       },
       {
         Header: "Date",
         accessor: "date",
+        align: "left",
       },
       {
         Header: "Status",
@@ -101,7 +103,9 @@ function Forms({clientId}) {
   return (
     <div
       id="clientChartClientProfile"
-      className={`bg-white rounded-md shadow-sm flex flex-col ${open ? "h-full" : ""}`}
+      className={`bg-white rounded-md shadow-sm flex flex-col ${
+        open ? "h-full" : ""
+      }`}
     >
       <div className="flex justify-between p-3">
         <div className="flex gap-4 items-center">

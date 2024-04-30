@@ -26,17 +26,17 @@ const Content = ({ data, columns }) => {
   return (
     <>
       <hr className="w-[99%] mx-auto text-[#bababa]" />
-        <BasicTable
-          type={"labResults"}
-          defaultPageSize={3}
-          columns={columns}
-          data={data}
-        />
+      <BasicTable
+        type={"labResults"}
+        defaultPageSize={3}
+        columns={columns}
+        data={data}
+      />
     </>
   );
 };
 
-function LabResults({clientId}) {
+function LabResults({ clientId }) {
   const [open, setOpen] = useState(true);
   const [data, setData] = useState([
     {
@@ -84,6 +84,7 @@ function LabResults({clientId}) {
       {
         Header: "Diagnosic Test/Results",
         accessor: "diagnosic_test_results",
+        align: "left",
       },
       {
         Header: "Results",
@@ -96,6 +97,7 @@ function LabResults({clientId}) {
       {
         Header: "Flag",
         accessor: "flag",
+        align: "left",
       },
       {
         Header: "Units",
@@ -104,14 +106,17 @@ function LabResults({clientId}) {
       {
         Header: "Lab",
         accessor: "lab",
+        align: "left",
       },
       {
         Header: "Ordering Provider",
         accessor: "ordering_provider",
+        align: "left",
       },
       {
         Header: "Source",
         accessor: "source",
+        align: "left",
       },
     ],
     []
@@ -120,7 +125,9 @@ function LabResults({clientId}) {
   return (
     <div
       id="clientChartClientProfile"
-      className={`bg-white rounded-md shadow-sm flex flex-col ${open ? "h-full" : ""}`}
+      className={`bg-white rounded-md shadow-sm flex flex-col ${
+        open ? "h-full" : ""
+      }`}
     >
       <div className="flex justify-between p-3">
         <div className="flex gap-4 items-center">
