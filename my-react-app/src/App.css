@@ -90,3 +90,9 @@ body {
 #app-container[data-expand="false"] {
   width: calc(100vw - 100px) !important;
 }
+
+input[type="text"]:disabled,
+input[type="number"]:disabled {
+  cursor: no-drop;
+  background: #f2f2f2;
+}
