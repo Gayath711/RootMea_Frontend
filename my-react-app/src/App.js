@@ -52,6 +52,7 @@ import ProgramDirectory from "./components/ProgramDirectory";
 import StaffDirectory from "./components/StaffDirectory";
 import StaffRecord from "./components/StaffDirectory/StaffRecord";
 import ProgramRecord from "./components/ProgramDirectory/ProgramRecord";
+import { selectIsSidebarExpanded } from "./store/slices/utilsSlice";
 
 function App() {
   // Retrieve isLoggedIn state from localStorage on initial render
@@ -106,6 +107,8 @@ function App() {
   });
   console.log("user", user);
 
+  const isSidebarExpanded = useSelector(selectIsSidebarExpanded);
+
   return (
     <Router>
       <div className="App w-full">
@@ -121,13 +124,17 @@ function App() {
             {/* <div className='flex min-h-screen'> */}
             {/* <Sidebar isMinimized={isMinimized} toggleSidebar={toggleSidebar} /> */}
             {/* <div className='flex-1'> */}
-            <div className="flex justify-between lg:pr-10">
+            <div className="flex w-100">
               {width > 640 && (
-                <div id="sideBar" className="w-[4%]">
+                <div id="sideBarX" style={{ zIndex: 40 }} className="">
                   <SideBar />
                 </div>
               )}
-              <div className="sm:w-[94%] py-8 sm:py-10 space-y-7">
+              <div
+                id="app-container"
+                data-expand={isSidebarExpanded ? "true" : "false"}
+                className="mx-4 py-8 sm:py-10 space-y-7"
+              >
                 <Routes>
                   <Route path="/" element={<Dashboard />} />
                   {/* <Route path="/clientprofile" element={<Dashboard />} /> */}
