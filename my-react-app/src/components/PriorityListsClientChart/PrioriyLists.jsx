@@ -13,9 +13,7 @@ const options = {
 
 const Tag = ({ text }) => {
   return (
-    <div
-      className={`${options[text]} text-center text-xs w-[70px] mx-auto py-1 rounded-[2px]`}
-    >
+    <div className={`${options[text]} text-center text-xs w-[70px] mx-auto py-1 rounded-[2px]`}>
       {text?.charAt(0)?.toUpperCase() + text?.slice(1)}
     </div>
   );
@@ -26,17 +24,12 @@ const Content = ({ data, columns }) => {
   return (
     <>
       <hr className="w-[99%] mx-auto text-[#bababa]" />
-      <BasicTable
-        type={"priorityLists"}
-        defaultPageSize={10}
-        columns={columns}
-        data={data}
-      />
+        <BasicTable type={"priorityLists"} defaultPageSize={10} columns={columns} data={data} />
     </>
   );
 };
 
-function PriorityLists({ clientId }) {
+function PriorityLists({clientId}) {
   const [open, setOpen] = useState(true);
   const [data, setData] = useState([
     {
@@ -131,12 +124,10 @@ function PriorityLists({ clientId }) {
       {
         Header: "List Name",
         accessor: "list_name",
-        align: "left",
       },
       {
         Header: "Working on this list",
         accessor: "working_on_this_list",
-        align: "left",
       },
       {
         Header: "Status",
@@ -145,12 +136,10 @@ function PriorityLists({ clientId }) {
       {
         Header: "Status Date",
         accessor: "status_date",
-        align: "left",
       },
       {
         Header: "link to use contact info",
         accessor: "link_to_user_contact_info",
-        align: "left",
       },
       {
         Header: "Actions",
@@ -168,9 +157,7 @@ function PriorityLists({ clientId }) {
   return (
     <div
       id="clientChartClientProfile"
-      className={`bg-white rounded-md shadow-sm flex flex-col ${
-        open ? "h-full" : ""
-      }`}
+      className={`bg-white rounded-md shadow-sm flex flex-col ${open ? "h-full" : ""}`}
     >
       <div className="flex justify-between p-3">
         <div className="flex gap-4 items-center">

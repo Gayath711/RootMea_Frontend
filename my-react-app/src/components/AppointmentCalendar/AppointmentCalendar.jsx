@@ -100,12 +100,10 @@ function AppointmentCalendar() {
     {
       Header: "Client Topic",
       accessor: "clientTopic",
-      align: "left",
     },
     {
       Header: "Descriptions",
       accessor: "descriptions",
-      align: "left",
     },
     {
       Header: "Encounter Mode",

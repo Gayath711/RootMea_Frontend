@@ -10,7 +10,7 @@ import BasicTable from "../../components/react-table/BasicTable";
 // import EditIcon from "../images/edit.svg";
 import EyeIcon from "../../components/images/eye.svg";
 import EditIcon from "../../components/images/edit.svg";
-import apiURL from "../../apiConfig";
+import apiURL from '../../apiConfig';
 
 const Users = ({ setShowAlert, setUser, group }) => {
   const [users, setUsers] = useState([]);
@@ -40,17 +40,14 @@ const Users = ({ setShowAlert, setUser, group }) => {
       {
         Header: "User Account",
         accessor: "user_acct", // Correct accessor according to your API response
-        align: "left",
       },
       {
         Header: "User Position",
         accessor: "user_position", // Correct accessor according to your API response
-        align: "left",
       },
       {
         Header: "User Title",
         accessor: "user_title", // Correct accessor according to your API response
-        align: "left",
       },
       // Add more columns as needed
       {
@@ -89,7 +86,6 @@ const Users = ({ setShowAlert, setUser, group }) => {
       {
         Header: "Description",
         accessor: "program_desc",
-        align: "left",
       },
       {
         Header: "Eligibility",
@@ -129,7 +125,7 @@ const Users = ({ setShowAlert, setUser, group }) => {
       />
 
       <br></br>
-
+      
       <div className="flex flex-row justify-between pb-3">
         <div className="flex gap-4 items-center">
           <div className="text-[#28293B] text-xl">Programs</div>

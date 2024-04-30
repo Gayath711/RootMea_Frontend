@@ -25,7 +25,7 @@ const CalendarCard = () => {
       <div className="bg-white shadow-md rounded-md w-full text-xs border p-[20px] lg:col-span-3 col-span-8">
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DateCalendar
-            className="date-picker w-100"
+            className="date-picker"
             defaultValue={dayjs(selectedDate)}
             onChange={handleDateChange}
           />

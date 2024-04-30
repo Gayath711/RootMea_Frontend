@@ -115,12 +115,10 @@ function SocialVitalSigns({ clientId }) {
       {
         Header: "Risk",
         Cell: ({ row }) => <Tag text={row.original.risk} />,
-        align: "left",
       },
       {
         Header: "Last Assessed",
         accessor: "last_assessed",
-        align: "left",
       },
       {
         Header: "Actions",

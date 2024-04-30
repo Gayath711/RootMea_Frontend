@@ -261,7 +261,7 @@ function ReactTable({ columns, data, striped, type, top, defaultPageSize }) {
                       fontSize: column.fontSize || 15,
                       whiteSpace: "nowrap",
                       color: "inherit",
-                      fontFamily: "Roboto Mono",
+                      fontFamily: "Poppins"
                     }}
                     {...column.getHeaderProps([
                       { className: column.className },
@@ -295,7 +295,7 @@ function ReactTable({ columns, data, striped, type, top, defaultPageSize }) {
                         textAlign: cell.column.align || "center",
                         fontSize: cell.column.fontSize || 14,
                         whiteSpace: "nowrap",
-                        fontFamily: "Roboto Mono",
+                        fontFamily: "Poppins"
                       }}
                       {...cell.getCellProps([
                         { className: cell.column.className },
