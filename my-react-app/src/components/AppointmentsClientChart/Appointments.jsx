@@ -26,17 +26,17 @@ const Content = ({ data, columns }) => {
   return (
     <>
       <hr className="w-[99%] mx-auto text-[#bababa]" />
-      <BasicTable
-        type={"appointments"}
-        defaultPageSize={3}
-        columns={columns}
-        data={data}
-      />
+        <BasicTable
+          type={"appointments"}
+          defaultPageSize={3}
+          columns={columns}
+          data={data}
+        />
     </>
   );
 };
 
-function Appointments({ clientId }) {
+function Appointments({clientId}) {
   const [open, setOpen] = useState(true);
   const [data, setData] = useState([
     {
@@ -81,32 +81,26 @@ function Appointments({ clientId }) {
       {
         Header: "Facility",
         accessor: "facility",
-        align: "left",
       },
       {
         Header: "Program",
         accessor: "program",
-        align: "left",
       },
       {
         Header: "Reason",
         accessor: "reason",
-        align: "left",
       },
       {
         Header: "Date",
         accessor: "date",
-        align: "left",
       },
       {
         Header: "Time",
         accessor: "time",
-        align: "left",
       },
       {
         Header: "Duration",
         accessor: "duration",
-        align: "left",
       },
       {
         Header: "Status",
@@ -128,9 +122,7 @@ function Appointments({ clientId }) {
   return (
     <div
       id="clientChartClientProfile"
-      className={`bg-white rounded-md shadow-sm flex flex-col ${
-        open ? "h-full" : ""
-      }`}
+      className={`bg-white rounded-md shadow-sm flex flex-col ${open ? "h-full" : ""}`}
     >
       <div className="flex justify-between p-3">
         <div className="flex gap-4 items-center">

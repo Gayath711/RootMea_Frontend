@@ -9,7 +9,7 @@ import { Checkbox } from "@mui/material";
 import { useWindowSize } from "../Utils/windowResize";
 
 function Encounters() {
-  const { width } = useWindowSize();
+  const {width} = useWindowSize();
   const [data, setData] = useState([
     {
       date: "01-01-2000",
@@ -60,13 +60,14 @@ function Encounters() {
         accessor: "date",
         align: "left",
         Cell: ({ value }) => {
-          if (!value) return "";
 
+          if (!value) return "";
+          
           // Parse the date string
           const date = new Date(value);
           // Extract day, month, and year
-          const day = String(date.getDate()).padStart(2, "0");
-          const month = String(date.getMonth() + 1).padStart(2, "0");
+          const day = String(date.getDate()).padStart(2, '0');
+          const month = String(date.getMonth() + 1).padStart(2, '0');
           const year = date.getFullYear();
           // Format date as "dd-mm-yyyy"
           return `${month}-${day}-${year}`;
@@ -75,18 +76,15 @@ function Encounters() {
       {
         Header: "Time",
         accessor: "time",
-        align: "left",
       },
       {
         Header: "Client",
         align: "left",
         accessor: "client",
-        align: "left",
       },
       {
         Header: "Reason",
         accessor: "reason",
-        align: "left",
       },
       {
         Header: "Note Status",
@@ -114,12 +112,7 @@ function Encounters() {
     <div className="w-full bg-white rounded-md shadow-md flex flex-col">
       <div className="flex justify-between items-center mx-3 sm:mx-4 mt-6">
         <div className="flex items-center space-x-1 sm:space-x-4">
-          <span
-            className="text-[16px] sm:text-lg font-medium"
-            id="encountersTable"
-          >
-            Encounters
-          </span>
+          <span className="text-[16px] sm:text-lg font-medium" id="encountersTable">Encounters</span>
           <img src={ExternalLinkIcon} className="size-3 sm:size-4" alt="link" />
         </div>
         <div className="flex items-center space-x-1 sm:space-x-4 text-[8px] sm:text-xs">
@@ -132,8 +125,7 @@ function Encounters() {
                 padding: width < 600 ? "3px" : "5px",
               }}
               inputProps={{ "aria-label": "controlled" }}
-            />
-            <span className="text-[#2F9384]">Active</span>
+              /><span className="text-[#2F9384]">Active</span>
           </label>
           <label htmlFor="client-goal-active" className="flex items-center">
             <Checkbox
@@ -144,8 +136,7 @@ function Encounters() {
                 padding: "5px",
               }}
               inputProps={{ "aria-label": "controlled" }}
-            />
-            <span className="text-[#7397B5]">Completed</span>
+            /><span className="text-[#7397B5]">Completed</span>
           </label>
           <button className="px-3 py-1 border-1 rounded-sm border-[#1F4B51] text-[13px] font-medium leading-5 sm:text-xs text-[#1F4B51]">
             View all
