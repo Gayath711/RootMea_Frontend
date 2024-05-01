@@ -276,7 +276,6 @@ function App() {
             <Route path="/" element={<LoginForm />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/password/reset" element={<PasswordReset />} />
-            <Route path="/form_builder" element={<FormBuilder />} />
           </Routes>
         )}
       </div>
