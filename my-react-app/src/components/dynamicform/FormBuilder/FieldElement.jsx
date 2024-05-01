@@ -16,6 +16,8 @@ import ActionContextMenu from "./ActionContextMenu";
 import { useDraggable, useDroppable } from "@dnd-kit/core";
 import SelectElement from "../FormElements/SelectElement";
 import MultiSelectElement from "../FormElements/MultiSelectElement";
+import HeaderElement from "../FormElements/HeaderElement";
+import DividerElement from "../FormElements/DividerElement";
 
 function FieldElement({ field, index, id, preview }) {
   const { setSelectedElement, selectedElement } = useFormBuilderContext();
@@ -56,6 +58,17 @@ function FieldElement({ field, index, id, preview }) {
     case "my_enum_typeb":
       {
         inputElement = <MultiSelectElement {...field.props} />;
+      }
+      break;
+    case "CHAR(250)":
+    case "JSON":
+      {
+        inputElement = <HeaderElement {...field.props} />;
+      }
+      break;
+    case "LINE":
+      {
+        inputElement = <DividerElement />;
       }
       break;
 

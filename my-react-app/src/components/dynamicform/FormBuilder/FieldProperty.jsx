@@ -10,6 +10,7 @@ import CheckBoxProperty from "./Property/CheckBoxProperty";
 import FileInputProperty from "./Property/FileInputProperty";
 import SelectProperty from "./Property/SelectProperty";
 import BooleanProperty from "./Property/BooleanProperty";
+import HeaderProperty from "./Property/HeaderProperty";
 
 function FieldProperty(props) {
   const { selectedElement, elements, updateElement } = useFormBuilderContext();
@@ -93,7 +94,12 @@ function FieldProperty(props) {
           return <SelectProperty />;
         }
         break;
-
+      case "CHAR(250)":
+      case "JSON":
+        {
+          return <HeaderProperty />;
+        }
+        break;
       default:
         return null;
     }

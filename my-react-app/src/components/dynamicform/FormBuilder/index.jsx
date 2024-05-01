@@ -133,6 +133,38 @@ function RenderFormBuilder() {
   // Define your element groups and their corresponding elements
   const elementGroups = [
     {
+      name: "Layout Elements",
+      elements: [
+        {
+          type: "CHAR(250)",
+          label: "Header",
+          IconSrc: Single_line_text_Icon,
+          props: {
+            type: "header",
+            label: "New Header",
+          },
+        },
+        {
+          type: "JSON",
+          label: "Sub Header",
+          IconSrc: Single_line_text_Icon,
+          props: {
+            type: "subheader",
+            label: "New SubHeader",
+          },
+        },
+        {
+          type: "LINE",
+          label: "Divider",
+          IconSrc: Single_line_text_Icon,
+          props: {
+            type: "break_line",
+            label: "Divider",
+          },
+        },
+      ],
+    },
+    {
       name: "Text Elements",
       elements: [
         {
