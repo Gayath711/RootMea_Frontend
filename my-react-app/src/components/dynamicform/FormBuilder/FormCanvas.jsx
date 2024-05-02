@@ -78,15 +78,7 @@ function FormCanvas() {
       if (undefinedLabels.length > 0) {
         alert("Please fill lables of all fields");
       } else {
-        const filteredItems = items.filter(
-          (item) =>
-            !(
-              item.type === "JSON" ||
-              item.type === "CHAR(250)" ||
-              item.type === "LINE"
-            )
-        );
-        const columns = filteredItems.map((item) => {
+        const columns = items.map((item) => {
           let type = item.type;
           let enumOpt = item.props.options ? item.props.options.join(",") : [];
 
