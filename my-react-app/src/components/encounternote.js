@@ -1,5 +1,7 @@
 import React, { useState,useEffect,useRef } from 'react';
 import './css/encounternote.css';
+import axios from 'axios';
+import apiURL from '../apiConfig';
 
 const EncounterNote = () => {
 
@@ -91,7 +93,7 @@ const EncounterNote = () => {
       // Function to fetch user data
       const fetchUserData = async () => {
         try {
-          const response = await fetch('http://localhost:8000/api/username', {
+          const response = await fetch(`${apiURL}/api/username`, {
             headers: {
               Authorization: `Bearer ${access_token}` // Include token in the request headers
             }
@@ -106,7 +108,7 @@ const EncounterNote = () => {
       // Function to fetch profile type data
       const fetchProfileTypeData = async () => {
         try {
-          const response = await fetch('http://localhost:8000/profile-type/', {
+          const response = await fetch(`${apiURL}/profile-type/`, {
             headers: {
               Authorization: `Bearer ${access_token}` // Include token in the request headers
             }
@@ -127,12 +129,134 @@ const EncounterNote = () => {
     console.log(profileTypeData)
     console.log(userData)
 
+//M implementation
 
+useEffect(() => {
+  const fetchClients = async () => {
+    try {
+      const response = await axios.get(`${apiURL}/clientinfo-api/`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setClients(response.data);
+    } catch (error) {
+      console.error('Error fetching clients:', error);
+    }
+  };
 
+  fetchClients();
+}, []);
+
+const token = localStorage.getItem('access_token');
+
+const [clients, setClients] = useState([]);
+const [selectedClient, setSelectedClient] = useState("");
+const [clientDetails, setClientDetails] = useState({
+  dob: null,
+  preferredName: null,
+  primaryPhoneNumber: null,
+  email: null
+});
+
+const initialValuesClientDetails = {
+  dob: null,
+  preferredName: null,
+  primaryPhoneNumber: null,
+  email: null
+};
+
+const initialValues = {
+  client_id: null,
+  staff_name: null,
+  encounter_date: null,
+  start_time: null,
+  end_time: null,
+  encounter_type: null,
+  encounter_status: null,
+  facility: null,
+  program: null,
+  note_template: null, //this is alternative for noneType not confirmed yet
+  noteType: null,
+  custom_fields: null,
+  encounter_summary: null,
+  uploaded_documents: null,
+  care_plans: null,
+  signed_by: null,
+};
+
+  // State variables to hold form data
+  const [formData, setFormData] = useState({
+    client_id: null,
+    staff_name: null,
+    encounter_date: null,
+    start_time: null,
+    end_time: null,
+    encounter_type: null,
+    encounter_status: null,
+    facility: null,
+    program: null,
+    note_template: null, //this is alternative for noneType not confirmed yet
+    noteType: null,
+    custom_fields: null,
+    encounter_summary: null,
+    uploaded_documents: null,
+    care_plans: null,
+    signed_by: null,
+  });
+
+  const handleChange = (field, value) => {
+    setFormData((prevInfo) => ({
+      ...prevInfo,
+      [field]: value,
+    }));
+  };
+
+  const handleClientChange = (e) => {
+    const clientId = e.target.value;
+    setSelectedClient(clientId);
+    handleChange("client_id", clientId)
+    handleChange("staff_name", userData.username)
+      
+    // Find the selected client from the clients array
+    const selectedClient = clients.find(client => client.id === parseInt(clientId));
+    // console.log(selectedClient,clientId, clients,"selected client")
+    if (selectedClient) {
+      setClientDetails({
+        dob: selectedClient.date_of_birth,
+        nickname_preferred_name: selectedClient.nickname_preferred_name || "",
+        primaryPhoneNumber: selectedClient.mobile_number || "",
+        email: selectedClient.email_address || ""
+      });
+    }
+  };
+
+  // Function to handle form submission
+  const handleSubmit1 = async (e) => {
+    e.preventDefault(); // Prevent default form submission behavior
+    //handleChange("staff_name", userData.username)
+    console.log("form data before submit", formData)
+
+    try {
+      // Make POST request to API endpoint with form data
+      const response = await axios.post(`${apiURL}/api/encounter-notes/create/`, formData);
+      console.log('Response:', response.data); // Log response from API
+      // Clear form fields after successful submission if needed
+      // setFormData({ ...formData, clientName: '', dob: '', preferredName: '', ... });
+      alert("Successfully Submitted")
+      setFormData(initialValues)
+      setSelectedClient("")
+      setClientDetails(initialValuesClientDetails); // Reset client details
+    } catch (error) {
+      console.error('Error:', error); // Log any errors
+    }
+  };
+
+    
 
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit1}>
       <div className="container pt-4">
         <div className="row">
           <div className="col-12">
@@ -148,15 +272,34 @@ const EncounterNote = () => {
               <div className="input-group-prepend">
                 <span className="input-group-text" id="basic-addon1">Client Name</span>
               </div>
-              <input type="text" className="form-control" id="basic-url1" aria-describedby="basic-addon1" />
-            </div>
+              <select 
+                className="form-control" 
+                id="clientName"
+                value={selectedClient}
+                onChange={handleClientChange}
+              >
+                <option value="">Select a client</option>
+                {clients.map(client => (
+                  <option key={client.id} value={client.id}>
+                    {`${client.first_name} ${client.middle_name ? client.middle_name + ' ' : ''}${client.last_name}`}
+                  </option>
+                ))}
+              </select>            </div>
           </div>
           <div className="col-md-4">
             <div className="input-group mb-3">
-              <div className="input-group-prepend">
+            <div className="input-group-prepend">
                 <span className="input-group-text" id="basic-addon2">DOB</span>
               </div>
-              <input type="text" className="form-control" id="basic-url2" aria-describedby="basic-addon2" />
+              <input 
+                type="text" 
+                className="form-control" 
+                id="basic-url2" 
+                aria-describedby="basic-addon2" 
+                value={clientDetails.dob || ""} 
+                //onChange={(e) => setClientDetails({ ...clientDetails, dob: e.target.value })}
+                disabled 
+              />
             </div>
           </div>
           <div className="col-md-4">
@@ -164,13 +307,18 @@ const EncounterNote = () => {
               <div className="input-group-prepend">
                 <span className="input-group-text" id="basic-addon3">Preferred Name</span>
               </div>
-              <input type="text" className="form-control" id="basic-url3" aria-describedby="basic-addon3" />
+              <input 
+                type="text" 
+                className="form-control" 
+                id="basic-url3" 
+                aria-describedby="basic-addon3" 
+                value={clientDetails.nickname_preferred_name || ""} 
+                // onChange={(e) => setClientDetails({ ...clientDetails, nickname_preferred_name: e.target.value })}
+                disabled 
+              />
             </div>
           </div>
         </div>
-
-
-   
 
         <div className="row">
           <div className="col-md-6">
@@ -178,7 +326,15 @@ const EncounterNote = () => {
               <div className="input-group-prepend">
                 <span className="input-group-text" id="basic-addon1">Primary Phonenumber</span>
               </div>
-              <input type="text" className="form-control" id="basic-url1" aria-describedby="basic-addon1" />
+              <input 
+                type="text" 
+                className="form-control" 
+                id="basic-url1" 
+                aria-describedby="basic-addon1" 
+                value={clientDetails.primaryPhoneNumber || ""} 
+                // onChange={(e) => setClientDetails({ ...clientDetails, primaryPhoneNumber: e.target.value })}
+                disabled 
+              />
             </div>
           </div>
           <div className="col-md-6">
@@ -186,7 +342,15 @@ const EncounterNote = () => {
               <div className="input-group-prepend">
                 <span className="input-group-text" id="basic-addon2">Email</span>
               </div>
-              <input type="text" className="form-control" id="basic-url2" aria-describedby="basic-addon2" />
+              <input 
+                type="text" 
+                className="form-control" 
+                id="basic-url2" 
+                aria-describedby="basic-addon2" 
+                value={clientDetails.email || ""} 
+                // onChange={(e) => setClientDetails({ ...clientDetails, email: e.target.value })}
+                disabled 
+              />
             </div>
           </div>
         </div>
@@ -209,7 +373,7 @@ const EncounterNote = () => {
           className="form-control"
           id="basic-url1"
           aria-describedby="basic-addon1"
-          value={userData.username}
+          value={userData.username || ""}
           disabled
         />
       )}
@@ -221,7 +385,7 @@ const EncounterNote = () => {
               <div className="input-group-prepend">
                 <span className="input-group-text" id="basic-addon2">Encounter Date <span style={{ color: 'red' }}>*</span>  </span>
               </div>
-              <input type="text" className="form-control" id="basic-url2" aria-describedby="basic-addon2" />
+              <input type="date" className="form-control" id="basic-url2" value={formData.encounter_date || ""} onChange={(encounter_date) => handleChange("encounter_date", encounter_date.target.value)} aria-describedby="basic-addon2" />
             </div>
           </div>
 
@@ -233,7 +397,7 @@ const EncounterNote = () => {
               <div className="input-group-prepend">
                 <span className="input-group-text" id="basic-addon1">Facility <span style={{ color: 'red' }}>*</span> </span>
               </div>
-              <input type="text" className="form-control" id="basic-url1" aria-describedby="basic-addon1" />
+              <input type="text" className="form-control" id="basic-url1" value={formData.facility || ""} onChange={(facility) => handleChange("facility", facility.target.value)} aria-describedby="basic-addon1" />
             </div>
           </div>
           <div className="col-md-6">
@@ -241,7 +405,7 @@ const EncounterNote = () => {
               <div className="input-group-prepend">
                 <span className="input-group-text" id="basic-addon2">Program <span style={{ color: 'red' }}>*</span> </span>
               </div>
-              <input type="text" className="form-control" id="basic-url2" aria-describedby="basic-addon2" />
+              <input type="text" className="form-control" id="basic-url2" value={formData.program || ""} onChange={(program) => handleChange("program", program.target.value)} aria-describedby="basic-addon2" />
             </div>
           </div>
 
@@ -253,7 +417,7 @@ const EncounterNote = () => {
               <div className="input-group-prepend">
                 <span className="input-group-text" id="basic-addon1">Note Type <span style={{ color: 'red' }}>*</span> </span>
               </div>
-              <input type="text" className="form-control" id="basic-url1" aria-describedby="basic-addon1" />
+              <input type="text" className="form-control" id="basic-url1" value={formData.noteType || ""} onChange={(noteType) => handleChange("noteType", noteType.target.value)} aria-describedby="basic-addon1" />
             </div>
           </div>
           <div className="col-md-6">
@@ -261,7 +425,7 @@ const EncounterNote = () => {
               <div className="input-group-prepend">
                 <span className="input-group-text" id="basic-addon2">Encounter Type <span style={{ color: 'red' }}>*</span> </span>
               </div>
-              <input type="text" className="form-control" id="basic-url2" aria-describedby="basic-addon2" />
+              <input type="text" className="form-control" id="basic-url2" value={formData.encounter_type || ""} onChange={(encounter_type) => handleChange("encounter_type", encounter_type.target.value)} aria-describedby="basic-addon2" />
             </div>
           </div>
 
@@ -279,7 +443,7 @@ const EncounterNote = () => {
                 <span className="input-group-text" id="basic-addon1">Custom Fields</span>
               </div>
            
-            <textarea className="form-control z-depth-1" id="exampleFormControlTextarea6" rows="3" placeholder="Write something here..."></textarea>
+            <textarea className="form-control z-depth-1" id="exampleFormControlTextarea6" value={formData.custom_fields || ""} onChange={(custom_fields) => handleChange("custom_fields", custom_fields.target.value)} rows="3" placeholder="Write something here..."></textarea>
           </div>
 
           </div>
