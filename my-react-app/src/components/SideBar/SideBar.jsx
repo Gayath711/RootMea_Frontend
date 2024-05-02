@@ -76,7 +76,7 @@ let sidebarLinks = [
   {
     id: "client-profile-new",
     to: "/clientprofilenew",
-    title: "New Client Profile",
+    title: "Add New Client",
     activeImageSrc: NewClientActive,
     inactiveImageSrc: NewClientInActive,
     isActive: false,
