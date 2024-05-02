@@ -6,6 +6,8 @@ import apiURL from "../../apiConfig";
 import Swal from "sweetalert2";
 import Select from "react-select";
 import DateInput from "./FormElements/DateInput";
+import HeaderElement from "./FormElements/HeaderElement";
+import DividerElement from "./FormElements/DividerElement";
 
 function NewPage() {
   const { tableName } = useParams();
@@ -240,6 +242,24 @@ function NewPage() {
               onChange={(event) => handleInputChange(event, column.name)}
               className={`${column.width} border border-gray-300 rounded px-4 py-2`}
             />
+          </div>
+        );
+      case "character":
+        return (
+          <div key={column.name} className="mb-4">
+            <HeaderElement type="header" label={label} />
+          </div>
+        );
+      case "json":
+        return (
+          <div key={column.name} className="mb-4">
+            <HeaderElement label={label} />
+          </div>
+        );
+      case "line":
+        return (
+          <div key={column.name} className="mb-4">
+            <DividerElement />
           </div>
         );
 
