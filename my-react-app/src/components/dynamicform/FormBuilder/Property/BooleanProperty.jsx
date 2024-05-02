@@ -5,7 +5,7 @@ import InputElement from "../../FormElements/InputElement";
 import CheckBoxElement from "../../FormElements/CheckBoxElement";
 import EnumOptionsComponent from "./EnumOptionsProperty";
 
-export default function CheckBoxProperty() {
+export default function BooleanProperty() {
   const { selectedElement, elements, updateElement } = useFormBuilderContext();
   const fieldElement = elements[selectedElement];
 
@@ -66,11 +66,6 @@ export default function CheckBoxProperty() {
         />
       </div>
       <div className="flex flex-column gap-3 pb-3">
-        <EnumOptionsComponent
-          label="Options"
-          value={fieldElement.props.options || ""}
-          setValue={handleEnumChange}
-        />
         <CheckBoxElement
           options={[
             {

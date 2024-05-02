@@ -133,6 +133,38 @@ function RenderFormBuilder() {
   // Define your element groups and their corresponding elements
   const elementGroups = [
     {
+      name: "Layout Elements",
+      elements: [
+        {
+          type: "CHAR(250)",
+          label: "Header",
+          IconSrc: Single_line_text_Icon,
+          props: {
+            type: "header",
+            label: "New Header",
+          },
+        },
+        {
+          type: "JSON",
+          label: "Sub Header",
+          IconSrc: Single_line_text_Icon,
+          props: {
+            type: "subheader",
+            label: "New SubHeader",
+          },
+        },
+        {
+          type: "LINE",
+          label: "Divider",
+          IconSrc: Single_line_text_Icon,
+          props: {
+            type: "break_line",
+            label: "Divider",
+          },
+        },
+      ],
+    },
+    {
       name: "Text Elements",
       elements: [
         {
@@ -171,13 +203,24 @@ function RenderFormBuilder() {
             disabled: false,
           },
         },
+        {
+          type: "FLOAT",
+          label: "Decimal",
+          IconSrc: Number_Icon,
+          props: {
+            type: "number",
+            label: "New Decimal",
+            placeholder: "Enter a Decimal",
+            step: "0.01",
+            required: false,
+            disabled: false,
+          },
+        },
       ],
     },
     {
       name: "Date Elements",
       elements: [
-        // { type: "FLOAT", label: "Decimal", IconSrc: file },
-        // { type: "BOOLEAN", label: "Boolean", IconSrc: file },
         {
           type: "TIMESTAMP",
           label: "Date and Time",
@@ -194,30 +237,40 @@ function RenderFormBuilder() {
     {
       name: "Multi Elements",
       elements: [
-        // {
-        //   type: "my_enum_type",
-        //   label: "Dropdown",
-        //   IconSrc: Drop_down_Icon,
-        //   props: {
-        //     type: "text",
-        //     label: "New Drop Down",
-        //     required: false,
-        //     disabled: true,
-        //     options: ["option-1", "option-2", "option-3"],
-        //   },
-        // },
-        // {
-        //   type: "my_enum_typeb",
-        //   label: "Multiple Select",
-        //   IconSrc: Drop_down_Icon,
-        //   props: {
-        //     type: "text",
-        //     label: "New Multi select",
-        //     required: false,
-        //     disabled: true,
-        //     options: ["option-1", "option-2", "option-3"],
-        //   },
-        // },
+        {
+          type: "my_enum_type",
+          label: "Dropdown",
+          IconSrc: Drop_down_Icon,
+          props: {
+            label: "New Drop Down",
+            required: false,
+            disabled: false,
+            options: ["option-1", "option-2", "option-3"],
+          },
+        },
+        {
+          type: "BOOLEAN",
+          label: "Yes/No",
+          IconSrc: Drop_down_Icon,
+          props: {
+            label: "New Yes/No",
+            required: false,
+            disabled: false,
+            options: ["Yes", "No"],
+          },
+        },
+
+        {
+          type: "my_enum_typeb",
+          label: "Multiple Select",
+          IconSrc: Drop_down_Icon,
+          props: {
+            label: "New Multi select",
+            required: false,
+            disabled: false,
+            options: ["option-1", "option-2", "option-3"],
+          },
+        },
         {
           type: "checkbox",
           label: "Checkbox",
@@ -233,13 +286,35 @@ function RenderFormBuilder() {
       ],
     },
 
-    // {
-    //   name: "Media Elements",
-    //   elements: [
-    //     { type: "BYTEA", label: "Image Upload", IconSrc: Image_upload_Icon },
-    //     { type: "BYTEA", label: "File Upload", IconSrc: Attachments_Icon },
-    //   ],
-    // },
+    {
+      name: "Media Elements",
+      elements: [
+        {
+          type: "BYTEA",
+          label: "Image Upload",
+          IconSrc: Image_upload_Icon,
+          props: {
+            type: "file",
+            accept: ".png, .jpg, .jpeg, .pdf",
+            label: "Image Upload",
+            required: false,
+            disabled: false,
+          },
+        },
+        {
+          type: "BYTEA2",
+          label: "File Upload",
+          IconSrc: Attachments_Icon,
+          props: {
+            type: "file",
+            accept: ".png, .jpg, .jpeg, .pdf",
+            label: "File Upload",
+            required: false,
+            disabled: false,
+          },
+        },
+      ],
+    },
   ];
 
   // const onDragStart = (event) => {
@@ -357,6 +432,7 @@ function RenderFormBuilder() {
   };
 
   console.log({ items });
+  console.log({ showPreview });
 
   return (
     <DndContext
@@ -371,23 +447,25 @@ function RenderFormBuilder() {
       {/* Form Header  */}
       <FormHeader />
       {/* Form Builder */}
-      <div className="row">
-        {/* Draggable Elements */}
-        <div className="col-sm-4 p-2">
-          <ElementsBar elementGroups={elementGroups} />
-        </div>
+      {!showPreview && (
+        <div className="row">
+          {/* Draggable Elements */}
+          <div className="col-sm-4 p-2">
+            <ElementsBar elementGroups={elementGroups} />
+          </div>
 
-        {/* Form Drop Zone */}
-        <div className="col-sm-5 p-2">
-          <FormCanvas items={items} />
-        </div>
+          {/* Form Drop Zone */}
+          <div className="col-sm-5 p-2">
+            <FormCanvas items={items} />
+          </div>
 
-        {/* Selected Element Property */}
+          {/* Selected Element Property */}
 
-        <div className="col-sm-3 p-2">
-          <FieldProperty />
+          <div className="col-sm-3 p-2">
+            <FieldProperty />
+          </div>
         </div>
-      </div>
+      )}
       {/* Form Preview */}
       {showPreview && <FormPreview />}
       {/* </SortableContext> */}

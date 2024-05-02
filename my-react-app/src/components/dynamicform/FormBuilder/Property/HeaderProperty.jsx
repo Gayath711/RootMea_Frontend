@@ -2,10 +2,8 @@ import React from "react";
 import { useFormBuilderContext } from "../Context/FormBuilderContext";
 
 import InputElement from "../../FormElements/InputElement";
-import CheckBoxElement from "../../FormElements/CheckBoxElement";
-import EnumOptionsComponent from "./EnumOptionsProperty";
 
-export default function CheckBoxProperty() {
+export default function HeaderProperty() {
   const { selectedElement, elements, updateElement } = useFormBuilderContext();
   const fieldElement = elements[selectedElement];
 
@@ -40,18 +38,6 @@ export default function CheckBoxProperty() {
     updateElement(selectedElement, updatedElement);
   };
 
-  const handleEnumChange = (enumValues) => {
-    const updatedElement = {
-      ...fieldElement,
-      props: {
-        ...fieldElement.props,
-        options: enumValues.split(","),
-      },
-    };
-
-    updateElement(selectedElement, updatedElement);
-  };
-
   return (
     <div className="flex flex-column gap-3">
       <div className="flex flex-column gap-3 border-b-2 pb-3">
@@ -61,26 +47,8 @@ export default function CheckBoxProperty() {
           type="text"
           name="label"
           value={fieldElement.props.label}
-          placeholder="Enter Label"
+          placeholder="Enter Text"
           onChange={handlePropsChange}
-        />
-      </div>
-      <div className="flex flex-column gap-3 pb-3">
-        <EnumOptionsComponent
-          label="Options"
-          value={fieldElement.props.options || ""}
-          setValue={handleEnumChange}
-        />
-        <CheckBoxElement
-          options={[
-            {
-              label: "is Required",
-              value: "required",
-              checked: fieldElement.props.required,
-            },
-          ]}
-          name={"required"}
-          onChange={handleCheckBoxProps}
         />
       </div>
     </div>

@@ -87,6 +87,8 @@ export const FormBuilderContextProvider = ({ children }) => {
   const contextValue = {
     elements,
     selectedElement,
+    selectedFieldElement:
+      selectedElement !== null ? elements[selectedElement] : null,
     setSelectedElement,
     cloneElement,
     removeElement,

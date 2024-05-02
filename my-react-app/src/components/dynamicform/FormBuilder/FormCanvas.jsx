@@ -78,13 +78,32 @@ function FormCanvas() {
       if (undefinedLabels.length > 0) {
         alert("Please fill lables of all fields");
       } else {
-        const columns = items.map((item) => {
+        const filteredItems = items.filter(
+          (item) =>
+            !(
+              item.type === "JSON" ||
+              item.type === "CHAR(250)" ||
+              item.type === "LINE"
+            )
+        );
+        const columns = filteredItems.map((item) => {
+          let type = item.type;
+          let enumOpt = item.props.options ? item.props.options.join(",") : [];
+
+          if (item.type === "BYTEA2") {
+            type = "BYTEA";
+          }
+
+          if (item.type === "BOOLEAN") {
+            enumOpt = [];
+          }
+
           return {
             name: item.props.label,
-            type: item.type,
+            type: type,
             notNull: item.props.required,
             width: item.props.width || "w-full",
-            enum: item.props.options ? item.props.options.join(",") : [],
+            enum: enumOpt,
           };
         });
 

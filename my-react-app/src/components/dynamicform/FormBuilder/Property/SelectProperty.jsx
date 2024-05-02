@@ -1,13 +1,21 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useFormBuilderContext } from "../Context/FormBuilderContext";
 
 import InputElement from "../../FormElements/InputElement";
 import CheckBoxElement from "../../FormElements/CheckBoxElement";
 import EnumOptionsComponent from "./EnumOptionsProperty";
 
-export default function CheckBoxProperty() {
-  const { selectedElement, elements, updateElement } = useFormBuilderContext();
-  const fieldElement = elements[selectedElement];
+export default function SelectProperty() {
+  const {
+    selectedElement,
+    selectedFieldElement: fieldElement,
+    elements,
+    updateElement,
+  } = useFormBuilderContext();
+  // const [fieldElement, setFieldElement] = useState(elements[selectedElement]);
+  // useEffect(() => {
+  //   setFieldElement(elements[selectedElement]);
+  // }, [selectedElement]);
 
   const handlePropsChange = (e) => {
     const {
@@ -51,6 +59,10 @@ export default function CheckBoxProperty() {
 
     updateElement(selectedElement, updatedElement);
   };
+
+  if (!fieldElement) {
+    return null;
+  }
 
   return (
     <div className="flex flex-column gap-3">
