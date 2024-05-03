@@ -34,7 +34,7 @@ const AddAppointment = ({ toggleModal, fetchEvents, setShowAlert }) => {
 
   const handleDateChange = (name, value) => {
     if (name === "date") {
-      const formattedDate = format(value, "yyyy-MM-dd");
+      const formattedDate = format(value, "MM-dd-yyyy");
       setDate(formattedDate);
     } else if (name === "start_time") {
       setStartTime(value);
@@ -140,6 +140,7 @@ const AddAppointment = ({ toggleModal, fetchEvents, setShowAlert }) => {
                 value={date}
                 handleChange={(date) => handleDateChange("date", date)}
               />
+
               {errors.date && (
                 <span className="text-xs ms-1 text-red-500">
                   This field is required
@@ -155,6 +156,7 @@ const AddAppointment = ({ toggleModal, fetchEvents, setShowAlert }) => {
                 value={startTime}
                 handleChange={(value) => handleDateChange("start_time", value)}
                 register={register}
+                selectedDate={date}
                 registerProps={{ required: true }}
               />
               {errors.start_time && (
@@ -170,6 +172,7 @@ const AddAppointment = ({ toggleModal, fetchEvents, setShowAlert }) => {
                 value={endTime}
                 handleChange={(value) => handleDateChange("end_time", value)}
                 register={register}
+                selectedDate={date}
                 registerProps={{ required: true }}
               />
               {errors.end_time && (
