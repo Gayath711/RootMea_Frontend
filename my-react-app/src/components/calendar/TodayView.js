@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import dayjs from "dayjs";
 import { getTodayTime } from "../utils";
 import GoogleIcon from "../images/google_icon.svg";
 import CalendarIcon from "../images/calendar-boxed.svg";
 import InternalCalendarIcon from "../images/internal-meeting.svg";
+import { AppointmentDetail_Modal } from "../Appointment/AppointmentDetail";
 
 export default function TodayView({ savedEvents }) {
   const todayTimes = getTodayTime();
@@ -81,6 +82,11 @@ function TimeBlock({ time, savedEvents }) {
     return eventTime.hour() === time.hour() && eventTime.date() === time.date();
   });
 
+  const [showDetailModal, setShowDetailModal] = useState(null);
+  const toggleDetailModal = (index) => {
+    setShowDetailModal(index);
+  };
+
   return (
     <div className="flex-1 grid grid-cols-9 gap-2 m-0 opacity-75 border border-gray-200">
       <div className="col-span-1 border-r-2 border-gray-200 flex justify-center items-center">
@@ -94,26 +100,44 @@ function TimeBlock({ time, savedEvents }) {
           const endTime = dayjs(event.end.dateTime).format("HH:mm A");
 
           return (
-            <div key={index} className="m-2 mb-0 relative">
-              <a href={event.htmlLink} target="_blank">
-                <div
-                  className={`flex flex-row gap-1 items-center w-full h-7 rounded-tl-sm rounded-tr-sm mx-1 ${getTitleBackGround()}`}
+            <>
+              {" "}
+              <div key={index} className="m-2 mb-0 relative">
+                <a
+                  // href={event.htmlLink}
+                  target="_blank"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleDetailModal(index);
+                  }}
                 >
-                  <img
-                    src={event.isExternal ? GoogleIcon : InternalCalendarIcon}
-                    className={
-                      event.isExternal
-                        ? "h-[16px] w-[16px] ms-1 bg-white rounded-full"
-                        : "h-[20px] w-[20px] ms-1"
-                    }
-                    alt="event-meet"
-                  />
-                  <div className="text-center text-xs font-normal truncate">
-                    {startTime + "-" + endTime + " | " + event.summary}
+                  <div
+                    className={`flex flex-row gap-1 items-center w-full h-7 rounded-tl-sm rounded-tr-sm mx-1 ${getTitleBackGround()}`}
+                  >
+                    <img
+                      src={event.isExternal ? GoogleIcon : InternalCalendarIcon}
+                      className={
+                        event.isExternal
+                          ? "h-[16px] w-[16px] ms-1 bg-white rounded-full"
+                          : "h-[20px] w-[20px] ms-1"
+                      }
+                      alt="event-meet"
+                    />
+                    <div className="text-center text-xs font-normal truncate">
+                      {startTime + "-" + endTime + " | " + event.summary}
+                    </div>
                   </div>
-                </div>
-              </a>
-            </div>
+                </a>
+              </div>
+              {showDetailModal === index && (
+                <AppointmentDetail_Modal
+                  showPreview={showDetailModal === index}
+                  toggleModal={() => toggleDetailModal(null)}
+                  event={event}
+                />
+              )}
+            </>
           );
         })}
       </div>

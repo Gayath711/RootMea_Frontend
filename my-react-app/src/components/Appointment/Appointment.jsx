@@ -4,7 +4,9 @@ import "./AppointmentStyles.css";
 import useAppointments from "../../hooks/useAppointments";
 import { getUpcomingEvents } from "../utils";
 import { Link } from "react-router-dom";
-import AppointmentDetail from "./AppointmentDetail";
+import AppointmentDetail, {
+  AppointmentDetail_Modal,
+} from "./AppointmentDetail";
 
 const AppointmentItem = ({ id, event }) => {
   const [showModal, setShowModal] = useState(false);
@@ -75,7 +77,11 @@ const AppointmentItem = ({ id, event }) => {
       </div>
 
       {showModal && (
-        <AppointmentDetail toggleModal={toggleModal} event={event} />
+        <AppointmentDetail_Modal
+          showPreview={showModal}
+          toggleModal={toggleModal}
+          event={event}
+        />
       )}
     </>
   );
