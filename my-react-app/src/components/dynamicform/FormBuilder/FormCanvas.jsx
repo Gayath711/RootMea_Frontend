@@ -47,6 +47,56 @@ function FormCanvas() {
     handleFormName(sanitizedValue);
   };
 
+  function checkHasOnlyNonFields(jsonArray) {
+    const allowedTypes = ["CHAR(250)", "JSON", "LINE"];
+    for (let obj of jsonArray) {
+      if (!allowedTypes.includes(obj.type)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function checkHasMetaData(formDetail) {
+    if (
+      formDetail.title === "" &&
+      formDetail.description === "" &&
+      formDetail.formName === ""
+    ) {
+      alert("Please fill valid Form Title, Description and Name");
+      return false;
+    }
+
+    if (formDetail.title === "") {
+      alert("Please fill valid Form Title");
+      return false;
+    }
+
+    if (formDetail.description === "") {
+      alert("Please fill valid Form description");
+      return false;
+    }
+
+    if (formDetail.formName === "") {
+      alert("Please fill valid Form Name");
+      return false;
+    }
+    return true;
+  }
+
+  const validation = () => {
+    let hasOnlyNonFields = checkHasOnlyNonFields(items);
+    let hasValidMetaData = checkHasMetaData(formDetail);
+    if (hasOnlyNonFields) {
+      alert("Add any valid fields to create a form");
+      return false;
+    }
+    if (!hasValidMetaData) {
+      return false;
+    }
+    return true;
+  };
+
   const postHeader = async () => {
     try {
       const response = await axios.post(
@@ -65,48 +115,55 @@ function FormCanvas() {
 
   const handleSubmit = async () => {
     try {
-      const undefinedLabels = [];
+      if (validation()) {
+        const undefinedLabels = [];
 
-      items.map((item, index) => {
-        if (item.props.label === "") {
-          undefinedLabels.push(index);
+        items.map((item, index) => {
+          if (item.props.label === "") {
+            undefinedLabels.push(index);
+          }
+        });
+
+        console.log({ undefinedLabels });
+
+        if (undefinedLabels.length > 0) {
+          alert("Please fill lables of all fields");
+        } else {
+          const columns = items.map((item) => {
+            let type = item.type;
+            let enumOpt = item.props.options
+              ? item.props.options.join(",")
+              : [];
+
+            if (item.type === "BYTEA2") {
+              type = "BYTEA";
+            }
+
+            if (item.type === "BOOLEAN") {
+              enumOpt = [];
+            }
+
+            return {
+              name: item.props.label,
+              type: type,
+              notNull: item.props.required,
+              width: item.props.width || "w-full",
+              enum: enumOpt,
+            };
+          });
+
+          const response = await axios.post(
+            `${apiURL}/create_table_endpoint/`,
+            {
+              table_name: "Roots" + formDetail.formName,
+              columns: columns,
+            }
+          );
+
+          await postHeader();
+
+          navigate("/createtableform");
         }
-      });
-
-      console.log({ undefinedLabels });
-
-      if (undefinedLabels.length > 0) {
-        alert("Please fill lables of all fields");
-      } else {
-        const columns = items.map((item) => {
-          let type = item.type;
-          let enumOpt = item.props.options ? item.props.options.join(",") : [];
-
-          if (item.type === "BYTEA2") {
-            type = "BYTEA";
-          }
-
-          if (item.type === "BOOLEAN") {
-            enumOpt = [];
-          }
-
-          return {
-            name: item.props.label,
-            type: type,
-            notNull: item.props.required,
-            width: item.props.width || "w-full",
-            enum: enumOpt,
-          };
-        });
-
-        const response = await axios.post(`${apiURL}/create_table_endpoint/`, {
-          table_name: "Roots" + formDetail.formName,
-          columns: columns,
-        });
-
-        await postHeader();
-
-        navigate("/createtableform");
       }
     } catch (error) {
       console.error("Error:", { error });

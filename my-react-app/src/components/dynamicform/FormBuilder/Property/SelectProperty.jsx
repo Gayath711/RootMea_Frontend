@@ -79,6 +79,7 @@ export default function SelectProperty() {
       </div>
       <div className="flex flex-column gap-3 pb-3">
         <EnumOptionsComponent
+          key={fieldElement.eleKey}
           label="Options"
           value={fieldElement.props.options || ""}
           setValue={handleEnumChange}
