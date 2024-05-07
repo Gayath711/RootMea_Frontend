@@ -5,6 +5,7 @@ import Paper from "@mui/material/Paper";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import apiURL from "../../apiConfig";
+import MUIDataGridWrapper from "../HOC/MUIDataGridWrapper";
 
 export default function ProgramRecord() {
   const { recordid } = useParams();
@@ -194,63 +195,65 @@ const PrimaryContactManagementTable = ({ rows, loadingData }) => {
         <p className="mb-2 fw-medium text-base">
           Primary Contact(s) for management/administration
         </p>
-        <DataGrid
-          loading={loadingData}
-          rows={rows}
-          columns={[
-            {
-              field: "StaffName",
-              headerName: "Staff Name",
-              flex: 1,
-              headerClassName: "bg-[#5BC4BF] text-white font-medium",
-            },
-            {
-              field: "StaffTitle",
-              headerName: "Staff Title",
-              flex: 1,
-              headerClassName: "bg-[#5BC4BF] text-white font-medium",
-            },
-            {
-              field: "StaffEmail",
-              headerName: "Staff Email",
-              flex: 1,
-              headerClassName: "bg-[#5BC4BF] text-white font-medium",
-            },
-            {
-              field: "StaffPhone",
-              headerName: "Staff Phone",
-              flex: 1,
-              headerClassName: "bg-[#5BC4BF] text-white font-medium",
-            },
-            {
-              field: "LinkToContactCard",
-              headerName: "Link To Contact Card",
-              flex: 1,
-              headerClassName: "bg-[#5BC4BF] text-white font-medium",
-              renderCell: (params) => {
-                return (
-                  <>
-                    <Link
-                      to={`/staff-directory/${params.row.id}`}
-                      className="text-[#5BC4BF]"
-                    >
-                      {params.row.LinkToContactCard}
-                    </Link>
-                  </>
-                );
+        <MUIDataGridWrapper>
+          <DataGrid
+            loading={loadingData}
+            rows={rows}
+            columns={[
+              {
+                field: "StaffName",
+                headerName: "Staff Name",
+                flex: 1,
+                headerClassName: "bg-[#5BC4BF] text-white font-medium",
               },
-            },
-          ]}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 10,
+              {
+                field: "StaffTitle",
+                headerName: "Staff Title",
+                flex: 1,
+                headerClassName: "bg-[#5BC4BF] text-white font-medium",
               },
-            },
-          }}
-          pageSizeOptions={[3, 5, 10, 25]}
-          disableRowSelectionOnClick
-        />
+              {
+                field: "StaffEmail",
+                headerName: "Staff Email",
+                flex: 1,
+                headerClassName: "bg-[#5BC4BF] text-white font-medium",
+              },
+              {
+                field: "StaffPhone",
+                headerName: "Staff Phone",
+                flex: 1,
+                headerClassName: "bg-[#5BC4BF] text-white font-medium",
+              },
+              {
+                field: "LinkToContactCard",
+                headerName: "Link To Contact Card",
+                flex: 1,
+                headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                renderCell: (params) => {
+                  return (
+                    <>
+                      <Link
+                        to={`/staff-directory/${params.row.id}`}
+                        className="text-[#5BC4BF]"
+                      >
+                        {params.row.LinkToContactCard}
+                      </Link>
+                    </>
+                  );
+                },
+              },
+            ]}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 10,
+                },
+              },
+            }}
+            pageSizeOptions={[3, 5, 10, 25]}
+            disableRowSelectionOnClick
+          />
+        </MUIDataGridWrapper>
       </div>
     </Box>
   );
@@ -262,63 +265,65 @@ const PrimaryContactReferralsTable = ({ rows, loadingData }) => {
         <p className="mb-2 fw-medium text-base">
           Primary Contact(s) for referrals/client care matters
         </p>
-        <DataGrid
-          loading={loadingData}
-          rows={rows}
-          columns={[
-            {
-              field: "StaffName",
-              headerName: "Staff Name",
-              flex: 1,
-              headerClassName: "bg-[#2F9384] text-white font-medium",
-            },
-            {
-              field: "StaffTitle",
-              headerName: "Staff Title",
-              flex: 1,
-              headerClassName: "bg-[#2F9384] text-white font-medium",
-            },
-            {
-              field: "StaffEmail",
-              headerName: "Staff Email",
-              flex: 1,
-              headerClassName: "bg-[#2F9384] text-white font-medium",
-            },
-            {
-              field: "StaffPhone",
-              headerName: "Staff Phone",
-              flex: 1,
-              headerClassName: "bg-[#2F9384] text-white font-medium",
-            },
-            {
-              field: "LinkToContactCard",
-              headerName: "Link To Contact Card",
-              flex: 1,
-              headerClassName: "bg-[#2F9384] text-white font-medium",
-              renderCell: (params) => {
-                return (
-                  <>
-                    <Link
-                      to={`/staff-directory/${params.row.id}`}
-                      className="text-[#5BC4BF]"
-                    >
-                      {params.row.LinkToContactCard}
-                    </Link>
-                  </>
-                );
+        <MUIDataGridWrapper>
+          <DataGrid
+            loading={loadingData}
+            rows={rows}
+            columns={[
+              {
+                field: "StaffName",
+                headerName: "Staff Name",
+                flex: 1,
+                headerClassName: "bg-[#2F9384] text-white font-medium",
               },
-            },
-          ]}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 10,
+              {
+                field: "StaffTitle",
+                headerName: "Staff Title",
+                flex: 1,
+                headerClassName: "bg-[#2F9384] text-white font-medium",
               },
-            },
-          }}
-          pageSizeOptions={[3, 5, 10, 25]}
-          disableRowSelectionOnClick
-        />
+              {
+                field: "StaffEmail",
+                headerName: "Staff Email",
+                flex: 1,
+                headerClassName: "bg-[#2F9384] text-white font-medium",
+              },
+              {
+                field: "StaffPhone",
+                headerName: "Staff Phone",
+                flex: 1,
+                headerClassName: "bg-[#2F9384] text-white font-medium",
+              },
+              {
+                field: "LinkToContactCard",
+                headerName: "Link To Contact Card",
+                flex: 1,
+                headerClassName: "bg-[#2F9384] text-white font-medium",
+                renderCell: (params) => {
+                  return (
+                    <>
+                      <Link
+                        to={`/staff-directory/${params.row.id}`}
+                        className="text-[#5BC4BF]"
+                      >
+                        {params.row.LinkToContactCard}
+                      </Link>
+                    </>
+                  );
+                },
+              },
+            ]}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 10,
+                },
+              },
+            }}
+            pageSizeOptions={[3, 5, 10, 25]}
+            disableRowSelectionOnClick
+          />
+        </MUIDataGridWrapper>
       </div>
     </Box>
   );
@@ -328,63 +333,65 @@ const AdditionalTeamMembersTable = ({ rows, loadingData }) => {
     <Box sx={{ width: "100%", my: 1 }}>
       <div className="flex flex-column gap-2 w-100 ">
         <p className="mb-2 fw-medium text-base">Additional team members</p>
-        <DataGrid
-          loading={loadingData}
-          rows={rows}
-          columns={[
-            {
-              field: "StaffName",
-              headerName: "Staff Name",
-              flex: 1,
-              headerClassName: "bg-[#89D6DE] text-black font-medium",
-            },
-            {
-              field: "StaffTitle",
-              headerName: "Staff Title",
-              flex: 1,
-              headerClassName: "bg-[#89D6DE] text-black font-medium",
-            },
-            {
-              field: "StaffEmail",
-              headerName: "Staff Email",
-              flex: 1,
-              headerClassName: "bg-[#89D6DE] text-black font-medium",
-            },
-            {
-              field: "StaffPhone",
-              headerName: "Staff Phone",
-              flex: 1,
-              headerClassName: "bg-[#89D6DE] text-black font-medium",
-            },
-            {
-              field: "LinkToContactCard",
-              headerName: "Link To Contact Card",
-              flex: 1,
-              headerClassName: "bg-[#89D6DE] text-black font-medium",
-              renderCell: (params) => {
-                return (
-                  <>
-                    <Link
-                      to={`/staff-directory/${params.row.id}`}
-                      className="text-[#5BC4BF]"
-                    >
-                      {params.row.LinkToContactCard}
-                    </Link>
-                  </>
-                );
+        <MUIDataGridWrapper>
+          <DataGrid
+            loading={loadingData}
+            rows={rows}
+            columns={[
+              {
+                field: "StaffName",
+                headerName: "Staff Name",
+                flex: 1,
+                headerClassName: "bg-[#89D6DE] text-black font-medium",
               },
-            },
-          ]}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 10,
+              {
+                field: "StaffTitle",
+                headerName: "Staff Title",
+                flex: 1,
+                headerClassName: "bg-[#89D6DE] text-black font-medium",
               },
-            },
-          }}
-          pageSizeOptions={[3, 5, 10, 25]}
-          disableRowSelectionOnClick
-        />
+              {
+                field: "StaffEmail",
+                headerName: "Staff Email",
+                flex: 1,
+                headerClassName: "bg-[#89D6DE] text-black font-medium",
+              },
+              {
+                field: "StaffPhone",
+                headerName: "Staff Phone",
+                flex: 1,
+                headerClassName: "bg-[#89D6DE] text-black font-medium",
+              },
+              {
+                field: "LinkToContactCard",
+                headerName: "Link To Contact Card",
+                flex: 1,
+                headerClassName: "bg-[#89D6DE] text-black font-medium",
+                renderCell: (params) => {
+                  return (
+                    <>
+                      <Link
+                        to={`/staff-directory/${params.row.id}`}
+                        className="text-[#5BC4BF]"
+                      >
+                        {params.row.LinkToContactCard}
+                      </Link>
+                    </>
+                  );
+                },
+              },
+            ]}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 10,
+                },
+              },
+            }}
+            pageSizeOptions={[3, 5, 10, 25]}
+            disableRowSelectionOnClick
+          />
+        </MUIDataGridWrapper>
       </div>
     </Box>
   );
@@ -418,43 +425,45 @@ const PriorityListTable = ({ loadingData }) => {
     <Box sx={{ width: "100%", my: 1 }}>
       <div className="flex flex-column gap-2 w-100 ">
         <p className="mb-2 fw-medium text-base">Priority Lists</p>
-        <DataGrid
-          loading={loadingData}
-          rows={rows}
-          columns={[
-            {
-              field: "PriorityListName",
-              headerName: "Priority ListName",
-              flex: 1,
-              headerClassName: "bg-[#C7CED4] text-black font-medium",
-            },
+        <MUIDataGridWrapper>
+          <DataGrid
+            loading={loadingData}
+            rows={rows}
+            columns={[
+              {
+                field: "PriorityListName",
+                headerName: "Priority ListName",
+                flex: 1,
+                headerClassName: "bg-[#C7CED4] text-black font-medium",
+              },
 
-            {
-              field: "LinkToPriorityList",
-              headerName: "Link To Priority List",
-              flex: 1,
-              headerClassName: "bg-[#C7CED4] text-black font-medium",
-              renderCell: (params) => {
-                return (
-                  <>
-                    <Link to="#" className="text-[#5BC4BF]">
-                      {params.row.LinkToPriorityList}
-                    </Link>
-                  </>
-                );
+              {
+                field: "LinkToPriorityList",
+                headerName: "Link To Priority List",
+                flex: 1,
+                headerClassName: "bg-[#C7CED4] text-black font-medium",
+                renderCell: (params) => {
+                  return (
+                    <>
+                      <Link to="#" className="text-[#5BC4BF]">
+                        {params.row.LinkToPriorityList}
+                      </Link>
+                    </>
+                  );
+                },
               },
-            },
-          ]}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 10,
+            ]}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 10,
+                },
               },
-            },
-          }}
-          pageSizeOptions={[3, 5, 10, 25]}
-          disableRowSelectionOnClick
-        />
+            }}
+            pageSizeOptions={[3, 5, 10, 25]}
+            disableRowSelectionOnClick
+          />
+        </MUIDataGridWrapper>
       </div>
     </Box>
   );
