@@ -210,7 +210,7 @@ function NewPage() {
             <label className="block mb-1">{label}</label>
             <input
               type="number" // Use type "number" for input validation
-              step="any" // Allow floating-point numbers
+              step="0.01" // Allow floating-point numbers
               value={formData[column.name] || ""}
               onChange={(event) => handleInputChange(event, column.name)}
               className={`${column.width} border border-gray-300 rounded px-4 py-2`}
