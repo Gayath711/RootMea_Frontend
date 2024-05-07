@@ -67,7 +67,7 @@ export default function DateTimeProperty() {
           onChange={handleCheckBoxProps}
         />
 
-        <CheckBoxElement
+        {/* <CheckBoxElement
           options={[
             {
               label: "Disable",
@@ -77,7 +77,7 @@ export default function DateTimeProperty() {
           ]}
           name={"disabled"}
           onChange={handleCheckBoxProps}
-        />
+        /> */}
       </div>
     </div>
   );
