@@ -54,6 +54,8 @@ import StaffRecord from "./components/StaffDirectory/StaffRecord";
 import ProgramRecord from "./components/ProgramDirectory/ProgramRecord";
 import { selectIsSidebarExpanded } from "./store/slices/utilsSlice";
 
+import TableListView from "./components/TableListView";
+
 function App() {
   // Retrieve isLoggedIn state from localStorage on initial render
   // const [isLoggedIn, setIsLoggedIn] = useState(
@@ -270,6 +272,7 @@ function App() {
                     path="/staff-directory/:recordid"
                     element={<StaffRecord />}
                   />
+                  <Route path="/table-list-view" element={<TableListView />} />
                 </Routes>
               </div>
             </div>
@@ -279,7 +282,6 @@ function App() {
           </>
         ) : (
           <Routes>
-            {/* <Route path="/" element={<LoginForm onLogin={handleLogin} />} /> */}
             <Route path="/" element={<LoginForm />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/password/reset" element={<PasswordReset />} />
