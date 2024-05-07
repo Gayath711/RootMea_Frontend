@@ -1,5 +1,7 @@
 import React, { useState, useMemo, useRef } from "react";
 
+import { v4 as uuidv4 } from "uuid";
+
 // Icons
 
 import Attachments_Icon from "../../images/form_builder/attachments.svg";
@@ -367,8 +369,12 @@ function RenderFormBuilder() {
 
     // First scenario
     if (droppingSidebarBtnOverDesignerDropArea) {
-      const newElement = active.data?.current?.element;
-
+      const uniqueKey = uuidv4();
+      let newElement = active.data?.current?.element;
+      newElement = {
+        ...newElement,
+        eleKey: uniqueKey,
+      };
       addElement(elements.length, newElement);
       return;
     }
@@ -388,8 +394,12 @@ function RenderFormBuilder() {
 
     // Second scenario
     if (droppingSidebarBtnOverDesignerElement) {
-      const newElement = active.data?.current?.element;
-
+      const uniqueKey = uuidv4();
+      let newElement = active.data?.current?.element;
+      newElement = {
+        ...newElement,
+        eleKey: uniqueKey,
+      };
       const overElementIndex = over.data?.current?.index;
 
       let indexForNewElement = overElementIndex; // i assume i'm on top-half
