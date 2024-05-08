@@ -5,8 +5,9 @@ import GoogleIcon from "../images/google_icon.svg";
 import CalendarIcon from "../images/calendar-boxed.svg";
 import InternalCalendarIcon from "../images/internal-meeting.svg";
 import { AppointmentDetail_Modal } from "../Appointment/AppointmentDetail";
+import AddAppointment from "./addappointment";
 
-export default function TodayView({ savedEvents }) {
+export default function TodayView({ savedEvents, fetchEvents }) {
   const todayTimes = getTodayTime();
 
   return (
@@ -14,7 +15,12 @@ export default function TodayView({ savedEvents }) {
       <div className="mt-1 p-1">
         {todayTimes.map((time, index) => {
           return (
-            <TimeBlock key={index} time={time} savedEvents={savedEvents} />
+            <TimeBlock
+              key={index}
+              time={time}
+              savedEvents={savedEvents}
+              fetchEvents={fetchEvents}
+            />
           );
         })}
       </div>
@@ -22,7 +28,7 @@ export default function TodayView({ savedEvents }) {
   );
 }
 
-function TimeBlock({ time, savedEvents }) {
+function TimeBlock({ time, savedEvents, fetchEvents }) {
   const startTime = time.format("h:mm A"); // Format the start time
   const endTime = time.add(1, "hour").format("h:mm A"); // Add 1 hour to get the end time
 
@@ -87,6 +93,8 @@ function TimeBlock({ time, savedEvents }) {
     setShowDetailModal(index);
   };
 
+  const [editEvent, setEditEvent] = useState(false);
+
   return (
     <div className="flex-1 grid grid-cols-9 gap-2 m-0 opacity-75 border border-gray-200">
       <div className="col-span-1 border-r-2 border-gray-200 flex justify-center items-center">
@@ -135,8 +143,17 @@ function TimeBlock({ time, savedEvents }) {
                   showPreview={showDetailModal === index}
                   toggleModal={() => toggleDetailModal(null)}
                   event={event}
+                  toggleEdit={() => setEditEvent(index)}
                 />
               )}
+              <AddAppointment
+                show={editEvent === index}
+                toggleModal={() => setEditEvent(null)}
+                setShowAlert={null}
+                fetchEvents={fetchEvents}
+                appointmentDetail={event}
+                isUpdate
+              />
             </>
           );
         })}

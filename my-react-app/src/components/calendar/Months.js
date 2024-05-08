@@ -7,8 +7,9 @@ import InternalCalendarIcon from "../images/internal-meeting.svg";
 
 import EventModal from "./EventsModal";
 import { AppointmentDetail_Modal } from "../Appointment/AppointmentDetail";
+import AddAppointment from "./addappointment";
 
-export default function Months({ month, savedEvents }) {
+export default function Months({ month, savedEvents, fetchEvents }) {
   const [showModal, setShowModal] = useState(false);
 
   const toggleModal = () => {
@@ -68,6 +69,8 @@ export default function Months({ month, savedEvents }) {
     setShowDetailModal(index);
   };
 
+  const [editEvent, setEditEvent] = useState(false);
+
   return (
     <>
       <div className={`opacity-75 border border-gray-200 flex flex-col h-36`}>
@@ -106,14 +109,23 @@ export default function Months({ month, savedEvents }) {
                   </div>
                 </div>
               </a>
-            </div>{" "}
+            </div>
             {showDetailModal === index && (
               <AppointmentDetail_Modal
                 showPreview={showDetailModal === index}
                 toggleModal={() => toggleDetailModal(null)}
                 event={event}
+                toggleEdit={() => setEditEvent(index)}
               />
             )}
+            <AddAppointment
+              show={editEvent === index}
+              toggleModal={() => setEditEvent(null)}
+              setShowAlert={null}
+              fetchEvents={fetchEvents}
+              appointmentDetail={event}
+              isUpdate
+            />
           </>
         ))}
         {additionalEventsCount > 0 && (
@@ -127,13 +139,13 @@ export default function Months({ month, savedEvents }) {
           </div>
         )}
       </div>
-      {showModal && (
-        <EventModal
-          eventDate={month.format("MMMM-YYYY")}
-          toggleModal={toggleModal}
-          events={eventsForMonth}
-        />
-      )}{" "}
+      <EventModal
+        show={showModal}
+        eventDate={month.format("MMMM-YYYY")}
+        toggleModal={toggleModal}
+        events={eventsForMonth}
+        fetchEvents={fetchEvents}
+      />
     </>
   );
 }

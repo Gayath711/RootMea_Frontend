@@ -8,8 +8,16 @@ import EventModal from "./EventsModal";
 import AppointmentDetail, {
   AppointmentDetail_Modal,
 } from "../Appointment/AppointmentDetail";
+import AddAppointment from "./addappointment";
 
-export default function Day({ day, rowIdx, savedEvents, isMonth, isWeek }) {
+export default function Day({
+  day,
+  rowIdx,
+  savedEvents,
+  isMonth,
+  isWeek,
+  fetchEvents,
+}) {
   const [dayEvents, setDayEvents] = useState([]);
 
   const [showModal, setShowModal] = useState(false);
@@ -60,6 +68,8 @@ export default function Day({ day, rowIdx, savedEvents, isMonth, isWeek }) {
   );
 
   const [showDetailModal, setShowDetailModal] = useState(null);
+  const [editEvent, setEditEvent] = useState(false);
+
   const toggleDetailModal = (index) => {
     setShowDetailModal(index);
   };
@@ -118,8 +128,17 @@ export default function Day({ day, rowIdx, savedEvents, isMonth, isWeek }) {
                 showPreview={showDetailModal === index}
                 toggleModal={() => toggleDetailModal(null)}
                 event={event}
+                toggleEdit={() => setEditEvent(index)}
               />
             )}
+            <AddAppointment
+              show={editEvent === index}
+              toggleModal={() => setEditEvent(null)}
+              setShowAlert={null}
+              fetchEvents={fetchEvents}
+              appointmentDetail={event}
+              isUpdate
+            />
           </>
         ))}
         {additionalEventsCount > 0 && (
@@ -133,11 +152,14 @@ export default function Day({ day, rowIdx, savedEvents, isMonth, isWeek }) {
           </div>
         )}
       </div>
+
       {showModal && (
         <EventModal
+          show={showModal}
           eventDate={day.format("DD-MMM-YYYY")}
           toggleModal={toggleModal}
           events={eventsForDay}
+          fetchEvents={fetchEvents}
         />
       )}
     </>

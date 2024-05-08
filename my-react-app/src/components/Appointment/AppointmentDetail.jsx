@@ -87,9 +87,16 @@ const AppointmentDetail = ({ toggleModal, event }) => {
 
 export default AppointmentDetail;
 
-export function AppointmentDetail_Modal({ showPreview, event, toggleModal }) {
+export function AppointmentDetail_Modal({
+  showPreview,
+  event,
+  toggleModal,
+  toggleEdit,
+}) {
   const startTime = dayjs(event.start.dateTime).format("hh:mm A");
   const endTime = dayjs(event.end.dateTime).format("hh:mm A");
+
+  const isPast = dayjs().isAfter(event.start.dateTime);
 
   return (
     <Modal show={showPreview} onHide={() => toggleModal()} centered>
@@ -119,8 +126,8 @@ export function AppointmentDetail_Modal({ showPreview, event, toggleModal }) {
                 src={event.isExternal ? GoogleIcon : InternalCalendarIcon}
                 className={
                   event.isExternal
-                    ? "h-[16px] w-[16px] ms-1 bg-white rounded-full"
-                    : "h-[20px] w-[20px] ms-1"
+                    ? "h-[26px] w-[26px] ms-1 bg-white rounded-full"
+                    : "h-[40px] w-[40px] ms-1"
                 }
                 alt="event-meet"
               />
@@ -147,7 +154,7 @@ export function AppointmentDetail_Modal({ showPreview, event, toggleModal }) {
                 })}
               </div>
             )}
-            <div className="flex justify-center items-center my-2">
+            <div className="flex justify-center items-center my-2 gap-2">
               <Link
                 to={event.htmlLink}
                 target="_blank"
@@ -155,6 +162,15 @@ export function AppointmentDetail_Modal({ showPreview, event, toggleModal }) {
               >
                 Join
               </Link>
+
+              {!event.isExternal && !isPast && (
+                <button
+                  onClick={toggleEdit}
+                  className="px-2.5 sm:px-4 py-1.5 rounded-sm text-white h-fit w-fit bg-[#43B09C] text-[10px] sm:text-xs font-medium"
+                >
+                  Edit
+                </button>
+              )}
             </div>
           </div>
         </div>
