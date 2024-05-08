@@ -12,6 +12,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import apiURL from "../../../apiConfig";
 
+import Swal from "sweetalert2";
+
 function FormCanvas() {
   const { setNodeRef } = useDroppable({
     id: "designer-drop-area",
@@ -30,6 +32,16 @@ function FormCanvas() {
   } = useFormBuilderContext();
 
   const navigate = useNavigate();
+
+  function transformArrayToString(array) {
+    if (array.length === 0) {
+      return "";
+    } else if (array.length === 1) {
+      return array[0];
+    } else {
+      return array.slice(0, -1).join(", ") + " and " + array[array.length - 1];
+    }
+  }
 
   const handleFormNameValidation = (e) => {
     const value = e.target.value;
@@ -54,41 +66,83 @@ function FormCanvas() {
         return false;
       }
     }
+    toast(
+      {
+        title: "oops !",
+        text: "Add any valid fields to create a form",
+      },
+      "warning"
+    );
     return true;
   }
 
   function checkHasMetaData(formDetail) {
+    let arrayOfMissingFields = [];
+
     if (
       formDetail.title === "" &&
       formDetail.description === "" &&
       formDetail.formName === ""
     ) {
-      alert("Please fill valid Form Title, Description and Name");
+      toast(
+        {
+          title: "Incomplete !",
+          text: "Please fill valid Form Title, Description and Name",
+        },
+        "error"
+      );
+
       return false;
     }
 
     if (formDetail.title === "") {
-      alert("Please fill valid Form Title");
-      return false;
+      arrayOfMissingFields.push("Title");
     }
 
     if (formDetail.description === "") {
-      alert("Please fill valid Form description");
-      return false;
+      arrayOfMissingFields.push("Description");
     }
 
     if (formDetail.formName === "") {
-      alert("Please fill valid Form Name");
+      arrayOfMissingFields.push("Name");
+    }
+
+    if (arrayOfMissingFields.length === 0) {
+      return true;
+    } else {
+      let alertText = transformArrayToString(arrayOfMissingFields);
+      toast(
+        {
+          title: "Incomplete !",
+          text: `Please fill valid Form ${alertText}`,
+        },
+        "error"
+      );
+
       return false;
     }
-    return true;
+  }
+
+  function toast(msg, type) {
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton:
+          "bg-[#5BC4BF] text-white hover:bg-teal-700 font-bold mt-2.5 p-2 px-4 rounded transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500  text-xs",
+        // cancelButton: "btn btn-danger"
+      },
+      buttonsStyling: false,
+    });
+
+    swalWithBootstrapButtons.fire({
+      ...msg,
+      icon: type,
+    });
   }
 
   const validation = () => {
     let hasOnlyNonFields = checkHasOnlyNonFields(items);
     let hasValidMetaData = checkHasMetaData(formDetail);
     if (hasOnlyNonFields) {
-      alert("Add any valid fields to create a form");
       return false;
     }
     if (!hasValidMetaData) {
@@ -168,7 +222,13 @@ function FormCanvas() {
     } catch (error) {
       console.error("Error:", { error });
       // console.error("Error:", error.response.data.message);
-      window.alert("An error occurred. Please try again later.");
+      toast(
+        {
+          title: "Error !",
+          text: `An error occurred. Please try again later.`,
+        },
+        "error"
+      );
     }
   };
 
