@@ -9,6 +9,8 @@ import axios from "axios";
 import apiURL from "../../apiConfig";
 import { styled } from "@mui/material/styles";
 
+import MUIDataGridWrapper from "../HOC/MUIDataGridWrapper";
+
 import EditPNG from "../images/edit.png";
 import DeletePNG from "../images/delete.png";
 
@@ -213,238 +215,242 @@ export default function StaffDirectoryTable() {
             searchText={searchText}
             handleSearchText={handleSearchText}
           />
-          <StyledDataGrid
-            loading={loadingData}
-            rows={rows}
-            columns={[
-              {
-                field: "Link",
-                headerName: "Link",
-                flex: 1,
-                headerClassName: "bg-[#5BC4BF] text-white font-medium",
-                minWidth: 100,
-                renderCell: (params) => {
-                  return (
-                    <>
-                      <Link
-                        to={`/staff-directory/${params.row.id}`}
-                        className="text-[#5BC4BF]"
-                      >
-                        {params.row.Link}
-                      </Link>
-                    </>
-                  );
+          <MUIDataGridWrapper>
+            <StyledDataGrid
+              loading={loadingData}
+              rows={rows}
+              columns={[
+                {
+                  field: "Link",
+                  headerName: "Link",
+                  flex: 1,
+                  headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                  minWidth: 100,
+                  renderCell: (params) => {
+                    return (
+                      <>
+                        <Link
+                          to={`/staff-directory/${params.row.id}`}
+                          className="text-[#5BC4BF]"
+                        >
+                          {params.row.Link}
+                        </Link>
+                      </>
+                    );
+                  },
                 },
-              },
-              {
-                field: "LastName",
-                headerName: "Last Name",
-                flex: 1,
-                headerClassName: "bg-[#5BC4BF] text-white font-medium",
-                minWidth: 150,
-              },
-              {
-                field: "FirstName",
-                headerName: "First Name",
-                flex: 1,
-                headerClassName: "bg-[#5BC4BF] text-white font-medium",
-                minWidth: 150,
-              },
-              {
-                field: "PhoneNumber",
-                headerName: "Phone Number",
-                flex: 1,
-                filterable: true,
-                headerClassName: "bg-[#5BC4BF] text-white font-medium",
-                minWidth: 150,
-              },
-              {
-                field: "RootsEmailAddress",
-                headerName: "Roots Email Address",
-                flex: 1,
-                sortable: true,
-                headerClassName: "bg-[#5BC4BF] text-white font-medium",
-                minWidth: 250,
-              },
-              {
-                field: "LastActivityDate",
-                headerName: "Last Activity Date",
-                align: "center",
-                headerAlign: "center",
-                flex: 1,
-                headerClassName:
-                  "bg-[#5BC4BF] text-white font-medium text-center w-100",
-                minWidth: 150,
-                renderCell: (params) => {
-                  let date = params.row.LastActivityDate
-                    ? new Date(params.row.LastActivityDate).toLocaleDateString()
-                    : "";
-
-                  return date;
+                {
+                  field: "LastName",
+                  headerName: "Last Name",
+                  flex: 1,
+                  headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                  minWidth: 150,
                 },
-              },
-
-              {
-                field: "SystemStatus",
-                headerName: "System Status",
-                flex: 1,
-                align: "center",
-                headerAlign: "center",
-
-                headerClassName: "bg-[#5BC4BF] text-white font-medium",
-                minWidth: 150,
-                renderCell: (params) => {
-                  const {
-                    row: { SystemStatus },
-                  } = params;
-
-                  let classToApply = SystemStatus
-                    ? "text-[#2F9384] bg-[#DAFCE7]"
-                    : "text-[#E0382D] bg-[#FFC7C7]";
-
-                  // if (SystemStatus === "Active") {
-                  //   classToApply = "text-[#2F9384] bg-[#DAFCE7]";
-                  // }
-                  // if (SystemStatus === "Deactivated") {
-                  //   classToApply = "text-[#E0382D] bg-[#FFC7C7]";
-                  // }
-
-                  return (
-                    <>
-                      <div className="h-100 w-100">
-                        <span className={`m-2 p-1 px-2 ${classToApply}`}>
-                          {SystemStatus ? "Active" : "Deactivated"}
-                        </span>
-                      </div>
-                    </>
-                  );
+                {
+                  field: "FirstName",
+                  headerName: "First Name",
+                  flex: 1,
+                  headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                  minWidth: 150,
                 },
-              },
-
-              {
-                field: "PositionTitle",
-                headerName: "Position Title",
-                align: "left",
-                headerAlign: "left",
-                flex: 1,
-                headerClassName:
-                  "bg-[#5BC4BF] text-white font-medium text-center w-100",
-                minWidth: 200,
-              },
-
-              {
-                field: "PrimaryFacility",
-                headerName: "Primary Facility",
-                align: "left",
-                headerAlign: "left",
-                flex: 1,
-                headerClassName:
-                  "bg-[#5BC4BF] text-white font-medium text-center w-100",
-                minWidth: 150,
-              },
-
-              {
-                field: "Program",
-                headerName: "Program",
-                align: "left",
-                headerAlign: "left",
-                flex: 1,
-                headerClassName:
-                  "bg-[#5BC4BF] text-white font-medium text-center w-100",
-                minWidth: 150,
-              },
-
-              {
-                field: "Supervisor",
-                headerName: "Supervisor",
-                align: "left",
-                headerAlign: "left",
-                flex: 1,
-                headerClassName:
-                  "bg-[#5BC4BF] text-white font-medium text-center w-100",
-                minWidth: 150,
-              },
-
-              {
-                field: "SupervisorTitle",
-                headerName: "Supervisor Title",
-                align: "left",
-                headerAlign: "left",
-                flex: 1,
-                headerClassName:
-                  "bg-[#5BC4BF] text-white font-medium text-center w-100",
-                minWidth: 200,
-              },
-
-              {
-                field: "SupervisorEmail",
-                headerName: "Supervisor Email",
-                align: "left",
-                headerAlign: "left",
-                flex: 1,
-                headerClassName:
-                  "bg-[#5BC4BF] text-white font-medium text-center w-100",
-                minWidth: 250,
-              },
-
-              // {
-              //   field: "Action",
-              //   headerName: "Action",
-              //   align: "left",
-              //   headerAlign: "center",
-              //   flex: 1,
-              //   headerClassName:
-              //     "bg-[#5BC4BF] text-white font-medium text-center w-100",
-              //   minWidth: 150,
-              //   renderCell: (params) => {
-              //     return (
-              //       <>
-              //         <div
-              //           className="text-[#5BC4BF] flex items-center justify-evenly"
-              //           style={{ height: "100%" }}
-              //         >
-              //           <img src={EditPNG} className="w-5 h-5" />
-              //           <img src={DeletePNG} className="w-5 h-5" />
-              //         </div>
-              //       </>
-              //     );
-              //   },
-              // renderCell: (params) => {
-              //   return (
-              //     <>
-              //       <Link
-              //         to={`/staff-directory/${params.row.id}`}
-              //         className="text-[#2F9384]"
-              //       >
-              //         {/* {params.row.linkToProgram} */}
-              //         <div className="flex flex-row items-center">
-              //           <img
-              //             src={EditPNG}
-              //             className="w-5 h-5"
-              //             style={{ display: "block", margin: "0 auto" }}
-              //           />
-              //           <img
-              //             src={DeletePNG}
-              //             className="w-5 h-5"
-              //             style={{ display: "block", margin: "0 auto" }}
-              //           />
-              //         </div>
-              //       </Link>
-              //     </>
-              //   );
-              // },
-              // },
-            ]}
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: 10,
+                {
+                  field: "PhoneNumber",
+                  headerName: "Phone Number",
+                  flex: 1,
+                  filterable: true,
+                  headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                  minWidth: 150,
                 },
-              },
-            }}
-            pageSizeOptions={[3, 5, 10, 25]}
-            disableRowSelectionOnClick
-          />
+                {
+                  field: "RootsEmailAddress",
+                  headerName: "Roots Email Address",
+                  flex: 1,
+                  sortable: true,
+                  headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                  minWidth: 250,
+                },
+                {
+                  field: "LastActivityDate",
+                  headerName: "Last Activity Date",
+                  align: "center",
+                  headerAlign: "center",
+                  flex: 1,
+                  headerClassName:
+                    "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                  minWidth: 150,
+                  renderCell: (params) => {
+                    let date = params.row.LastActivityDate
+                      ? new Date(
+                          params.row.LastActivityDate
+                        ).toLocaleDateString()
+                      : "";
+
+                    return date;
+                  },
+                },
+
+                {
+                  field: "SystemStatus",
+                  headerName: "System Status",
+                  flex: 1,
+                  align: "center",
+                  headerAlign: "center",
+
+                  headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                  minWidth: 150,
+                  renderCell: (params) => {
+                    const {
+                      row: { SystemStatus },
+                    } = params;
+
+                    let classToApply = SystemStatus
+                      ? "text-[#2F9384] bg-[#DAFCE7]"
+                      : "text-[#E0382D] bg-[#FFC7C7]";
+
+                    // if (SystemStatus === "Active") {
+                    //   classToApply = "text-[#2F9384] bg-[#DAFCE7]";
+                    // }
+                    // if (SystemStatus === "Deactivated") {
+                    //   classToApply = "text-[#E0382D] bg-[#FFC7C7]";
+                    // }
+
+                    return (
+                      <>
+                        <div className="h-100 w-100">
+                          <span className={`m-2 p-1 px-2 ${classToApply}`}>
+                            {SystemStatus ? "Active" : "Deactivated"}
+                          </span>
+                        </div>
+                      </>
+                    );
+                  },
+                },
+
+                {
+                  field: "PositionTitle",
+                  headerName: "Position Title",
+                  align: "left",
+                  headerAlign: "left",
+                  flex: 1,
+                  headerClassName:
+                    "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                  minWidth: 200,
+                },
+
+                {
+                  field: "PrimaryFacility",
+                  headerName: "Primary Facility",
+                  align: "left",
+                  headerAlign: "left",
+                  flex: 1,
+                  headerClassName:
+                    "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                  minWidth: 150,
+                },
+
+                {
+                  field: "Program",
+                  headerName: "Program",
+                  align: "left",
+                  headerAlign: "left",
+                  flex: 1,
+                  headerClassName:
+                    "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                  minWidth: 150,
+                },
+
+                {
+                  field: "Supervisor",
+                  headerName: "Supervisor",
+                  align: "left",
+                  headerAlign: "left",
+                  flex: 1,
+                  headerClassName:
+                    "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                  minWidth: 150,
+                },
+
+                {
+                  field: "SupervisorTitle",
+                  headerName: "Supervisor Title",
+                  align: "left",
+                  headerAlign: "left",
+                  flex: 1,
+                  headerClassName:
+                    "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                  minWidth: 200,
+                },
+
+                {
+                  field: "SupervisorEmail",
+                  headerName: "Supervisor Email",
+                  align: "left",
+                  headerAlign: "left",
+                  flex: 1,
+                  headerClassName:
+                    "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                  minWidth: 250,
+                },
+
+                // {
+                //   field: "Action",
+                //   headerName: "Action",
+                //   align: "left",
+                //   headerAlign: "center",
+                //   flex: 1,
+                //   headerClassName:
+                //     "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                //   minWidth: 150,
+                //   renderCell: (params) => {
+                //     return (
+                //       <>
+                //         <div
+                //           className="text-[#5BC4BF] flex items-center justify-evenly"
+                //           style={{ height: "100%" }}
+                //         >
+                //           <img src={EditPNG} className="w-5 h-5" />
+                //           <img src={DeletePNG} className="w-5 h-5" />
+                //         </div>
+                //       </>
+                //     );
+                //   },
+                // renderCell: (params) => {
+                //   return (
+                //     <>
+                //       <Link
+                //         to={`/staff-directory/${params.row.id}`}
+                //         className="text-[#2F9384]"
+                //       >
+                //         {/* {params.row.linkToProgram} */}
+                //         <div className="flex flex-row items-center">
+                //           <img
+                //             src={EditPNG}
+                //             className="w-5 h-5"
+                //             style={{ display: "block", margin: "0 auto" }}
+                //           />
+                //           <img
+                //             src={DeletePNG}
+                //             className="w-5 h-5"
+                //             style={{ display: "block", margin: "0 auto" }}
+                //           />
+                //         </div>
+                //       </Link>
+                //     </>
+                //   );
+                // },
+                // },
+              ]}
+              initialState={{
+                pagination: {
+                  paginationModel: {
+                    pageSize: 10,
+                  },
+                },
+              }}
+              pageSizeOptions={[3, 5, 10, 25]}
+              disableRowSelectionOnClick
+            />
+          </MUIDataGridWrapper>
         </div>
       </Paper>
     </Box>

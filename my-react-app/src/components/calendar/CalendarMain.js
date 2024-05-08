@@ -93,13 +93,33 @@ const CalendarMain = () => {
   const renderCalendar = () => {
     switch (currentCalendarView) {
       case "Today":
-        return <TodayView savedEvents={savedEvents} />;
+        return (
+          <TodayView savedEvents={savedEvents} fetchEvents={fetchEvents} />
+        );
       case "Week":
-        return <Week currentDate={currentDate} savedEvents={savedEvents} />;
+        return (
+          <Week
+            currentDate={currentDate}
+            savedEvents={savedEvents}
+            fetchEvents={fetchEvents}
+          />
+        );
       case "Month":
-        return <Month currentDate={currentDate} savedEvents={savedEvents} />;
+        return (
+          <Month
+            currentDate={currentDate}
+            savedEvents={savedEvents}
+            fetchEvents={fetchEvents}
+          />
+        );
       case "Year":
-        return <YearView currentDate={currentDate} savedEvents={savedEvents} />;
+        return (
+          <YearView
+            currentDate={currentDate}
+            savedEvents={savedEvents}
+            fetchEvents={fetchEvents}
+          />
+        );
       default:
         return <p>No view found</p>;
     }
@@ -115,7 +135,9 @@ const CalendarMain = () => {
       )}
       <div className={`space-y-5 m-5 ${showModal ? "opacity-50" : ""}`}>
         <div className="flex flex-row justify-between items-end">
-          <div className="text-gray-900 text-2xl font-medium" id="calendarPage">Calendar</div>
+          <div className="text-gray-900 text-2xl font-medium" id="calendarPage">
+            Calendar
+          </div>
           <button
             className="w-54 h-12 bg-[#43B09C] rounded text-xs text-white p-3"
             onClick={toggleModal}
@@ -141,14 +163,13 @@ const CalendarMain = () => {
         </div>
       </div>
 
-      {showModal && (
-        <AddAppointment
-          toggleModal={toggleModal}
-          handleSubmit={submitAppointment}
-          setShowAlert={setShowAlert}
-          fetchEvents={fetchEvents}
-        />
-      )}
+      <AddAppointment
+        show={showModal}
+        toggleModal={toggleModal}
+        handleSubmit={submitAppointment}
+        setShowAlert={setShowAlert}
+        fetchEvents={fetchEvents}
+      />
     </div>
   );
 };

@@ -7,6 +7,7 @@ import axios from "axios";
 import apiURL from "../../apiConfig";
 
 import EditPNG from "../images/edit.png";
+import MUIDataGridWrapper from "../HOC/MUIDataGridWrapper";
 
 export default function StaffRecord() {
   const { recordid } = useParams();
@@ -160,54 +161,56 @@ const AssignedProgramTable = ({ rows, loadingData }) => {
     <Box sx={{ width: "100%", my: 1 }}>
       <div className="flex flex-column gap-2 w-100 ">
         <p className="mb-2 fw-medium text-base">Assigned Programs</p>
-        <DataGrid
-          loading={loadingData}
-          rows={rows}
-          columns={[
-            {
-              field: "ProgramName",
-              headerName: "Program Name",
-              flex: 1,
-              headerClassName: "bg-[#2F9384] text-white font-medium",
-            },
-            {
-              field: "linkToProgram",
-              headerName: "Link To Program",
-              flex: 1,
-              headerClassName: "bg-[#2F9384] text-white font-medium",
-              renderCell: (params) => {
-                return (
-                  <>
-                    <Link
-                      to={`/program-directory/${params.row.id}`}
-                      className="text-[#2F9384]"
-                    >
-                      {params.row.linkToProgram}
-                    </Link>
-                  </>
-                );
+        <MUIDataGridWrapper>
+          <DataGrid
+            loading={loadingData}
+            rows={rows}
+            columns={[
+              {
+                field: "ProgramName",
+                headerName: "Program Name",
+                flex: 1,
+                headerClassName: "bg-[#2F9384] text-white font-medium",
               },
-            },
+              {
+                field: "linkToProgram",
+                headerName: "Link To Program",
+                flex: 1,
+                headerClassName: "bg-[#2F9384] text-white font-medium",
+                renderCell: (params) => {
+                  return (
+                    <>
+                      <Link
+                        to={`/program-directory/${params.row.id}`}
+                        className="text-[#2F9384]"
+                      >
+                        {params.row.linkToProgram}
+                      </Link>
+                    </>
+                  );
+                },
+              },
 
-            {
-              field: "AssignedToProgramDate",
-              headerName: "Assigned To ProgramDate",
-              flex: 1,
-              align: "center",
-              headerAlign: "center",
-              headerClassName: "bg-[#2F9384] text-white font-medium",
-            },
-          ]}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 10,
+              {
+                field: "AssignedToProgramDate",
+                headerName: "Assigned To ProgramDate",
+                flex: 1,
+                align: "center",
+                headerAlign: "center",
+                headerClassName: "bg-[#2F9384] text-white font-medium",
               },
-            },
-          }}
-          pageSizeOptions={[3, 5, 10, 25]}
-          disableRowSelectionOnClick
-        />
+            ]}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 10,
+                },
+              },
+            }}
+            pageSizeOptions={[3, 5, 10, 25]}
+            disableRowSelectionOnClick
+          />
+        </MUIDataGridWrapper>
       </div>
     </Box>
   );
@@ -248,64 +251,66 @@ const AssignedPriorityListsTable = () => {
     <Box sx={{ width: "100%", my: 1 }}>
       <div className="flex flex-column gap-2 w-100 ">
         <p className="mb-2 fw-medium text-base">Assigned Priority Lists</p>
-        <DataGrid
-          rows={rows}
-          columns={[
-            {
-              field: "ProgramName",
-              headerName: "Program Name",
-              flex: 1,
-              headerClassName: "bg-[#5BC4BF] text-white font-medium",
-            },
+        <MUIDataGridWrapper>
+          <DataGrid
+            rows={rows}
+            columns={[
+              {
+                field: "ProgramName",
+                headerName: "Program Name",
+                flex: 1,
+                headerClassName: "bg-[#5BC4BF] text-white font-medium",
+              },
 
-            {
-              field: "PriorityListName",
-              headerName: "PriorityList Name",
-              flex: 1,
-              align: "center",
-              headerAlign: "center",
-              headerClassName: "bg-[#5BC4BF] text-white font-medium",
-            },
-            {
-              field: "ListActivityDate",
-              headerName: "List Activity Date",
-              flex: 1,
-              align: "center",
-              headerAlign: "center",
-              headerClassName: "bg-[#5BC4BF] text-white font-medium",
-            },
+              {
+                field: "PriorityListName",
+                headerName: "PriorityList Name",
+                flex: 1,
+                align: "center",
+                headerAlign: "center",
+                headerClassName: "bg-[#5BC4BF] text-white font-medium",
+              },
+              {
+                field: "ListActivityDate",
+                headerName: "List Activity Date",
+                flex: 1,
+                align: "center",
+                headerAlign: "center",
+                headerClassName: "bg-[#5BC4BF] text-white font-medium",
+              },
 
-            {
-              field: "linkToProgram",
-              headerName: "Link To Program",
-              flex: 1,
-              headerClassName: "bg-[#5BC4BF] text-white font-medium",
-              renderCell: (params) => {
-                return (
-                  <>
-                    {/* <Link
+              {
+                field: "linkToProgram",
+                headerName: "Link To Program",
+                flex: 1,
+                headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                renderCell: (params) => {
+                  return (
+                    <>
+                      {/* <Link
                       to={`/program-directory/${params.row.id}`}
                       className="text-[#5BC4BF]"
                     > */}
-                    <div className="text-[#5BC4BF]">
-                      {params.row.linkToProgram}
-                    </div>
-                    {/* </Link> */}
-                  </>
-                );
+                      <div className="text-[#5BC4BF]">
+                        {params.row.linkToProgram}
+                      </div>
+                      {/* </Link> */}
+                    </>
+                  );
+                },
               },
-            },
-          ]}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 10,
+            ]}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 10,
+                },
               },
-            },
-          }}
-          pageSizeOptions={[3, 5, 10, 25]}
-          disableRowSelectionOnClick
-        />
+            }}
+            pageSizeOptions={[3, 5, 10, 25]}
+            disableRowSelectionOnClick
+          />
+        </MUIDataGridWrapper>
       </div>
     </Box>
   );

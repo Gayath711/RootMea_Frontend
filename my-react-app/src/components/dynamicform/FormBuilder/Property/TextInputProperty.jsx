@@ -55,7 +55,7 @@ export default function TextInputProperty() {
       <div className="flex flex-column gap-3 pb-3">
         {/* <p className="text-[14px] font-medium mx-1">{`${fieldElement.label} properties`}</p> */}
 
-        <InputElement
+        {/* <InputElement
           className="m-0 p-0"
           type="text"
           name="placeholder"
@@ -63,7 +63,7 @@ export default function TextInputProperty() {
           value={fieldElement.props.placeholder}
           placeholder="Enter Placeholder"
           onChange={handlePropsChange}
-        />
+        /> */}
 
         {/* <InputElement
           className="m-0 p-0"
@@ -89,7 +89,7 @@ export default function TextInputProperty() {
           onChange={handleCheckBoxProps}
         />
 
-        <CheckBoxElement
+        {/* <CheckBoxElement
           options={[
             {
               label: "Disable",
@@ -99,7 +99,7 @@ export default function TextInputProperty() {
           ]}
           name={"disabled"}
           onChange={handleCheckBoxProps}
-        />
+        /> */}
       </div>
     </div>
   );

@@ -428,15 +428,22 @@ function AlterTable({ onAddColumn }) {
                       column.width || ""
                     } focus:outline-none focus:border-blue-500`}
                   />
-                ) : column.type === "DECIMAL" || column.type === "INTEGER" ? (
+                ) : column.type === "INTEGER" ? (
                   <input
                     type={column.type === "DECIMAL" ? "number" : "text"}
-                    step={column.type === "DECIMAL" ? "0.1" : undefined}
                     value={formData[column.name] || ""}
                     onChange={(event) => handleInputChange(event, column.name)}
                     className={`border border-gray-300 rounded px-4 py-2 w-full ${
                       column.width || ""
                     } focus:outline-none focus:border-blue-500`}
+                  />
+                ) : column.type === "DECIMAL" ? (
+                  <input
+                    type={column.type === "DECIMAL" ? "number" : "text"}
+                    step="any" // Allow floating-point numbers
+                    value={formData[column.name] || ""}
+                    onChange={(event) => handleInputChange(event, column.name)}
+                    className={`${column.width} border border-gray-300 rounded px-4 py-2`}
                   />
                 ) : column.type === "BOOLEAN" ? (
                   <select
