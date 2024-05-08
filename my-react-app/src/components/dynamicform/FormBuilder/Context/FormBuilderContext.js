@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext, useEffect } from "react";
 
 // Create the context
 const FormBuilderContext = createContext();
@@ -19,6 +19,38 @@ export const FormBuilderContextProvider = ({ children }) => {
     description: "",
     formName: "",
   });
+
+  const [formDetailErrors, setFormDetailErrors] = useState({
+    title: false,
+    description: false,
+    formName: false,
+  });
+
+  useEffect(() => {
+    let newErrs = { ...formDetailErrors };
+
+    if (formDetail.formName !== "") {
+      newErrs.formName = false;
+    }
+    if (formDetail.title !== "") {
+      newErrs.title = false;
+    }
+    if (formDetail.description !== "") {
+      newErrs.description = false;
+    }
+
+    setFormDetailErrors(newErrs);
+  }, [formDetail]);
+
+  const handleFormDetailErrors = (name, boolVal) => {
+    setFormDetailErrors((prev) => {
+      return { ...prev, [name]: boolVal };
+    });
+  };
+
+  const resetFormDetailErrors = () => {
+    setFormDetailErrors({});
+  };
 
   // Function to remove an element
   const removeElement = (index) => {
@@ -101,6 +133,9 @@ export const FormBuilderContextProvider = ({ children }) => {
     handleTitle,
     handleDesc,
     handleFormName,
+    formDetailErrors,
+    handleFormDetailErrors,
+    resetFormDetailErrors,
   };
 
   // Provide the context value to the children components
