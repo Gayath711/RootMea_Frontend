@@ -55,6 +55,7 @@ import ProgramRecord from "./components/ProgramDirectory/ProgramRecord";
 import { selectIsSidebarExpanded } from "./store/slices/utilsSlice";
 
 import TableListView from "./components/TableListView";
+import DataView from "./components/TableListView/DataView";
 
 function App() {
   // Retrieve isLoggedIn state from localStorage on initial render
@@ -273,6 +274,7 @@ function App() {
                     element={<StaffRecord />}
                   />
                   <Route path="/table-list-view" element={<TableListView />} />
+                  <Route path="/dataview/:dataviewid" element={<DataView />} />
                 </Routes>
               </div>
             </div>
