@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
 
-const TransferList = () => {
+const DataViewTransferList = () => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [leftItems, setLeftItems] = useState([]);
   const [rightItems, setRightItems] = useState([]);
@@ -163,7 +163,7 @@ const TransferList = () => {
   );
 };
 
-export default TransferList;
+export default DataViewTransferList;
 
 var MOCK = {
   databases: {

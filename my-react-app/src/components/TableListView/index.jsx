@@ -1,10 +1,10 @@
 import React from "react";
-import TransferList from "./TransferList";
+import DataViewTransferList from "./DataViewTransferList";
 
 function TableListView() {
   return (
     <div>
-      <TransferList />
+      <DataViewTransferList />
     </div>
   );
 }
