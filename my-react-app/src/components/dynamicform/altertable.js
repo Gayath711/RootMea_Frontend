@@ -27,6 +27,10 @@ function AlterTable({ onAddColumn }) {
     setIsModalOpen(false);
   };
 
+  const handleRequiredCheckboxChange = (event) => {
+    setIsRequired(event.target.checked);
+  };
+
   const fetchTableStructure = async () => {
     try {
       const response = await axios.get(
@@ -77,7 +81,7 @@ function AlterTable({ onAddColumn }) {
   const handleDeleteTable = async (tableName) => {
     // Display a confirmation dialog
     const confirmDelete = window.confirm(
-      "Are you sure you want to delete this table?"
+      `Are you sure you want to delete ${tableName} table?`
     );
 
     if (confirmDelete) {
@@ -289,7 +293,7 @@ function AlterTable({ onAddColumn }) {
         setNewColumnInputType("number");
         break;
       case "BOOLEAN":
-        setNewColumnInputType("checkbox");
+        setNewColumnInputType("boolean");
         break;
       case "TIMESTAMP":
         setNewColumnInputType("datetime-local");
@@ -702,7 +706,7 @@ function AlterTable({ onAddColumn }) {
                     <input
                       type="checkbox"
                       checked={isRequired}
-                      onChange={handleCheckboxChange}
+                      onChange={handleRequiredCheckboxChange}
                       className="ml-2"
                     />
                   </label>
