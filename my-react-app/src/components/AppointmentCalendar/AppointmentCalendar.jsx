@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState, useMemo } from "react";
 import ExternalLinkIcon from "../images/externalLink.svg";
 import BasicTable from "../react-table/BasicTable";
@@ -11,17 +11,92 @@ import useAppointments from "../../hooks/useAppointments";
 import { getUpcomingEvents } from "../utils";
 import { Link } from "react-router-dom";
 
-function AppointmentCalendar() {
-  const { eventList, fetchEvents } = useAppointments();
+function AppointmentCalendar({ from }) {
+  const { eventList, fetchEvents } = useAppointments(from);
 
-  let upcomingEvents = useMemo(() => {
-    console.count("upcomingEvents");
-    return getUpcomingEvents(eventList);
+  // let upcomingEvents = useMemo(() => {
+  //   console.count("upcomingEvents");
+  //   return getUpcomingEvents(eventList);
+  // }, [eventList]);
+  // const data = useMemo(() => {
+  //   console.count("upcomingEvents data");
+
+  //   return upcomingEvents.map((event) => {
+  //     // Extract start and end times
+  //     const startTime = new Date(event.start.dateTime).toLocaleTimeString([], {
+  //       hour: "numeric",
+  //       minute: "2-digit",
+  //       hour12: true,
+  //     });
+  //     const endTime = new Date(event.end.dateTime).toLocaleTimeString([], {
+  //       hour: "numeric",
+  //       minute: "2-digit",
+  //       hour12: true,
+  //     });
+
+  //     // Extract summary and description
+  //     const clientTopic = event.summary || ""; // If summary is not present, set to empty string
+  //     const description = event.description || ""; // If description is not present, set to empty string
+
+  //     // Create the transformed object
+  //     return {
+  //       // date: new Date(event.start.dateTime).toLocaleTimeString([], {
+  //       //   day: "2-digit",
+  //       //   month: "long",
+  //       //   year: "2-digit",
+  //       //   hour: "numeric",
+  //       //   minute: "2-digit",
+  //       //   hour12: true,
+  //       // }),
+  //       time: `${startTime} - ${endTime}`,
+  //       clientTopic: clientTopic,
+  //       description: description,
+  //       encounterMode: "...", // Placeholder for encounter mode
+  //     };
+  //   });
+  // }, [upcomingEvents]);
+
+  const [data, setData] = useState([
+    {
+      time: "9 a.m - 10 a.m",
+      clientTopic: "Team Meeting",
+      descriptions: "Care plan review",
+      encounterMode: "...",
+    },
+    {
+      time: "9 a.m - 10 a.m",
+      clientTopic: "Team Meeting",
+      descriptions: "Care plan review",
+      encounterMode: "...",
+    },
+    {
+      time: "9 a.m - 10 a.m",
+      clientTopic: "Team Meeting",
+      descriptions: "Care plan review",
+      encounterMode: "...",
+    },
+    {
+      time: "9 a.m - 10 a.m",
+      clientTopic: "Team Meeting",
+      descriptions: "Care plan review",
+      encounterMode: "...",
+    },
+    {
+      time: "9 a.m - 10 a.m",
+      clientTopic: "Team Meeting",
+      descriptions: "Care plan review",
+      encounterMode: "...",
+    },
+  ]);
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
+
+  useEffect(() => {
+    const upcomingEvents = getUpcomingEvents(eventList);
+    setUpcomingEvents(upcomingEvents);
   }, [eventList]);
-  const data = useMemo(() => {
-    console.count("upcomingEvents data");
 
-    return upcomingEvents.map((event) => {
+  useEffect(() => {
+    const data = upcomingEvents.map((event) => {
       // Extract start and end times
       const startTime = new Date(event.start.dateTime).toLocaleTimeString([], {
         hour: "numeric",
@@ -54,83 +129,54 @@ function AppointmentCalendar() {
         encounterMode: "...", // Placeholder for encounter mode
       };
     });
+    setData(data);
   }, [upcomingEvents]);
 
-  console.count("appointmentCalendae");
-
-  // const [data, setData] = useState([
-  //   {
-  //     time: "9 a.m - 10 a.m",
-  //     clientTopic: "Team Meeting",
-  //     descriptions: "Care plan review",
-  //     encounterMode: "...",
-  //   },
-  //   {
-  //     time: "9 a.m - 10 a.m",
-  //     clientTopic: "Team Meeting",
-  //     descriptions: "Care plan review",
-  //     encounterMode: "...",
-  //   },
-  //   {
-  //     time: "9 a.m - 10 a.m",
-  //     clientTopic: "Team Meeting",
-  //     descriptions: "Care plan review",
-  //     encounterMode: "...",
-  //   },
-  //   {
-  //     time: "9 a.m - 10 a.m",
-  //     clientTopic: "Team Meeting",
-  //     descriptions: "Care plan review",
-  //     encounterMode: "...",
-  //   },
-  //   {
-  //     time: "9 a.m - 10 a.m",
-  //     clientTopic: "Team Meeting",
-  //     descriptions: "Care plan review",
-  //     encounterMode: "...",
-  //   },
-  // ]);
-
-  const columns = [
-    {
-      Header: "Time",
-      accessor: "time",
-      align: "left",
-    },
-    {
-      Header: "Client Topic",
-      accessor: "clientTopic",
-    },
-    {
-      Header: "Descriptions",
-      accessor: "descriptions",
-    },
-    {
-      Header: "Encounter Mode",
-      accessor: "encounterMode",
-    },
-    {
-      Header: "Encounter Note",
-      accessor: "encounterNote",
-      Cell: ({ row }) => (
-        <div className="mx-auto flex justify-around items-center">
-          <img src={DocumentAddIcon} alt="add" />
-          <img src={EditIcon} alt="edit" />
-          <img src={EyeIcon} alt="view" />
-        </div>
-      ),
-    },
-    {
-      Header: "Action",
-      accessor: "action",
-      Cell: ({ row }) => (
-        <div className="mx-auto flex justify-around space-x-2 items-center">
-          <img src={EditIcon} alt="edit" />
-          <img src={EyeIcon} alt="view" />
-        </div>
-      ),
-    },
-  ];
+  const columns = useMemo(
+    () => [
+      {
+        Header: "Time",
+        accessor: "time",
+        align: "left",
+      },
+      {
+        Header: "Client Topic",
+        accessor: "clientTopic",
+        align: "left",
+      },
+      {
+        Header: "Descriptions",
+        accessor: "descriptions",
+        align: "left",
+      },
+      {
+        Header: "Encounter Mode",
+        accessor: "encounterMode",
+      },
+      {
+        Header: "Encounter Note",
+        accessor: "encounterNote",
+        Cell: ({ row }) => (
+          <div className="mx-auto flex justify-around items-center">
+            <img src={DocumentAddIcon} alt="add" />
+            <img src={EditIcon} alt="edit" />
+            <img src={EyeIcon} alt="view" />
+          </div>
+        ),
+      },
+      {
+        Header: "Action",
+        accessor: "action",
+        Cell: ({ row }) => (
+          <div className="mx-auto flex justify-around space-x-2 items-center">
+            <img src={EditIcon} alt="edit" />
+            <img src={EyeIcon} alt="view" />
+          </div>
+        ),
+      },
+    ],
+    []
+  );
 
   return (
     <div className="w-full bg-white rounded-md shadow-md flex flex-col">

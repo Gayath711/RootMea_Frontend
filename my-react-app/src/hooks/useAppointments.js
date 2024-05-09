@@ -43,8 +43,10 @@ function useAppointments() {
               dateTime: event.end_datetime,
             },
             htmlLink: event.meeting_link,
+            fullEvent: event,
           }))
         : [];
+
       setInternalEvents(internal);
     } catch (error) {
       console.error("Error fetching calendar events:", error);

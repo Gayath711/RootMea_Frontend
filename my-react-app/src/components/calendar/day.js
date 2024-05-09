@@ -5,8 +5,19 @@ import GoogleIcon from "../images/google_icon.svg";
 import CalendarIcon from "../images/calendar-boxed.svg";
 import InternalCalendarIcon from "../images/internal-meeting.svg";
 import EventModal from "./EventsModal";
+import AppointmentDetail, {
+  AppointmentDetail_Modal,
+} from "../Appointment/AppointmentDetail";
+import AddAppointment from "./addappointment";
 
-export default function Day({ day, rowIdx, savedEvents, isMonth, isWeek }) {
+export default function Day({
+  day,
+  rowIdx,
+  savedEvents,
+  isMonth,
+  isWeek,
+  fetchEvents,
+}) {
   const [dayEvents, setDayEvents] = useState([]);
 
   const [showModal, setShowModal] = useState(false);
@@ -56,6 +67,13 @@ export default function Day({ day, rowIdx, savedEvents, isMonth, isWeek }) {
     0
   );
 
+  const [showDetailModal, setShowDetailModal] = useState(null);
+  const [editEvent, setEditEvent] = useState(false);
+
+  const toggleDetailModal = (index) => {
+    setShowDetailModal(index);
+  };
+
   return (
     <>
       <div
@@ -75,27 +93,53 @@ export default function Day({ day, rowIdx, savedEvents, isMonth, isWeek }) {
           </div>
         )}
         {displayedEvents.map((event, index) => (
-          <div key={index} className="m-2 mb-0 relative">
-            <a href={event.htmlLink} target="_blank">
-              <div
-                className={`flex flex-row gap-1 items-center w-full h-7 ${getTitleBackGround()} rounded-tl-sm rounded-tr-sm mx-1`}
+          <>
+            <div key={index} className="m-2 mb-0 relative">
+              <a
+                // href={event.htmlLink}
+                target="_blank"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  toggleDetailModal(index);
+                }}
               >
-                <img
-                  src={event.isExternal ? GoogleIcon : InternalCalendarIcon}
-                  className={`${
-                    event.isExternal
-                      ? "h-[16px] w-[16px] ms-1 bg-white rounded-full"
-                      : "h-[20px] w-[20px] ms-1"
-                  }`}
-                  alt="event-meet"
-                />
+                <div
+                  className={`flex flex-row gap-1 items-center w-full h-7 ${getTitleBackGround()} rounded-tl-sm rounded-tr-sm mx-1`}
+                >
+                  <img
+                    src={event.isExternal ? GoogleIcon : InternalCalendarIcon}
+                    className={`${
+                      event.isExternal
+                        ? "h-[16px] w-[16px] ms-1 bg-white rounded-full"
+                        : "h-[20px] w-[20px] ms-1"
+                    }`}
+                    alt="event-meet"
+                  />
 
-                <div className="text-center text-xs font-normal truncate">
-                  {event.summary}
+                  <div className="text-center text-xs font-normal truncate">
+                    {event.summary}
+                  </div>
                 </div>
-              </div>
-            </a>
-          </div>
+              </a>
+            </div>
+            {showDetailModal === index && (
+              <AppointmentDetail_Modal
+                showPreview={showDetailModal === index}
+                toggleModal={() => toggleDetailModal(null)}
+                event={event}
+                toggleEdit={() => setEditEvent(index)}
+              />
+            )}
+            <AddAppointment
+              show={editEvent === index}
+              toggleModal={() => setEditEvent(null)}
+              setShowAlert={null}
+              fetchEvents={fetchEvents}
+              appointmentDetail={event}
+              isUpdate
+            />
+          </>
         ))}
         {additionalEventsCount > 0 && (
           <div
@@ -108,11 +152,14 @@ export default function Day({ day, rowIdx, savedEvents, isMonth, isWeek }) {
           </div>
         )}
       </div>
+
       {showModal && (
         <EventModal
+          show={showModal}
           eventDate={day.format("DD-MMM-YYYY")}
           toggleModal={toggleModal}
           events={eventsForDay}
+          fetchEvents={fetchEvents}
         />
       )}
     </>

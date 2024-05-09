@@ -1,17 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import { useForm } from "react-hook-form";
 import { format } from "date-fns";
 import axios from "axios";
 
 import ClosePNG from "../images/close.png";
+import CloseIcon from "../images/form_builder/close_x.svg";
 import DropDown from "../common/Dropdown";
 import TextBox from "../common/TextBox";
 import DateInput from "../common/DateInput";
 import TimeInput from "../common/TimeInput";
 import apiURL from "../.././apiConfig";
 
-const AddAppointment = ({ toggleModal, fetchEvents, setShowAlert }) => {
+import { Modal } from "react-bootstrap";
+
+import Swal from "sweetalert2";
+
+const AddAppointment = ({
+  toggleModal,
+  fetchEvents,
+  setShowAlert,
+  show,
+  appointmentDetail,
+  isUpdate = false,
+}) => {
   const options = [
     { value: "15 mins before time", label: "15 mins before time" },
     { value: "on time", label: "on time" },
@@ -32,9 +44,12 @@ const AddAppointment = ({ toggleModal, fetchEvents, setShowAlert }) => {
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleDateChange = (name, value) => {
+    console.log({ name, value });
     if (name === "date") {
-      const formattedDate = format(value, "yyyy-MM-dd");
+      const formattedDate = format(value, "MM-dd-yyyy");
       setDate(formattedDate);
     } else if (name === "start_time") {
       setStartTime(value);
@@ -45,8 +60,7 @@ const AddAppointment = ({ toggleModal, fetchEvents, setShowAlert }) => {
   };
 
   const onSubmit = (data) => {
-    reset();
-    toggleModal();
+    setIsSubmitting(true);
 
     let start_datetime = new Date(data.date);
     start_datetime.setHours(data.start_time.getHours());
@@ -59,6 +73,12 @@ const AddAppointment = ({ toggleModal, fetchEvents, setShowAlert }) => {
     end_datetime.setSeconds(data.end_time.getSeconds());
 
     let endpoint = isExternal ? "/create_event/" : "/django/create_event/";
+    let axiosCall = axios.post;
+
+    if (isUpdate) {
+      endpoint = `/update_event/${appointmentDetail.fullEvent.id}/`;
+      axiosCall = isUpdate ? axios.put : axios.post;
+    }
 
     let splittedAttendees = data.attendees.split(",").map((email) => {
       return {
@@ -73,15 +93,31 @@ const AddAppointment = ({ toggleModal, fetchEvents, setShowAlert }) => {
       attendees: splittedAttendees,
     };
 
-    axios
-      .post(`${apiURL}${endpoint}`, event)
+    axiosCall(`${apiURL}${endpoint}`, event)
       .then((response) => {
-        setShowAlert(true);
-        fetchEvents();
+        Swal.fire({
+          title: "Success!",
+          text: `Appointment ${isUpdate ? "Updated" : "Created"}`,
+          icon: "success",
+          timer: 2000,
+        });
+        setShowAlert && setShowAlert(true);
+        fetchEvents && fetchEvents();
         window.scrollTo({ top: 0, behavior: "smooth" });
       })
       .catch((error) => {
-        console.error("Error fetching Client Diagnosis Data:", error);
+        console.error("Error", error);
+        Swal.fire({
+          title: "Error!",
+          text: `Unable to ${isUpdate ? "Update" : "Create"} Appointment`,
+          icon: "error",
+          timer: 2000,
+        });
+      })
+      .finally(() => {
+        resetAll();
+        setIsSubmitting(false);
+        toggleModal();
       });
   };
 
@@ -89,172 +125,257 @@ const AddAppointment = ({ toggleModal, fetchEvents, setShowAlert }) => {
     setIsExternal(value === "external");
   };
 
+  const resetAll = () => {
+    reset();
+    setDate(null);
+    setStartTime(null);
+    setEndTime(null);
+  };
+
+  useEffect(() => {
+    if (isUpdate && show && appointmentDetail) {
+      const { summary, start, end, fullEvent, isExternal } = appointmentDetail;
+      setValue("appointement_title", summary);
+      handleDateChange("date", start.dateTime); // Assuming start.dateTime contains date
+      handleDateChange("start_time", new Date(start.dateTime));
+      handleDateChange("end_time", new Date(end.dateTime));
+      setValue(
+        "attendees",
+        fullEvent.attendees.map((attendee) => attendee.email).join(",")
+      );
+      setIsExternal(isExternal);
+    } else {
+      resetAll();
+      setIsExternal(true);
+    }
+  }, [show, isUpdate, appointmentDetail]);
+
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 ">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex flex-col border bg-white border-gray-500 rounded-md">
-          <div className=" bg-white rounded-lg">
-            <header className="flex flex-row justify-between items-start px-3 pt-3">
-              <p className="text-gray-600 font-semibold">Add New Appointment</p>
-              <button onClick={toggleModal} className="">
-                <img src={ClosePNG} className="w-4 h-4"></img>
-              </button>
-            </header>
-          </div>
-          <div className="my-1 border border-gray-500" />
-          <div className="flex flex-col">
-            <div className="p-3">
-              <TextBox
-                name="appointement_title"
-                placeholder="Appointment Title"
-                register={register}
-                registerProps={{ required: true }}
-              />
-              {errors.appointement_title && (
-                <span className="text-xs ms-1 text-red-500">
-                  This field is required
-                </span>
-              )}
-            </div>
-          </div>
-          <div className="flex flex-row">
-            <div className="p-3">
-              <TextBox
-                name="client_name"
-                placeholder="Client Name"
-                register={register}
-                registerProps={{ required: true }}
-              />
-              {errors.client_name && (
-                <span className="text-xs ms-1 text-red-500">
-                  This field is required
-                </span>
-              )}
-            </div>
-            <div className="p-3">
-              <DateInput
-                name="date"
-                placeholder="Date"
-                register={register}
-                registerProps={{ required: true }}
-                value={date}
-                handleChange={(date) => handleDateChange("date", date)}
-              />
-              {errors.date && (
-                <span className="text-xs ms-1 text-red-500">
-                  This field is required
-                </span>
-              )}
-            </div>
-          </div>
-          <div className="flex flex-row">
-            <div className="p-3">
-              <TimeInput
-                name="start_time"
-                placeholder="Start Time"
-                value={startTime}
-                handleChange={(value) => handleDateChange("start_time", value)}
-                register={register}
-                registerProps={{ required: true }}
-              />
-              {errors.start_time && (
-                <span className="text-xs ms-1 text-red-500">
-                  This field is required
-                </span>
-              )}
-            </div>
-            <div className="p-3">
-              <TimeInput
-                name="end_time"
-                placeholder="End Time"
-                value={endTime}
-                handleChange={(value) => handleDateChange("end_time", value)}
-                register={register}
-                registerProps={{ required: true }}
-              />
-              {errors.end_time && (
-                <span className="text-xs ms-1 text-red-500">
-                  This field is required
-                </span>
-              )}
-            </div>
-          </div>
-          <div className="flex flex-row">
-            <div className="p-3 w-full">
-              <TextBox
-                name="attendees"
-                placeholder="Attendees (comma separated)"
-                register={register}
-                registerProps={{
-                  required: true,
-                  validate: (value) => {
-                    const emailPattern = /\S+@\S+\.\S+/;
-                    const emails = value
-                      .split(",")
-                      .map((email) => email.trim());
-                    return (
-                      emails.every((email) => emailPattern.test(email)) ||
-                      "Invalid email format"
-                    );
-                  },
+    <Modal
+      show={show}
+      onHide={() => toggleModal()}
+      backdrop="static"
+      keyboard={false}
+      centered
+    >
+      <Modal.Header className="m-0 p-2 w-100 text-white text-base bg-[#5BC4BF] font-medium">
+        <Modal.Title className="m-0 p-0 w-100">
+          <div className="flex justify-between items-center w-100">
+            <span className="text-white text-base">
+              {isUpdate ? "Update Appointment" : "Add New Appointment"}
+            </span>
+            <button onClick={() => toggleModal()}>
+              <img
+                src={CloseIcon}
+                style={{
+                  height: "20px",
+                  width: "100%",
                 }}
               />
-              {errors.attendees && (
-                <span className="text-xs ms-1 text-red-500">
-                  {errors.attendees.message}
-                </span>
-              )}
-              {errors.attendees && errors.attendees.type === "required" && (
-                <span className="text-xs ms-1 text-red-500">
-                  This field is required
-                </span>
-              )}
-            </div>
+            </button>
           </div>
-          <div className="flex flex-row justify-center items-center py-3 px-1 gap-3">
-            <div className="">
-              <label className="inline-flex items-center text-xs">
-                <input
-                  type="radio"
-                  className="form-radio h-5 w-5 text-[#43B09C] accent-teal-600"
-                  name="toggleType"
-                  value="external"
-                  checked={isExternal}
-                  onChange={() => handleToggle("external")}
-                />
-                <span className="ml-2 text-gray-700">External (Google)</span>
-              </label>
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <div className="flex relative items-center justify-center">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="flex flex-col bg-white">
+              <div className="flex flex-col">
+                <div className="p-3">
+                  <TextBox
+                    name="appointement_title"
+                    placeholder="Appointment Title"
+                    register={register}
+                    registerProps={{ required: true }}
+                  />
+                  {errors.appointement_title && (
+                    <span className="text-xs ms-1 text-red-500">
+                      This field is required
+                    </span>
+                  )}
+                </div>
+              </div>
+              <div className="flex flex-row">
+                <div className="p-3">
+                  <TextBox
+                    name="client_name"
+                    placeholder="Client Name"
+                    register={register}
+                    registerProps={{ required: isUpdate ? false : true }}
+                    isEdittable={isUpdate}
+                  />
+                  {errors.client_name && (
+                    <span className="text-xs ms-1 text-red-500">
+                      This field is required
+                    </span>
+                  )}
+                </div>
+                <div className="p-3">
+                  <DateInput
+                    name="date"
+                    placeholder="Date"
+                    register={register}
+                    registerProps={{ required: true }}
+                    value={date}
+                    handleChange={(date) => handleDateChange("date", date)}
+                  />
+
+                  {errors.date && (
+                    <span className="text-xs ms-1 text-red-500">
+                      This field is required
+                    </span>
+                  )}
+                </div>
+              </div>
+              <div className="flex flex-row">
+                <div className="p-3">
+                  <TimeInput
+                    name="start_time"
+                    placeholder="Start Time"
+                    value={startTime}
+                    handleChange={(value) =>
+                      handleDateChange("start_time", value)
+                    }
+                    register={register}
+                    selectedDate={date}
+                    registerProps={{ required: true }}
+                  />
+                  {errors.start_time && (
+                    <span className="text-xs ms-1 text-red-500">
+                      This field is required
+                    </span>
+                  )}
+                </div>
+                <div className="p-3">
+                  <TimeInput
+                    name="end_time"
+                    placeholder="End Time"
+                    value={endTime}
+                    handleChange={(value) =>
+                      handleDateChange("end_time", value)
+                    }
+                    register={register}
+                    selectedDate={date}
+                    registerProps={{ required: true }}
+                  />
+                  {errors.end_time && (
+                    <span className="text-xs ms-1 text-red-500">
+                      This field is required
+                    </span>
+                  )}
+                </div>
+              </div>
+              <div className="flex flex-row">
+                <div className="p-3 w-full">
+                  <TextBox
+                    name="attendees"
+                    placeholder="Attendees (comma separated)"
+                    register={register}
+                    registerProps={{
+                      required: true,
+                      validate: (value) => {
+                        const emailPattern = /\S+@\S+\.\S+/;
+                        const emails = value
+                          .split(",")
+                          .map((email) => email.trim());
+                        return (
+                          emails.every((email) => emailPattern.test(email)) ||
+                          "Invalid email format"
+                        );
+                      },
+                    }}
+                  />
+                  {errors.attendees && (
+                    <span className="text-xs ms-1 text-red-500">
+                      {errors.attendees.message}
+                    </span>
+                  )}
+                  {errors.attendees && errors.attendees.type === "required" && (
+                    <span className="text-xs ms-1 text-red-500">
+                      This field is required
+                    </span>
+                  )}
+                </div>
+              </div>
+              <div className="flex flex-row justify-center items-center py-3 px-1 gap-3">
+                <div className="">
+                  <label className="inline-flex items-center text-xs">
+                    <input
+                      type="radio"
+                      className="form-radio h-5 w-5 text-[#43B09C] accent-teal-600"
+                      name="toggleType"
+                      value="external"
+                      checked={isExternal}
+                      onChange={() => handleToggle("external")}
+                      disabled={isUpdate}
+                    />
+                    <span className="ml-2 text-gray-700">
+                      External (Google)
+                    </span>
+                  </label>
+                </div>
+                <div className="">
+                  <label className="inline-flex items-center text-xs">
+                    <input
+                      type="radio"
+                      className="form-radio h-5 w-5 text-[#43B09C] accent-teal-600"
+                      name="toggleType"
+                      value="internal"
+                      checked={!isExternal}
+                      onChange={() => handleToggle("internal")}
+                      disabled={isUpdate}
+                    />
+                    <span className="ml-2 text-gray-700">Internal</span>
+                  </label>
+                </div>
+              </div>
+              <div className="flex flex-row justify-between items-center pb-4">
+                <div className="p-3">
+                  <div className="text-gray-400 text-xs">Save to Draft</div>
+                </div>
+                <div className="p-3">
+                  <button
+                    type="submit"
+                    className="w-54 h-10 bg-[#43B09C] rounded text-xs text-white p-2"
+                  >
+                    {isUpdate
+                      ? "Update Appointment"
+                      : "Submit Your Appointment"}
+                  </button>
+                </div>
+              </div>
             </div>
-            <div className="">
-              <label className="inline-flex items-center text-xs">
-                <input
-                  type="radio"
-                  className="form-radio h-5 w-5 text-[#43B09C] accent-teal-600"
-                  name="toggleType"
-                  value="internal"
-                  checked={!isExternal}
-                  onChange={() => handleToggle("internal")}
-                />
-                <span className="ml-2 text-gray-700">Internal</span>
-              </label>
-            </div>
-          </div>
-          <div className="flex flex-row justify-between items-center pb-4">
-            <div className="p-3">
-              <div className="text-gray-400 text-xs">Save to Draft</div>
-            </div>
-            <div className="p-3">
-              <button
-                type="submit"
-                className="w-54 h-10 bg-[#43B09C] rounded text-xs text-white p-2"
+          </form>
+          {isSubmitting && (
+            <div className="flex flex-column absolute top-0 left-0 items-center justify-center gap-2 w-100 h-100 bg-gray-100/80">
+              <svg
+                className="animate-spin -ml-1 mr-3 h-8 w-8 text-teal-500"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
               >
-                Submit Your appointment
-              </button>
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              <p className="text-base">
+                {isUpdate ? "Updating..." : "Creating.."}
+              </p>
             </div>
-          </div>
+          )}
         </div>
-      </form>
-    </div>
+      </Modal.Body>
+    </Modal>
   );
 };
 

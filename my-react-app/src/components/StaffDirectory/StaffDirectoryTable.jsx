@@ -7,6 +7,24 @@ import SearchIcon from "../images/search.svg";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import apiURL from "../../apiConfig";
+import { styled } from "@mui/material/styles";
+
+import MUIDataGridWrapper from "../HOC/MUIDataGridWrapper";
+
+import EditPNG from "../images/edit.png";
+import DeletePNG from "../images/delete.png";
+
+const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
+  "& .MuiDataGrid-sortIcon": {
+    opacity: 1,
+    color: "white",
+  },
+  "& .MuiDataGrid-menuIconButton": {
+    opacity: 1,
+    color: "white",
+  },
+}));
+
 // function createData(
 //   Link,
 //   LastName,
@@ -86,80 +104,7 @@ import apiURL from "../../apiConfig";
 export default function StaffDirectoryTable() {
   const token = localStorage.getItem("access_token");
   const [loadingData, setLoadingData] = useState(true);
-  const [recordData, setRecordData] = useState([
-    {
-      id: 3,
-      first_name: "Alice",
-      last_name: "Johnson",
-      email: "alice.johnson@rootsclinic.org",
-      last_login: null,
-      is_active: true,
-      profile: {
-        phone_no: "+1-555-345-6789",
-        position: null,
-        facility: "",
-        program: ["STI", "Asthma"],
-        supervisor_first_name: "arrun",
-        supervisor_last_name: "prasaath",
-        supervisor_title: null,
-        supervisor_email: "arrun@dataterrain.com",
-      },
-    },
-    {
-      id: 1,
-      first_name: "arrun",
-      last_name: "prasaath",
-      email: "arrun@dataterrain.com",
-      last_login: "2024-04-17T17:51:01.236789Z",
-      is_active: true,
-      profile: {
-        phone_no: "+1-555-123-4567",
-        position: null,
-        facility: "",
-        program: [],
-        supervisor_first_name: "",
-        supervisor_last_name: "",
-        supervisor_title: "",
-        supervisor_email: "",
-      },
-    },
-    {
-      id: 4,
-      first_name: "David",
-      last_name: "Brown",
-      email: "david.brown@rootsclinic.org",
-      last_login: null,
-      is_active: true,
-      profile: {
-        phone_no: "2345124",
-        position: null,
-        facility: "",
-        program: [],
-        supervisor_first_name: "Alice",
-        supervisor_last_name: "Johnson",
-        supervisor_title: null,
-        supervisor_email: "alice.johnson@rootsclinic.org",
-      },
-    },
-    {
-      id: 2,
-      first_name: "John",
-      last_name: "Smith",
-      email: "john.smith@rootsclinic.org",
-      last_login: null,
-      is_active: true,
-      profile: {
-        phone_no: "+1-555-234-5678",
-        position: null,
-        facility: "",
-        program: [],
-        supervisor_first_name: "arrun",
-        supervisor_last_name: "prasaath",
-        supervisor_title: null,
-        supervisor_email: "arrun@dataterrain.com",
-      },
-    },
-  ]);
+  const [recordData, setRecordData] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [selectedValue, setSelectedValue] = useState(null);
 
@@ -208,6 +153,9 @@ export default function StaffDirectoryTable() {
   let rowData = useMemo(
     () =>
       recordData.map((item) => {
+        const programValue =
+          item.profile?.program.length > 0 ? item.profile?.program[0] : "";
+
         return {
           id: item.id,
           Link: `Record ${item.id}`,
@@ -218,6 +166,15 @@ export default function StaffDirectoryTable() {
           LastActivityDate: item.last_login || "",
           SystemStatus: item.is_active || null,
           PositionTitle: item.profile?.position || "",
+          PrimaryFacility: item.profile?.facility || "",
+          Program: programValue,
+          Supervisor: `${item.profile?.supervisor_first_name || " "} ${
+            item.profile?.supervisor_last_name || " "
+          }`,
+
+          SupervisorTitle: item.profile?.supervisor_title || "",
+          SupervisorEmail: item.profile?.supervisor_email || "",
+          Action: "",
         };
       }),
     [recordData]
@@ -258,127 +215,242 @@ export default function StaffDirectoryTable() {
             searchText={searchText}
             handleSearchText={handleSearchText}
           />
-          <DataGrid
-            loading={loadingData}
-            rows={rows}
-            columns={[
-              {
-                field: "Link",
-                headerName: "Link",
-                flex: 1,
-                headerClassName: "bg-[#5BC4BF] text-white font-medium",
-                renderCell: (params) => {
-                  return (
-                    <>
-                      <Link
-                        to={`/staff-directory/${params.row.id}`}
-                        className="text-[#5BC4BF]"
-                      >
-                        {params.row.Link}
-                      </Link>
-                    </>
-                  );
+          <MUIDataGridWrapper>
+            <StyledDataGrid
+              loading={loadingData}
+              rows={rows}
+              columns={[
+                {
+                  field: "Link",
+                  headerName: "Link",
+                  flex: 1,
+                  headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                  minWidth: 100,
+                  renderCell: (params) => {
+                    return (
+                      <>
+                        <Link
+                          to={`/staff-directory/${params.row.id}`}
+                          className="text-[#5BC4BF]"
+                        >
+                          {params.row.Link}
+                        </Link>
+                      </>
+                    );
+                  },
                 },
-              },
-              {
-                field: "LastName",
-                headerName: "Last Name",
-                flex: 1,
-                headerClassName: "bg-[#5BC4BF] text-white font-medium",
-              },
-              {
-                field: "FirstName",
-                headerName: "First Name",
-                flex: 1,
-                headerClassName: "bg-[#5BC4BF] text-white font-medium",
-              },
-              {
-                field: "PhoneNumber",
-                headerName: "Phone Number",
-                flex: 1,
-                filterable: true,
-                headerClassName: "bg-[#5BC4BF] text-white font-medium",
-              },
-              {
-                field: "RootsEmailAddress",
-                headerName: "Roots Email Address",
-                flex: 1,
-                sortable: true,
-                headerClassName: "bg-[#5BC4BF] text-white font-medium",
-              },
-              {
-                field: "LastActivityDate",
-                headerName: "Last Activity Date",
-                align: "center",
-                headerAlign: "center",
-                flex: 1,
-                headerClassName:
-                  "bg-[#5BC4BF] text-white font-medium text-center w-100",
-                renderCell: (params) => {
-                  let date = params.row.LastActivityDate
-                    ? new Date(params.row.LastActivityDate).toLocaleDateString()
-                    : "";
-
-                  return date;
+                {
+                  field: "LastName",
+                  headerName: "Last Name",
+                  flex: 1,
+                  headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                  minWidth: 150,
                 },
-              },
-
-              {
-                field: "SystemStatus",
-                headerName: "System Status",
-                flex: 1,
-                align: "center",
-                headerAlign: "center",
-
-                headerClassName: "bg-[#5BC4BF] text-white font-medium",
-                renderCell: (params) => {
-                  const {
-                    row: { SystemStatus },
-                  } = params;
-
-                  let classToApply = SystemStatus
-                    ? "text-[#2F9384] bg-[#DAFCE7]"
-                    : "text-[#E0382D] bg-[#FFC7C7]";
-
-                  // if (SystemStatus === "Active") {
-                  //   classToApply = "text-[#2F9384] bg-[#DAFCE7]";
-                  // }
-                  // if (SystemStatus === "Deactivated") {
-                  //   classToApply = "text-[#E0382D] bg-[#FFC7C7]";
-                  // }
-
-                  return (
-                    <>
-                      <div className="h-100 w-100">
-                        <span className={`m-2 p-1 px-2 ${classToApply}`}>
-                          {SystemStatus ? "Active" : "Deactivated"}
-                        </span>
-                      </div>
-                    </>
-                  );
+                {
+                  field: "FirstName",
+                  headerName: "First Name",
+                  flex: 1,
+                  headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                  minWidth: 150,
                 },
-              },
-
-              {
-                field: "PositionTitle",
-                headerName: "Position Title",
-                align: "left",
-                headerAlign: "left",
-                flex: 1,
-                headerClassName:
-                  "bg-[#5BC4BF] text-white font-medium text-center w-100",
-              },
-            ]}
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: 10,
+                {
+                  field: "PhoneNumber",
+                  headerName: "Phone Number",
+                  flex: 1,
+                  filterable: true,
+                  headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                  minWidth: 150,
                 },
-              },
-            }}
-            pageSizeOptions={[3, 5, 10, 25]}
-            disableRowSelectionOnClick
-          />
+                {
+                  field: "RootsEmailAddress",
+                  headerName: "Roots Email Address",
+                  flex: 1,
+                  sortable: true,
+                  headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                  minWidth: 250,
+                },
+                {
+                  field: "LastActivityDate",
+                  headerName: "Last Activity Date",
+                  align: "center",
+                  headerAlign: "center",
+                  flex: 1,
+                  headerClassName:
+                    "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                  minWidth: 150,
+                  renderCell: (params) => {
+                    let date = params.row.LastActivityDate
+                      ? new Date(
+                          params.row.LastActivityDate
+                        ).toLocaleDateString()
+                      : "";
+
+                    return date;
+                  },
+                },
+
+                {
+                  field: "SystemStatus",
+                  headerName: "System Status",
+                  flex: 1,
+                  align: "center",
+                  headerAlign: "center",
+
+                  headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                  minWidth: 150,
+                  renderCell: (params) => {
+                    const {
+                      row: { SystemStatus },
+                    } = params;
+
+                    let classToApply = SystemStatus
+                      ? "text-[#2F9384] bg-[#DAFCE7]"
+                      : "text-[#E0382D] bg-[#FFC7C7]";
+
+                    // if (SystemStatus === "Active") {
+                    //   classToApply = "text-[#2F9384] bg-[#DAFCE7]";
+                    // }
+                    // if (SystemStatus === "Deactivated") {
+                    //   classToApply = "text-[#E0382D] bg-[#FFC7C7]";
+                    // }
+
+                    return (
+                      <>
+                        <div className="h-100 w-100">
+                          <span className={`m-2 p-1 px-2 ${classToApply}`}>
+                            {SystemStatus ? "Active" : "Deactivated"}
+                          </span>
+                        </div>
+                      </>
+                    );
+                  },
+                },
+
+                {
+                  field: "PositionTitle",
+                  headerName: "Position Title",
+                  align: "left",
+                  headerAlign: "left",
+                  flex: 1,
+                  headerClassName:
+                    "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                  minWidth: 200,
+                },
+
+                {
+                  field: "PrimaryFacility",
+                  headerName: "Primary Facility",
+                  align: "left",
+                  headerAlign: "left",
+                  flex: 1,
+                  headerClassName:
+                    "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                  minWidth: 150,
+                },
+
+                {
+                  field: "Program",
+                  headerName: "Program",
+                  align: "left",
+                  headerAlign: "left",
+                  flex: 1,
+                  headerClassName:
+                    "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                  minWidth: 150,
+                },
+
+                {
+                  field: "Supervisor",
+                  headerName: "Supervisor",
+                  align: "left",
+                  headerAlign: "left",
+                  flex: 1,
+                  headerClassName:
+                    "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                  minWidth: 150,
+                },
+
+                {
+                  field: "SupervisorTitle",
+                  headerName: "Supervisor Title",
+                  align: "left",
+                  headerAlign: "left",
+                  flex: 1,
+                  headerClassName:
+                    "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                  minWidth: 200,
+                },
+
+                {
+                  field: "SupervisorEmail",
+                  headerName: "Supervisor Email",
+                  align: "left",
+                  headerAlign: "left",
+                  flex: 1,
+                  headerClassName:
+                    "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                  minWidth: 250,
+                },
+
+                // {
+                //   field: "Action",
+                //   headerName: "Action",
+                //   align: "left",
+                //   headerAlign: "center",
+                //   flex: 1,
+                //   headerClassName:
+                //     "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                //   minWidth: 150,
+                //   renderCell: (params) => {
+                //     return (
+                //       <>
+                //         <div
+                //           className="text-[#5BC4BF] flex items-center justify-evenly"
+                //           style={{ height: "100%" }}
+                //         >
+                //           <img src={EditPNG} className="w-5 h-5" />
+                //           <img src={DeletePNG} className="w-5 h-5" />
+                //         </div>
+                //       </>
+                //     );
+                //   },
+                // renderCell: (params) => {
+                //   return (
+                //     <>
+                //       <Link
+                //         to={`/staff-directory/${params.row.id}`}
+                //         className="text-[#2F9384]"
+                //       >
+                //         {/* {params.row.linkToProgram} */}
+                //         <div className="flex flex-row items-center">
+                //           <img
+                //             src={EditPNG}
+                //             className="w-5 h-5"
+                //             style={{ display: "block", margin: "0 auto" }}
+                //           />
+                //           <img
+                //             src={DeletePNG}
+                //             className="w-5 h-5"
+                //             style={{ display: "block", margin: "0 auto" }}
+                //           />
+                //         </div>
+                //       </Link>
+                //     </>
+                //   );
+                // },
+                // },
+              ]}
+              initialState={{
+                pagination: {
+                  paginationModel: {
+                    pageSize: 10,
+                  },
+                },
+              }}
+              pageSizeOptions={[3, 5, 10, 25]}
+              disableRowSelectionOnClick
+            />
+          </MUIDataGridWrapper>
         </div>
       </Paper>
     </Box>
@@ -394,7 +466,7 @@ function TableActions({
 }) {
   return (
     <div className="grid grid-cols-4 justify-between gap-2 w-100 mt-1 mb-4">
-      <div className="col-start-1 col-span-1">
+      {/* <div className="col-start-1 col-span-1">
         <Select
           name={"selector"}
           options={selectorList}
@@ -425,7 +497,7 @@ function TableActions({
           }}
           menuPortalTarget={document.body}
         />
-      </div>
+      </div> */}
       <div className="col-end-5 col-span-1 flex gap-1 items-center border-b-2 border-[#5BC4BF]">
         <img src={SearchIcon} className="w-[20px] h-100" />
         <input
@@ -439,3 +511,80 @@ function TableActions({
     </div>
   );
 }
+
+// DUMMY DATA
+
+// [
+//   {
+//     id: 3,
+//     first_name: "Alice",
+//     last_name: "Johnson",
+//     email: "alice.johnson@rootsclinic.org",
+//     last_login: null,
+//     is_active: true,
+//     profile: {
+//       phone_no: "+1-555-345-6789",
+//       position: null,
+//       facility: "",
+//       program: ["STI", "Asthma"],
+//       supervisor_first_name: "arrun",
+//       supervisor_last_name: "prasaath",
+//       supervisor_title: null,
+//       supervisor_email: "arrun@dataterrain.com",
+//     },
+//   },
+//   {
+//     id: 1,
+//     first_name: "arrun",
+//     last_name: "prasaath",
+//     email: "arrun@dataterrain.com",
+//     last_login: "2024-04-17T17:51:01.236789Z",
+//     is_active: true,
+//     profile: {
+//       phone_no: "+1-555-123-4567",
+//       position: null,
+//       facility: "",
+//       program: [],
+//       supervisor_first_name: "",
+//       supervisor_last_name: "",
+//       supervisor_title: "",
+//       supervisor_email: "",
+//     },
+//   },
+//   {
+//     id: 4,
+//     first_name: "David",
+//     last_name: "Brown",
+//     email: "david.brown@rootsclinic.org",
+//     last_login: null,
+//     is_active: true,
+//     profile: {
+//       phone_no: "2345124",
+//       position: null,
+//       facility: "",
+//       program: [],
+//       supervisor_first_name: "Alice",
+//       supervisor_last_name: "Johnson",
+//       supervisor_title: null,
+//       supervisor_email: "alice.johnson@rootsclinic.org",
+//     },
+//   },
+//   {
+//     id: 2,
+//     first_name: "John",
+//     last_name: "Smith",
+//     email: "john.smith@rootsclinic.org",
+//     last_login: null,
+//     is_active: true,
+//     profile: {
+//       phone_no: "+1-555-234-5678",
+//       position: null,
+//       facility: "",
+//       program: ["XXX", "YYYY"],
+//       supervisor_first_name: "arrun",
+//       supervisor_last_name: "prasaath",
+//       supervisor_title: null,
+//       supervisor_email: "arrun@dataterrain.com",
+//     },
+//   },
+// ]

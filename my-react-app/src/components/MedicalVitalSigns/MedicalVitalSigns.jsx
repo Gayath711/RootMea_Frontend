@@ -23,58 +23,58 @@ const Content = ({ data, columns }) => {
   return (
     <>
       <hr className="w-[99%] mx-auto text-[#bababa]" />
-        <BasicTable
-          type={"medicalVitalSigns"}
-          defaultPageSize={10}
-          columns={columns}
-          data={data}
-        />
+      <BasicTable
+        type={"medicalVitalSigns"}
+        defaultPageSize={10}
+        columns={columns}
+        data={data}
+      />
     </>
   );
 };
 
-function MedicalVitalSigns({clientId}) {
+function MedicalVitalSigns({ clientId }) {
   const [open, setOpen] = useState(true);
   const [data, setData] = useState([
     {
       measure: "Blood Pressure (Syst/Diast)",
-      date_time: "...",
+      value: "...",
     },
     {
       measure: "Heart Rate (Beats per minute)",
-      date_time: "...",
+      value: "...",
     },
     {
       measure: "Respiration (Breaths per minute)",
-      date_time: "...",
+      value: "...",
     },
     {
-      measure: "Blood Pressure (Syst/Diast)",
-      date_time: "...",
+      measure: "Weight (Pounds)",
+      value: "...",
     },
     {
-      measure: "Heart Rate (Beats per minute)",
-      date_time: "...",
+      measure: "Height (Inches)",
+      value: "...",
     },
     {
-      measure: "Respiration (Breaths per minute)",
-      date_time: "...",
+      measure: "BMI (Index)",
+      value: "...",
     },
     {
-      measure: "Blood Pressure (Syst/Diast)",
-      date_time: "...",
+      measure: "Smoked tobacco in last 30 days (Syst/Diast)",
+      value: "...",
     },
     {
-      measure: "Respiration (Breaths per minute)",
-      date_time: "...",
+      measure: "Other nicotine in last 30 days",
+      value: "...",
     },
     {
-      measure: "Heart Rate (Beats per minute)",
-      date_time: "...",
+      measure: "Date",
+      value: "...",
     },
     {
-      measure: "Respiration (Breaths per minute)",
-      date_time: "...",
+      measure: "Source",
+      value: "...",
     },
   ]);
 
@@ -86,14 +86,13 @@ function MedicalVitalSigns({clientId}) {
         align: "left",
       },
       {
-        Header: "Date/Time",
-        accessor: "date_time",
+        Header: "Value",
+        accessor: "value",
+        align: "left",
       },
       {
-        Header: "Date/Time",
-        Cell: ({ row }) => (
-            "..."
-        )
+        Header: "Value",
+        Cell: ({ row }) => "...",
       },
     ],
     []
@@ -102,11 +101,16 @@ function MedicalVitalSigns({clientId}) {
   return (
     <div
       id="clientChartClientProfile"
-      className={`bg-white rounded-md shadow-sm flex flex-col ${open ? "h-full" : ""}`}
+      className={`bg-white rounded-md shadow-sm flex flex-col ${
+        open ? "h-full" : ""
+      }`}
     >
       <div className="flex justify-between p-3">
         <div className="flex gap-4 items-center">
-          <div className="text-[#28293B] text-xl">Medical Vital Signs <span className="italic text-xs">[from AMD]</span></div>
+          <div className="text-[#28293B] text-xl">
+            Medical Vital Signs{" "}
+            <span className="italic text-xs">[from AMD]</span>
+          </div>
           <img src={ExternalLinkIcon} className="size-4" alt="link" />
         </div>
         <RemoveCircleIcon

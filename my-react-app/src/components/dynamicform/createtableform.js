@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShare, faDownload, faUpload, faSearch } from '@fortawesome/free-solid-svg-icons';
 
@@ -15,6 +16,10 @@ import file1 from '../../image/file1.png';
 import date from '../../image/date.png';
 import apiURL from '../../apiConfig';
 
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
+import Button from 'react-bootstrap/Button';
+
 initMDB({ Input, Ripple });
 
 function CreateTableForm() {
@@ -23,12 +28,22 @@ function CreateTableForm() {
   const [formData, setFormData] = useState({});
   const [matchingTables, setMatchingTables] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [time, setTime] = useState([]);
+
+
+  const formatDateTimeString = (dateTimeString) => {
+    const dateTimeObject = new Date(dateTimeString);
+    return dateTimeObject.toLocaleString('en-US'); // Format as mm/dd/yyyy, hh:mm:ss AM/PM
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${apiURL}/get_matching_tables/`);
         setMatchingTables(response.data.matching_tables);
+        setTime(response.data.time);
+        console.log(time,"time",response.data)
+       
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -44,29 +59,53 @@ function CreateTableForm() {
     tableName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const staticurl = `${apiURL}/`;
+  const currentURL = window.location.href;
+
+
+  const staticurl = `${currentURL}`;
 
   const handleShare = async (tableName) => {
-
-    const url = `${staticurl}createtableform/${tableName}`;
+    const url = `${staticurl}/${tableName}`;
     try {
-      if (navigator.share) {
-        const url = `${staticurl}createtableform/${tableName}`;
-        await navigator.share({
-          title: 'Share Table Form',
-          text: 'Check out this table form',
-          url: url
-        });
-        console.log('Shared successfully');
-      } else {
-        throw new Error('Web Share API is not supported in this browser');
-      }
+        if (navigator.share) {
+            await navigator.share({
+                title: 'Share Table Form',
+                text: 'Check out this table form',
+                url: url
+            });
+            console.log('Shared successfully');
+        } else {
+            throw new Error('Web Share API is not supported in this browser');
+        }
     } catch (error) {
-      console.error('Error sharing:', error);
-      alert(`Share Not supported for http only work for https, copy this URL: ${url}`);
-
+        console.error('Error sharing:', error);
+      
+        Swal.fire({
+            title: "Copy to Clipboard",
+            text: "Click below to copy the URL to clipboard:",
+            input: 'text',
+            inputValue: url,
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "Copy",
+            cancelButtonText: "Cancel",
+            inputReadOnly: true,
+            allowOutsideClick: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                navigator.clipboard.writeText(url)
+                    .then(() => {
+                        Swal.fire("Copied!", "URL copied to clipboard.", "success");
+                    })
+                    .catch(err => {
+                        console.error('Unable to copy URL to clipboard: ', err);
+                        Swal.fire("Error", "Failed to copy URL to clipboard.", "error");
+                    });
+            }
+        });
     }
-  };
+};
+
 
   
 
@@ -125,23 +164,58 @@ function CreateTableForm() {
               <div key={index} className="card border-success row col-2" style={{ maxWidth: '18rem', margin: '20px' }}>
                 <div className="card-header bg-transparent border-success">
                   <div className='row justify-content-center'>
-                    <div className='col-4 text-center'>
+
+                    
+                  <OverlayTrigger
+      placement="top"
+      overlay={<Tooltip id="disabled-tooltip">Edit</Tooltip>}
+    >
+                     <div className='col-4 text-center'>
                       <a href={`/createtableform/${matchedTableName}`}>
                         <img src={edit} alt="Edit" className="img-fluid" style={{ width: '40px', height: '40px' }} />
                       </a>
                     </div>
-                    <div className='col-4 text-center'>
+    </OverlayTrigger>
+
+
+
+
+  
+
+
+
+
+                    <OverlayTrigger
+      placement="top"
+      overlay={<Tooltip id="disabled-tooltip">Share</Tooltip>}
+    >
+      <div className='col-4 text-center'>
                       <button type="button" onClick={() => handleShare(matchedTableName)}>
                         <img src={share} alt="Share" className="img-fluid" style={{ width: '40px', height: '40px' }} />
                       </button>
                     </div>
-                    <div className='col-4 text-center'>
+    </OverlayTrigger>
+
+
+
+
+                    <OverlayTrigger
+      placement="top"
+      overlay={<Tooltip id="disabled-tooltip">Bulk Upload</Tooltip>}
+    >
+       <div className='col-4 text-center'>
                       <a href={`/BulkUploadComponent/${matchedTableName}`}>
                         <img src={bulk} alt="Bulk" className="img-fluid" style={{ width: '40px', height: '40px' }} />
                       </a>
                     </div>
+    </OverlayTrigger>
+
+
+               
                   </div>
                 </div>
+
+
                 <div className="card-body text-success">
                   <div style={{ textAlign: 'center' }}>
                   <h5 className="card-title" style={{fontWeight: 'bold'}}>{cleanedTableName.charAt(0).toUpperCase() + cleanedTableName.slice(1)}</h5>
@@ -152,20 +226,48 @@ function CreateTableForm() {
                     </a>
                   </div>
                 </div>
+
+
                 <div className="card-footer bg-transparent border-success">
+
+
                   <div className='row justify-content-center'>
-                    <div className='col-6 text-center'>
+            
+
+                    <OverlayTrigger
+      placement="top"
+      overlay={<Tooltip id="disabled-tooltip">{formatDateTimeString(time[index])}</Tooltip>}
+    >
+          <div className='col-6 text-center'>
                       <img src={date} alt="Date" style={{ width: '40px', height: '40px' }} />
                     </div>
-                    <div className='col-6 text-center'>
+
+    </OverlayTrigger>
+
+
+
+                 
+
+                    <OverlayTrigger
+      placement="top"
+      overlay={<Tooltip id="disabled-tooltip">Form Data Download</Tooltip>}
+    >
+        <div className='col-6 text-center'>
                       <button type="button" onClick={() => handledownload(matchedTableName)}>
                         <img src={down} alt="Download" style={{ width: '40px', height: '40px' }} />
                       </button>
                     </div>
+    </OverlayTrigger>
+
+
                   </div>
                 </div>
+
+
               </div>
             );
+
+            
           })}
         </div>
       </div>

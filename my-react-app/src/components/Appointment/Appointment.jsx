@@ -4,10 +4,14 @@ import "./AppointmentStyles.css";
 import useAppointments from "../../hooks/useAppointments";
 import { getUpcomingEvents } from "../utils";
 import { Link } from "react-router-dom";
-import AppointmentDetail from "./AppointmentDetail";
+import AppointmentDetail, {
+  AppointmentDetail_Modal,
+} from "./AppointmentDetail";
+import AddAppointment from "../calendar/addappointment";
 
-const AppointmentItem = ({ id, event }) => {
+const AppointmentItem = ({ id, event, fetchEvents }) => {
   const [showModal, setShowModal] = useState(false);
+  const [editEvent, setEditEvent] = useState(false);
 
   const toggleModal = () => {
     setShowModal(!showModal);
@@ -75,8 +79,21 @@ const AppointmentItem = ({ id, event }) => {
       </div>
 
       {showModal && (
-        <AppointmentDetail toggleModal={toggleModal} event={event} />
+        <AppointmentDetail_Modal
+          showPreview={showModal}
+          toggleModal={toggleModal}
+          event={event}
+          toggleEdit={() => setEditEvent(true)}
+        />
       )}
+      <AddAppointment
+        show={editEvent}
+        toggleModal={() => setEditEvent(false)}
+        setShowAlert={null}
+        fetchEvents={fetchEvents}
+        appointmentDetail={event}
+        isUpdate
+      />
     </>
   );
 };
@@ -108,7 +125,12 @@ function Appointment() {
       <hr id="appointment-HR" className="w-11/12 mx-auto my-2" />
       <div className="flex flex-col justify-between space-y-6 mx-3 my-8">
         {upcomingEvents.slice(0, 5).map((event, idx) => (
-          <AppointmentItem key={event.id} event={event} id={idx} />
+          <AppointmentItem
+            key={event.id}
+            event={event}
+            id={idx}
+            fetchEvents={fetchEvents}
+          />
         ))}
       </div>
     </div>

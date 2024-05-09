@@ -7,6 +7,11 @@ import SearchIcon from "../images/search.svg";
 import axios from "axios";
 import apiURL from "../../apiConfig";
 import { Link, useParams } from "react-router-dom";
+
+import ViewPNG from "../images/view.png";
+import EditPNG from "../images/edit.png";
+import DeletePNG from "../images/delete.png";
+import MUIDataGridWrapper from "../HOC/MUIDataGridWrapper";
 // function createData(
 //   Link,
 //   ProgramName,
@@ -231,83 +236,116 @@ export default function ProgramListTable() {
             searchText={searchText}
             handleSearchText={handleSearchText}
           />
-          <DataGrid
-            loading={loadingData}
-            rows={rows}
-            columns={[
-              {
-                field: "Link",
-                headerName: "Link",
-                flex: 1,
-                headerClassName: "bg-[#5BC4BF] text-white font-medium",
-                renderCell: (params) => {
-                  return (
-                    <>
-                      <Link
-                        to={`/program-directory/${params.row.id}`}
-                        className="text-[#5BC4BF]"
-                      >
-                        {params.row.Link}
-                      </Link>
-                    </>
-                  );
+          <MUIDataGridWrapper>
+            <DataGrid
+              loading={loadingData}
+              rows={rows}
+              columns={[
+                {
+                  field: "Link",
+                  headerName: "Link",
+                  flex: 1,
+                  headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                  minWidth: 50,
+                  renderCell: (params) => {
+                    return (
+                      <>
+                        <Link
+                          to={`/program-directory/${params.row.id}`}
+                          className="text-[#5BC4BF]"
+                        >
+                          {params.row.Link}
+                        </Link>
+                      </>
+                    );
+                  },
                 },
-              },
-              {
-                field: "ProgramName",
-                headerName: "Program Name",
-                flex: 1,
-                headerClassName: "bg-[#5BC4BF] text-white font-medium",
-              },
-              {
-                field: "Department",
-                headerName: "Department",
-                flex: 1,
-                headerClassName: "bg-[#5BC4BF] text-white font-medium",
-              },
-              {
-                field: "Description",
-                headerName: "Description",
-                flex: 1,
-                filterable: true,
-                headerClassName: "bg-[#5BC4BF] text-white font-medium",
-              },
-              {
-                field: "Eligibility",
-                headerName: "Eligibility",
-                flex: 1,
-                sortable: true,
-                headerClassName: "bg-[#5BC4BF] text-white font-medium",
-              },
-              {
-                field: "ManagementAdminContacts",
-                headerName: "Management Admin Contacts",
-                align: "center",
-                headerAlign: "center",
-                flex: 1,
-                headerClassName:
-                  "bg-[#5BC4BF] text-white font-medium text-center w-100",
-              },
-              {
-                field: "ClientMattersContacts",
-                headerName: "Client Matters Contacts",
-                align: "center",
-                headerAlign: "center",
-                flex: 1,
-                headerClassName:
-                  "bg-[#5BC4BF] text-white font-medium text-center w-100",
-              },
-            ]}
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: 10,
+                {
+                  field: "ProgramName",
+                  headerName: "Program Name",
+                  flex: 1,
+                  headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                  minWidth: 150,
                 },
-              },
-            }}
-            pageSizeOptions={[3, 5, 10, 25]}
-            disableRowSelectionOnClick
-          />
+                {
+                  field: "Department",
+                  headerName: "Department",
+                  flex: 1,
+                  headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                  minWidth: 150,
+                },
+                {
+                  field: "Description",
+                  headerName: "Description",
+                  flex: 1,
+                  filterable: true,
+                  headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                  minWidth: 200,
+                },
+                {
+                  field: "Eligibility",
+                  headerName: "Eligibility",
+                  flex: 1,
+                  sortable: true,
+                  headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                  minWidth: 200,
+                },
+                // {
+                //   field: "Action",
+                //   headerName: "Action",
+                //   align: "left",
+                //   headerAlign: "center",
+                //   flex: 1,
+                //   headerClassName:
+                //     "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                //   minWidth: 150,
+                //   renderCell: (params) => {
+                //     return (
+                //       <>
+                //         <div
+                //           className="text-[#5BC4BF] flex items-center justify-evenly"
+                //           style={{ height: "100%" }}
+                //         >
+                //           <img src={ViewPNG} className="w-5 h-5" />
+                //           <img src={EditPNG} className="w-5 h-5" />
+                //           <img src={DeletePNG} className="w-5 h-5" />
+                //         </div>
+                //       </>
+                //     );
+                //   },
+                // },
+                // {
+                //   field: "ManagementAdminContacts",
+                //   headerName: "Management Admin Contacts",
+                //   align: "center",
+                //   headerAlign: "center",
+                //   flex: 1,
+                //   headerClassName:
+                //     "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                //   minWidth: 150,
+                // },
+                // {
+                //   field: "ClientMattersContacts",
+                //   headerName: "Client Matters Contacts",
+                //   align: "center",
+                //   headerAlign: "center",
+                //   flex: 1,
+                //   headerClassName:
+                //     "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                //   minWidth: 150,
+                // },
+              ]}
+              initialState={{
+                pagination: {
+                  paginationModel: {
+                    pageSize: 10,
+                  },
+                },
+              }}
+              pageSizeOptions={[3, 5, 10, 25]}
+              disableRowSelectionOnClick
+            />
+          </MUIDataGridWrapper>
         </div>
       </Paper>
     </Box>
@@ -323,8 +361,8 @@ function TableActions({
 }) {
   return (
     <div className="grid grid-cols-4 justify-between gap-2 w-100 mt-1 mb-4">
-      <div className="col-start-1 col-span-1">
-        <Select
+      {/* <div className="col-start-1 col-span-1">
+      <Select
           name={"selector"}
           options={selectorList}
           placeholder="Program Name"
@@ -354,7 +392,7 @@ function TableActions({
           }}
           menuPortalTarget={document.body}
         />
-      </div>
+      </div> */}
       <div className="col-end-5 col-span-1 flex gap-1 items-center border-b-2 border-[#5BC4BF]">
         <img src={SearchIcon} className="w-[20px] h-100" />
         <input

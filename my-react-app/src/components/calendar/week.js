@@ -2,7 +2,7 @@ import React from "react";
 import Day from "./day";
 import { getWeek } from "../utils";
 
-export default function Week({ currentDate, savedEvents }) {
+export default function Week({ currentDate, savedEvents, fetchEvents }) {
   const week = getWeek(currentDate);
 
   return (
@@ -11,6 +11,7 @@ export default function Week({ currentDate, savedEvents }) {
         <React.Fragment key={i}>
           {row.map((day, idx) => (
             <Day
+              fetchEvents={fetchEvents}
               day={day}
               key={idx}
               rowIdx={i}
