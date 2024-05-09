@@ -9,6 +9,7 @@ export default function SelectElement({
   value,
   required,
   onChange,
+  placeholder = "Select",
   ...rest
 }) {
   return (
@@ -21,8 +22,15 @@ export default function SelectElement({
         onChange={onChange}
         {...rest}
       >
+        <option disabled value="" defaultChecked>
+          {placeholder}
+        </option>
         {options.map((option, index) => (
-          <option key={index} value={option.label || option}>
+          <option
+            disabled={option?.disabled === true ? true : false}
+            key={index}
+            value={option.value || option}
+          >
             {option.label || option}
           </option>
         ))}

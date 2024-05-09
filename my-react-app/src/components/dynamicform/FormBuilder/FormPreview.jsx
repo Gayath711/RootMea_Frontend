@@ -15,11 +15,18 @@ export default function FormPreview() {
 
   return (
     <div className="flex flex-column gap-2 p-4 bg-white border shadow">
-      <div className="flex flex-column gap-2 mb-2">
+      {/* <div className="flex flex-column gap-2 mb-2">
         <p className="m-0 text-base font-bold">{formDetail.title}</p>
         <p className="m-0 text-base">{formDetail.description}</p>
+      </div> */}
+      <div className="p-4 bg-white rounded-lg shadow-md">
+        <h1 className="text-xl font-semibold mb-2">{formDetail.title}</h1>
+        <h3 className="text-base font-medium text-gray-700">
+          {formDetail.description}
+        </h3>
       </div>
-      <div className="m-0 p-2 w-100 text-white text-base bg-[#5BC4BF] font-medium">
+
+      <div className="hidden m-0 p-2 w-100 text-white text-base bg-[#5BC4BF] font-medium">
         <div className="flex items-center w-100">
           <span className="text-white text-base">
             Form: {formDetail.formName}
