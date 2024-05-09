@@ -7,13 +7,13 @@ import { faShare, faDownload, faUpload, faSearch } from '@fortawesome/free-solid
 
 import { Input, Ripple, initMDB } from "mdb-ui-kit";
 import deleteImage from '../../image/delete.jpg';
-import edit from '../../image/edit.jpg';
-import bulk from '../../image/bulk.jpg';
+import edit from '../../image/dataview.png';
+import bulk from '../../image/blk.png';
 import share from '../../image/share.jpg';
-import down from '../../image/down.png';
+import down from '../../image/Download.png';
 import file from '../../image/file.jpg';
 import file1 from '../../image/file1.png';
-import date from '../../image/date.png';
+import date from '../../image/clock.png';
 import apiURL from '../../apiConfig';
 
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
@@ -28,22 +28,12 @@ function CreateTableForm() {
   const [formData, setFormData] = useState({});
   const [matchingTables, setMatchingTables] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [time, setTime] = useState([]);
-
-
-  const formatDateTimeString = (dateTimeString) => {
-    const dateTimeObject = new Date(dateTimeString);
-    return dateTimeObject.toLocaleString('en-US'); // Format as mm/dd/yyyy, hh:mm:ss AM/PM
-  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${apiURL}/get_matching_tables/`);
         setMatchingTables(response.data.matching_tables);
-        setTime(response.data.time);
-        console.log(time,"time",response.data)
-       
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -168,7 +158,7 @@ function CreateTableForm() {
                     
                   <OverlayTrigger
       placement="top"
-      overlay={<Tooltip id="disabled-tooltip">Edit</Tooltip>}
+      overlay={<Tooltip id="disabled-tooltip">view</Tooltip>}
     >
                      <div className='col-4 text-center'>
                       <a href={`/createtableform/${matchedTableName}`}>
@@ -236,7 +226,7 @@ function CreateTableForm() {
 
                     <OverlayTrigger
       placement="top"
-      overlay={<Tooltip id="disabled-tooltip">{formatDateTimeString(time[index])}</Tooltip>}
+      overlay={<Tooltip id="disabled-tooltip">Form created date 25-04-2024</Tooltip>}
     >
           <div className='col-6 text-center'>
                       <img src={date} alt="Date" style={{ width: '40px', height: '40px' }} />
