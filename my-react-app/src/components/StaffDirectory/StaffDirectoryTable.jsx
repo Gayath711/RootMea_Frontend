@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Select from "react-select";
 import SearchIcon from "../images/search.svg";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import apiURL from "../../apiConfig";
 import { styled } from "@mui/material/styles";
@@ -464,6 +464,8 @@ function TableActions({
   searchText,
   handleSearchText,
 }) {
+  const navigate = useNavigate();
+
   return (
     <div className="grid grid-cols-4 justify-between gap-2 w-100 mt-1 mb-4">
       {/* <div className="col-start-1 col-span-1">
@@ -498,15 +500,27 @@ function TableActions({
           menuPortalTarget={document.body}
         />
       </div> */}
-      <div className="col-end-5 col-span-1 flex gap-1 items-center border-b-2 border-[#5BC4BF]">
-        <img src={SearchIcon} className="w-[20px] h-100" />
-        <input
-          type={"text"}
-          value={searchText}
-          onChange={handleSearchText}
-          placeholder="Search here"
-          className={`appearance-none w-full p-2.5 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
-        />
+      <div className="col-end-5 col-span-2 flex gap-2 items-center justify-end">
+        <div className="flex gap-1 items-center border-b-2 border-[#5BC4BF]">
+          <img src={SearchIcon} className="w-[20px] h-100" />
+          <input
+            type={"text"}
+            value={searchText}
+            onChange={handleSearchText}
+            placeholder="Search here"
+            className={`appearance-none w-full p-2.5 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+          />
+        </div>
+        <div className="ms-3">
+          <button
+            className="px-3 py-2 text-[13px] font-medium leading-5 bg-[#5BC4BF] border-1 border-[#5BC4BF] text-white rounded-sm font-medium hover:bg-[#429e97] focus:outline-none focus:ring-2 focus:ring-[#429e97] focus:ring-opacity-50 transition-colors duration-300"
+            onClick={() => {
+              navigate("/add-new-staff-directory/");
+            }}
+          >
+            Add New
+          </button>
+        </div>
       </div>
     </div>
   );
