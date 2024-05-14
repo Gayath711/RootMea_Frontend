@@ -25,82 +25,6 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
   },
 }));
 
-// function createData(
-//   Link,
-//   LastName,
-//   FirstName,
-//   PhoneNumber,
-//   RootsEmailAddress,
-//   LastActivityDate,
-//   SystemStatus,
-//   PositionTitle
-// ) {
-//   return {
-//     id: Link,
-//     Link,
-//     LastName,
-//     FirstName,
-//     PhoneNumber,
-//     RootsEmailAddress,
-//     LastActivityDate,
-//     SystemStatus,
-//     PositionTitle,
-//   };
-// }
-
-// const rows = [
-//   createData(
-//     "Record 1",
-//     "William 1",
-//     "Richard",
-//     "123-4650-78",
-//     "root@gmail.com",
-//     "08/22/2024 8:00pm",
-//     "Active",
-//     "Doctor"
-//   ),
-//   createData(
-//     "Record 2",
-//     "William 2",
-//     "Richard",
-//     "123-4150-78",
-//     "root@gmail.com",
-//     "08/22/2024 8:00pm",
-//     "Deactivated",
-//     "Doctor"
-//   ),
-//   createData(
-//     "Record 3",
-//     "William 3",
-//     "Richard",
-//     "123-4150-78",
-//     "root@gmail.com",
-//     "08/22/2024 8:00pm",
-//     "Deactivated",
-//     "Doctor"
-//   ),
-//   createData(
-//     "Record 4",
-//     "William 4",
-//     "Richard",
-//     "123-4150-78",
-//     "root@gmail.com",
-//     "08/22/2024 8:00pm",
-//     "Active",
-//     "Doctor"
-//   ),
-//   createData(
-//     "Record 5",
-//     "William 5",
-//     "Richard",
-//     "123-4150-78",
-//     "root@gmail.com",
-//     "08/22/2024 8:00pm",
-//     "Active",
-//     "Doctor"
-//   ),
-// ];
-
 export default function StaffDirectoryTable() {
   const token = localStorage.getItem("access_token");
   const [loadingData, setLoadingData] = useState(true);
@@ -494,7 +418,7 @@ function TableActions({
             IndicatorSeparator: () => null,
           }}
           isClearable
-          onChange={(item) => {
+          onChange={(item) => { 
             handleSelectorValue(item);
           }}
           menuPortalTarget={document.body}
