@@ -271,6 +271,12 @@ function App() {
                     path="/add-new-program-directory/"
                     element={<AddNewProgram />}
                   />
+
+                  <Route
+                    path="/update-program-directory/:paramid"
+                    element={<AddNewProgram />}
+                  />
+
                   <Route path="/staff-directory" element={<StaffDirectory />} />
                   <Route
                     path="/staff-directory/:recordid"
@@ -278,6 +284,10 @@ function App() {
                   />
                   <Route
                     path="/add-new-staff-directory/"
+                    element={<AddNewStaff />}
+                  />
+                  <Route
+                    path="/update-staff-directory/:paramid"
                     element={<AddNewStaff />}
                   />
                 </Routes>
