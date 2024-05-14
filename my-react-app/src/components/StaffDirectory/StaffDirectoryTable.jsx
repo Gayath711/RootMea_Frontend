@@ -5,14 +5,15 @@ import Paper from "@mui/material/Paper";
 import Select from "react-select";
 import SearchIcon from "../images/search.svg";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
-import apiURL from "../../apiConfig";
+import axios from "../../helper/axiosInstance";
 import { styled } from "@mui/material/styles";
 
 import MUIDataGridWrapper from "../HOC/MUIDataGridWrapper";
 
 import EditPNG from "../images/edit.png";
 import DeletePNG from "../images/delete.png";
+
+import { notifySuccess, notifyError } from "../../helper/toastNotication";
 
 const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
   "& .MuiDataGrid-sortIcon": {
@@ -26,7 +27,7 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
 }));
 
 export default function StaffDirectoryTable() {
-  const token = localStorage.getItem("access_token");
+  const navigate = useNavigate();
   const [loadingData, setLoadingData] = useState(true);
   const [recordData, setRecordData] = useState([]);
   const [searchText, setSearchText] = useState("");
@@ -38,11 +39,7 @@ export default function StaffDirectoryTable() {
 
   const fetchData = () => {
     axios
-      .get(`${apiURL}/api/users`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      .get(`/api/users`)
       .then((response) => {
         setLoadingData(true);
         setRecordData(response.data);
@@ -53,6 +50,20 @@ export default function StaffDirectoryTable() {
       .finally(() => {
         setLoadingData(false);
       });
+  };
+
+  const deleteRecord = (id) => {
+    axios
+      .delete(`/api/users/${id}`)
+      .then((response) => {
+        fetchData();
+        notifySuccess("Deleted Successfully");
+      })
+      .catch((error) => {
+        notifyError("Could not delete, please try again later");
+        console.error("Error deleting:", error);
+      })
+      .finally(() => {});
   };
 
   const handleSearchText = (e) => {
@@ -316,53 +327,50 @@ export default function StaffDirectoryTable() {
                   minWidth: 250,
                 },
 
-                // {
-                //   field: "Action",
-                //   headerName: "Action",
-                //   align: "left",
-                //   headerAlign: "center",
-                //   flex: 1,
-                //   headerClassName:
-                //     "bg-[#5BC4BF] text-white font-medium text-center w-100",
-                //   minWidth: 150,
-                //   renderCell: (params) => {
-                //     return (
-                //       <>
-                //         <div
-                //           className="text-[#5BC4BF] flex items-center justify-evenly"
-                //           style={{ height: "100%" }}
-                //         >
-                //           <img src={EditPNG} className="w-5 h-5" />
-                //           <img src={DeletePNG} className="w-5 h-5" />
-                //         </div>
-                //       </>
-                //     );
-                //   },
-                // renderCell: (params) => {
-                //   return (
-                //     <>
-                //       <Link
-                //         to={`/staff-directory/${params.row.id}`}
-                //         className="text-[#2F9384]"
-                //       >
-                //         {/* {params.row.linkToProgram} */}
-                //         <div className="flex flex-row items-center">
-                //           <img
-                //             src={EditPNG}
-                //             className="w-5 h-5"
-                //             style={{ display: "block", margin: "0 auto" }}
-                //           />
-                //           <img
-                //             src={DeletePNG}
-                //             className="w-5 h-5"
-                //             style={{ display: "block", margin: "0 auto" }}
-                //           />
-                //         </div>
-                //       </Link>
-                //     </>
-                //   );
-                // },
-                // },
+                {
+                  field: "Action",
+                  headerName: "Action",
+                  align: "left",
+                  headerAlign: "center",
+                  flex: 1,
+                  headerClassName:
+                    "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                  minWidth: 150,
+                  renderCell: (params) => {
+                    return (
+                      <>
+                        <div className="h-100 w-100 flex flex-row gap-2 justify-center items-center">
+                          <button
+                            className="p-1 hover:bg-teal-400 bg-opacity-50 hover:rounded"
+                            onClick={() => {
+                              navigate(
+                                `/update-staff-directory/${params.row.id}`
+                              );
+                            }}
+                          >
+                            <img
+                              src={EditPNG}
+                              className="w-4 h-4"
+                              style={{ display: "block", margin: "0 auto" }}
+                            />
+                          </button>
+                          <button
+                            className="p-1 hover:bg-red-400 bg-opacity-50 hover:rounded"
+                            onClick={() => {
+                              deleteRecord(params.row.id);
+                            }}
+                          >
+                            <img
+                              src={DeletePNG}
+                              className="w-4 h-4"
+                              style={{ display: "block", margin: "0 auto" }}
+                            />
+                          </button>
+                        </div>
+                      </>
+                    );
+                  },
+                },
               ]}
               initialState={{
                 pagination: {
