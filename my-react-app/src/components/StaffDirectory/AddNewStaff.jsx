@@ -260,7 +260,15 @@ export default function AddNewStaff() {
           },
         };
 
-        const response = await axios.post("/api/users", data);
+        let apiCall = axios.post;
+        let endpoint = "/api/users";
+
+        if (isEdit) {
+          apiCall = axios.put;
+          endpoint = `${endpoint}/${paramid}`;
+        }
+
+        const response = await apiCall(endpoint, data);
         notifySuccess(`Staff ${isEdit ? "Updated" : "Added"} successfully`);
         navigate(`/staff-directory/${response.data.id}`, { replace: true });
       } catch (error) {
