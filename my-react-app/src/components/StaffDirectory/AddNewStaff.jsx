@@ -298,8 +298,6 @@ export default function AddNewStaff() {
     }));
   };
 
-  console.log({ formDetail });
-
   return (
     <>
       <div className="flex flex-column gap-2 items-center">

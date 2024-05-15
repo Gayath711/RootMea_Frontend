@@ -132,21 +132,21 @@ export default function AddNewProgram() {
   };
 
   const fetchDepartment = async () => {
-    // try {
-    //   const response = await axios.get("/api/users");
-    //   setDepartmentNameOptions(
-    //     response.data.map((itm) => {
-    //       return {
-    //         ...itm,
-    //         label: itm.name,
-    //         value: itm.name,
-    //       };
-    //     })
-    //   );
-    // } catch (error) {
-    //   // Handle errors here
-    //   console.error("Error fetching department:", error);
-    // }
+    try {
+      const response = await axios.get("/api/resources/department");
+      setDepartmentNameOptions(
+        response.data.map((itm) => {
+          return {
+            ...itm,
+            label: itm.name,
+            value: itm.name,
+          };
+        })
+      );
+    } catch (error) {
+      // Handle errors here
+      console.error("Error fetching department:", error);
+    }
   };
 
   const fieldValidation = () => {
@@ -209,12 +209,14 @@ export default function AddNewProgram() {
         };
 
         let apiCall = axios.post;
+        let endpoint = "/api/resources/program";
 
         if (isEdit) {
           apiCall = axios.put;
+          endpoint = `${endpoint}/${paramid}`;
         }
 
-        const response = await apiCall("/api/resources/program", data);
+        const response = await apiCall(endpoint, data);
         notifySuccess(`Program ${isEdit ? "updated" : "added"} successfully`);
         navigate(`/program-directory/${response.data.id}`, { replace: true });
       } catch (error) {
