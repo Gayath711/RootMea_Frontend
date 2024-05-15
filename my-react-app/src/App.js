@@ -55,6 +55,7 @@ import ProgramRecord from "./components/ProgramDirectory/ProgramRecord";
 import { selectIsSidebarExpanded } from "./store/slices/utilsSlice";
 import AddNewProgram from "./components/ProgramDirectory/AddNewProgram";
 import AddNewStaff from "./components/StaffDirectory/AddNewStaff";
+import NewEncounterNote from "./pages/NewEncounterNote/NewEncounterNote";
 
 function App() {
   // Retrieve isLoggedIn state from localStorage on initial render
@@ -290,6 +291,11 @@ function App() {
                     path="/update-staff-directory/:paramid"
                     element={<AddNewStaff />}
                   />
+
+
+                  {/* Encounter notes */}
+                  <Route path="/encounter-note/add/:clientId" element={<NewEncounterNote />} />
+
                 </Routes>
               </div>
             </div>
