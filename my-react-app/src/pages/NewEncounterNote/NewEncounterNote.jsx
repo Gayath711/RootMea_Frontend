@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PageTitle from "../../components/PageTitle/PageTitle";
 import { useParams } from "react-router-dom";
 import InputElement from "../../components/dynamicform/FormElements/InputElement";
@@ -26,6 +26,11 @@ function FormWrapper({ children, label }) {
 
 function NewEncounterNote() {
   const { clientId } = useParams();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [])
+
   return (
     <div className="mx-1" style={{ fontFamily: "poppins" }}>
       <PageTitle clientId={clientId} title="Encounter" />
