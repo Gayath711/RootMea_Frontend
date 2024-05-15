@@ -6,10 +6,11 @@ const TimeInput = ({
   name,
   id,
   placeholder,
-  width = 340,
+  width = "340px",
   height = "7vh",
   isEdittable,
   value,
+  className,
   handleChange,
   timeIntervals,
   selectedDate,
@@ -84,7 +85,7 @@ const TimeInput = ({
   }, [selectedDate, value]);
 
   return (
-    <div className="relative flex-grow">
+    <div className="relative flex-grow w-full">
       <DatePicker
         name={name}
         id={id || name}
@@ -111,8 +112,9 @@ const TimeInput = ({
                 rounded-md
                 text-md
                 z-50
-                h-[7vh]
-                w-[${width}px]`}
+                h-[${height}]
+                w-[${width}]
+                ${className}`}
         placeholderText=" "
         selected={value}
         // onChange={date => setSelectedTime(date)}
