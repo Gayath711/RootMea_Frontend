@@ -32,7 +32,7 @@ export default function AddNewProgram() {
 
   useEffect(() => {
     fetchUsers();
-
+    fetchDepartment();
     // Clean up effect
     return () => {
       // Optionally do any cleanup here
@@ -131,6 +131,24 @@ export default function AddNewProgram() {
     }
   };
 
+  const fetchDepartment = async () => {
+    // try {
+    //   const response = await axios.get("/api/users");
+    //   setDepartmentNameOptions(
+    //     response.data.map((itm) => {
+    //       return {
+    //         ...itm,
+    //         label: itm.name,
+    //         value: itm.name,
+    //       };
+    //     })
+    //   );
+    // } catch (error) {
+    //   // Handle errors here
+    //   console.error("Error fetching department:", error);
+    // }
+  };
+
   const fieldValidation = () => {
     let errorFields = {};
 
@@ -176,7 +194,6 @@ export default function AddNewProgram() {
   const handleSubmit = async () => {
     if (fieldValidation()) {
       try {
-        console.log({ formDetail });
         let data = {
           name: formDetail.ProgramName,
           department_name: formDetail.DepartmentName.value,
