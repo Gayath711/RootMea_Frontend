@@ -7,11 +7,13 @@ const DropDown = ({
   placeholder,
   height = "7vh",
   borderColor = "#E5E7EA",
+  fontSize = "1.125rem",
   isEdittable,
   value,
   handleChange,
   options,
   selectedOption,
+  className
 }) => {
   const bgDisabled = isEdittable ? "#F6F7F7" : "white";
   const bgLabelDisabled = isEdittable ? "#F6F7F7" : "white";
@@ -37,6 +39,7 @@ const DropDown = ({
         // selectedOption={selectedOption}
         onFocus={handleFocus}
         onBlur={handleBlur}
+        className={className}
         onChange={handleChange}
         isDisabled={isEdittable}
         styles={{
@@ -45,7 +48,7 @@ const DropDown = ({
             height: `${height}`,
             border: `1px solid ${borderColor}`,
             background: `${bgDisabled}`,
-            fontSize: "1.125rem",
+            fontSize: fontSize,
             borderRadius: "0.375rem",
           }),
           menu: (styles) => ({
