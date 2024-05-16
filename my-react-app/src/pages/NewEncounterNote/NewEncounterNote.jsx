@@ -61,7 +61,10 @@ function NewEncounterNote() {
   const [endTime, setEndTime] = useState(null);
   const [forms, setForms] = useState([]);
   const [carePlans, setCarePlans] = useState([]);
-  const [formData, setFormData] = useState({ client_id: clientId, staff_name: "Temporary User" });
+  const [formData, setFormData] = useState({
+    client_id: clientId,
+    staff_name: "Temporary User",
+  });
 
   const handleFormDataChange = useCallback(
     (fieldName, value) => {
@@ -105,8 +108,8 @@ function NewEncounterNote() {
       !formData?.end_time ||
       !formData?.program ||
       !formData?.note_template
-    )
-  }, [formData])
+    );
+  }, [formData]);
 
   const handleCreate = useCallback(async () => {
     const {
@@ -141,13 +144,18 @@ function NewEncounterNote() {
     formDataPayload.append("forms", JSON.stringify(forms));
     formDataPayload.append("care_plans", JSON.stringify(care_plans));
     formDataPayload.append("signed_by", JSON.stringify(signed_by));
-    for(let i=0; i<uploaded_documents.length; i++){
+    for (let i = 0; i < uploaded_documents.length; i++) {
       formDataPayload.append("uploaded_documents", uploaded_documents[i]);
     }
 
     try {
-      const response = await protectedApi.post("/encounter-notes/", formDataPayload);
-      console.log(response.status, response.data);
+      const response = await protectedApi.post(
+        "/encounter-notes/",
+        formDataPayload
+      );
+      if (response.status === 201) {
+        setFormData({ client_id: clientId, staff_name: "Temporary User" });
+      }
     } catch (error) {
       console.error(error);
     }
@@ -477,7 +485,11 @@ function NewEncounterNote() {
           <button className="border border-keppel rounded-[3px] text-[#5BC4BF] w-32 py-2">
             Cancel
           </button>
-          <button disabled={disableSubmit} onClick={handleCreate} className="border border-keppel rounded-[3px] disabled:cursor-not-allowed disabled:bg-[#6cd8d3] bg-[#5BC4BF] text-white w-32 py-2">
+          <button
+            disabled={disableSubmit}
+            onClick={handleCreate}
+            className="border border-keppel rounded-[3px] disabled:cursor-not-allowed disabled:bg-[#6cd8d3] bg-[#5BC4BF] text-white w-32 py-2"
+          >
             Save
           </button>
         </div>
