@@ -13,6 +13,7 @@ import SignInput from "../../components/dynamicform/FormElements/SignInput";
 import { protectedApi } from "../../services/api";
 import { notifyError, notifySuccess } from "../../helper/toastNotication";
 import DropDown from "../../components/common/Dropdown";
+import { format } from "date-fns";
 
 function FormWrapper({ children, label }) {
   return (
@@ -209,7 +210,7 @@ function NewEncounterNote() {
             </div>
             <div className="col-span-6">
               <DateInput
-                value={clientDetails?.date_of_birth | ""}
+                value={clientDetails?.date_of_birth ? format(clientDetails?.date_of_birth, "MM/dd/yyyy") : ""}
                 placeholder="DOB"
                 isEdittable
                 className="m-1 border-keppel h-[37.6px]"
