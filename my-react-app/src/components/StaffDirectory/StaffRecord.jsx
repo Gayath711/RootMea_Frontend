@@ -101,29 +101,34 @@ const StaffDetail = ({
         </p>
       </div>
       <div className="col-span-1">
-        <input
-          type="text"
-          value={phoneNumber}
-          placeholder="Phone Number"
-          className={`placeholder:text-sm appearance-none border-1 border-[#5BC4BF] rounded w-full p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
-        />
+        <FormField label="Phone Number">
+          <input
+            type="text"
+            value={phoneNumber}
+            placeholder="Phone Number"
+            className={`placeholder:text-sm appearance-none border-1 border-[#5BC4BF] rounded w-full p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+          />
+        </FormField>
       </div>
       <div className="col-span-1">
-        <input
-          type="text"
-          value={email}
-          placeholder="Email"
-          className={`placeholder:text-sm appearance-none border-1 border-[#5BC4BF] rounded w-full p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
-        />
+        <FormField label="Email">
+          <input
+            type="text"
+            value={email}
+            placeholder="Email"
+            className={`placeholder:text-sm appearance-none border-1 border-[#5BC4BF] rounded w-full p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+          />
+        </FormField>
       </div>
       <div className="col-span-1">
-        {" "}
-        <input
-          type="text"
-          value={supervisorName}
-          placeholder="Supervisor"
-          className={`placeholder:text-sm appearance-none border-1 border-[#5BC4BF] rounded w-full p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
-        />
+        <FormField label="Supervisor">
+          <input
+            type="text"
+            value={supervisorName}
+            placeholder="Supervisor"
+            className={`placeholder:text-sm appearance-none border-1 border-[#5BC4BF] rounded w-full p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+          />
+        </FormField>
       </div>
     </div>
   );
@@ -315,3 +320,20 @@ const AssignedPriorityListsTable = () => {
     </Box>
   );
 };
+
+function FormField({ required = false, label = "", error, children }) {
+  return (
+    <>
+      <div className="flex flex-column gap-1 w-100">
+        {label && (
+          <p className="mb-1 ms-1 text-base flex gap-2 items-center font-medium">
+            <span>{label}</span>
+            {required && <span className="text-red-400">*</span>}
+          </p>
+        )}
+        {children}
+        {error && <p className="mt-1 ms-1 text-xs text-red-400">{error}</p>}
+      </div>
+    </>
+  );
+}

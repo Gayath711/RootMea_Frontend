@@ -96,7 +96,7 @@ export default function ProgramRecord() {
           dptName={recordData.department_name}
           progName={recordData.name}
           description={recordData?.description}
-          eligibility={recordData?.description}
+          eligibility={recordData?.eligibility}
           loadingData={loadingData}
         />
         <PrimaryContactManagementTable
@@ -132,22 +132,26 @@ const ProgramDetail = ({
         </p>
       </div>
       <div className="col-start-1 col-span-1">
-        <textarea
-          rows={4}
-          style={{ resize: "none" }}
-          value={description}
-          // placeholder="Description.."
-          className={`placeholder:text-sm appearance-none border-1 border-[#5BC4BF] rounded w-full p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
-        />
+        <FormField label="Description">
+          <textarea
+            rows={4}
+            style={{ resize: "none" }}
+            value={description}
+            // placeholder="Description.."
+            className={`placeholder:text-sm appearance-none border-1 border-[#5BC4BF] rounded w-full p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+          />
+        </FormField>
       </div>
       <div className="col-span-1">
-        <textarea
-          rows={4}
-          style={{ resize: "none" }}
-          value={eligibility}
-          // placeholder="Eligibility.."
-          className={`placeholder:text-sm appearance-none border-1 border-[#5BC4BF] rounded w-full p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
-        />
+        <FormField label="Eligibility">
+          <textarea
+            rows={4}
+            style={{ resize: "none" }}
+            value={eligibility}
+            // placeholder="Eligibility.."
+            className={`placeholder:text-sm appearance-none border-1 border-[#5BC4BF] rounded w-full p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+          />
+        </FormField>
       </div>
     </div>
   );
@@ -468,3 +472,20 @@ const PriorityListTable = ({ loadingData }) => {
     </Box>
   );
 };
+
+function FormField({ required = false, label = "", error, children }) {
+  return (
+    <>
+      <div className="flex flex-column gap-1 w-100">
+        {label && (
+          <p className="mb-1 ms-1 text-base flex gap-2 items-center font-medium">
+            <span>{label}</span>
+            {required && <span className="text-red-400">*</span>}
+          </p>
+        )}
+        {children}
+        {error && <p className="mt-1 ms-1 text-xs text-red-400">{error}</p>}
+      </div>
+    </>
+  );
+}
