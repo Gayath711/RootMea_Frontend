@@ -341,7 +341,7 @@ export default function AddNewProgram() {
                 <FormField
                   label="Eligibility"
                   error={errFields.Eligibility}
-                  required
+                  // required
                 >
                   <input
                     className="w-100 p-[0.725rem] rounded-[2px]"
@@ -365,7 +365,7 @@ export default function AddNewProgram() {
               <FormField
                 label="Program Description"
                 error={errFields.ProgramDescription}
-                required
+                // required
               >
                 <textarea
                   rows={5}
@@ -392,7 +392,7 @@ export default function AddNewProgram() {
                 <FormField
                   label="Team Members"
                   error={errFields.teamMembers}
-                  required
+                  // required
                 >
                   <Select
                     isClearable={false}
@@ -432,7 +432,7 @@ export default function AddNewProgram() {
                 <FormField
                   label="Management / Admin Contacts"
                   error={errFields.ManagementAdminContacts}
-                  required
+                  // required
                 >
                   <Select
                     isClearable={false}
@@ -472,7 +472,7 @@ export default function AddNewProgram() {
                 <FormField
                   label="Client Matters Contacts"
                   error={errFields.ClientMattersContacts}
-                  required
+                  // required
                 >
                   {" "}
                   <Select
