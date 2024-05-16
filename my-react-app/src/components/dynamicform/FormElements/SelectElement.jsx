@@ -10,15 +10,17 @@ export default function SelectElement({
   required,
   onChange,
   placeholder = "Select",
+  disabled=false,
   ...rest
 }) {
   return (
     <div className="m-1">
       {label && <FormLabel required={required}>{label}</FormLabel>}
       <select
-        className={`form-select ${className}`}
+        className={`form-select disabled:bg-[#F2F2F2] ${className}`}
         name={name}
         value={value}
+        disabled={disabled}
         onChange={onChange}
         {...rest}
       >

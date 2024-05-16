@@ -16,6 +16,7 @@ const DateInput = ({
   value,
   handleChange,
   register,
+  disabled = false,
 }) => {
   const [startDate, setStartDate] = useState(value || null);
   const bgDisabled = isEdittable ? "#F6F7F7" : "";
