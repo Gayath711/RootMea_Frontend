@@ -136,12 +136,14 @@ function NewEncounterNote() {
     formDataPayload.append("encounter_type", encounter_type);
     formDataPayload.append("program", program);
     formDataPayload.append("note_template", note_template);
-    formDataPayload.append("custom_fields", custom_fields);
+    formDataPayload.append("custom_fields", JSON.stringify(custom_fields));
     formDataPayload.append("encounter_summary", encounter_summary);
-    formDataPayload.append("forms", forms);
-    formDataPayload.append("care_plans", care_plans);
-    formDataPayload.append("signed_by", signed_by);
-    formDataPayload.append("uploaded_documents", uploaded_documents);
+    formDataPayload.append("forms", JSON.stringify(forms));
+    formDataPayload.append("care_plans", JSON.stringify(care_plans));
+    formDataPayload.append("signed_by", JSON.stringify(signed_by));
+    for(let i=0; i<uploaded_documents.length; i++){
+      formDataPayload.append("uploaded_documents", uploaded_documents[i]);
+    }
 
     try {
       const response = await protectedApi.post("/encounter-notes/", formDataPayload);
