@@ -210,8 +210,9 @@ function NewEncounterNote() {
             </div>
             <div className="col-span-6">
               <DateInput
-                value={clientDetails?.date_of_birth ? format(clientDetails?.date_of_birth, "MM/dd/yyyy") : ""}
+                value={clientDetails?.date_of_birth ? format(clientDetails?.date_of_birth, "MM-dd-yyyy") : ""}
                 placeholder="DOB"
+                dateFormat="MM-dd-yyyy"
                 isEdittable
                 className="m-1 border-keppel h-[37.6px]"
                 height="37.6px"

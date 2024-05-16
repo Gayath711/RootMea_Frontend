@@ -13,6 +13,7 @@ const DateInput = ({
   height = "7vh",
   className,
   isEdittable,
+  dateFormat="MM/dd/yyyy",
   value,
   handleChange,
   register,
@@ -57,7 +58,7 @@ const DateInput = ({
         onChange={handleDateChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        dateFormat="MM/dd/yyyy"
+        dateFormat={dateFormat}
         minDate={new Date()} // Disable past dates
         // dateFormatCalendar=""
         className={`
