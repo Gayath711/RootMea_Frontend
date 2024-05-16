@@ -261,7 +261,8 @@ function NewEncounterNote() {
               <DateInput
                 placeholder="Encounter Date *"
                 className="m-1 border-keppel"
-                value={formData?.encounter_date || ""}
+                dateFormat="MM-dd-yyyy"
+                value={formData?.encounter_date ? format(formData?.encounter_date, "MM-dd-yyyy") : ""}
                 handleChange={(date) =>
                   handleFormDataChange("encounter_date", date)
                 }
