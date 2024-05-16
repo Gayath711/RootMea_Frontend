@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import PageTitle from "../../components/PageTitle/PageTitle";
 import { useParams } from "react-router-dom";
 import InputElement from "../../components/dynamicform/FormElements/InputElement";
@@ -61,7 +61,7 @@ function NewEncounterNote() {
   const [endTime, setEndTime] = useState(null);
   const [forms, setForms] = useState([]);
   const [carePlans, setCarePlans] = useState([]);
-  const [formData, setFormData] = useState({ client_id: clientId });
+  const [formData, setFormData] = useState({ client_id: clientId, staff_name: "Temporary User" });
 
   const handleFormDataChange = useCallback(
     (fieldName, value) => {
@@ -94,6 +94,19 @@ function NewEncounterNote() {
         console.error(error.message);
       });
   }, []);
+
+  const disableSubmit = useMemo(() => {
+    return (
+      !formData?.staff_name ||
+      !formData?.encounter_date ||
+      !formData?.facility ||
+      !formData?.start_time ||
+      !formData?.encounter_type ||
+      !formData?.end_time ||
+      !formData?.program ||
+      !formData?.note_template
+    )
+  }, [formData])
 
   const handleCreate = useCallback(async () => {
     const {
@@ -204,15 +217,15 @@ function NewEncounterNote() {
             <div className="col-span-6">
               <InputElement
                 type="text"
-                value={"Temporary User"}
+                value={formData?.staff_name || ""}
                 className="border-keppel"
-                placeholder="User Name"
+                placeholder="User Name *"
                 disabled
               />
             </div>
             <div className="col-span-6">
               <DateInput
-                placeholder="Encounter Date"
+                placeholder="Encounter Date *"
                 className="m-1 border-keppel"
                 value={formData?.encounter_date || ""}
                 handleChange={(date) =>
@@ -223,7 +236,7 @@ function NewEncounterNote() {
             </div>
             <div className="col-span-6">
               <SelectElement
-                placeholder="Facility"
+                placeholder="Facility *"
                 onChange={(e) =>
                   handleFormDataChange("facility", e.target.value)
                 }
@@ -236,7 +249,7 @@ function NewEncounterNote() {
               <TimeInput
                 width="100%"
                 height="37.6px"
-                placeholder="Start Time"
+                placeholder="Start Time *"
                 value={startTime}
                 selectedDate={formData?.encounter_date || null}
                 handleChange={(value) => {
@@ -251,7 +264,7 @@ function NewEncounterNote() {
             </div>
             <div className="col-span-6">
               <SelectElement
-                placeholder="Encounter Mode"
+                placeholder="Encounter Mode *"
                 className="border-keppel"
                 value={formData?.encounter_type || ""}
                 onChange={(e) =>
@@ -276,7 +289,7 @@ function NewEncounterNote() {
               <TimeInput
                 width="100%"
                 height="37.6px"
-                placeholder="End Time"
+                placeholder="End Time *"
                 value={endTime}
                 selectedDate={formData?.encounter_date || null}
                 handleChange={(value) => {
@@ -288,7 +301,7 @@ function NewEncounterNote() {
             </div>
             <div className="col-span-6">
               <SelectElement
-                placeholder="Program"
+                placeholder="Program *"
                 className="border-keppel"
                 value={formData?.program || ""}
                 onChange={(e) =>
@@ -299,7 +312,7 @@ function NewEncounterNote() {
             </div>
             <div className="col-span-6">
               <SelectElement
-                placeholder="Note Template"
+                placeholder="Note Template *"
                 className="border-keppel"
                 value={formData?.note_template || ""}
                 onChange={(e) =>
@@ -462,7 +475,7 @@ function NewEncounterNote() {
           <button className="border border-keppel rounded-[3px] text-[#5BC4BF] w-32 py-2">
             Cancel
           </button>
-          <button onClick={handleCreate} className="border border-keppel rounded-[3px] bg-[#5BC4BF] text-white w-32 py-2">
+          <button disabled={disableSubmit} onClick={handleCreate} className="border border-keppel rounded-[3px] disabled:cursor-not-allowed disabled:bg-[#6cd8d3] bg-[#5BC4BF] text-white w-32 py-2">
             Save
           </button>
         </div>
