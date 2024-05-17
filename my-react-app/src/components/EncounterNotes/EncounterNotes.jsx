@@ -20,7 +20,7 @@ const Tag = ({ text }) => {
     <div
       className={`${options[text]} text-center text-xs w-[70px] mx-auto py-1 rounded-[2px]`}
     >
-      {text?.charAt(0)?.toUpperCase() + text?.slice(1)}
+      {(text?.charAt(0)?.toUpperCase() + text?.slice(1)) || ""}
     </div>
   );
 };
@@ -89,7 +89,8 @@ function EncounterNotes({ clientId }) {
       },
       {
         Header: "Status",
-        Cell: ({ row }) => <Tag text={row.original.encounter_status} />,
+        accessor: "encounter_status",
+        // Cell: ({ row }) => <Tag text={row.original.encounter_status} />,
       },
       {
         Header: "Actions",
