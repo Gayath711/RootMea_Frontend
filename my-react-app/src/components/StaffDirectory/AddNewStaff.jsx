@@ -30,6 +30,7 @@ export default function AddNewStaff() {
 
   const [errFields, setErrFields] = useState({});
 
+  const [usersData, setUsersData] = useState({});
   const [positionTitleOptions, setPositionTitleOptions] = useState([]);
   const [primaryFaculityOptions, setPrimaryFaculityOptions] = useState([]);
   const [supervisorOptions, setSupervisorOptions] = useState([]);
@@ -43,6 +44,7 @@ export default function AddNewStaff() {
     fetchPrimaryFaculity();
     fetchSupervisor();
     fetchPrograms();
+
     // Clean up effect
     return () => {
       // Optionally do any cleanup here
@@ -58,33 +60,77 @@ export default function AddNewStaff() {
   useEffect(() => {
     if (paramid) {
       fetchData();
+      fetchUser();
     }
   }, [paramid]);
 
   useEffect(() => {
-    if (paramid) {
-      if (!formDetail.Supervisor) {
-        if (formDetail.SupervisorEmail) {
-          let supervisorData = supervisorOptions.find(
-            (item) => item.email === formDetail.SupervisorEmail
-          );
-          if (supervisorData) {
-            setFormDetail((prev) => {
-              return {
-                ...prev,
-                Supervisor: {
-                  ...supervisorData,
-                  label:
-                    supervisorData.first_name + " " + supervisorData.last_name,
-                  value: supervisorData.id,
-                },
-              };
-            });
+    if (paramid && JSON.stringify(usersData) !== "{}") {
+      let PositionTitleData = usersData?.profile?.position
+        ? {
+            ...formDetail.PositionTitle,
+            label: usersData.profile.position,
           }
-        }
-      }
+        : {};
+      let PrimaryFaculityData = usersData?.profile?.facility
+        ? {
+            ...formDetail.PrimaryFaculity,
+            label: usersData.profile.facility,
+          }
+        : {};
+      let SupervisorData = {
+        ...formDetail.Supervisor,
+        label:
+          usersData?.profile?.supervisor_first_name ||
+          "" + " " + usersData?.profile?.supervisor_last_name ||
+          "",
+      };
+
+      setFormDetail((prev) => {
+        return {
+          ...prev,
+          PositionTitle: {
+            ...formDetail.PositionTitle,
+            ...PositionTitleData,
+          },
+          PrimaryFaculity: {
+            ...formDetail.PrimaryFaculity,
+            ...PrimaryFaculityData,
+          },
+          Supervisor: {
+            ...formDetail.Supervisor,
+            ...SupervisorData,
+          },
+          SupervisorEmail: usersData?.profile?.supervisor_email || "",
+        };
+      });
     }
-  }, [supervisorOptions, formDetail, paramid]);
+  }, [usersData, paramid]);
+
+  // useEffect(() => {
+  //   if (paramid) {
+  //     if (!formDetail.Supervisor) {
+  //       if (formDetail.SupervisorEmail) {
+  //         let supervisorData = supervisorOptions.find(
+  //           (item) => item.email === formDetail.SupervisorEmail
+  //         );
+  //         if (supervisorData) {
+  //           setFormDetail((prev) => {
+  //             return {
+  //               ...prev,
+  //               Supervisor: {
+  //                 ...supervisorData,
+  //                 label:
+  //                   supervisorData.first_name + " " + supervisorData.last_name,
+  //                 value: supervisorData.id,
+  //               },
+  //             };
+  //           });
+  //         }
+  //       }
+  //     }
+  //   }
+  // }, [supervisorOptions, formDetail, paramid]);
 
   const isEdit = useMemo(() => {
     const { pathname } = location;
@@ -101,36 +147,43 @@ export default function AddNewStaff() {
       .then((response) => {
         setLoadingData(true);
         const { data } = response;
-        setFormDetail({
-          LastName: data.last_name || "",
-          FirstName: data.first_name || "",
-          PhoneNumber: data.profile.phone_no || "",
-          EmailId: data.email || "",
-          AdditionalContactInformation: "",
-          PositionTitle: data.profile.position
-            ? {
-                label: data.profile.position,
-                value: data.profile.position,
-              }
-            : null,
-          PrimaryFaculity: data.profile.facility
-            ? {
-                label: data.profile.facility,
-                value: data.profile.facility,
-              }
-            : null,
-          Supervisor: null,
-          SupervisorEmail: data.profile.supervisor_email || "",
-          Programs: data.profile.program
-            ? data.profile.program.map((item) => {
-                return {
-                  ...item,
-                  label: item.program,
-                  value: item.program,
-                };
-              })
-            : [],
-          NavigationClients: "",
+        setFormDetail((prev) => {
+          return {
+            LastName: data.last_name || "",
+            FirstName: data.first_name || "",
+            PhoneNumber: data.profile.phone_no || "",
+            EmailId: data.email || "",
+            AdditionalContactInformation: "",
+            PositionTitle: data?.profile?.position
+              ? {
+                  id: data.profile.position,
+                  value: data.profile.position,
+                }
+              : null,
+            PrimaryFaculity: data?.profile?.facility
+              ? {
+                  id: data.profile.facility,
+                  value: data.profile.facility,
+                }
+              : null,
+            Supervisor: data?.profile?.supervisor
+              ? {
+                  id: data.profile.supervisor,
+                  value: data.profile.supervisor,
+                }
+              : null,
+            SupervisorEmail: data?.profile?.supervisor_email || "",
+            Programs: data?.profile?.program
+              ? data.profile.program.map((item) => {
+                  return {
+                    ...item,
+                    label: item.program,
+                    value: item.program,
+                  };
+                })
+              : [],
+            NavigationClients: "",
+          };
         });
       })
       .catch((error) => {
@@ -141,12 +194,27 @@ export default function AddNewStaff() {
       });
   };
 
+  const fetchUser = async () => {
+    try {
+      const { data } = await axios.get("/api/users");
+      const foundUser = data.find((user) => +user.id === +paramid);
+      if (foundUser) {
+        setUsersData(foundUser);
+      } else {
+        throw new Error("User not found");
+      }
+    } catch (error) {
+      // Handle errors here
+      console.error("Error fetching users list:", error);
+    }
+  };
+
   const fetchPositionTitles = async () => {
     try {
       const response = await axios.get("/api/resources/position");
       setPositionTitleOptions(
         response.data.map((itm) => {
-          return { ...itm, label: itm.name, value: itm.name };
+          return { ...itm, label: itm.name, value: itm.id };
         })
       );
     } catch (error) {
@@ -159,7 +227,7 @@ export default function AddNewStaff() {
       const response = await axios.get("/api/resources/facilities");
       setPrimaryFaculityOptions(
         response.data.map((itm) => {
-          return { ...itm, label: itm.name, value: itm.name };
+          return { ...itm, label: itm.name, value: itm.id };
         })
       );
     } catch (error) {
@@ -189,7 +257,12 @@ export default function AddNewStaff() {
       const response = await axios.get("/api/resources/program");
       setProgramsOptions(
         response.data.map((itm) => {
-          return { ...itm, label: itm.name, value: itm.name };
+          return {
+            ...itm,
+            program: itm.name,
+            label: itm.name,
+            value: itm.name,
+          };
         })
       );
     } catch (error) {
@@ -259,7 +332,9 @@ export default function AddNewStaff() {
             position: formDetail.PositionTitle?.id || "",
             facility: formDetail.PrimaryFaculity?.id || "",
             supervisor: formDetail.Supervisor?.id || "",
-            program: formDetail.Programs.map((each) => each.id),
+            program: formDetail.Programs.map((each) => {
+              return isEdit ? { id: each.id, program: each.program } : each.id;
+            }),
           },
         };
 
