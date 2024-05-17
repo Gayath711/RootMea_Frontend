@@ -29,6 +29,7 @@ export default function AddNewProgram() {
   const [usersList, setUsersList] = useState([]);
 
   const [loadingData, setLoadingData] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -152,35 +153,35 @@ export default function AddNewProgram() {
   const fieldValidation = () => {
     let errorFields = {};
 
-    if (!formDetail.DepartmentName) {
-      errorFields.DepartmentName = "Please select the department name";
-    }
-
     if (!formDetail.ProgramName) {
       errorFields.ProgramName = "Please fill the program name";
     }
 
-    if (!formDetail.ProgramDescription) {
-      errorFields.ProgramDescription = "Please fill the program description";
-    }
+    // if (!formDetail.DepartmentName) {
+    //   errorFields.DepartmentName = "Please select the department name";
+    // }
 
-    if (!formDetail.Eligibility) {
-      errorFields.Eligibility = "Please fill the eligibility";
-    }
+    // if (!formDetail.ProgramDescription) {
+    //   errorFields.ProgramDescription = "Please fill the program description";
+    // }
 
-    if (formDetail.teamMembers.length === 0) {
-      errorFields.teamMembers = "Please select minimum one team member";
-    }
+    // if (!formDetail.Eligibility) {
+    //   errorFields.Eligibility = "Please fill the eligibility";
+    // }
 
-    if (formDetail.ManagementAdminContacts.length === 0) {
-      errorFields.ManagementAdminContacts =
-        "Please select minimum one Management Admin Contact";
-    }
+    // if (formDetail.teamMembers.length === 0) {
+    //   errorFields.teamMembers = "Please select minimum one team member";
+    // }
 
-    if (formDetail.ClientMattersContacts.length === 0) {
-      errorFields.ClientMattersContacts =
-        "Please select minimum one Client Matters Contact";
-    }
+    // if (formDetail.ManagementAdminContacts.length === 0) {
+    //   errorFields.ManagementAdminContacts =
+    //     "Please select minimum one Management Admin Contact";
+    // }
+
+    // if (formDetail.ClientMattersContacts.length === 0) {
+    //   errorFields.ClientMattersContacts =
+    //     "Please select minimum one Client Matters Contact";
+    // }
 
     setErrFields(errorFields);
 
@@ -194,9 +195,10 @@ export default function AddNewProgram() {
   const handleSubmit = async () => {
     if (fieldValidation()) {
       try {
+        setIsSubmitting(true);
         let data = {
           name: formDetail.ProgramName,
-          department_name: formDetail.DepartmentName.value,
+          department_name: formDetail.DepartmentName?.value || "",
           description: formDetail.ProgramDescription,
           eligibility: formDetail.Eligibility,
           primary_contact: formDetail.ManagementAdminContacts.map(
@@ -224,9 +226,26 @@ export default function AddNewProgram() {
           `Error ${isEdit ? "updating" : "adding"} program:`,
           error
         );
-        notifyError(
-          `Error ${isEdit ? "updating" : "adding"} program, try after sometime`
-        );
+        if (error.response.status === 400) {
+          if (error?.response?.data) {
+            if (typeof error?.response?.data === "object") {
+              let errObj = Object.keys(error.response.data);
+              Object.keys(errObj).map((itm) => {
+                errObj[itm].map((errMsg) => notifyError(errMsg));
+              });
+            } else {
+              notifyError(error?.response?.data);
+            }
+          }
+        } else {
+          notifyError(
+            `Error ${
+              isEdit ? "updating" : "adding"
+            } program, try after sometime`
+          );
+        }
+      } finally {
+        setIsSubmitting(false);
       }
     } else {
       notifyError("Please check all required fields are filled");
@@ -253,7 +272,7 @@ export default function AddNewProgram() {
     <>
       <div className="flex flex-column gap-2 items-center">
         <PageHeader title={`${isEdit ? "Update" : "Add new"} program staff`} />
-        <div className="flex flex-column gap-2 w-100 shadow-md rounded-md">
+        <div className="flex flex-column gap-2 w-100 shadow-md rounded-md relative">
           <div className="flex flex-column gap-1 p-4">
             <div className="flex flex-wrap">
               <div className="w-full md:w-1/3 p-4">
@@ -322,7 +341,7 @@ export default function AddNewProgram() {
                 <FormField
                   label="Eligibility"
                   error={errFields.Eligibility}
-                  required
+                  // required
                 >
                   <input
                     className="w-100 p-[0.725rem] rounded-[2px]"
@@ -346,7 +365,7 @@ export default function AddNewProgram() {
               <FormField
                 label="Program Description"
                 error={errFields.ProgramDescription}
-                required
+                // required
               >
                 <textarea
                   rows={5}
@@ -373,7 +392,7 @@ export default function AddNewProgram() {
                 <FormField
                   label="Team Members"
                   error={errFields.teamMembers}
-                  required
+                  // required
                 >
                   <Select
                     isClearable={false}
@@ -413,7 +432,7 @@ export default function AddNewProgram() {
                 <FormField
                   label="Management / Admin Contacts"
                   error={errFields.ManagementAdminContacts}
-                  required
+                  // required
                 >
                   <Select
                     isClearable={false}
@@ -453,7 +472,7 @@ export default function AddNewProgram() {
                 <FormField
                   label="Client Matters Contacts"
                   error={errFields.ClientMattersContacts}
-                  required
+                  // required
                 >
                   {" "}
                   <Select
@@ -504,6 +523,34 @@ export default function AddNewProgram() {
               {isEdit ? "Update" : "Save"}
             </button>
           </div>
+
+          {isSubmitting && (
+            <div className="flex flex-column absolute top-0 left-0 items-center justify-center gap-2 w-100 h-100 bg-gray-100/80">
+              <svg
+                className="animate-spin -ml-1 mr-3 h-8 w-8 text-teal-500"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              <p className="text-base">
+                {isEdit ? "Updating..." : "Creating.."}
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </>

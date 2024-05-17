@@ -36,6 +36,8 @@ export default function AddNewStaff() {
   const [programsOptions, setProgramsOptions] = useState([]);
   const [loadingData, setLoadingData] = useState(true);
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   useEffect(() => {
     fetchPositionTitles();
     fetchPrimaryFaculity();
@@ -207,28 +209,28 @@ export default function AddNewStaff() {
       errorFields.LastName = "Please fill the last name";
     }
 
-    if (!formDetail.PhoneNumber) {
-      errorFields.PhoneNumber = "Please fill the phone number";
-    }
+    // if (!formDetail.PhoneNumber) {
+    //   errorFields.PhoneNumber = "Please fill the phone number";
+    // }
 
     if (!formDetail.EmailId) {
       errorFields.EmailId = "Please fill the email id";
     }
 
-    if (!formDetail.PositionTitle) {
-      errorFields.PositionTitle = "Please select the position";
-    }
+    // if (!formDetail.PositionTitle) {
+    //   errorFields.PositionTitle = "Please select the position";
+    // }
 
-    if (!formDetail.PrimaryFaculity) {
-      errorFields.PrimaryFaculity = "Please select the faculty";
-    }
-    if (!formDetail.Supervisor) {
-      errorFields.Supervisor = "Please select the supervisor";
-    }
+    // if (!formDetail.PrimaryFaculity) {
+    //   errorFields.PrimaryFaculity = "Please select the faculty";
+    // }
+    // if (!formDetail.Supervisor) {
+    //   errorFields.Supervisor = "Please select the supervisor";
+    // }
 
-    if (formDetail.Programs.length === 0) {
-      errorFields.Programs = "Please select minimum one Programs";
-    }
+    // if (formDetail.Programs.length === 0) {
+    //   errorFields.Programs = "Please select minimum one Programs";
+    // }
     setErrFields(errorFields);
 
     if (JSON.stringify(errorFields) === "{}") {
@@ -240,6 +242,7 @@ export default function AddNewStaff() {
 
   const handleSubmit = async () => {
     if (fieldValidation()) {
+      setIsSubmitting(true);
       try {
         // Concatenate first name and last name, remove spaces, and keep alphanumeric characters
         const username = `${formDetail.FirstName}${formDetail.LastName}`
@@ -253,9 +256,9 @@ export default function AddNewStaff() {
           username: username,
           profile: {
             phone_no: formDetail.PhoneNumber,
-            position: formDetail.PositionTitle.id,
-            facility: formDetail.PrimaryFaculity.id,
-            supervisor: formDetail.Supervisor.id,
+            position: formDetail.PositionTitle?.id || "",
+            facility: formDetail.PrimaryFaculity?.id || "",
+            supervisor: formDetail.Supervisor?.id || "",
             program: formDetail.Programs.map((each) => each.id),
           },
         };
@@ -272,10 +275,21 @@ export default function AddNewStaff() {
         notifySuccess(`Staff ${isEdit ? "Updated" : "Added"} successfully`);
         navigate(`/staff-directory/${response.data.id}`, { replace: true });
       } catch (error) {
+        if (error.response.status === 400) {
+          if (error?.response?.data) {
+            Object.keys(error.response.data).map((itm) => {
+              error.response.data[itm].map((errMsg) => notifyError(errMsg));
+            });
+          }
+        } else {
+          notifyError(
+            `Error ${isEdit ? "Updating" : "Adding"} staff, try after sometime`
+          );
+        }
+
         console.error(`Error ${isEdit ? "Updating" : "Adding"} staff:`, error);
-        notifyError(
-          `Error ${isEdit ? "Updating" : "Adding"} staff, try after sometime`
-        );
+      } finally {
+        setIsSubmitting(false);
       }
     } else {
       notifyError("Please check all required fields are filled");
@@ -302,7 +316,7 @@ export default function AddNewStaff() {
     <>
       <div className="flex flex-column gap-2 items-center">
         <PageHeader title={`${isEdit ? "Update" : "Add New"} Staff`} />
-        <div className="flex flex-column gap-2 w-100 shadow-md rounded-md">
+        <div className="flex flex-column gap-2 w-100 shadow-md rounded-md relative">
           <div className="flex flex-column gap-1 p-4">
             <div className="flex flex-wrap">
               <div className="w-full md:w-1/2 p-4">
@@ -354,11 +368,7 @@ export default function AddNewStaff() {
             </div>
             <div className="flex flex-wrap">
               <div className="w-full md:w-1/2 p-4">
-                <FormField
-                  label="Phone Number"
-                  error={errFields.PhoneNumber}
-                  required
-                >
+                <FormField label="Phone Number" error={errFields.PhoneNumber}>
                   <input
                     className="w-100 p-[0.725rem] rounded-[2px] border-[#5BC4BF] text-base"
                     style={{
@@ -430,7 +440,6 @@ export default function AddNewStaff() {
                 <FormField
                   label="Position Title"
                   error={errFields.PositionTitle}
-                  required
                 >
                   <Select
                     name={"PositionTitle"}
@@ -468,7 +477,6 @@ export default function AddNewStaff() {
                 <FormField
                   label="Primary Faculity"
                   error={errFields.PrimaryFaculity}
-                  required
                 >
                   <Select
                     name={"PrimaryFaculity"}
@@ -505,11 +513,7 @@ export default function AddNewStaff() {
             </div>
             <div className="flex flex-wrap">
               <div className="w-full md:w-1/2 p-4">
-                <FormField
-                  label="Supervisor"
-                  error={errFields.Supervisor}
-                  required
-                >
+                <FormField label="Supervisor" error={errFields.Supervisor}>
                   <Select
                     name={"Supervisor"}
                     options={supervisorOptions}
@@ -572,7 +576,7 @@ export default function AddNewStaff() {
             </div>
             <div className="flex flex-wrap">
               <div className="w-full md:w-1/2 p-4">
-                <FormField label="Programs" required error={errFields.Programs}>
+                <FormField label="Programs" error={errFields.Programs}>
                   <Select
                     name={"Programs"}
                     options={
@@ -642,6 +646,34 @@ export default function AddNewStaff() {
               {`${isEdit ? "Update" : "Save"}`}
             </button>
           </div>
+
+          {isSubmitting && (
+            <div className="flex flex-column absolute top-0 left-0 items-center justify-center gap-2 w-100 h-100 bg-gray-100/80">
+              <svg
+                className="animate-spin -ml-1 mr-3 h-8 w-8 text-teal-500"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              <p className="text-base">
+                {isEdit ? "Updating..." : "Creating.."}
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </>
