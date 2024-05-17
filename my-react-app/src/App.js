@@ -53,7 +53,7 @@ import StaffDirectory from "./components/StaffDirectory";
 import StaffRecord from "./components/StaffDirectory/StaffRecord";
 import ProgramRecord from "./components/ProgramDirectory/ProgramRecord";
 import { selectIsSidebarExpanded } from "./store/slices/utilsSlice";
-import NewEncounterNote from "./pages/NewEncounterNote/NewEncounterNote";
+import EncounterNoteForm from "./pages/EncounterNote/EncounterNoteForm";
 
 function App() {
   // Retrieve isLoggedIn state from localStorage on initial render
@@ -273,7 +273,7 @@ function App() {
                   />
 
                   {/* Encounter notes */}
-                  <Route path="/encounter-note/add/:clientId" element={<NewEncounterNote />} />
+                  <Route path="/encounter-note/add/:clientId" element={<EncounterNoteForm />} />
 
                 </Routes>
               </div>

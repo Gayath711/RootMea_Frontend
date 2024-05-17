@@ -9,10 +9,10 @@ function toggleSign(user, signs, setSigns) {
   }
 }
 
-function SignInput({ className, user, signs, setSigns, ...rest }) {
+function SignInput({ className, user, signs, setSigns, disabled, ...rest }) {
   return (
     <div
-      className={`w-full flex justify-between items-center border rounded-[6px] ${className}`}
+      className={`w-full flex justify-between items-center border rounded-[6px] ${disabled ? "bg-[#FAFAFA]": ""} ${className}`}
     >
       {!signs?.length && <div className="px-3 text-[#8C8C8C]">Signed by</div>}
       {signs?.length > 0 && (
@@ -26,7 +26,8 @@ function SignInput({ className, user, signs, setSigns, ...rest }) {
       )}
       <button
         onClick={() => toggleSign(user, signs, setSigns)}
-        className="bg-[#5BC4BF] text-white px-3 py-2"
+        className="bg-[#5BC4BF] text-white px-3 py-2 disabled:cursor-not-allowed"
+        disabled={disabled}
       >
         Sign Now As/Unsign
       </button>

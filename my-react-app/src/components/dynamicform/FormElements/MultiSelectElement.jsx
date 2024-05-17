@@ -10,6 +10,7 @@ export default function MultiSelectElement({
   value,
   required,
   onChange,
+  disabled,
   ...rest
 }) {
   return (
@@ -27,6 +28,7 @@ export default function MultiSelectElement({
         name={name}
         value={value}
         onChange={onChange}
+        isDisabled={disabled}
         {...rest}
       />
     </div>

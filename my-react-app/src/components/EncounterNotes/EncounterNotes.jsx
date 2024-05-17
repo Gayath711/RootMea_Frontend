@@ -7,7 +7,7 @@ import EditIcon from "../images/edit.svg";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import { protectedApi } from "../../services/api";
-import {notifyError} from "../../helper/toastNotication"
+import { notifyError } from "../../helper/toastNotication";
 
 const options = {
   Pending: "bg-[#FFE5E5] text-[#E0382D]",
@@ -20,7 +20,7 @@ const Tag = ({ text }) => {
     <div
       className={`${options[text]} text-center text-xs w-[70px] mx-auto py-1 rounded-[2px]`}
     >
-      {(text?.charAt(0)?.toUpperCase() + text?.slice(1)) || ""}
+      {text?.charAt(0)?.toUpperCase() + text?.slice(1) || ""}
     </div>
   );
 };
@@ -97,7 +97,9 @@ function EncounterNotes({ clientId }) {
         Cell: ({ row }) => (
           <div className="flex gap-x-3 items-center mx-auto justify-center">
             <img src={EditIcon} className="size-4" alt="edit" />
-            <img src={EyeIcon} className="size-4" alt="view" />
+            <Link to={`/encounter-note/add/${clientId}/?mode=view`}>
+              <img src={EyeIcon} className="size-4" alt="view" />
+            </Link>
           </div>
         ),
       },

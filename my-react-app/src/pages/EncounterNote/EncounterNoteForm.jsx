@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import PageTitle from "../../components/PageTitle/PageTitle";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import InputElement from "../../components/dynamicform/FormElements/InputElement";
 import DateInput from "../../components/common/DateInput";
 import SelectElement from "../../components/dynamicform/FormElements/SelectElement";
 import TimeInput from "../../components/common/TimeInput";
-import "./NewEncounterNoteStyles.css";
+import "./EncounterNoteFormStyles.css";
 import TextAreaElement from "../../components/dynamicform/FormElements/TextAreaElement";
 import MultiSelectElement from "../../components/dynamicform/FormElements/MultiSelectElement";
 import FileInput from "../../components/dynamicform/FormElements/FileInput";
@@ -55,7 +55,20 @@ async function fetchClientDetails({ clientId }) {
   }
 }
 
-function NewEncounterNote() {
+function convertTimeToISOString(data, timeString) {
+  // Get the current date in 'YYYY-MM-DD' format
+  const currentDate = new Date().toISOString().split("T")[0];
+
+  // Create the full date-time string
+  const dateTimeString = `${currentDate}T${timeString}Z`;
+
+  // Convert to ISO string
+  return new Date(dateTimeString);
+}
+
+function EncounterNoteForm() {
+  const [mode, setMode] = useState("new");
+
   const { clientId } = useParams();
   const [clientDetails, setClientDetails] = useState({});
   const [startTime, setStartTime] = useState(null);
@@ -68,6 +81,46 @@ function NewEncounterNote() {
   });
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  useEffect(() => {
+    setMode(queryParams.get("mode"));
+
+    if (queryParams.get("mode") === "view") {
+      const fetchClientEncounterDetails = async () => {
+        try {
+          const response = await protectedApi.get(
+            `/encounter-notes/${clientId}`
+          );
+          const data = response.data;
+          data.custom_fields = JSON.stringify(data.custom_fields);
+          setStartTime(
+            convertTimeToISOString(data.encounter_date, data.start_time)
+          );
+          setEndTime(
+            convertTimeToISOString(data.encounter_date, data.end_time)
+          );
+          setForms(
+            data.forms.map((form) => {
+              return { label: form.form_name, value: form.form_name };
+            })
+          );
+          setCarePlans(
+            data.care_plans.map((carePlan) => {
+              return {
+                label: carePlan.care_plan_name,
+                value: carePlan.care_plan_name,
+              };
+            })
+          );
+          setFormData(data);
+        } catch (error) {
+          console.error(error.message);
+        }
+      };
+      fetchClientEncounterDetails();
+    }
+  }, []);
 
   const handleFormDataChange = useCallback(
     (fieldName, value) => {
@@ -94,7 +147,6 @@ function NewEncounterNote() {
           }
         }
         setClientDetails(clientDetailsResponse);
-        console.log(clientDetailsResponse);
       })
       .catch((error) => {
         console.error(error.message);
@@ -141,7 +193,8 @@ function NewEncounterNote() {
     encounter_date && formDataPayload.append("encounter_date", encounter_date);
     startTime && formDataPayload.append("start_time", start_time);
     endTime && formDataPayload.append("end_time", end_time);
-    encounter_status && formDataPayload.append("encounter_status", encounter_status);
+    encounter_status &&
+      formDataPayload.append("encounter_status", encounter_status);
     encounter_type && formDataPayload.append("encounter_type", encounter_type);
     program && formDataPayload.append("program", program);
     note_template && formDataPayload.append("note_template", note_template);
@@ -210,7 +263,11 @@ function NewEncounterNote() {
             </div>
             <div className="col-span-6">
               <DateInput
-                value={clientDetails?.date_of_birth ? format(clientDetails?.date_of_birth, "MM-dd-yyyy") : ""}
+                value={
+                  clientDetails?.date_of_birth
+                    ? format(clientDetails?.date_of_birth, "MM-dd-yyyy")
+                    : ""
+                }
                 placeholder="DOB"
                 dateFormat="MM-dd-yyyy"
                 isEdittable
@@ -262,7 +319,12 @@ function NewEncounterNote() {
                 placeholder="Encounter Date *"
                 className="m-1 border-keppel"
                 dateFormat="MM-dd-yyyy"
-                value={formData?.encounter_date ? format(formData?.encounter_date, "MM-dd-yyyy") : ""}
+                isEdittable={mode === "view"}
+                value={
+                  formData?.encounter_date
+                    ? format(formData?.encounter_date, "MM-dd-yyyy")
+                    : ""
+                }
                 handleChange={(date) =>
                   handleFormDataChange("encounter_date", date)
                 }
@@ -278,6 +340,7 @@ function NewEncounterNote() {
                 }
                 className="border-keppel m-1 h-[37.6px]"
                 height="37.6px"
+                isEdittable={mode === "view"}
                 fontSize="14px"
                 borderColor="#5bc4bf"
                 options={[
@@ -294,6 +357,7 @@ function NewEncounterNote() {
                 height="37.6px"
                 placeholder="Start Time *"
                 value={startTime}
+                isEdittable={mode === "view"}
                 selectedDate={formData?.encounter_date || null}
                 handleChange={(value) => {
                   setStartTime(value);
@@ -314,6 +378,7 @@ function NewEncounterNote() {
                 }
                 className="border-keppel m-1 h-[37.6px]"
                 height="37.6px"
+                isEdittable={mode === "view"}
                 fontSize="14px"
                 borderColor="#5bc4bf"
                 options={[
@@ -353,6 +418,7 @@ function NewEncounterNote() {
                 height="37.6px"
                 placeholder="End Time *"
                 value={endTime}
+                isEdittable={mode === "view"}
                 selectedDate={formData?.encounter_date || null}
                 handleChange={(value) => {
                   setEndTime(value);
@@ -368,6 +434,7 @@ function NewEncounterNote() {
                 handleChange={(data) =>
                   handleFormDataChange("encounter_status", data.value)
                 }
+                isEdittable={mode === "view"}
                 className="border-keppel m-1 h-[37.6px]"
                 height="37.6px"
                 fontSize="14px"
@@ -397,6 +464,7 @@ function NewEncounterNote() {
                 handleChange={(data) =>
                   handleFormDataChange("program", data.value)
                 }
+                isEdittable={mode === "view"}
                 className="border-keppel m-1 h-[37.6px]"
                 height="37.6px"
                 fontSize="14px"
@@ -416,6 +484,7 @@ function NewEncounterNote() {
                 handleChange={(data) =>
                   handleFormDataChange("note_template", data.value)
                 }
+                isEdittable={mode === "view"}
                 className="border-keppel m-1 h-[37.6px]"
                 height="37.6px"
                 fontSize="14px"
@@ -444,6 +513,7 @@ function NewEncounterNote() {
                 onChange={(e) =>
                   handleFormDataChange("custom_fields", e.target.value)
                 }
+                disabled={mode === "view"}
                 placeholder="Loreipusum..."
               />
             </div>
@@ -460,6 +530,7 @@ function NewEncounterNote() {
                     data.value
                   )
                 }
+                isEdittable={mode === "view"}
                 className="border-keppel m-1 h-[37.6px]"
                 height="37.6px"
                 fontSize="14px"
@@ -479,6 +550,7 @@ function NewEncounterNote() {
                 onChange={(e) =>
                   handleFormDataChange("encounter_summary", e.target.value)
                 }
+                disabled={mode === "view"}
                 placeholder="Enter Encounter Summary"
               />
             </div>
@@ -490,6 +562,7 @@ function NewEncounterNote() {
                 className="border-keppel"
                 placeholder="Select forms"
                 value={forms || []}
+                disabled={mode === "view"}
                 onChange={(data) => {
                   setForms(data);
                   handleFormDataChange(
@@ -505,6 +578,7 @@ function NewEncounterNote() {
                 className="border-keppel"
                 placeholder="Care Plans"
                 value={carePlans || []}
+                disabled={mode === "view"}
                 onChange={(data) => {
                   setCarePlans(data);
                   handleFormDataChange(
@@ -520,10 +594,10 @@ function NewEncounterNote() {
                 title="Upload Documents"
                 className="border-keppel m-1 w-full"
                 formData={formData}
+                disabled={mode === "view"}
                 files={formData?.uploaded_documents || []}
                 setFiles={useCallback(
                   (files) => {
-                    console.log(formData, files);
                     setFormData({ ...formData, uploaded_documents: files });
                   },
                   [formData]
@@ -534,6 +608,7 @@ function NewEncounterNote() {
               <SignInput
                 signs={formData?.signed_by || []}
                 user={"User 1"}
+                disabled={mode === "view"}
                 setSigns={(signs) => handleFormDataChange("signed_by", signs)}
                 className="border-keppel m-1"
               />
@@ -586,11 +661,14 @@ function NewEncounterNote() {
           </FormWrapper>
         </div>
         <div className="mx-auto flex justify-center items-center gap-x-4 my-8">
-          <button onClick={() => navigate(`/clientchart/${clientId}`)} className="border border-keppel rounded-[3px] text-[#5BC4BF] w-32 py-2">
+          <button
+            onClick={() => navigate(`/clientchart/${clientId}`)}
+            className="border border-keppel rounded-[3px] text-[#5BC4BF] w-32 py-2"
+          >
             Cancel
           </button>
           <button
-            disabled={disableSubmit}
+            disabled={disableSubmit || mode === "view"}
             onClick={handleCreate}
             className="border border-keppel rounded-[3px] disabled:cursor-not-allowed disabled:bg-[#6cd8d3] bg-[#5BC4BF] text-white w-32 py-2"
           >
@@ -602,4 +680,4 @@ function NewEncounterNote() {
   );
 }
 
-export default NewEncounterNote;
+export default EncounterNoteForm;
