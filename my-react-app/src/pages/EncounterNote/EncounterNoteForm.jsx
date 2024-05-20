@@ -85,12 +85,14 @@ function EncounterNoteForm() {
   const queryParams = new URLSearchParams(location.search);
   useEffect(() => {
     setMode(queryParams.get("mode"));
+    const encounterId = queryParams.get("encounterId");
+    console.log(encounterId, "encounterId");
 
-    if (queryParams.get("mode") === "view") {
+    if (queryParams.get("mode") === "view" && queryParams.get("encounterId")) {
       const fetchClientEncounterDetails = async () => {
         try {
           const response = await protectedApi.get(
-            `/encounter-notes/${clientId}`
+            `/encounter-notes/${encounterId}`
           );
           const data = response.data;
           data.custom_fields = JSON.stringify(data.custom_fields);

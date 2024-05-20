@@ -97,7 +97,7 @@ function EncounterNotes({ clientId }) {
         Cell: ({ row }) => (
           <div className="flex gap-x-3 items-center mx-auto justify-center">
             <img src={EditIcon} className="size-4" alt="edit" />
-            <Link to={`/encounter-note/add/${clientId}/?mode=view`}>
+            <Link to={`/encounter-note/add/${clientId}/?encounterId=${row.original.id}&mode=view`}>
               <img src={EyeIcon} className="size-4" alt="view" />
             </Link>
           </div>
