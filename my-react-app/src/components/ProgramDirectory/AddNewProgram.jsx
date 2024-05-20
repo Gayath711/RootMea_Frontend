@@ -314,7 +314,7 @@ export default function AddNewProgram() {
                   />
                 </FormField>
               </div>
-              <div className="w-full md:w-1/3 p-4">
+              <div className="w-full md:w-2/3 p-4">
                 <FormField
                   label="Program Name"
                   error={errFields.ProgramName}
@@ -337,29 +337,31 @@ export default function AddNewProgram() {
                   />
                 </FormField>
               </div>
-              <div className="w-full md:w-1/3 p-4">
-                <FormField
-                  label="Eligibility"
-                  error={errFields.Eligibility}
-                  // required
-                >
-                  <input
-                    className="w-100 p-[0.725rem] rounded-[2px]"
-                    name={"Eligibility"}
-                    placeholder="Eligibility"
-                    value={formDetail.Eligibility}
-                    style={{
-                      border: `1px solid ${
-                        !errFields.Eligibility ? "#5BC4BF" : "red"
-                      }`,
-                      fontSize: "14px",
-                    }}
-                    onChange={(item) => {
-                      handleInputChange("Eligibility", item.target.value);
-                    }}
-                  />
-                </FormField>
-              </div>
+            </div>
+            <div className="mx-[25px] my-[15px]">
+              <FormField
+                label="Eligibility"
+                error={errFields.Eligibility}
+                // required
+              >
+                <textarea
+                  rows={5}
+                  className="w-100 rounded-[2px]"
+                  name={"Eligibility"}
+                  placeholder="Eligibility"
+                  value={formDetail.Eligibility}
+                  style={{
+                    padding: "15px",
+                    border: `1px solid ${
+                      !errFields.Eligibility ? "#5BC4BF" : "red"
+                    }`,
+                    fontSize: "14px",
+                  }}
+                  onChange={(item) => {
+                    handleInputChange("Eligibility", item.target.value);
+                  }}
+                />
+              </FormField>
             </div>
             <div className="mx-[25px] my-[15px]">
               <FormField
