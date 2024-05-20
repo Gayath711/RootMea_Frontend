@@ -189,7 +189,7 @@ function NewEncounterNote() {
       <div className="border border-keppel rounded-[5px] my-6 bg-white !important">
         {/* Component Header */}
         <div className="flex justify-between items-center px-6 font-medium text-xl text-white bg-[#5bc4bf] py-3">
-          <div>Encounter CLient Profile</div>
+          <div>Encounter Client Profile</div>
           <div>System ID:1234568</div>
         </div>
 
