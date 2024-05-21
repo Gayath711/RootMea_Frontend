@@ -4,130 +4,19 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Select from "react-select";
 import SearchIcon from "../images/search.svg";
-import axios from "axios";
-import apiURL from "../../apiConfig";
-import { Link, useParams } from "react-router-dom";
+import axios from "../../helper/axiosInstance";
+
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 import ViewPNG from "../images/view.png";
 import EditPNG from "../images/edit.png";
 import DeletePNG from "../images/delete.png";
 import MUIDataGridWrapper from "../HOC/MUIDataGridWrapper";
-// function createData(
-//   Link,
-//   ProgramName,
-//   Department,
-//   Description,
-//   Eligibility,
-//   ManagementAdminContacts,
-//   ClientMattersContacts
-// ) {
-//   return {
-//     id: Link,
-//     Link,
-//     ProgramName,
-//     Department,
-//     Description,
-//     Eligibility,
-//     ManagementAdminContacts,
-//     ClientMattersContacts,
-//   };
-// }
 
-// const rows = [
-//   createData(
-//     "Record 1",
-//     "Diabetes",
-//     "Clinical Programs",
-//     "description",
-//     "Eligibility",
-//     "123-4650-78",
-//     "123-4650-78"
-//   ),
-//   createData(
-//     "Record 2",
-//     "Workforce",
-//     "Transition Services",
-//     "description",
-//     "Eligibility",
-//     "123-4650-78",
-//     "123-4650-78"
-//   ),
-//   createData(
-//     "Record 3",
-//     "Client Services",
-//     "Community Engagement",
-//     "description",
-//     "Eligibility",
-//     "123-4650-78",
-//     "123-4650-78"
-//   ),
-//   createData(
-//     "Record 4",
-//     "STOMP",
-//     "Clinical Programs",
-//     "description",
-//     "Eligibility",
-//     "123-4650-78",
-//     "123-4650-78"
-//   ),
-//   createData(
-//     "Record 5",
-//     "Safe Landing",
-//     "Clinical Programs",
-//     "description",
-//     "Eligibility",
-//     "123-4650-78",
-//     "123-4650-78"
-//   ),
-//   createData(
-//     "Record 6",
-//     "Diabetes",
-//     "Clinical Programs",
-//     "description",
-//     "Eligibility",
-//     "123-4650-78",
-//     "123-4650-78"
-//   ),
-//   createData(
-//     "Record 7",
-//     "Diabetes",
-//     "Clinical Programs",
-//     "description",
-//     "Eligibility",
-//     "123-4650-78",
-//     "123-4650-78"
-//   ),
-//   createData(
-//     "Record 8",
-//     "Diabetes",
-//     "Community Engagement",
-//     "description",
-//     "Eligibility",
-//     "123-4650-78",
-//     "123-4650-78"
-//   ),
-//   createData(
-//     "Record 9",
-//     "Diabetes",
-//     "Clinical Programs",
-//     "description",
-//     "Eligibility",
-//     "123-4650-78",
-//     "123-4650-78"
-//   ),
-//   createData(
-//     "Record 10",
-//     "Diabetes",
-//     "Clinical Programs",
-//     "description",
-//     "Eligibility",
-//     "123-4650-78",
-//     "123-4650-78"
-//   ),
-// ];
+import { notifySuccess, notifyError } from "../../helper/toastNotication";
 
 export default function ProgramListTable() {
-  const token = localStorage.getItem("access_token");
+  const navigate = useNavigate();
   const [loadingData, setLoadingData] = useState(true);
   const [recordData, setRecordData] = useState([]);
   const [searchText, setSearchText] = useState("");
@@ -139,11 +28,7 @@ export default function ProgramListTable() {
 
   const fetchData = () => {
     axios
-      .get(`${apiURL}/api/resources/program`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      .get(`api/resources/program`)
       .then((response) => {
         setLoadingData(true);
         setRecordData(response.data);
@@ -154,6 +39,20 @@ export default function ProgramListTable() {
       .finally(() => {
         setLoadingData(false);
       });
+  };
+
+  const deleteRecord = (id) => {
+    axios
+      .delete(`/api/resources/program/${id}`)
+      .then((response) => {
+        fetchData();
+        notifySuccess("Deleted Successfully");
+      })
+      .catch((error) => {
+        notifyError("Could not delete, please try again later");
+        console.error("Error deleting:", error);
+      })
+      .finally(() => {});
   };
 
   const handleSearchText = (e) => {
@@ -290,30 +189,65 @@ export default function ProgramListTable() {
                   headerClassName: "bg-[#5BC4BF] text-white font-medium",
                   minWidth: 200,
                 },
-                // {
-                //   field: "Action",
-                //   headerName: "Action",
-                //   align: "left",
-                //   headerAlign: "center",
-                //   flex: 1,
-                //   headerClassName:
-                //     "bg-[#5BC4BF] text-white font-medium text-center w-100",
-                //   minWidth: 150,
-                //   renderCell: (params) => {
-                //     return (
-                //       <>
-                //         <div
-                //           className="text-[#5BC4BF] flex items-center justify-evenly"
-                //           style={{ height: "100%" }}
-                //         >
-                //           <img src={ViewPNG} className="w-5 h-5" />
-                //           <img src={EditPNG} className="w-5 h-5" />
-                //           <img src={DeletePNG} className="w-5 h-5" />
-                //         </div>
-                //       </>
-                //     );
-                //   },
-                // },
+                {
+                  field: "Action",
+                  headerName: "Action",
+                  align: "left",
+                  headerAlign: "center",
+                  flex: 1,
+                  headerClassName:
+                    "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                  minWidth: 150,
+                  // renderCell: (params) => {
+                  //   return (
+                  //     <>
+                  //       <div
+                  //         className="text-[#5BC4BF] flex items-center justify-evenly"
+                  //         style={{ height: "100%" }}
+                  //       >
+                  //         <img src={ViewPNG} className="w-5 h-5" />
+                  //         <img src={EditPNG} className="w-5 h-5" />
+                  //         <img src={DeletePNG} className="w-5 h-5" />
+                  //       </div>
+                  //     </>
+                  //   );
+                  // },
+
+                  renderCell: (params) => {
+                    return (
+                      <>
+                        <div className="h-100 w-100 flex flex-row gap-2 justify-center items-center">
+                          <button
+                            className="p-1 hover:bg-teal-400 bg-opacity-50 hover:rounded"
+                            onClick={() => {
+                              navigate(
+                                `/update-program-directory/${params.row.id}`
+                              );
+                            }}
+                          >
+                            <img
+                              src={EditPNG}
+                              className="w-4 h-4"
+                              style={{ display: "block", margin: "0 auto" }}
+                            />
+                          </button>
+                          <button
+                            className="p-1 hover:bg-red-400 bg-opacity-50 hover:rounded"
+                            onClick={() => {
+                              deleteRecord(params.row.id);
+                            }}
+                          >
+                            <img
+                              src={DeletePNG}
+                              className="w-4 h-4"
+                              style={{ display: "block", margin: "0 auto" }}
+                            />
+                          </button>
+                        </div>
+                      </>
+                    );
+                  },
+                },
                 // {
                 //   field: "ManagementAdminContacts",
                 //   headerName: "Management Admin Contacts",
@@ -359,6 +293,8 @@ function TableActions({
   searchText,
   handleSearchText,
 }) {
+  const navigate = useNavigate();
+
   return (
     <div className="grid grid-cols-4 justify-between gap-2 w-100 mt-1 mb-4">
       {/* <div className="col-start-1 col-span-1">
@@ -393,15 +329,27 @@ function TableActions({
           menuPortalTarget={document.body}
         />
       </div> */}
-      <div className="col-end-5 col-span-1 flex gap-1 items-center border-b-2 border-[#5BC4BF]">
-        <img src={SearchIcon} className="w-[20px] h-100" />
-        <input
-          type={"text"}
-          value={searchText}
-          onChange={handleSearchText}
-          placeholder="Search here"
-          className={`appearance-none w-full p-2.5 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
-        />
+      <div className="col-end-5 col-span-2 flex gap-2 items-center justify-end">
+        <div className="flex gap-1 items-center border-b-2 border-[#5BC4BF]">
+          <img src={SearchIcon} className="w-[20px] h-100" />
+          <input
+            type={"text"}
+            value={searchText}
+            onChange={handleSearchText}
+            placeholder="Search here"
+            className={`appearance-none w-full p-2.5 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+          />
+        </div>
+        <div className="ms-3">
+          <button
+            className="px-3 py-2 text-[13px] font-medium leading-5 bg-[#5BC4BF] border-1 border-[#5BC4BF] text-white rounded-sm font-medium hover:bg-[#429e97] focus:outline-none focus:ring-2 focus:ring-[#429e97] focus:ring-opacity-50 transition-colors duration-300"
+            onClick={() => {
+              navigate("/add-new-program-directory/");
+            }}
+          >
+            Add New
+          </button>
+        </div>
       </div>
     </div>
   );

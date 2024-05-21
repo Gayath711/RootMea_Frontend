@@ -11,10 +11,12 @@ const DateInput = ({
   placeholder,
   width = 340,
   height = "7vh",
+  className,
   isEdittable,
   value,
   handleChange,
   register,
+  disabled = false,
 }) => {
   const [startDate, setStartDate] = useState(value || null);
   const bgDisabled = isEdittable ? "#F6F7F7" : "";
@@ -58,7 +60,7 @@ const DateInput = ({
         dateFormat="MM/dd/yyyy"
         minDate={new Date()} // Disable past dates
         // dateFormatCalendar=""
-        className="
+        className={`
                 custom-datepicker
                 px-2 border-1
                 border-gray-300/50
@@ -66,10 +68,11 @@ const DateInput = ({
                 placeholder-opacity-50 
                 rounded-md
                 text-md
-                h-[7vh]
+                h-[${height}]
                 z-50
                 w-full
-                "
+                ${className}
+                `}
         placeholderText=" "
         selected={value}
         // onChange={date => setSelectedDate(date)}

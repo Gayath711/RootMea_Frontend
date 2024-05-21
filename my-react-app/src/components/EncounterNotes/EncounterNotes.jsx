@@ -4,6 +4,7 @@ import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import BasicTable from "../react-table/BasicTable";
 import EyeIcon from "../images/eye.svg";
 import EditIcon from "../images/edit.svg";
+import { Link } from "react-router-dom";
 
 const options = {
   Pending: "bg-[#FFE5E5] text-[#E0382D]",
@@ -176,9 +177,9 @@ function EncounterNotes({ clientId }) {
           <img src={ExternalLinkIcon} className="size-4" alt="link" />
         </div>
         <div className="flex items-center gap-x-10">
-          <button className="px-3 py-2 text-sm bg-[#5BC4BF] text-white rounded-sm font-medium">
+          <Link to={`/encounter-note/add/${clientId}`} className="px-3 py-2 text-sm bg-[#5BC4BF] text-white rounded-sm font-medium">
             Add New
-          </button>
+          </Link>
           <RemoveCircleIcon
             onClick={() => setOpen(!open)}
             className="text-[#585A60] hover:cursor-pointer"
