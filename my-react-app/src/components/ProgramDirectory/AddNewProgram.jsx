@@ -271,7 +271,7 @@ export default function AddNewProgram() {
   return (
     <>
       <div className="flex flex-column gap-2 items-center">
-        <PageHeader title={`${isEdit ? "Update" : "Add new"} program staff`} />
+        <PageHeader title={`${isEdit ? "Update" : "Add new"} program`} />
         <div className="flex flex-column gap-2 w-100 shadow-md rounded-md relative">
           <div className="flex flex-column gap-1 p-4">
             <div className="flex flex-wrap">
