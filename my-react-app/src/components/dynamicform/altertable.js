@@ -18,6 +18,7 @@ function AlterTable({ onAddColumn }) {
   const [isTitleModalOpen, setIsTitleModalOpen] = useState(false);
   const [selectedColumn, setSelectedColumn] = useState(null);
   const [newColumnInputType, setNewColumnInputType] = useState("default");
+  const [hiddenColumns, setHiddenColumns] = useState([]);
 
   const handleModalOpen = () => {
     setIsModalOpen(true);
@@ -316,6 +317,28 @@ function AlterTable({ onAddColumn }) {
     }
   };
 
+  const handleHideColumn = async (columnName) => {
+    try {
+      await axios.patch(`${apiURL}/hide_column/${tableName}/${columnName}/`, {
+        hidden: true,
+      });
+      setHiddenColumns([...hiddenColumns, columnName]);
+    } catch (error) {
+      console.error("Error hiding column:", error);
+    }
+  };
+
+  const handleUnhideColumn = async (columnName) => {
+    try {
+      await axios.patch(`${apiURL}/hide_column/${tableName}/${columnName}/`, {
+        hidden: false,
+      });
+      setHiddenColumns(hiddenColumns.filter((name) => name !== columnName));
+    } catch (error) {
+      console.error("Error unhiding column:", error);
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -553,6 +576,28 @@ function AlterTable({ onAddColumn }) {
                   onClick={() => handleDropColumn(column.name)}
                 >
                   Drop Column
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    hiddenColumns.includes(column.name)
+                      ? handleUnhideColumn(column.name)
+                      : handleHideColumn(column.name)
+                  }
+                  style={{
+                    backgroundColor: hiddenColumns.includes(column.name)
+                      ? "orange"
+                      : "green",
+                    color: "white",
+                    border: "none",
+                    padding: "10px 15px",
+                    cursor: "pointer",
+                    borderRadius: "5px",
+                    margin: "5px",
+                  }}
+                >
+                  {hiddenColumns.includes(column.name) ? "Unhide" : "Hide"}
                 </button>
               </div>
             ))}
