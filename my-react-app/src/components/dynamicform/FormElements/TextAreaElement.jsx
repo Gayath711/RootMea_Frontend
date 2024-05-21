@@ -1,9 +1,9 @@
 import React from "react";
 import FormLabel from "./FormLabel";
 
-const TextAreaElement = ({ label, required, ...rest }) => {
+const TextAreaElement = ({ label, required, width, ...rest }) => {
   return (
-    <div className="m-1">
+    <div className={`m-1 ${width}`}>
       <FormLabel required={required}>{label}</FormLabel>
       <textarea
         {...rest}

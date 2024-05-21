@@ -10,10 +10,11 @@ export default function SelectElement({
   required,
   onChange,
   placeholder = "Select",
+  width,
   ...rest
 }) {
   return (
-    <div className="m-1">
+    <div className={`m-1 ${width}`}>
       {label && <FormLabel required={required}>{label}</FormLabel>}
       <select
         className={`form-select ${className}`}

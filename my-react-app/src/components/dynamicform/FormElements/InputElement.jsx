@@ -1,9 +1,9 @@
 import React from "react";
 import FormLabel from "./FormLabel";
 
-const InputElement = ({ className, type, label, required, ...rest }) => {
+const InputElement = ({ className, type, label, required, width, ...rest }) => {
   return (
-    <div className="m-1">
+    <div className={`m-1 ${width}`}>
       {label && <FormLabel required={required}>{label}</FormLabel>}
       <input
         type={type}

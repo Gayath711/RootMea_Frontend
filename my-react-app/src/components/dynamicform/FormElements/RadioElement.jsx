@@ -1,10 +1,10 @@
 import React from "react";
 import FormLabel from "./FormLabel";
 
-const RadioElement = ({ options, name, label,required,...rest }) => {
+const RadioElement = ({ options, name, label, required, width, ...rest }) => {
   return (
-    <div className="m-1">
-       <FormLabel required={required}>{label}</FormLabel>
+    <div className={`m-1 ${width}`}>
+      <FormLabel required={required}>{label}</FormLabel>
       {options.map((option, index) => (
         <div key={index}>
           <input

@@ -175,7 +175,7 @@ function NewPage() {
     switch (column.type) {
       case "character varying":
         return (
-          <div key={column.name} className="mb-3">
+          <div key={column.name} className={`mb-3 ${column.width}`}>
             {/* <label className="block mb-1">{label}</label>
             <input
               type="text"
@@ -194,7 +194,7 @@ function NewPage() {
         );
       case "integer":
         return (
-          <div key={column.name} className="mb-3">
+          <div key={column.name} className={`mb-3 ${column.width}`}>
             {/* <label className="block mb-1">{label}</label>
             <input
               type="number"
@@ -213,7 +213,7 @@ function NewPage() {
         );
       case "text":
         return (
-          <div key={column.name} className="mb-3">
+          <div key={column.name} className={`mb-3 ${column.width}`}>
             {/* <label className="block mb-1">{label}</label>
             <textarea
               value={formData[column.name] || ""}
@@ -230,7 +230,7 @@ function NewPage() {
         );
       case "double precision":
         return (
-          <div key={column.name} className="mb-3">
+          <div key={column.name} className={`mb-3 ${column.width}`}>
             {/* <label className="block mb-1">{label}</label>
             <input
               type="number" // Use type "number" for input validation
@@ -252,7 +252,7 @@ function NewPage() {
         );
       case "boolean":
         return (
-          <div key={column.name} className="mb-3">
+          <div key={column.name} className={`mb-3 ${column.width}`}>
             {/* <label className="block mb-1">{label}</label>
             <select
               value={formData[column.name] || ""}
@@ -284,7 +284,7 @@ function NewPage() {
         );
       case "bytea":
         return (
-          <div key={column.name} className="mb-3">
+          <div key={column.name} className={`mb-3 ${column.width}`}>
             {/* <label className="block mb-1">{label}</label>
             <input
               type="file"
@@ -303,33 +303,34 @@ function NewPage() {
         );
       case "character":
         return (
-          <div key={column.name} className="mb-0">
+          <div key={column.name} className={`mb-0 ${column.width}`}>
             <HeaderElement type="header" label={label} />
           </div>
         );
       case "json":
         return (
-          <div key={column.name} className="mb-1">
+          <div key={column.name} className={`mb-1 ${column.width}`}>
             <HeaderElement label={label} />
           </div>
         );
       case "line":
         return (
-          <div key={column.name} className="mb-4">
+          <div key={column.name} className={`mb-4 ${column.width}`}>
             <DividerElement />
           </div>
         );
 
       case "timestamp without time zone":
         return (
-          <div key={column.name} className="mb-2">
+          <div key={column.name} className={`mb-2 ${column.width}`}>
             <DateInput
               label={label}
               required={column.is_nullable === "NO"}
               type="date"
               value={formData[column.name] || ""}
               onChange={(event) => handleInputChange(event, column.name)}
-              className={`${column.width} border border-gray-300 rounded px-4 py-2`}
+              className={`border border-gray-300 rounded px-4 py-2`}
+              width={column.width}
             />
           </div>
         );
@@ -349,7 +350,7 @@ function NewPage() {
         if (key.endsWith("multiple_enum_type")) {
           console.log("qdwewwwwwwwwwwwwwww", droplist, droplist[key]);
           return (
-            <div key={column.name} className="mb-3">
+            <div key={column.name} className={`mb-3 ${column.width}`}>
               {/* <label className="block mb-1">{label} xxx</label>
               <Select
                 options={
@@ -467,7 +468,7 @@ function NewPage() {
           console.log("checkbox_enum_type okkk");
           // console.log(droplist[key])
           return (
-            <div key={column.name} className="mb-3">
+            <div key={column.name} className={`mb-3 ${column.width}`}>
               {/* <label className="block mb-1">{label}</label>
               {droplist[key] &&
                 droplist[key].map((option) => (
@@ -544,7 +545,7 @@ function NewPage() {
           console.log("droplist", droplist);
 
           return (
-            <div key={column.name} className="mb-3">
+            <div key={column.name} className={`mb-3 ${column.width}`}>
               {/* <label className="block mb-1">{label}</label>
               <select
                 value={formData[column.name] || ""}

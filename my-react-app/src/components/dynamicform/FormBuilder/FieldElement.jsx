@@ -68,7 +68,7 @@ function FieldElement({ field, index, id, preview }) {
       break;
     case "LINE":
       {
-        inputElement = <DividerElement />;
+        inputElement = <DividerElement {...field.props} />;
       }
       break;
 
