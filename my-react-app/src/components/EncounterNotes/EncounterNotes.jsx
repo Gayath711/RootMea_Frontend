@@ -96,8 +96,14 @@ function EncounterNotes({ clientId }) {
         Header: "Actions",
         Cell: ({ row }) => (
           <div className="flex gap-x-3 items-center mx-auto justify-center">
-            <img src={EditIcon} className="size-4" alt="edit" />
-            <Link to={`/encounter-note/add/${clientId}/?encounterId=${row.original.id}&mode=view`}>
+            <Link
+              to={`/encounter-note/add/${clientId}/?encounterId=${row.original.id}&mode=edit`}
+            >
+              <img src={EditIcon} className="size-4" alt="edit" />
+            </Link>
+            <Link
+              to={`/encounter-note/add/${clientId}/?encounterId=${row.original.id}&mode=view`}
+            >
               <img src={EyeIcon} className="size-4" alt="view" />
             </Link>
           </div>

@@ -84,11 +84,14 @@ function EncounterNoteForm() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   useEffect(() => {
-    setMode(queryParams.get("mode"));
+    const mode = queryParams.get("mode");
+    setMode(mode);
     const encounterId = queryParams.get("encounterId");
-    console.log(encounterId, "encounterId");
 
-    if (queryParams.get("mode") === "view" && queryParams.get("encounterId")) {
+    if (
+      (mode === "edit" || mode === "view") &&
+      queryParams.get("encounterId")
+    ) {
       const fetchClientEncounterDetails = async () => {
         try {
           const response = await protectedApi.get(
@@ -107,6 +110,7 @@ function EncounterNoteForm() {
               return { label: form.form_name, value: form.form_name };
             })
           );
+          data.forms = data.forms.map((form) => form.form_name);
           setCarePlans(
             data.care_plans.map((carePlan) => {
               return {
@@ -114,6 +118,9 @@ function EncounterNoteForm() {
                 value: carePlan.care_plan_name,
               };
             })
+          );
+          data.care_plans = data.care_plans.map(
+            (carePlan) => carePlan.care_plan_name
           );
           setFormData(data);
         } catch (error) {
@@ -596,7 +603,10 @@ function EncounterNoteForm() {
                 title="Upload Documents"
                 className="border-keppel m-1 w-full"
                 formData={formData}
+                setFormData={setFormData}
                 disabled={mode === "view"}
+                mode={mode}
+                deletedFilesKey="deleted_documents"
                 files={formData?.uploaded_documents || []}
                 setFiles={useCallback(
                   (files) => {
