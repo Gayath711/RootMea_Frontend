@@ -11,10 +11,11 @@ const CheckBoxElement = ({
   direction = "column",
   required,
   onChange,
+  width,
   ...rest
 }) => {
   return (
-    <div className="m-1">
+    <div className={`m-1 ${width}`}>
       {label && <FormLabel required={required}>{label}</FormLabel>}
       <div
         className={`flex ${
