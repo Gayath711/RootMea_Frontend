@@ -85,14 +85,21 @@ async function fetchUsers() {
 }
 
 function convertTimeToISOString(data, timeString) {
+  console.log(timeString, "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
   // Get the current date in 'YYYY-MM-DD' format
-  const currentDate = new Date().toISOString().split("T")[0];
+  var timeParts = timeString.split(":");
+  var hours = parseInt(timeParts[0], 10);
+  var minutes = parseInt(timeParts[1], 10);
+  var seconds = parseInt(timeParts[2], 10);
 
-  // Create the full date-time string
-  const dateTimeString = `${currentDate}T${timeString}Z`;
+  // Create a new Date object and set the time
+  var convertedDate = new Date();
+  convertedDate.setHours(hours);
+  convertedDate.setMinutes(minutes);
+  convertedDate.setSeconds(seconds);
 
   // Convert to ISO string
-  return new Date(dateTimeString);
+  return convertedDate;
 }
 
 function EncounterNoteForm() {
@@ -156,6 +163,7 @@ function EncounterNoteForm() {
           data.deleted_forms = [];
           data.deleted_careplans = [];
           data.deleted_documents = [];
+          data.deleted_signedby = [];
           data.care_plans = data.care_plans.map(
             (carePlan) => carePlan.care_plan_id
           );
@@ -255,6 +263,7 @@ function EncounterNoteForm() {
   }, [formData]);
 
   const handleCreatePayload = useCallback(async () => {
+    console.log(formData);
     const {
       staff_name,
       facility,
@@ -272,6 +281,7 @@ function EncounterNoteForm() {
       care_plans,
       deleted_careplans,
       deleted_documents,
+      deleted_signedby,
       signed_by,
       uploaded_documents,
     } = formData;
@@ -314,9 +324,21 @@ function EncounterNoteForm() {
           ) || []
         )
       );
-    deleted_documents && formDataPayload.append("deleted_documents", deleted_documents);
+    deleted_documents &&
+      formDataPayload.append(
+        "deleted_documents",
+        JSON.stringify(deleted_documents)
+      );
+    deleted_signedby &&
+      formDataPayload.append(
+        "deleted_signedby",
+        JSON.stringify(deleted_signedby)
+      );
     signed_by &&
-      formDataPayload.append("signed_by", JSON.stringify(signed_by || []));
+      formDataPayload.append(
+        "signed_by",
+        JSON.stringify(signed_by.filter((sign) => !sign?.id) || [])
+      );
     for (let i = 0; i < uploaded_documents?.length; i++) {
       if (uploaded_documents[i] instanceof File) {
         formDataPayload.append("uploaded_documents", uploaded_documents[i]);
@@ -344,7 +366,7 @@ function EncounterNoteForm() {
     } catch (error) {
       console.error(error);
     }
-  }, []);
+  }, [formData, clientId, navigate, formsBackup, carePlansBackup]);
 
   const handleUpdate = useCallback(async () => {
     try {
@@ -360,7 +382,7 @@ function EncounterNoteForm() {
     } catch (error) {
       console.error(error);
     }
-  }, [encounterId, clientId]);
+  }, [encounterId, formData, clientId, navigate, formsBackup, carePlansBackup]);
 
   return (
     <div className="mx-1" style={{ fontFamily: "poppins" }}>
@@ -800,6 +822,12 @@ function EncounterNoteForm() {
                 user={"User 1"}
                 disabled={mode === "view"}
                 setSigns={(signs) => handleFormDataChange("signed_by", signs)}
+                onSignRemove={(signId) =>
+                  setFormData({
+                    ...formData,
+                    deleted_signedby: [...formData.deleted_signedby, signId],
+                  })
+                }
                 className="border-keppel m-1"
               />
             </div>
