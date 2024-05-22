@@ -11,8 +11,10 @@ export default function MultiSelectElement({
   required,
   onChange,
   disabled,
+  placeholder,
   ...rest
 }) {
+  console.log(value, name);
   return (
     <div className="m-1">
       {label && <FormLabel required={required}>{label}</FormLabel>}
@@ -29,6 +31,7 @@ export default function MultiSelectElement({
         value={value}
         onChange={onChange}
         isDisabled={disabled}
+        placeholder={placeholder}
         {...rest}
       />
     </div>

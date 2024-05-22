@@ -5,7 +5,6 @@ import InputElement from "../../components/dynamicform/FormElements/InputElement
 import DateInput from "../../components/common/DateInput";
 import SelectElement from "../../components/dynamicform/FormElements/SelectElement";
 import TimeInput from "../../components/common/TimeInput";
-import "./EncounterNoteFormStyles.css";
 import TextAreaElement from "../../components/dynamicform/FormElements/TextAreaElement";
 import MultiSelectElement from "../../components/dynamicform/FormElements/MultiSelectElement";
 import FileInput from "../../components/dynamicform/FormElements/FileInput";
@@ -14,6 +13,7 @@ import { protectedApi } from "../../services/api";
 import { notifyError, notifySuccess } from "../../helper/toastNotication";
 import DropDown from "../../components/common/Dropdown";
 import { format } from "date-fns";
+import "./EncounterNoteFormStyles.css";
 
 function FormWrapper({ children, label }) {
   return (
@@ -55,6 +55,35 @@ async function fetchClientDetails({ clientId }) {
   }
 }
 
+async function fetchFormOptions() {
+  try {
+    const response = await protectedApi.get("/encounter-note-form-options/");
+    return response.data;
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
+async function fetchCarePlanOptions() {
+  try {
+    const response = await protectedApi.get(
+      "/encounter-note-careplan-options/"
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
+async function fetchUsers() {
+  try {
+    const response = await protectedApi.get("/encounter-notes-users/");
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 function convertTimeToISOString(data, timeString) {
   // Get the current date in 'YYYY-MM-DD' format
   const currentDate = new Date().toISOString().split("T")[0];
@@ -71,22 +100,27 @@ function EncounterNoteForm() {
 
   const { clientId } = useParams();
   const [clientDetails, setClientDetails] = useState({});
+  const [formOptions, setFormOptions] = useState([]);
+  const [carePlanOptions, setCarePlanOptions] = useState([]);
+  const [userOptions, setUserOptions] = useState([]);
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
   const [forms, setForms] = useState([]);
+  const [formsBackup, setFormsBackup] = useState([]);
   const [carePlans, setCarePlans] = useState([]);
+  const [carePlansBackup, setCarePlansBackup] = useState([]);
   const [formData, setFormData] = useState({
     client_id: clientId,
-    staff_name: "Temporary User",
+    staff_name: 2,
   });
 
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
+  const encounterId = queryParams.get("encounterId");
   useEffect(() => {
     const mode = queryParams.get("mode");
     setMode(mode);
-    const encounterId = queryParams.get("encounterId");
 
     if (
       (mode === "edit" || mode === "view") &&
@@ -105,22 +139,25 @@ function EncounterNoteForm() {
           setEndTime(
             convertTimeToISOString(data.encounter_date, data.end_time)
           );
-          setForms(
-            data.forms.map((form) => {
-              return { label: form.form_name, value: form.form_name };
-            })
-          );
-          data.forms = data.forms.map((form) => form.form_name);
-          setCarePlans(
-            data.care_plans.map((carePlan) => {
-              return {
-                label: carePlan.care_plan_name,
-                value: carePlan.care_plan_name,
-              };
-            })
-          );
+          const convertedForms = data.forms.map((form) => {
+            return { label: form.form_name, value: form.form_id };
+          });
+          setForms(convertedForms);
+          setFormsBackup(convertedForms);
+          data.forms = data.forms.map((form) => form.form_id);
+          const convertedCarePlans = data.care_plans.map((carePlan) => {
+            return {
+              label: carePlan.care_plan_name,
+              value: carePlan.care_plan_id,
+            };
+          });
+          setCarePlans(convertedCarePlans);
+          setCarePlansBackup(convertedCarePlans);
+          data.deleted_forms = [];
+          data.deleted_careplans = [];
+          data.deleted_documents = [];
           data.care_plans = data.care_plans.map(
-            (carePlan) => carePlan.care_plan_name
+            (carePlan) => carePlan.care_plan_id
           );
           setFormData(data);
         } catch (error) {
@@ -162,6 +199,47 @@ function EncounterNoteForm() {
       });
   }, []);
 
+  useEffect(() => {
+    fetchFormOptions()
+      .then((formOptionsResponse) => {
+        const convertedFormOptions = formOptionsResponse.map((form) => ({
+          label: form.form_name,
+          value: form.id,
+        }));
+        setFormOptions(convertedFormOptions);
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetchCarePlanOptions()
+      .then((carePlanOptionsResponse) => {
+        const convertedCarePlanOptions = carePlanOptionsResponse.map(
+          (carePlan) => ({ label: carePlan.care_plan_name, value: carePlan.id })
+        );
+        setCarePlanOptions(convertedCarePlanOptions);
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetchUsers()
+      .then((fetchUsersResponse) => {
+        const convertedUserOptions = fetchUsersResponse.map((user) => ({
+          label: user.username,
+          value: user.id,
+        }));
+        setUserOptions(convertedUserOptions);
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  }, []);
+
   const disableSubmit = useMemo(() => {
     return (
       !formData?.staff_name ||
@@ -176,7 +254,7 @@ function EncounterNoteForm() {
     );
   }, [formData]);
 
-  const handleCreate = useCallback(async () => {
+  const handleCreatePayload = useCallback(async () => {
     const {
       staff_name,
       facility,
@@ -190,7 +268,9 @@ function EncounterNoteForm() {
       custom_fields,
       encounter_summary,
       forms,
+      deleted_forms,
       care_plans,
+      deleted_careplans,
       signed_by,
       uploaded_documents,
     } = formData;
@@ -200,8 +280,8 @@ function EncounterNoteForm() {
     staff_name && formDataPayload.append("staff_name", staff_name);
     facility && formDataPayload.append("facility", facility);
     encounter_date && formDataPayload.append("encounter_date", encounter_date);
-    startTime && formDataPayload.append("start_time", start_time);
-    endTime && formDataPayload.append("end_time", end_time);
+    start_time && formDataPayload.append("start_time", start_time);
+    end_time && formDataPayload.append("end_time", end_time);
     encounter_status &&
       formDataPayload.append("encounter_status", encounter_status);
     encounter_type && formDataPayload.append("encounter_type", encounter_type);
@@ -215,15 +295,37 @@ function EncounterNoteForm() {
     encounter_summary &&
       formDataPayload.append("encounter_summary", encounter_summary);
     forms && formDataPayload.append("forms", JSON.stringify(forms));
+    deleted_forms &&
+      formDataPayload.append(
+        "deleted_forms",
+        JSON.stringify(
+          deleted_forms.filter((formId) => !formsBackup.includes(formId)) || []
+        )
+      );
     care_plans &&
       formDataPayload.append("care_plans", JSON.stringify(care_plans || []));
+    deleted_careplans &&
+      formDataPayload.append(
+        "deleted_careplans",
+        JSON.stringify(
+          deleted_careplans.filter(
+            (carePlanId) => !carePlansBackup.includes(carePlanId)
+          ) || []
+        )
+      );
     signed_by &&
       formDataPayload.append("signed_by", JSON.stringify(signed_by || []));
     for (let i = 0; i < uploaded_documents?.length; i++) {
-      formDataPayload.append("uploaded_documents", uploaded_documents[i]);
+      if (uploaded_documents[i] instanceof File) {
+        formDataPayload.append("uploaded_documents", uploaded_documents[i]);
+      }
     }
+    return formDataPayload;
+  }, [formData, clientId, navigate, formsBackup, carePlansBackup]);
 
+  const handleCreate = useCallback(async () => {
     try {
+      const formDataPayload = await handleCreatePayload();
       const response = await protectedApi.post(
         "/encounter-notes/",
         formDataPayload
@@ -240,7 +342,23 @@ function EncounterNoteForm() {
     } catch (error) {
       console.error(error);
     }
-  }, [formData]);
+  }, []);
+
+  const handleUpdate = useCallback(async () => {
+    try {
+      const formDataPayload = await handleCreatePayload();
+      const response = await protectedApi.put(
+        `/encounter-notes/${encounterId}/`,
+        formDataPayload
+      );
+      if (response.status === 200) {
+        notifySuccess("Encounter Note updated successfully");
+        navigate(`/clientchart/${clientId}`);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }, [encounterId, clientId]);
 
   return (
     <div className="mx-1" style={{ fontFamily: "poppins" }}>
@@ -315,12 +433,23 @@ function EncounterNoteForm() {
 
           <FormWrapper label="Encounter Details">
             <div className="col-span-6">
-              <InputElement
-                type="text"
-                value={formData?.staff_name || ""}
-                className="border-keppel"
+              <DropDown
+                name="staff_name"
                 placeholder="User Name *"
-                disabled
+                handleChange={(data) =>
+                  handleFormDataChange("staff_name", data.value)
+                }
+                className="border-keppel m-1 h-[37.6px]"
+                height="37.6px"
+                isEdittable={mode === "view"}
+                fontSize="14px"
+                borderColor="#5bc4bf"
+                options={userOptions}
+                selectedOption={
+                  userOptions.find(
+                    (user) => formData?.staff_name === user.value
+                  )?.label || ""
+                }
               />
             </div>
             <div className="col-span-6">
@@ -568,34 +697,81 @@ function EncounterNoteForm() {
           <FormWrapper label="Forms and Authority">
             <div className="col-span-6">
               <MultiSelectElement
+                name={"forms"}
                 className="border-keppel"
                 placeholder="Select forms"
                 value={forms || []}
                 disabled={mode === "view"}
                 onChange={(data) => {
                   setForms(data);
-                  handleFormDataChange(
-                    "forms",
-                    data.map((d) => d.value)
-                  );
+                  const updatedData = [];
+                  if (mode === "edit") {
+                    let deleted_forms = [
+                      ...formData?.deleted_forms,
+                      ...formData?.forms,
+                    ];
+                    data.forEach((d) => {
+                      const old_length = formData?.deleted_forms?.length;
+                      deleted_forms = deleted_forms.filter(
+                        (formId) => formId !== d.value
+                      );
+                      if (deleted_forms.length !== old_length) {
+                        updatedData.push(d.value);
+                      } else {
+                        updatedData.push(d.value);
+                      }
+                    });
+                    handleFormDataChange("deleted_forms", deleted_forms);
+                    handleFormDataChange("forms", updatedData);
+                  } else {
+                    handleFormDataChange(
+                      "forms",
+                      data.map((d) => d.value)
+                    );
+                  }
                 }}
-                options={["Form 1", "Form 2", "Form 3"]}
+                options={formOptions}
               />
             </div>
             <div className="col-span-6">
               <MultiSelectElement
+                name={"care_plans"}
                 className="border-keppel"
                 placeholder="Care Plans"
                 value={carePlans || []}
                 disabled={mode === "view"}
                 onChange={(data) => {
                   setCarePlans(data);
-                  handleFormDataChange(
-                    "care_plans",
-                    data.map((d) => d.value)
-                  );
+                  const updatedData = [];
+                  if (mode === "edit") {
+                    let deleted_careplans = [
+                      ...formData?.deleted_careplans,
+                      ...formData?.forms,
+                    ];
+                    data.forEach((d) => {
+                      const old_length = formData?.deleted_careplans?.length;
+                      deleted_careplans = deleted_careplans.filter(
+                        (carePlanId) => carePlanId !== d.value
+                      );
+                      if (deleted_careplans.length !== old_length) {
+                        updatedData.push(d.value);
+                      } else {
+                        updatedData.push(d.value);
+                      }
+                    });
+                    handleFormDataChange(
+                      "deleted_careplans",
+                      deleted_careplans
+                    );
+                    handleFormDataChange("care_plans", updatedData);
+                  } else {
+                    handleFormDataChange(
+                      "care_plans",
+                      data.map((d) => d.value)
+                    );
+                  }
                 }}
-                options={["Care Plan 1", "Care Plan 2", "Care Plan 3"]}
+                options={carePlanOptions}
               />
             </div>
             <div className="col-span-12">
@@ -681,7 +857,7 @@ function EncounterNoteForm() {
           </button>
           <button
             disabled={disableSubmit || mode === "view"}
-            onClick={handleCreate}
+            onClick={mode === "edit" ? handleUpdate : handleCreate}
             className="border border-keppel rounded-[3px] disabled:cursor-not-allowed disabled:bg-[#6cd8d3] bg-[#5BC4BF] text-white w-32 py-2"
           >
             Save
