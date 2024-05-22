@@ -10,10 +10,11 @@ export default function MultiSelectElement({
   value,
   required,
   onChange,
+  width,
   ...rest
 }) {
   return (
-    <div className="m-1">
+    <div className={`m-1 ${width}`}>
       {label && <FormLabel required={required}>{label}</FormLabel>}
       <Select
         className={className}
