@@ -13,6 +13,7 @@ import SignInput from "../../components/dynamicform/FormElements/SignInput";
 import { protectedApi } from "../../services/api";
 import { notifyError, notifySuccess } from "../../helper/toastNotication";
 import DropDown from "../../components/common/Dropdown";
+import DnDCustomFields from "../../components/DnDCustomFields";
 
 function FormWrapper({ children, label }) {
   return (
@@ -140,7 +141,8 @@ function NewEncounterNote() {
     encounter_date && formDataPayload.append("encounter_date", encounter_date);
     startTime && formDataPayload.append("start_time", start_time);
     endTime && formDataPayload.append("end_time", end_time);
-    encounter_status && formDataPayload.append("encounter_status", encounter_status);
+    encounter_status &&
+      formDataPayload.append("encounter_status", encounter_status);
     encounter_type && formDataPayload.append("encounter_type", encounter_type);
     program && formDataPayload.append("program", program);
     note_template && formDataPayload.append("note_template", note_template);
@@ -537,6 +539,16 @@ function NewEncounterNote() {
             </div>
           </FormWrapper>
 
+          <FormWrapper label="Custom Fields">
+            <div className="col-span-12">
+              <DnDCustomFields
+                onChange={(dndItms) => {
+                  console.log({ dndItms });
+                }}
+              />
+            </div>
+          </FormWrapper>
+
           <FormWrapper label="Billing Details">
             <div className="col-span-4">
               <InputElement
@@ -583,7 +595,10 @@ function NewEncounterNote() {
           </FormWrapper>
         </div>
         <div className="mx-auto flex justify-center items-center gap-x-4 my-8">
-          <button onClick={() => navigate(`/clientchart/${clientId}`)} className="border border-keppel rounded-[3px] text-[#5BC4BF] w-32 py-2">
+          <button
+            onClick={() => navigate(`/clientchart/${clientId}`)}
+            className="border border-keppel rounded-[3px] text-[#5BC4BF] w-32 py-2"
+          >
             Cancel
           </button>
           <button
