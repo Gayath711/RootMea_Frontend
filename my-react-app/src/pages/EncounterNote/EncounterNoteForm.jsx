@@ -271,6 +271,7 @@ function EncounterNoteForm() {
       deleted_forms,
       care_plans,
       deleted_careplans,
+      deleted_documents,
       signed_by,
       uploaded_documents,
     } = formData;
@@ -313,6 +314,7 @@ function EncounterNoteForm() {
           ) || []
         )
       );
+    deleted_documents && formDataPayload.append("deleted_documents", deleted_documents);
     signed_by &&
       formDataPayload.append("signed_by", JSON.stringify(signed_by || []));
     for (let i = 0; i < uploaded_documents?.length; i++) {
