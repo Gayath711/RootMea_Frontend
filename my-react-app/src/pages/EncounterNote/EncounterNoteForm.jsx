@@ -346,14 +346,11 @@ function EncounterNoteForm() {
         "signed_by",
         JSON.stringify(signed_by.filter((sign) => !sign?.id) || [])
       );
-    const uploadedDocumentsPayload =
-      uploaded_documents?.filter((doc) => doc instanceof File) || [];
-    // for (let i = 0; i < uploaded_documents?.length; i++) {
-    //   if (uploaded_documents[i] instanceof File) {
-    //     uploadedDocumentsPayload.append(uploaded_documents[i]);
-    //   }
-    // }
-    formDataPayload.append("uploaded_documents", uploadedDocumentsPayload);
+    for (let i = 0; i < uploaded_documents?.length; i++) {
+      if (uploaded_documents[i] instanceof File) {
+        formDataPayload.append("uploaded_documents", uploaded_documents[i]);
+      }
+    }
     return formDataPayload;
   }, [formData, clientId, navigate, formsBackup, carePlansBackup]);
 

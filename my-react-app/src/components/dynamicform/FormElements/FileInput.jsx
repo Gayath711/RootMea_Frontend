@@ -16,6 +16,7 @@ function FileInput({
 }) {
   const onDrop = useCallback(
     (acceptedFiles) => {
+      console.log(typeof acceptedFiles[0]);
       setFiles([...files, ...acceptedFiles]);
     },
     [formData, files]
