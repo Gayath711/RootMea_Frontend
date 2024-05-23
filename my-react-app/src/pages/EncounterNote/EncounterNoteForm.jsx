@@ -29,12 +29,13 @@ function FormWrapper({ children, label }) {
 }
 
 function convertToTimeString(date) {
+  console.log(date);
   return (
-    date.getHours() +
+    date?.getHours() +
     ":" +
-    date.getMinutes() +
+    date?.getMinutes() +
     ":" +
-    (date.getSeconds() < 9 ? date.getSeconds() : "0" + date.getSeconds())
+    (date?.getSeconds() < 9 ? date?.getSeconds() : "0" + date?.getSeconds())
   );
 }
 
@@ -96,7 +97,6 @@ function convertTimeToISOString(data, timeString) {
   convertedDate.setHours(hours);
   convertedDate.setMinutes(minutes);
   convertedDate.setSeconds(seconds);
-
   // Convert to ISO string
   return convertedDate;
 }
@@ -275,6 +275,7 @@ function EncounterNoteForm() {
       program,
       note_template,
       custom_fields,
+      encounter_summary_text_template,
       encounter_summary,
       forms,
       forms_deleted,
@@ -298,11 +299,13 @@ function EncounterNoteForm() {
     encounter_type && formDataPayload.append("encounter_type", encounter_type);
     program && formDataPayload.append("program", program);
     note_template && formDataPayload.append("note_template", note_template);
-    custom_fields &&
-      formDataPayload.append(
-        "custom_fields",
-        JSON.stringify(custom_fields || [])
-      );
+    custom_fields !== undefined &&
+    formDataPayload.append(
+      "custom_fields",
+      JSON.stringify(custom_fields || [])
+    );
+    encounter_summary_text_template &&
+      formDataPayload.append("encounter_summary_text_template", encounter_summary_text_template);
     encounter_summary &&
       formDataPayload.append("encounter_summary", encounter_summary);
     forms &&
