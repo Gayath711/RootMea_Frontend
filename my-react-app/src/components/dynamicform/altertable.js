@@ -611,7 +611,7 @@ function AlterTable({ onAddColumn }) {
                 onChange={handleColumnTypeChange} // Call handleColumnTypeChange when new column type changes
                 className="border border-gray-300 rounded px-4 py-2 w-full focus:outline-none focus:border-blue-500"
               >
-                <option value="VARCHAR(250)">Text</option>
+                {/* <option value="VARCHAR(250)">Text</option> */}
                 <option value="TEXT">Text</option>
                 <option value="TEXTAREA">Text Area</option>
                 <option value="DECIMAL">Decimal</option>
