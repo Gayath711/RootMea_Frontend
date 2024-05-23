@@ -88,9 +88,9 @@ function convertTimeToISOString(data, timeString) {
   console.log(timeString, "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
   // Get the current date in 'YYYY-MM-DD' format
   var timeParts = timeString.split(":");
-  var hours = parseInt(timeParts[0], 10);
-  var minutes = parseInt(timeParts[1], 10);
-  var seconds = parseInt(timeParts[2], 10);
+  var hours = parseInt(timeParts?.[0], 10);
+  var minutes = parseInt(timeParts?.[1], 10);
+  var seconds = parseInt(timeParts?.[2], 10);
 
   // Create a new Date object and set the time
   var convertedDate = new Date();
@@ -197,7 +197,7 @@ function EncounterNoteForm() {
         if (clientDetails?.date_of_birth) {
           const splitDate = clientDetailsResponse.date_of_birth.split("-");
           if (splitDate.length === 3) {
-            clientDetailsResponse.date_of_birth = `${splitDate[1]}/${splitDate[2]}/${splitDate[0]}`;
+            clientDetailsResponse.date_of_birth = `${splitDate?.[1]}/${splitDate?.[2]}/${splitDate?.[0]}`;
           }
         }
         setClientDetails(clientDetailsResponse);
