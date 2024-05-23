@@ -9,6 +9,7 @@ const InputElement = ({
   value,
   placeholder,
   disabled = false,
+  width,
   ...rest
 }) => {
   const valueProps =
@@ -19,7 +20,7 @@ const InputElement = ({
         };
 
   return (
-    <div className="m-1">
+    <div className={`m-1 ${width}`}>
       {label && <FormLabel required={required}>{label}</FormLabel>}
       <input
         type={type}
