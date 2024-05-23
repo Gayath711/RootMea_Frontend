@@ -85,7 +85,6 @@ async function fetchUsers() {
 }
 
 function convertTimeToISOString(data, timeString) {
-  console.log(timeString, "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
   // Get the current date in 'YYYY-MM-DD' format
   var timeParts = timeString.split(":");
   var hours = parseInt(timeParts?.[0], 10);
@@ -150,7 +149,7 @@ function EncounterNoteForm() {
             return { label: form.form_name, value: form.form_id };
           });
           setForms(convertedForms);
-          setFormsBackup(convertedForms);
+          setFormsBackup(data.forms.map((form) => form.form_id));
           data.forms = data.forms.map((form) => form.form_id);
           const convertedCarePlans = data.care_plans.map((carePlan) => {
             return {
@@ -159,7 +158,9 @@ function EncounterNoteForm() {
             };
           });
           setCarePlans(convertedCarePlans);
-          setCarePlansBackup(convertedCarePlans);
+          setCarePlansBackup(
+            data.care_plans.map((carePlan) => carePlan.care_plan_id)
+          );
           data.forms_deleted = [];
           data.care_plans_deleted = [];
           data.uploaded_documents_deleted = [];
@@ -263,7 +264,6 @@ function EncounterNoteForm() {
   }, [formData]);
 
   const handleCreatePayload = useCallback(async () => {
-    console.log(formData);
     const {
       staff_name,
       facility,
@@ -305,24 +305,31 @@ function EncounterNoteForm() {
       );
     encounter_summary &&
       formDataPayload.append("encounter_summary", encounter_summary);
-    forms && formDataPayload.append("forms", JSON.stringify(forms));
+    forms &&
+      formDataPayload.append(
+        "forms",
+        JSON.stringify(
+          forms?.filter((formId) => !formsBackup.includes(formId)) || []
+        )
+      );
     forms_deleted &&
       formDataPayload.append(
         "forms_deleted",
-        JSON.stringify(
-          forms_deleted.filter((formId) => !formsBackup.includes(formId)) || []
-        )
+        JSON.stringify([...new Set(forms_deleted)] || [])
       );
     care_plans &&
-      formDataPayload.append("care_plans", JSON.stringify(care_plans || []));
+      formDataPayload.append(
+        "care_plans",
+        JSON.stringify(
+          care_plans?.filter(
+            (carePlanId) => !carePlansBackup?.includes(carePlanId)
+          ) || []
+        )
+      );
     care_plans_deleted &&
       formDataPayload.append(
         "care_plans_deleted",
-        JSON.stringify(
-          care_plans_deleted.filter(
-            (carePlanId) => !carePlansBackup.includes(carePlanId)
-          ) || []
-        )
+        JSON.stringify([...new Set(care_plans_deleted)] || [])
       );
     uploaded_documents_deleted &&
       formDataPayload.append(
@@ -339,11 +346,14 @@ function EncounterNoteForm() {
         "signed_by",
         JSON.stringify(signed_by.filter((sign) => !sign?.id) || [])
       );
-    for (let i = 0; i < uploaded_documents?.length; i++) {
-      if (uploaded_documents[i] instanceof File) {
-        formDataPayload.append("uploaded_documents", uploaded_documents[i]);
-      }
-    }
+    const uploadedDocumentsPayload =
+      uploaded_documents?.filter((doc) => doc instanceof File) || [];
+    // for (let i = 0; i < uploaded_documents?.length; i++) {
+    //   if (uploaded_documents[i] instanceof File) {
+    //     uploadedDocumentsPayload.append(uploaded_documents[i]);
+    //   }
+    // }
+    formDataPayload.append("uploaded_documents", uploadedDocumentsPayload);
     return formDataPayload;
   }, [formData, clientId, navigate, formsBackup, carePlansBackup]);
 
@@ -770,7 +780,7 @@ function EncounterNoteForm() {
                   if (mode === "edit") {
                     let care_plans_deleted = [
                       ...formData?.care_plans_deleted,
-                      ...formData?.forms,
+                      ...formData?.care_plans,
                     ];
                     data.forEach((d) => {
                       const old_length = formData?.care_plans_deleted?.length;

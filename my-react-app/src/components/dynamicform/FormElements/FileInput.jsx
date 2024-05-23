@@ -23,8 +23,9 @@ function FileInput({
 
   const handleRemove = useCallback(
     (filePath, file_id) => {
-      console.log(files.filter((file) => file.path !== filePath));
-      setFiles(files.filter((file) => file.path !== filePath));
+      setFiles(
+        files.filter((file) => file.path !== filePath || file?.file_id !== file_id)
+      );
       if (formData && mode === "edit") {
         setFormData((prev) => {
           const newFormData = { ...prev };
@@ -52,7 +53,6 @@ function FileInput({
   });
 
   const extractFilenameFromHeader = useCallback((response) => {
-    console.log(response.headers);
     const contentDisposition = response.headers.get("Content-Disposition");
     const matches = contentDisposition.match(/filename="(.+)"/);
     if (matches && matches.length > 1) {
