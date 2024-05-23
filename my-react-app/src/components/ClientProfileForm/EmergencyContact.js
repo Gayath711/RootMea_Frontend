@@ -9,6 +9,7 @@ const EmergencyContact = ({
   handleFieldChange,
   errors,
   contactPrefix,
+  required,
 }) => {
   const [isOpen, setIsOpen] = useState(true);
 
@@ -56,7 +57,7 @@ const EmergencyContact = ({
               <div className="flex space-x-6">
                 <div className="flex-1">
                   <TextBox
-                    placeholder="Name"
+                    placeholder={`Name${required ? " *" : ""}`}
                     isEdittable={isEdittable}
                     value={clientData[`${contactPrefix}_name`]}
                     handleChange={(e) =>
@@ -66,7 +67,7 @@ const EmergencyContact = ({
                 </div>
                 <div className="flex-1">
                   <TextBox
-                    placeholder="Email Address"
+                    placeholder={`Email Address${required ? " *" : ""}`}
                     isEdittable={isEdittable}
                     value={clientData[`${contactPrefix}_email_address`]}
                     handleChange={(e) =>
@@ -84,7 +85,7 @@ const EmergencyContact = ({
                 </div>
                 <div className="flex-1">
                   <DropDown
-                    placeholder="Relationship"
+                    placeholder={`Relationship${required ? " *" : ""}`}
                     options={relationshipOptions}
                     isEdittable={isEdittable}
                     selectedOption={clientData[`${contactPrefix}_relationship`]}
@@ -100,7 +101,7 @@ const EmergencyContact = ({
               <div className="flex space-x-6">
                 <div className="flex-1">
                   <TextBox
-                    placeholder="Address Line #1"
+                    placeholder={`Address Line #1${required ? " *" : ""}`}
                     isEdittable={isEdittable}
                     value={clientData[`${contactPrefix}_address_line_1`]}
                     handleChange={(e) =>
@@ -113,7 +114,7 @@ const EmergencyContact = ({
                 </div>
                 <div className="flex-1">
                   <TextBox
-                    placeholder="Address Line #2"
+                    placeholder={`Address Line #2${required ? " *" : ""}`}
                     isEdittable={isEdittable}
                     value={clientData[`${contactPrefix}_address_line_2`]}
                     handleChange={(e) =>
@@ -126,7 +127,7 @@ const EmergencyContact = ({
                 </div>
                 <div className="flex-1">
                   <DropDown
-                    placeholder="City"
+                    placeholder={`City${required ? " *" : ""}`}
                     options={cityOptions}
                     isEdittable={isEdittable}
                     selectedOption={clientData[`${contactPrefix}_city`]}
@@ -139,7 +140,7 @@ const EmergencyContact = ({
               <div className="flex space-x-6">
                 <div className="flex-1">
                   <DropDown
-                    placeholder="State"
+                    placeholder={`State${required ? " *" : ""}`}
                     options={stateOptions}
                     isEdittable={isEdittable}
                     selectedOption={clientData[`${contactPrefix}_state`]}
@@ -150,7 +151,7 @@ const EmergencyContact = ({
                 </div>
                 <div className="flex-1">
                   <TextBox
-                    placeholder="Zip Code"
+                    placeholder={`Zip Code${required ? " *" : ""}`}
                     isEdittable={isEdittable}
                     value={clientData[`${contactPrefix}_zip`]}
                     handleChange={(e) =>
@@ -165,7 +166,7 @@ const EmergencyContact = ({
                 </div>
                 <div className="flex-1">
                   <TextBox
-                    placeholder="Phone Number"
+                    placeholder={`Phone Number${required ? " *" : ""}`}
                     isEdittable={isEdittable}
                     value={clientData[`${contactPrefix}_phone`]}
                     handleChange={(e) =>

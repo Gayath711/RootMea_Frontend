@@ -63,7 +63,7 @@ const AddressInformation = ({
               <div className="flex space-x-6">
                 <div className="flex-1">
                   <TextBox
-                    placeholder="Mailing Address Line 1"
+                    placeholder="Mailing Address Line 1 *"
                     isEdittable={isEdittable}
                     value={
                       clientData.mailing_address_line_1_address_n_usual_location
@@ -80,7 +80,7 @@ const AddressInformation = ({
               <div className="flex space-x-6">
                 <div className="flex-1">
                   <TextBox
-                    placeholder="Mailing Address Line 2"
+                    placeholder="Mailing Address Line 2 *"
                     isEdittable={isEdittable}
                     value={
                       clientData.mailing_address_line_2_address_n_usual_location
@@ -97,7 +97,7 @@ const AddressInformation = ({
               <div className="flex space-x-6">
                 <div className="flex-1">
                   <DropDown
-                    placeholder="City"
+                    placeholder="City *"
                     options={cityOptions}
                     isEdittable={isEdittable}
                     selectedOption={clientData.city_address_n_usual_location}
@@ -111,7 +111,7 @@ const AddressInformation = ({
                 </div>
                 <div className="flex-1">
                   <DropDown
-                    placeholder="State"
+                    placeholder="State *"
                     options={stateOptions}
                     isEdittable={isEdittable}
                     selectedOption={clientData.state_address_n_usual_location}
@@ -125,7 +125,7 @@ const AddressInformation = ({
                 </div>
                 <div className="flex-1">
                   <TextBox
-                    placeholder="Valid Zip Code"
+                    placeholder="Valid Zip Code *"
                     isEdittable={isEdittable}
                     value={clientData.zip_address_n_usual_location}
                     handleChange={(e) =>

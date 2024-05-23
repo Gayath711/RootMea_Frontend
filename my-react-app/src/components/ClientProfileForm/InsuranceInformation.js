@@ -47,6 +47,7 @@ const InsuranceInformation = ({
             clientData={clientData}
             handleFieldChange={handleFieldChange}
             insurancePrefix="insurance_primary"
+            required
           />
           <Insurance
             heading={"Secondary - Insurance"}

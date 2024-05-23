@@ -9,6 +9,7 @@ const Insurance = ({
   clientData,
   handleFieldChange,
   insurancePrefix,
+  required,
 }) => {
   const [isOpen, setIsOpen] = useState(true);
 
@@ -26,6 +27,8 @@ const Insurance = ({
     { value: "Other", label: "Other" },
   ];
 
+  let requredIndicator = required ? " *" : "";
+
   return (
     <div className="">
       <div className="border-1 border-gray-500/50 mx-4 mb-4">
@@ -37,7 +40,7 @@ const Insurance = ({
             <div className="flex space-x-6">
               <div className="flex-1">
                 <TextBox
-                  placeholder="Carrier Name"
+                  placeholder={"Carrier Name" + requredIndicator}
                   isEdittable={isEdittable}
                   value={clientData[`${insurancePrefix}_carrier_name`]}
                   handleChange={(e) =>
@@ -52,7 +55,7 @@ const Insurance = ({
             <div className="flex space-x-6">
               <div className="flex-1">
                 <TextBox
-                  placeholder="Subscriber ID"
+                  placeholder={"Subscriber ID" + requredIndicator}
                   isEdittable={isEdittable}
                   value={clientData[`${insurancePrefix}_subscriber_id`]}
                   handleChange={(e) =>
@@ -65,7 +68,7 @@ const Insurance = ({
               </div>
               <div className="flex-1">
                 <TextBox
-                  placeholder="Subscriber Name"
+                  placeholder={"Subscriber Name" + requredIndicator}
                   isEdittable={isEdittable}
                   value={clientData[`${insurancePrefix}_subscriber_name`]}
                   handleChange={(e) =>
@@ -80,7 +83,7 @@ const Insurance = ({
             <div className="flex space-x-6">
               <div className="flex-1">
                 <DropDown
-                  placeholder="Relation to Insured"
+                  placeholder={"Relation to Insured" + requredIndicator}
                   options={relationshipOptions}
                   isEdittable={isEdittable}
                   selectedOption={
@@ -96,7 +99,7 @@ const Insurance = ({
               </div>
               <div className="flex-1">
                 <DateInput
-                  placeholder="Effective From Date"
+                  placeholder={"Effective From Date" + requredIndicator}
                   width={260}
                   isEdittable={isEdittable}
                   value={clientData[`${insurancePrefix}_effective_from`]}
@@ -110,7 +113,7 @@ const Insurance = ({
               </div>
               <div className="flex-1">
                 <DateInput
-                  placeholder="Effective To Date"
+                  placeholder={"Effective To Date" + requredIndicator}
                   width={260}
                   isEdittable={isEdittable}
                   value={clientData[`${insurancePrefix}_effective_to`]}
