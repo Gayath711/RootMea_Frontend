@@ -79,7 +79,7 @@ const ContactInformation = ({
                 <div className="flex space-x-6">
                   <div className="flex-1">
                     <TextBox
-                      placeholder="First Name"
+                      placeholder="First Name *"
                       isEdittable={isEdittable}
                       value={clientData.first_name}
                       handleChange={(e) =>
@@ -104,7 +104,7 @@ const ContactInformation = ({
                   </div>
                   <div className="flex-1">
                     <TextBox
-                      placeholder="Last Name"
+                      placeholder="Last Name *"
                       isEdittable={isEdittable}
                       value={clientData.last_name}
                       handleChange={(e) =>
@@ -142,7 +142,7 @@ const ContactInformation = ({
                       }
                     /> */}
                     <DropDown
-                      placeholder="Preferred Pronouns"
+                      placeholder="Preferred Pronouns *"
                       options={preferedPronounsOptions}
                       isEdittable={isEdittable}
                       selectedOption={clientData.preferred_pronouns}
@@ -170,7 +170,7 @@ const ContactInformation = ({
                 <div className="flex space-x-6">
                   <div className="flex-1">
                     <TextBox
-                      placeholder="Mobile Number"
+                      placeholder="Mobile Number *"
                       isEdittable={isEdittable}
                       value={clientData.mobile_number}
                       handleChange={(e) =>
@@ -207,7 +207,7 @@ const ContactInformation = ({
                 <div className="flex space-x-6">
                   <div className="flex-1">
                     <DropDown
-                      placeholder="Best Way to Contact You"
+                      placeholder="Best Way to Contact You *"
                       options={waysToContactOptions}
                       isEdittable={isEdittable}
                       selectedOption={clientData.best_way_to_contact}
@@ -218,7 +218,7 @@ const ContactInformation = ({
                   </div>
                   <div className="flex-1">
                     <DropDown
-                      placeholder="Primary Phone Number"
+                      placeholder="Primary Phone Number *"
                       options={primaryPhoneOptions}
                       isEdittable={isEdittable}
                       selectedOption={clientData.primary_phone}
@@ -231,7 +231,7 @@ const ContactInformation = ({
                 <div className="flex space-x-6">
                   <div className="flex-1">
                     <DropDown
-                      placeholder="Preferred Language"
+                      placeholder="Preferred Language *"
                       options={preferredLanguageoptions}
                       isEdittable={isEdittable}
                       selectedOption={clientData.comfortable_language}
@@ -262,6 +262,7 @@ const ContactInformation = ({
             clientData={clientData}
             handleFieldChange={handleFieldChange}
             contactPrefix="emergency_contact_1"
+            required={true}
           />
 
           <EmergencyContact

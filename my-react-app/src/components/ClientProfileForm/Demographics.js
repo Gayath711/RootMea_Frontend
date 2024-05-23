@@ -80,10 +80,20 @@ const Demographics = ({
   ];
 
   const raceOptions = [
-    { value: "White/Caucasian", label: "White/Caucasian" },
-    { value: "Native American", label: "Native American" },
-    { value: "Mixed Race", label: "Mixed Race" },
-    { value: "Other", label: "Other" },
+    { label: "Black or African Descent", value: "Black or African Descent" },
+    { label: "White or Caucasian", value: "White or Caucasian" },
+    { label: "Asian", value: "Asian" },
+    {
+      label: "Pacific Islander or Native Hawaiian",
+      value: "Pacific Islander or Native Hawaiian",
+    },
+    { label: "Filipino", value: "Filipino" },
+    {
+      label: "Native American/Alaskan/American Indian",
+      value: "Native American/Alaskan/American Indian",
+    },
+    { label: "Middle Eastern/Arab", value: "Middle Eastern/Arab" },
+    { label: "Other", value: "Other" },
   ];
 
   const genderOptions = [
@@ -141,7 +151,7 @@ const Demographics = ({
               <div className="flex space-x-6">
                 <div className="flex-1">
                   <DateInput
-                    placeholder="Date of Birth"
+                    placeholder="Date of Birth *"
                     width={290}
                     isEdittable={isEdittable}
                     value={clientData.date_of_birth}
@@ -167,7 +177,7 @@ const Demographics = ({
                 </div>
                 <div className="flex-1">
                   <DropDown
-                    placeholder="Sex"
+                    placeholder="Sex *"
                     options={sexOptions}
                     isEdittable={isEdittable}
                     selectedOption={clientData.sex}
@@ -199,7 +209,7 @@ const Demographics = ({
                     }
                   /> */}
                   <DropDown
-                    placeholder="US Armed Forces"
+                    placeholder="US Armed Forces *"
                     options={usArmedForcesOptions}
                     isEdittable={isEdittable}
                     selectedOption={clientData.us_armed_forces}
@@ -210,7 +220,7 @@ const Demographics = ({
                 </div>
                 <div className="flex-1">
                   <DropDown
-                    placeholder="Ethinicity"
+                    placeholder="Ethinicity *"
                     options={ethinicityOptions}
                     isEdittable={isEdittable}
                     selectedOption={clientData.ethnicity}
@@ -223,7 +233,7 @@ const Demographics = ({
               <div className="flex space-x-6">
                 <div className="flex-1">
                   <DropDown
-                    placeholder="Which Best describes the place you live now?"
+                    placeholder="Which Best describes the place you live now? *"
                     options={currentPlaceOptions}
                     isEdittable={isEdittable}
                     selectedOption={clientData.describe_the_place_you_live}
@@ -236,7 +246,7 @@ const Demographics = ({
               <div className="flex space-x-6">
                 <div className="flex-1">
                   <DropDown
-                    placeholder="Race"
+                    placeholder="Race *"
                     options={raceOptions}
                     isEdittable={isEdittable}
                     selectedOption={clientData.race}
@@ -255,7 +265,7 @@ const Demographics = ({
                 </div>
                 <div className="flex-1">
                   <DropDown
-                    placeholder="Gender Identity"
+                    placeholder="Gender Identity *"
                     options={genderOptions}
                     isEdittable={isEdittable}
                     selectedOption={clientData.gender_identity}
@@ -278,7 +288,7 @@ const Demographics = ({
                 </div>
                 <div className="flex-1">
                   <DropDown
-                    placeholder="Sexual Orientation"
+                    placeholder="Sexual Orientation *"
                     options={sexualOrientationOptions}
                     isEdittable={isEdittable}
                     selectedOption={clientData.sexual_orientation}
