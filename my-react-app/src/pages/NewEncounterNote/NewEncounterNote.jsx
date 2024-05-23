@@ -15,15 +15,33 @@ import { notifyError, notifySuccess } from "../../helper/toastNotication";
 import DropDown from "../../components/common/Dropdown";
 import DnDCustomFields from "../../components/DnDCustomFields";
 
-function FormWrapper({ children, label }) {
+import CollapseOpenSvg from "../../components/images/collpase-open.svg";
+import CollapseCloseSvg from "../../components/images/collapse-close.svg";
+
+function FormWrapper({ children, label, isCollapsable, initialState = true }) {
+  const [show, setShow] = useState(initialState);
+
   return (
     <div className="rounded-[6px] border border-keppel">
-      <div className="w-full px-3 py-2.5 border-b border-keppel text-xl font-medium">
-        {label}
+      <div
+        onClick={() => {
+          isCollapsable && setShow((prev) => !prev);
+        }}
+        className="w-full px-3 py-2.5 border-b border-keppel text-xl font-medium flex justify-between items-center gap-2 cursor-pointer"
+      >
+        <span>{label}</span>
+        {isCollapsable && (
+          <img
+            src={show ? CollapseCloseSvg : CollapseOpenSvg}
+            alt="collapse-icon"
+          />
+        )}
       </div>
-      <div className="px-4 py-3 grid grid-cols-12 gap-x-3 gap-y-3">
-        {children}
-      </div>
+      {show && (
+        <div className="px-4 py-3 grid grid-cols-12 gap-x-3 gap-y-3">
+          {children}
+        </div>
+      )}
     </div>
   );
 }
@@ -66,6 +84,9 @@ function NewEncounterNote() {
     client_id: clientId,
     staff_name: "Temporary User",
   });
+
+  const [customFields, setCustomFields] = useState([]);
+  const [showCutomFields, setShowCustomFields] = useState(false);
 
   const navigate = useNavigate();
 
@@ -162,6 +183,24 @@ function NewEncounterNote() {
       formDataPayload.append("uploaded_documents", uploaded_documents[i]);
     }
 
+    // DND Custom Fields
+
+    let tags = customFields.map((field) => {
+      let answer = "";
+      if (field.type === "imageupload" || field.type === "fileupload") {
+        answer = field.props.base64;
+      } else {
+        answer = field.props.value;
+      }
+      return {
+        datatype: field.type,
+        question: field.props.label,
+        answer: answer,
+      };
+    });
+
+    formDataPayload.append("tags", JSON.stringify(tags || []));
+
     try {
       const response = await protectedApi.post(
         "/encounter-notes/",
@@ -179,7 +218,7 @@ function NewEncounterNote() {
     } catch (error) {
       console.error(error);
     }
-  }, [formData]);
+  }, [formData, customFields]);
 
   return (
     <div className="mx-1" style={{ fontFamily: "poppins" }}>
@@ -539,11 +578,15 @@ function NewEncounterNote() {
             </div>
           </FormWrapper>
 
-          <FormWrapper label="Custom Fields">
+          <FormWrapper
+            label="Custom Fields"
+            isCollapsable={true}
+            initialState={false}
+          >
             <div className="col-span-12">
               <DnDCustomFields
                 onChange={(dndItms) => {
-                  console.log({ dndItms });
+                  setCustomFields(dndItms);
                 }}
               />
             </div>

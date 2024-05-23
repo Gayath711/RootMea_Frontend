@@ -6,19 +6,20 @@ import { CSS } from "@dnd-kit/utilities";
 import { useSortable } from "@dnd-kit/sortable";
 
 // Elements
-import InputElement from "../dynamicform/FormElements/InputElement";
-import TextAreaElement from "../dynamicform/FormElements/TextAreaElement";
-import CheckBoxElement from "../dynamicform/FormElements/CheckBoxElement";
-import RadioElement from "../dynamicform/FormElements/RadioElement";
-import DateInput from "../dynamicform/FormElements/DateInput";
+import InputElement from "./FormElements/InputElement";
+import TextAreaElement from "./FormElements/TextAreaElement";
+import CheckBoxElement from "./FormElements/CheckBoxElement";
+import RadioElement from "./FormElements/RadioElement";
+import DateInput from "./FormElements/DateInput";
 import { useDnDCustomFieldsContext } from "./Context/DnDCustomFieldsContext";
 import ActionContextMenu from "./ActionContextMenu";
 import { useDraggable, useDroppable } from "@dnd-kit/core";
-import SelectElement from "../dynamicform/FormElements/SelectElement";
-import MultiSelectElement from "../dynamicform/FormElements/MultiSelectElement";
-import HeaderElement from "../dynamicform/FormElements/HeaderElement";
-import DividerElement from "../dynamicform/FormElements/DividerElement";
+import SelectElement from "./FormElements/SelectElement";
+import MultiSelectElement from "./FormElements/MultiSelectElement";
+import HeaderElement from "./FormElements/HeaderElement";
+import DividerElement from "./FormElements/DividerElement";
 import FieldProperty from "./FieldProperty";
+import FileInputElement from "./FormElements/FileInputElement";
 
 function FieldElement({ field, index, id, preview }) {
   const { setSelectedElement, selectedElement } = useDnDCustomFieldsContext();
@@ -29,10 +30,14 @@ function FieldElement({ field, index, id, preview }) {
   let inputElement;
   switch (field.type) {
     case "text":
+      {
+        inputElement = <InputElement {...field.props} />;
+      }
+      break;
     case "imageupload":
     case "fileupload":
       {
-        inputElement = <InputElement {...field.props} />;
+        inputElement = <FileInputElement {...field.props} />;
       }
       break;
     case "textarea":

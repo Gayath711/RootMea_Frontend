@@ -346,7 +346,7 @@ function RenderDnDCustomFields({ onDnDItemsChange }) {
         type: "date",
         label: "",
         value: "",
-        width: "w-full",
+        width: "w-1/4",
       },
     },
     {
@@ -374,6 +374,7 @@ function RenderDnDCustomFields({ onDnDItemsChange }) {
         value: "",
         width: "w-full",
         base64: "",
+        isFile: true,
       },
     },
     {

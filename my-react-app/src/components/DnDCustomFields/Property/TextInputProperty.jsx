@@ -3,6 +3,7 @@ import { useDnDCustomFieldsContext } from "../Context/DnDCustomFieldsContext";
 
 import InputElement from "../../dynamicform/FormElements/InputElement";
 import CheckBoxElement from "../../dynamicform/FormElements/CheckBoxElement";
+import TextAreaElement from "../FormElements/TextAreaElement";
 
 export default function TextInputProperty() {
   const { selectedElement, elements, updateElement } =
@@ -40,6 +41,10 @@ export default function TextInputProperty() {
     updateElement(selectedElement, updatedElement);
   };
 
+  let isTextArea = fieldElement.type === "textarea";
+
+  let AnswerInput = isTextArea ? TextAreaElement : InputElement;
+
   return (
     <div className="flex flex-column gap-1">
       <InputElement
@@ -52,7 +57,7 @@ export default function TextInputProperty() {
         onChange={handlePropsChange}
       />
 
-      <InputElement
+      <AnswerInput
         className="m-0 p-0"
         type="text"
         name="value"
@@ -60,6 +65,7 @@ export default function TextInputProperty() {
         value={fieldElement.props.value}
         placeholder="Write an answer.."
         onChange={handlePropsChange}
+        rows={5}
       />
     </div>
   );
