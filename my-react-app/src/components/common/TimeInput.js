@@ -104,7 +104,7 @@ const TimeInput = ({
         maxTime={maxTime} // Set maxTime dynamically
         timeIntervals={timeIntervals}
         className={`
-                bg-white
+                bg-${isEdittable ? "#F6F7F7" : "white"}
                 px-2 border-1
                 border-gray-300/50
                 placeholder-gray-500 
