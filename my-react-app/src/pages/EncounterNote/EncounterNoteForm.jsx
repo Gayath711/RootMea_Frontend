@@ -160,10 +160,10 @@ function EncounterNoteForm() {
           });
           setCarePlans(convertedCarePlans);
           setCarePlansBackup(convertedCarePlans);
-          data.deleted_forms = [];
-          data.deleted_careplans = [];
-          data.deleted_documents = [];
-          data.deleted_signedby = [];
+          data.forms_deleted = [];
+          data.care_plans_deleted = [];
+          data.uploaded_documents_deleted = [];
+          data.signed_by_deleted = [];
           data.care_plans = data.care_plans.map(
             (carePlan) => carePlan.care_plan_id
           );
@@ -277,11 +277,11 @@ function EncounterNoteForm() {
       custom_fields,
       encounter_summary,
       forms,
-      deleted_forms,
+      forms_deleted,
       care_plans,
-      deleted_careplans,
-      deleted_documents,
-      deleted_signedby,
+      care_plans_deleted,
+      uploaded_documents_deleted,
+      signed_by_deleted,
       signed_by,
       uploaded_documents,
     } = formData;
@@ -306,33 +306,33 @@ function EncounterNoteForm() {
     encounter_summary &&
       formDataPayload.append("encounter_summary", encounter_summary);
     forms && formDataPayload.append("forms", JSON.stringify(forms));
-    deleted_forms &&
+    forms_deleted &&
       formDataPayload.append(
-        "deleted_forms",
+        "forms_deleted",
         JSON.stringify(
-          deleted_forms.filter((formId) => !formsBackup.includes(formId)) || []
+          forms_deleted.filter((formId) => !formsBackup.includes(formId)) || []
         )
       );
     care_plans &&
       formDataPayload.append("care_plans", JSON.stringify(care_plans || []));
-    deleted_careplans &&
+    care_plans_deleted &&
       formDataPayload.append(
-        "deleted_careplans",
+        "care_plans_deleted",
         JSON.stringify(
-          deleted_careplans.filter(
+          care_plans_deleted.filter(
             (carePlanId) => !carePlansBackup.includes(carePlanId)
           ) || []
         )
       );
-    deleted_documents &&
+    uploaded_documents_deleted &&
       formDataPayload.append(
-        "deleted_documents",
-        JSON.stringify(deleted_documents)
+        "uploaded_documents_deleted",
+        JSON.stringify(uploaded_documents_deleted)
       );
-    deleted_signedby &&
+    signed_by_deleted &&
       formDataPayload.append(
-        "deleted_signedby",
-        JSON.stringify(deleted_signedby)
+        "signed_by_deleted",
+        JSON.stringify(signed_by_deleted)
       );
     signed_by &&
       formDataPayload.append(
@@ -372,7 +372,7 @@ function EncounterNoteForm() {
     try {
       const formDataPayload = await handleCreatePayload();
       const response = await protectedApi.put(
-        `/encounter-notes/${encounterId}/`,
+        `/encounter-notes-update/${encounterId}/`,
         formDataPayload
       );
       if (response.status === 200) {
@@ -730,22 +730,22 @@ function EncounterNoteForm() {
                   setForms(data);
                   const updatedData = [];
                   if (mode === "edit") {
-                    let deleted_forms = [
-                      ...formData?.deleted_forms,
+                    let forms_deleted = [
+                      ...formData?.forms_deleted,
                       ...formData?.forms,
                     ];
                     data.forEach((d) => {
-                      const old_length = formData?.deleted_forms?.length;
-                      deleted_forms = deleted_forms.filter(
+                      const old_length = formData?.forms_deleted?.length;
+                      forms_deleted = forms_deleted.filter(
                         (formId) => formId !== d.value
                       );
-                      if (deleted_forms.length !== old_length) {
+                      if (forms_deleted.length !== old_length) {
                         updatedData.push(d.value);
                       } else {
                         updatedData.push(d.value);
                       }
                     });
-                    handleFormDataChange("deleted_forms", deleted_forms);
+                    handleFormDataChange("forms_deleted", forms_deleted);
                     handleFormDataChange("forms", updatedData);
                   } else {
                     handleFormDataChange(
@@ -768,24 +768,24 @@ function EncounterNoteForm() {
                   setCarePlans(data);
                   const updatedData = [];
                   if (mode === "edit") {
-                    let deleted_careplans = [
-                      ...formData?.deleted_careplans,
+                    let care_plans_deleted = [
+                      ...formData?.care_plans_deleted,
                       ...formData?.forms,
                     ];
                     data.forEach((d) => {
-                      const old_length = formData?.deleted_careplans?.length;
-                      deleted_careplans = deleted_careplans.filter(
+                      const old_length = formData?.care_plans_deleted?.length;
+                      care_plans_deleted = care_plans_deleted.filter(
                         (carePlanId) => carePlanId !== d.value
                       );
-                      if (deleted_careplans.length !== old_length) {
+                      if (care_plans_deleted.length !== old_length) {
                         updatedData.push(d.value);
                       } else {
                         updatedData.push(d.value);
                       }
                     });
                     handleFormDataChange(
-                      "deleted_careplans",
-                      deleted_careplans
+                      "care_plans_deleted",
+                      care_plans_deleted
                     );
                     handleFormDataChange("care_plans", updatedData);
                   } else {
@@ -806,7 +806,7 @@ function EncounterNoteForm() {
                 setFormData={setFormData}
                 disabled={mode === "view"}
                 mode={mode}
-                deletedFilesKey="deleted_documents"
+                deletedFilesKey="uploaded_documents_deleted"
                 files={formData?.uploaded_documents || []}
                 setFiles={useCallback(
                   (files) => {
@@ -821,13 +821,11 @@ function EncounterNoteForm() {
                 signs={formData?.signed_by || []}
                 user={"User 1"}
                 disabled={mode === "view"}
-                setSigns={(signs) => handleFormDataChange("signed_by", signs)}
-                onSignRemove={(signId) =>
-                  setFormData({
-                    ...formData,
-                    deleted_signedby: [...formData.deleted_signedby, signId],
-                  })
-                }
+                mode={mode}
+                setSigns={(signs) => {
+                  handleFormDataChange("signed_by", signs);
+                }}
+                setFormData={setFormData}
                 className="border-keppel m-1"
               />
             </div>

@@ -1,10 +1,17 @@
 import React from "react";
 
-function toggleSign(user, signs, setSigns, onSignRemove) {
+function toggleSign(user, signs, setSigns, mode, setFormData) {
   if (signs.find((sign) => sign.staff_name === user)) {
-    setSigns(signs.filter((sign) => sign.staff_name !== user));
     const signId = signs?.find((sign) => sign.staff_name === user)?.id;
-    onSignRemove(signId);
+    if (mode === "edit") {
+      setFormData((prev) => ({
+        ...prev,
+        signed_by_deleted: [...prev.signed_by_deleted, signId],
+        signed_by: prev.signed_by.filter((sign) => sign.staff_name !== user),
+      }));
+    } else {
+      setSigns(signs.filter((sign) => sign.staff_name !== user));
+    }
   } else {
     setSigns([
       ...signs,
@@ -20,9 +27,10 @@ function SignInput({
   className,
   user,
   signs,
+  mode,
   setSigns,
   disabled,
-  onSignRemove,
+  setFormData,
   ...rest
 }) {
   return (
@@ -44,7 +52,7 @@ function SignInput({
         </div>
       )}
       <button
-        onClick={() => toggleSign(user, signs, setSigns, onSignRemove)}
+        onClick={() => toggleSign(user, signs, setSigns, mode, setFormData)}
         className="bg-[#5BC4BF] text-white px-3 py-2 disabled:cursor-not-allowed"
         disabled={disabled}
       >
