@@ -168,61 +168,61 @@ export default function FormView() {
     switch (column.type) {
       case "character varying":
         return (
-          <div key={column.name} className="mb-4">
+          <div key={column.name} className={`mb-4 ${column.width}`}>
             <label className="block mb-1">{label}</label>
             <InputElement
               type="text"
               value={formData[column.name] || ""}
               onChange={(event) => handleInputChange(event, column.name)}
-              className={`${column.width} border border-gray-300 rounded px-4 py-2`}
+              className={`border border-gray-300 rounded px-4 py-2`}
             />
           </div>
         );
       case "integer":
         return (
-          <div key={column.name} className="mb-4">
+          <div key={column.name} className={`mb-4 ${column.width}`}>
             <label className="block mb-1">{label}</label>
             <InputElement
               type="number"
               value={formData[column.name] || ""}
               onChange={(event) => handleInputChange(event, column.name)}
-              className={`${column.width} border border-gray-300 rounded px-4 py-2`}
+              className={`border border-gray-300 rounded px-4 py-2`}
             />
           </div>
         );
 
       case "text":
         return (
-          <div key={column.name} className="mb-4">
+          <div key={column.name} className={`mb-4 ${column.width}`}>
             <label className="block mb-1">{label}</label>
             <TextAreaElement
               value={formData[column.name] || ""}
               onChange={(event) => handleInputChange(event, column.name)}
-              className={`${column.width} border border-gray-300 rounded px-4 py-2`}
+              className={`border border-gray-300 rounded px-4 py-2`}
             />
           </div>
         );
       case "double precision":
         return (
-          <div key={column.name} className="mb-4">
+          <div key={column.name} className={`mb-4 ${column.width}`}>
             <label className="block mb-1">{label}</label>
             <InputElement
               type="number" // Use type "number" for input validation
               step="any" // Allow floating-point numbers
               value={formData[column.name] || ""}
               onChange={(event) => handleInputChange(event, column.name)}
-              className={`${column.width} border border-gray-300 rounded px-4 py-2`}
+              className={`border border-gray-300 rounded px-4 py-2`}
             />
           </div>
         );
       case "boolean":
         return (
-          <div key={column.name} className="mb-4">
+          <div key={column.name} className={`mb-4 ${column.width}`}>
             <label className="block mb-1">{label}</label>
             <select
               value={formData[column.name] || ""}
               onChange={(event) => handleInputChange(event, column.name)}
-              className={`${column.width} border border-gray-300 rounded px-4 py-2`}
+              className={`border border-gray-300 rounded px-4 py-2`}
             >
               <option value="">Select</option>
               <option value="true">Yes</option>
@@ -232,26 +232,27 @@ export default function FormView() {
         );
       case "bytea":
         return (
-          <div key={column.name} className="mb-4">
+          <div key={column.name} className={`mb-4 ${column.width}`}>
             <label className="block mb-1">{label}</label>
             <InputElement
               type="file"
               accept=".png, .jpg, .jpeg, .pdf"
               onChange={(event) => handleInputChange(event, column.name)}
-              className={`${column.width} border border-gray-300 rounded px-4 py-2`}
+              className={`border border-gray-300 rounded px-4 py-2`}
             />
           </div>
         );
 
       case "timestamp without time zone":
         return (
-          <div key={column.name} className="mb-4">
+          <div key={column.name} className={`mb-4 ${column.width}`}>
             <label className="block mb-1">{label}</label>
             <DateInput
               type="date"
               value={formData[column.name] || ""}
               onChange={(event) => handleInputChange(event, column.name)}
-              className={`${column.width} border border-gray-300 rounded px-4 py-2`}
+              className={`border border-gray-300 rounded px-4 py-2`}
+              width={column.width}
             />
           </div>
         );
@@ -271,7 +272,7 @@ export default function FormView() {
         if (key.endsWith("multiple_enum_type")) {
           console.log("qdwewwwwwwwwwwwwwww", droplist, droplist[key]);
           return (
-            <div key={column.name} className="mb-4">
+            <div key={column.name} className={`mb-4 ${column.width}`}>
               <label className="block mb-1">{label}</label>
               <Select
                 options={
@@ -348,7 +349,10 @@ export default function FormView() {
           console.log("checkbox_enum_type okkk");
           // console.log(droplist[key])
           return (
-            <div key={column.name} className="mb-4 flex flex-column gap-2">
+            <div
+              key={column.name}
+              className={`mb-4 flex flex-column gap-2  ${column.width}`}
+            >
               <label className="block mb-1">{label}</label>
               {droplist[key] &&
                 droplist[key].map((option) => (
@@ -385,7 +389,7 @@ export default function FormView() {
           console.log("droplist", droplist);
 
           return (
-            <div key={column.name} className="mb-4">
+            <div key={column.name} className={`mb-4 ${column.width}`}>
               <label className="block mb-1">{label}</label>
               <select
                 value={formData[column.name] || ""}

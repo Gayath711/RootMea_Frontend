@@ -322,21 +322,68 @@ export default function AddNewStaff() {
           .replace(/\s+/g, "") // Remove spaces
           .replace(/[^\w]+/g, "");
 
-        const data = {
+        let data = {
           first_name: formDetail.FirstName,
           last_name: formDetail.LastName,
           email: formDetail.EmailId,
           username: username,
-          profile: {
-            phone_no: formDetail.PhoneNumber,
-            position: formDetail.PositionTitle?.id || "",
-            facility: formDetail.PrimaryFaculity?.id || "",
-            supervisor: formDetail.Supervisor?.id || "",
-            program: formDetail.Programs.map((each) => {
-              return isEdit ? { id: each.id, program: each.program } : each.id;
-            }),
-          },
         };
+
+        let phone_no = formDetail.PhoneNumber || "";
+        let position = formDetail.PositionTitle?.id || "";
+        let facility = formDetail.PrimaryFaculity?.id || "";
+        let supervisor = formDetail.Supervisor?.id || "";
+        let program = formDetail.Programs.map((each) => {
+          return isEdit ? { id: each.id, program: each.program } : each.id;
+        });
+
+        let profile = {};
+
+        if (phone_no !== "") {
+          profile.phone_no = phone_no;
+        }
+
+        if (position !== "") {
+          profile.position = position;
+        }
+
+        if (facility !== "") {
+          profile.facility = facility;
+        }
+
+        if (supervisor !== "") {
+          profile.supervisor = supervisor;
+        }
+
+        if (program.length > 0) {
+          profile.program = program;
+        } else {
+          if (JSON.stringify(profile) !== "{}") {
+            profile.program = [];
+          }
+        }
+
+        if (JSON.stringify(profile) !== "{}") {
+          data.profile = profile;
+        }
+
+        // const data = {
+        //   first_name: formDetail.FirstName,
+        //   last_name: formDetail.LastName,
+        //   email: formDetail.EmailId,
+        //   username: username,
+        //   profile: {
+        //     phone_no: formDetail.PhoneNumber || "",
+        //     position: formDetail.PositionTitle?.id || "",
+        //     facility: formDetail.PrimaryFaculity?.id || "",
+        //     supervisor: formDetail.Supervisor?.id || "",
+        //     program: formDetail.Programs.map((each) => {
+        //       return isEdit ? { id: each.id, program: each.program } : each.id;
+        //     }),
+        //   },
+        // };
+
+        console.log({ data });
 
         let apiCall = axios.post;
         let endpoint = "/api/users";

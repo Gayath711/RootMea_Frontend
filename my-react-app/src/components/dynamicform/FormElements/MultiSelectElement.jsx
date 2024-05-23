@@ -12,11 +12,12 @@ export default function MultiSelectElement({
   onChange,
   disabled,
   placeholder,
+  width,
   ...rest
 }) {
   console.log(value, name);
   return (
-    <div className="m-1">
+    <div className={`m-1 ${width}`}>
       {label && <FormLabel required={required}>{label}</FormLabel>}
       <Select
         className={className}

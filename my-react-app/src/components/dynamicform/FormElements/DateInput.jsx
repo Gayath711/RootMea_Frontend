@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import FormLabel from "./FormLabel";
 import "react-datepicker/dist/react-datepicker.css";
@@ -12,6 +12,7 @@ function DateInput({
   required,
   disabled,
   stateless,
+  width,
 }) {
   const [date, setDate] = useState(null);
   const handleChange = (selectedDate) => {
@@ -26,13 +27,24 @@ function DateInput({
 
   const dateValue = value ? new Date(value) : value;
 
+  useEffect(() => {
+    try {
+      let dtEle = document.getElementById("dateInput");
+      if (dtEle) {
+        dtEle.style.width = "100%";
+      }
+    } catch (err) {
+      console.log({ err });
+    }
+  }, []);
+
   if (stateless) {
     return (
-      <div className="m-1">
+      <div className={`m-1 ${width}`}>
         <FormLabel required={required}>{label}</FormLabel>
         <DatePicker
+          wrapperClassName={width}
           showIcon
-          id="dateInput"
           selected={date}
           onChange={(newDate) => {
             console.log(newDate);
@@ -50,10 +62,13 @@ function DateInput({
   }
 
   return (
-    <div className="m-1">
+    <div className={`m-1 ${width}`}>
       <FormLabel required={required}>{label}</FormLabel>
       <DatePicker
-        className="border"
+        wrapperClassName="border w-full"
+        style={{
+          width: "100%",
+        }}
         showIcon
         id="dateInput"
         selected={dateValue}

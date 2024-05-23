@@ -5,7 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 import Navbar from "./components/NavBar/NavBar";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Dashboard from "./pages/Dashboard/Dashboard"; // Import Dashboard component
-import ClientProfile from "./components/clientprofile"; // Import ClientProfile component
+// import ClientProfile from "./components/clientprofile"; // Import ClientProfile component
 import LoginForm from "./components/Login/Logins";
 import SignupPage from "./components/Signup";
 import UserProfile from "./components/UserProfile";
@@ -57,6 +57,9 @@ import EncounterNoteForm from "./pages/EncounterNote/EncounterNoteForm";
 import AddNewProgram from "./components/ProgramDirectory/AddNewProgram";
 import AddNewStaff from "./components/StaffDirectory/AddNewStaff";
 import NewEncounterNote from "./pages/NewEncounterNote/NewEncounterNote";
+
+// New Client Profile - Create/View/Edit
+import ClientProfile from "./components/ClientProfileForm";
 
 function App() {
   // Retrieve isLoggedIn state from localStorage on initial render
@@ -237,7 +240,7 @@ function App() {
                   <Route path="/directory" element={<UserDirectory />} />
                   <Route
                     path="/clientprofilenew"
-                    element={<ClientProfileNew />}
+                    element={<ClientProfile isNew />}
                   />
 
                   <Route
@@ -293,10 +296,11 @@ function App() {
                     element={<AddNewStaff />}
                   />
 
-
                   {/* Encounter notes */}
-                  <Route path="/encounter-note/add/:clientId" element={<EncounterNoteForm />} />
-
+                  <Route
+                    path="/encounter-note/add/:clientId"
+                    element={<NewEncounterNote />}
+                  />
                 </Routes>
               </div>
             </div>
