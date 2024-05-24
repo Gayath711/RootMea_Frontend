@@ -56,7 +56,7 @@ import { selectIsSidebarExpanded } from "./store/slices/utilsSlice";
 import EncounterNoteForm from "./pages/EncounterNote/EncounterNoteForm";
 import AddNewProgram from "./components/ProgramDirectory/AddNewProgram";
 import AddNewStaff from "./components/StaffDirectory/AddNewStaff";
-// import NewEncounterNote from "./pages/NewEncounterNote/NewEncounterNote";
+import NewEncounterNote from "./pages/NewEncounterNote/NewEncounterNote";
 
 // New Client Profile - Create/View/Edit
 import ClientProfile from "./components/ClientProfileForm";
@@ -297,10 +297,10 @@ function App() {
                   />
 
                   {/* Encounter notes */}
-                  {/* <Route
+                  <Route
                     path="/encounter-note/add/:clientId"
                     element={<NewEncounterNote />}
-                  /> */}
+                  />
                 </Routes>
               </div>
             </div>
