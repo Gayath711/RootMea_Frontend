@@ -53,6 +53,7 @@ import StaffDirectory from "./components/StaffDirectory";
 import StaffRecord from "./components/StaffDirectory/StaffRecord";
 import ProgramRecord from "./components/ProgramDirectory/ProgramRecord";
 import { selectIsSidebarExpanded } from "./store/slices/utilsSlice";
+import EncounterNoteForm from "./pages/EncounterNote/EncounterNoteForm";
 import AddNewProgram from "./components/ProgramDirectory/AddNewProgram";
 import AddNewStaff from "./components/StaffDirectory/AddNewStaff";
 import NewEncounterNote from "./pages/NewEncounterNote/NewEncounterNote";

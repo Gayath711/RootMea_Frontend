@@ -13,10 +13,10 @@ const DateInput = ({
   height = "7vh",
   className,
   isEdittable,
+  dateFormat="MM/dd/yyyy",
   value,
   handleChange,
   register,
-  disabled = false,
 }) => {
   const [startDate, setStartDate] = useState(value || null);
   const bgDisabled = isEdittable ? "#F6F7F7" : "";
@@ -57,7 +57,7 @@ const DateInput = ({
         onChange={handleDateChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        dateFormat="MM/dd/yyyy"
+        dateFormat={dateFormat}
         minDate={new Date()} // Disable past dates
         // dateFormatCalendar=""
         className={`

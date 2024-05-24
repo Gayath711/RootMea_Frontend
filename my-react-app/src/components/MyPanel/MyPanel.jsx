@@ -152,8 +152,8 @@ function MyPanel() {
               className="mx-auto"
               sx={{ bgcolor: "#77ceca", height: 25, width: 25, fontSize: 10 }}
             >
-              {row.original?.first_name[0].toUpperCase() +
-                row.original?.last_name[0].toUpperCase()}
+              {row.original?.first_name?.[0].toUpperCase() +
+                row.original?.last_name?.[0].toUpperCase()}
             </Avatar>
           </Link>
         ),
