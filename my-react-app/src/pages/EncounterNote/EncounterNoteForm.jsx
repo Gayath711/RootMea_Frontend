@@ -12,18 +12,38 @@ import SignInput from "../../components/dynamicform/FormElements/SignInput";
 import { protectedApi } from "../../services/api";
 import { notifyError, notifySuccess } from "../../helper/toastNotication";
 import DropDown from "../../components/common/Dropdown";
+import DnDCustomFields from "../../components/DnDCustomFields";
+
+import CollapseOpenSvg from "../../components/images/collpase-open.svg";
+import CollapseCloseSvg from "../../components/images/collapse-close.svg";
+
 import { format } from "date-fns";
 import "./EncounterNoteFormStyles.css";
 
-function FormWrapper({ children, label }) {
+function FormWrapper({ children, label, isCollapsable, initialState = true }) {
+  const [show, setShow] = useState(initialState);
+
   return (
     <div className="rounded-[6px] border border-keppel">
-      <div className="w-full px-3 py-2.5 border-b border-keppel text-xl font-medium">
-        {label}
+      <div
+        onClick={() => {
+          isCollapsable && setShow((prev) => !prev);
+        }}
+        className="w-full px-3 py-2.5 border-b border-keppel text-xl font-medium flex justify-between items-center gap-2 cursor-pointer"
+      >
+        <span>{label}</span>
+        {isCollapsable && (
+          <img
+            src={show ? CollapseCloseSvg : CollapseOpenSvg}
+            alt="collapse-icon"
+          />
+        )}
       </div>
-      <div className="px-4 py-3 grid grid-cols-12 gap-x-3 gap-y-3">
-        {children}
-      </div>
+      {show && (
+        <div className="px-4 py-3 grid grid-cols-12 gap-x-3 gap-y-3">
+          {children}
+        </div>
+      )}
     </div>
   );
 }
@@ -119,6 +139,9 @@ function EncounterNoteForm() {
     client_id: clientId,
     staff_name: 2,
   });
+
+  const [customFields, setCustomFields] = useState([]);
+  const [showCutomFields, setShowCustomFields] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -292,20 +315,25 @@ function EncounterNoteForm() {
     staff_name && formDataPayload.append("staff_name", staff_name);
     facility && formDataPayload.append("facility", facility);
     encounter_date && formDataPayload.append("encounter_date", encounter_date);
+
     start_time && formDataPayload.append("start_time", start_time);
     end_time && formDataPayload.append("end_time", end_time);
+
     encounter_status &&
       formDataPayload.append("encounter_status", encounter_status);
     encounter_type && formDataPayload.append("encounter_type", encounter_type);
     program && formDataPayload.append("program", program);
     note_template && formDataPayload.append("note_template", note_template);
     custom_fields !== undefined &&
-    formDataPayload.append(
-      "custom_fields",
-      JSON.stringify(custom_fields || [])
-    );
+      formDataPayload.append(
+        "custom_fields",
+        JSON.stringify(custom_fields || [])
+      );
     encounter_summary_text_template &&
-      formDataPayload.append("encounter_summary_text_template", encounter_summary_text_template);
+      formDataPayload.append(
+        "encounter_summary_text_template",
+        encounter_summary_text_template
+      );
     encounter_summary &&
       formDataPayload.append("encounter_summary", encounter_summary);
     forms &&
@@ -354,6 +382,24 @@ function EncounterNoteForm() {
         formDataPayload.append("uploaded_documents", uploaded_documents[i]);
       }
     }
+
+    // DND Custom Fields
+
+    let tags = customFields.map((field) => {
+      let answer = "";
+      if (field.type === "imageupload" || field.type === "fileupload") {
+        answer = field.props.base64;
+      } else {
+        answer = field.props.value;
+      }
+      return {
+        datatype: field.type,
+        question: field.props.label,
+        answer: answer,
+      };
+    });
+
+    formDataPayload.append("tags", JSON.stringify(tags || []));
     return formDataPayload;
   }, [formData, clientId, navigate, formsBackup, carePlansBackup]);
 
@@ -837,6 +883,21 @@ function EncounterNoteForm() {
                 }}
                 setFormData={setFormData}
                 className="border-keppel m-1"
+              />
+            </div>
+          </FormWrapper>
+
+          <FormWrapper
+            label="Custom Fields"
+            isCollapsable={true}
+            initialState={false}
+          >
+            <div className="col-span-12">
+              <DnDCustomFields
+                onChange={(dndItms) => {
+                  setCustomFields(dndItms);
+                }}
+                dndItems={customFields}
               />
             </div>
           </FormWrapper>
