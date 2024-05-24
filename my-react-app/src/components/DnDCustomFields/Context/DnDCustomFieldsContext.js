@@ -65,6 +65,7 @@ export const DnDCustomFieldsContextProvider = ({ children }) => {
     removeElement,
     updateElement,
     addElement,
+    setElements,
     resetElements,
   };
 

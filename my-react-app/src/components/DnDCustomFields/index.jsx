@@ -32,9 +32,10 @@ import FormPreview from "../dynamicform/FormBuilder/FormPreview";
 import DragOverlayWrapper from "../dynamicform/FormBuilder/DragOverlayWrapper";
 import { notify } from "../../helper/toastNotication";
 
-function RenderDnDCustomFields({ onDnDItemsChange }) {
+function RenderDnDCustomFields({ onDnDItemsChange, dndItems = [] }) {
   const {
     elements: items,
+    setElements,
     addElement,
     removeElement,
     setSelectedElement,
@@ -390,6 +391,10 @@ function RenderDnDCustomFields({ onDnDItemsChange }) {
     onDnDItemsChange && onDnDItemsChange(items);
   }, [items]);
 
+  useEffect(() => {
+    setElements(dndItems);
+  }, []);
+
   // const onDragStart = (event) => {
   //   console.log({ OnDragStart: event });
   // };
@@ -549,10 +554,10 @@ function RenderDnDCustomFields({ onDnDItemsChange }) {
   );
 }
 
-function DnDCustomFields({ onChange = () => {} }) {
+function DnDCustomFields({ onChange = () => {}, dndItems }) {
   return (
     <DnDCustomFieldsContextProvider>
-      <RenderDnDCustomFields onDnDItemsChange={onChange} />
+      <RenderDnDCustomFields onDnDItemsChange={onChange} dndItems={dndItems} />
     </DnDCustomFieldsContextProvider>
   );
 }

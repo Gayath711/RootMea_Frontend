@@ -588,6 +588,7 @@ function NewEncounterNote() {
                 onChange={(dndItms) => {
                   setCustomFields(dndItms);
                 }}
+                dndItems={customFields}
               />
             </div>
           </FormWrapper>

@@ -47,15 +47,17 @@ export default function TextInputProperty() {
 
   return (
     <div className="flex flex-column gap-1">
-      <InputElement
-        className="m-0 p-0"
-        type="text"
-        name="label"
-        label="Question"
-        value={fieldElement.props.label}
-        placeholder="Write a question..."
-        onChange={handlePropsChange}
-      />
+      {!isTextArea && (
+        <InputElement
+          className="m-0 p-0"
+          type="text"
+          name="label"
+          label="Question"
+          value={fieldElement.props.label}
+          placeholder="Write a question..."
+          onChange={handlePropsChange}
+        />
+      )}
 
       <AnswerInput
         className="m-0 p-0"
