@@ -2,22 +2,23 @@ import React, { useState, useMemo, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "../../helper/axiosInstance";
-import {
-  notify,
-  notifyError,
-  notifySuccess,
-} from "../../helper/toastNotication";
+
+import { notifyError, notifySuccess } from "../../helper/toastNotication";
 
 import EditPNG from "../images/edit.png";
+import DeletePNG from "../images/delete.png";
+
 import MUIDataGridWrapper from "../HOC/MUIDataGridWrapper";
 
 export default function StaffRecord() {
   const { recordid } = useParams();
+  const navigate = useNavigate();
   const [recordData, setRecordData] = useState({});
   const [usersData, setUsersData] = useState({});
   const [loadingData, setLoadingData] = useState(true);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -81,25 +82,74 @@ export default function StaffRecord() {
     usersData?.profile?.supervisor_last_name || ""
   }`;
 
+  const deleteRecord = () => {
+    setIsDeleting(true);
+    axios
+      .delete(`/api/users/${recordid}`)
+      .then((response) => {
+        navigate(-1);
+        fetchData();
+        notifySuccess("Deleted Successfully");
+      })
+      .catch((error) => {
+        notifyError("Could not delete, please try again later");
+        console.error("Error deleting:", error);
+      })
+      .finally(() => {
+        setIsDeleting(false);
+      });
+  };
+
   return (
-    <div class="container mx-auto sm:grid-cols-12 md:grid-cols-7 shadow p-0">
-      <div className="w-100 bg-[#5BC4BF] text-white p-2.5 px-4">
-        {staffName}
+    <>
+      {" "}
+      <div className="w-100 flex flex-row gap-2 justify-end items-center my-1">
+        <button
+          className="p-1 px-2 hover:bg-teal-400 hover:text-white bg-opacity-50 hover:rounded flex justify-center items-center gap-2"
+          onClick={() => {
+            navigate(`/update-staff-directory/${recordid}`);
+          }}
+        >
+          <span>Edit</span>
+          <img
+            src={EditPNG}
+            className="w-4 h-4"
+            style={{ display: "block", margin: "0 auto" }}
+          />
+        </button>
+        <button
+          className="p-1 px-2 hover:bg-red-400 hover:text-white bg-opacity-50 hover:rounded flex justify-center items-center gap-2"
+          onClick={() => {
+            deleteRecord();
+          }}
+        >
+          <span>Delete</span>
+          <img
+            src={DeletePNG}
+            className="w-4 h-4"
+            style={{ display: "block", margin: "0 auto" }}
+          />
+        </button>
       </div>
-      <div className="flex flex-column gap-4 p-4">
-        <StaffDetail
-          staffTitle={StaffTitle}
-          phoneNumber={phoneNumber}
-          email={email}
-          supervisorName={supervisorName}
-        />
-        <AssignedProgramTable
-          loadingData={loadingData}
-          rows={assignedProgramTableRows}
-        />
-        <AssignedPriorityListsTable />
+      <div class="container mx-auto sm:grid-cols-12 md:grid-cols-7 shadow p-0">
+        <div className="w-100 bg-[#5BC4BF] text-white p-2.5 px-4">
+          {staffName}
+        </div>
+        <div className="flex flex-column gap-4 p-4">
+          <StaffDetail
+            staffTitle={StaffTitle}
+            phoneNumber={phoneNumber}
+            email={email}
+            supervisorName={supervisorName}
+          />
+          <AssignedProgramTable
+            loadingData={loadingData}
+            rows={assignedProgramTableRows}
+          />
+          <AssignedPriorityListsTable />
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

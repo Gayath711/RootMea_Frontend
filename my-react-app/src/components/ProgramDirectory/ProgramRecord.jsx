@@ -2,17 +2,21 @@ import React, { useState, useMemo, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
-import { Link, useParams } from "react-router-dom";
-import axios from "axios";
-import apiURL from "../../apiConfig";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import axios from "../../helper/axiosInstance";
 import MUIDataGridWrapper from "../HOC/MUIDataGridWrapper";
+import { notifyError, notifySuccess } from "../../helper/toastNotication";
+
+import EditPNG from "../images/edit.png";
+import DeletePNG from "../images/delete.png";
 
 export default function ProgramRecord() {
   const { recordid } = useParams();
-  const token = localStorage.getItem("access_token");
+  const navigate = useNavigate();
 
   const [recordData, setRecordData] = useState({});
   const [loadingData, setLoadingData] = useState(true);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -20,11 +24,7 @@ export default function ProgramRecord() {
 
   const fetchData = () => {
     axios
-      .get(`${apiURL}/api/resources/program/${recordid}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      .get(`/api/resources/program/${recordid}`)
       .then((response) => {
         setLoadingData(true);
         setRecordData(response.data);
@@ -86,34 +86,108 @@ export default function ProgramRecord() {
     });
   }, [recordData, loadingData]);
 
+  const deleteRecord = () => {
+    setIsDeleting(true);
+    axios
+      .delete(`/api/resources/program/${recordid}`)
+      .then((response) => {
+        navigate(-1);
+        fetchData();
+        notifySuccess("Deleted Successfully");
+      })
+      .catch((error) => {
+        notifyError("Could not delete, please try again later");
+        console.error("Error deleting:", error);
+      })
+      .finally(() => {
+        setIsDeleting(false);
+      });
+  };
+
   return (
-    <div class="container mx-auto sm:grid-cols-12 md:grid-cols-7 shadow p-0">
-      <div className="w-100 bg-[#5BC4BF] text-white p-2.5 px-4">
-        {recordData.name}
+    <>
+      <div className="w-100 flex flex-row gap-2 justify-end items-center my-1">
+        <button
+          className="p-1 px-2 hover:bg-teal-400 hover:text-white bg-opacity-50 hover:rounded flex justify-center items-center gap-2"
+          onClick={() => {
+            navigate(`/update-program-directory/${recordid}`);
+          }}
+        >
+          <span>Edit</span>
+          <img
+            src={EditPNG}
+            className="w-4 h-4"
+            style={{ display: "block", margin: "0 auto" }}
+          />
+        </button>
+        <button
+          className="p-1 px-2 hover:bg-red-400 hover:text-white bg-opacity-50 hover:rounded flex justify-center items-center gap-2"
+          onClick={() => {
+            deleteRecord();
+          }}
+        >
+          <span>Delete</span>
+          <img
+            src={DeletePNG}
+            className="w-4 h-4"
+            style={{ display: "block", margin: "0 auto" }}
+          />{" "}
+        </button>
       </div>
-      <div className="flex flex-column gap-4 p-4">
-        <ProgramDetail
-          dptName={recordData.department_name}
-          progName={recordData.name}
-          description={recordData?.description}
-          eligibility={recordData?.eligibility}
-          loadingData={loadingData}
-        />
-        <PrimaryContactManagementTable
-          rows={primaryContactManagementTableRows}
-          loadingData={loadingData}
-        />
-        <PrimaryContactReferralsTable
-          rows={primaryContactReferralsTableRows}
-          loadingData={loadingData}
-        />
-        <AdditionalTeamMembersTable
-          rows={additionalTeamMembersTableRows}
-          loadingData={loadingData}
-        />
-        <PriorityListTable />
+      <div class="container mx-auto sm:grid-cols-12 md:grid-cols-7 shadow p-0">
+        {isDeleting && (
+          <div className="flex flex-column absolute top-0 left-0 items-center justify-center gap-2 w-100 h-100 bg-gray-100/80">
+            <svg
+              className="animate-spin -ml-1 mr-3 h-8 w-8 text-teal-500"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+            <p className="text-base">{isDeleting ? "Deleting..." : ""}</p>
+          </div>
+        )}
+
+        <div className="w-100 bg-[#5BC4BF] text-white p-2.5 px-4">
+          {recordData.name}
+        </div>
+        <div className="flex flex-column gap-4 p-4">
+          <ProgramDetail
+            dptName={recordData.department_name}
+            progName={recordData.name}
+            description={recordData?.description}
+            eligibility={recordData?.eligibility}
+            loadingData={loadingData}
+          />
+          <PrimaryContactManagementTable
+            rows={primaryContactManagementTableRows}
+            loadingData={loadingData}
+          />
+          <PrimaryContactReferralsTable
+            rows={primaryContactReferralsTableRows}
+            loadingData={loadingData}
+          />
+          <AdditionalTeamMembersTable
+            rows={additionalTeamMembersTableRows}
+            loadingData={loadingData}
+          />
+          <PriorityListTable />
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
