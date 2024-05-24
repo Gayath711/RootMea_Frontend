@@ -8,7 +8,8 @@ import MUIDataGridWrapper from "../HOC/MUIDataGridWrapper";
 import { notifyError, notifySuccess } from "../../helper/toastNotication";
 
 import EditPNG from "../images/edit.png";
-import DeletePNG from "../images/delete.png";
+// import DeletePNG from "../images/delete.png";
+import DeactivatePNG from "../images/deactivate.png";
 
 export default function ProgramRecord() {
   const { recordid } = useParams();
@@ -86,18 +87,18 @@ export default function ProgramRecord() {
     });
   }, [recordData, loadingData]);
 
-  const deleteRecord = () => {
+  const deactivateRecord = () => {
     setIsDeleting(true);
     axios
       .delete(`/api/resources/program/${recordid}`)
       .then((response) => {
         navigate(-1);
         fetchData();
-        notifySuccess("Deleted Successfully");
+        notifySuccess("Deactivated Successfully");
       })
       .catch((error) => {
-        notifyError("Could not delete, please try again later");
-        console.error("Error deleting:", error);
+        notifyError("Could not deactivate, please try again later");
+        console.error("Error Deactivating:", error);
       })
       .finally(() => {
         setIsDeleting(false);
@@ -123,12 +124,12 @@ export default function ProgramRecord() {
         <button
           className="p-1 px-2 hover:bg-red-400 hover:text-white bg-opacity-50 hover:rounded flex justify-center items-center gap-2"
           onClick={() => {
-            deleteRecord();
+            deactivateRecord();
           }}
         >
-          <span>Delete</span>
+          <span>Deactivate</span>
           <img
-            src={DeletePNG}
+            src={DeactivatePNG}
             className="w-4 h-4"
             style={{ display: "block", margin: "0 auto" }}
           />{" "}

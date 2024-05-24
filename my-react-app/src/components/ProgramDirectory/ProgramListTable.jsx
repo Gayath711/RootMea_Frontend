@@ -10,7 +10,8 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 
 import ViewPNG from "../images/view.png";
 import EditPNG from "../images/edit.png";
-import DeletePNG from "../images/delete.png";
+// import DeletePNG from "../images/delete.png";
+import DeactivatePNG from "../images/deactivate.png";
 import MUIDataGridWrapper from "../HOC/MUIDataGridWrapper";
 
 import { notifySuccess, notifyError } from "../../helper/toastNotication";
@@ -25,7 +26,7 @@ export default function ProgramListTable() {
   useEffect(() => {
     fetchData();
   }, []);
- 
+
   const fetchData = () => {
     axios
       .get(`api/resources/program`)
@@ -41,16 +42,16 @@ export default function ProgramListTable() {
       });
   };
 
-  const deleteRecord = (id) => {
+  const deactivateRecord = (id) => {
     axios
       .delete(`/api/resources/program/${id}`)
       .then((response) => {
         fetchData();
-        notifySuccess("Deleted Successfully");
+        notifySuccess("Deactivated Successfully");
       })
       .catch((error) => {
-        notifyError("Could not delete, please try again later");
-        console.error("Error deleting:", error);
+        notifyError("Could not deactivate, please try again later");
+        console.error("Error Deactivating:", error);
       })
       .finally(() => {});
   };
@@ -219,6 +220,7 @@ export default function ProgramListTable() {
                         <div className="h-100 w-100 flex flex-row gap-2 justify-center items-center">
                           <button
                             className="p-1 hover:bg-teal-400 bg-opacity-50 hover:rounded"
+                            title="Edit"
                             onClick={() => {
                               navigate(
                                 `/update-program-directory/${params.row.id}`
@@ -233,12 +235,13 @@ export default function ProgramListTable() {
                           </button>
                           <button
                             className="p-1 hover:bg-red-400 bg-opacity-50 hover:rounded"
+                            title="Deactivate"
                             onClick={() => {
-                              deleteRecord(params.row.id);
+                              deactivateRecord(params.row.id);
                             }}
                           >
                             <img
-                              src={DeletePNG}
+                              src={DeactivatePNG}
                               className="w-4 h-4"
                               style={{ display: "block", margin: "0 auto" }}
                             />

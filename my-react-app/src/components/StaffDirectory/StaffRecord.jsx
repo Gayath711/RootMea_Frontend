@@ -8,7 +8,8 @@ import axios from "../../helper/axiosInstance";
 import { notifyError, notifySuccess } from "../../helper/toastNotication";
 
 import EditPNG from "../images/edit.png";
-import DeletePNG from "../images/delete.png";
+// import DeletePNG from "../images/delete.png";
+import DeactivatePNG from "../images/deactivate.png";
 
 import MUIDataGridWrapper from "../HOC/MUIDataGridWrapper";
 
@@ -82,18 +83,18 @@ export default function StaffRecord() {
     usersData?.profile?.supervisor_last_name || ""
   }`;
 
-  const deleteRecord = () => {
+  const deactivateRecord = () => {
     setIsDeleting(true);
     axios
       .delete(`/api/users/${recordid}`)
       .then((response) => {
         navigate(-1);
         fetchData();
-        notifySuccess("Deleted Successfully");
+        notifySuccess("Deactivated Successfully");
       })
       .catch((error) => {
-        notifyError("Could not delete, please try again later");
-        console.error("Error deleting:", error);
+        notifyError("Could not deactivate, please try again later");
+        console.error("Error deactivating:", error);
       })
       .finally(() => {
         setIsDeleting(false);
@@ -120,12 +121,12 @@ export default function StaffRecord() {
         <button
           className="p-1 px-2 hover:bg-red-400 hover:text-white bg-opacity-50 hover:rounded flex justify-center items-center gap-2"
           onClick={() => {
-            deleteRecord();
+            deactivateRecord();
           }}
         >
-          <span>Delete</span>
+          <span>Deactivate</span>
           <img
-            src={DeletePNG}
+            src={DeactivatePNG}
             className="w-4 h-4"
             style={{ display: "block", margin: "0 auto" }}
           />
