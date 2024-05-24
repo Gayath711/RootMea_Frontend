@@ -54,6 +54,7 @@ import StaffRecord from "./components/StaffDirectory/StaffRecord";
 import ProgramRecord from "./components/ProgramDirectory/ProgramRecord";
 import { selectIsSidebarExpanded } from "./store/slices/utilsSlice";
 import EncounterNoteForm from "./pages/EncounterNote/EncounterNoteForm";
+import TheNewCarePlan from "./pages/NewCarePlan/NewCarePlan";
 import AddNewProgram from "./components/ProgramDirectory/AddNewProgram";
 import AddNewStaff from "./components/StaffDirectory/AddNewStaff";
 import NewEncounterNote from "./pages/EncounterNote/EncounterNoteForm";
@@ -301,6 +302,8 @@ function App() {
                     path="/encounter-note/add/:clientId"
                     element={<NewEncounterNote />}
                   />
+                  <Route path="/encounter-note/add/:clientId" element={<EncounterNoteForm />} />
+                  <Route path="/care-plan" element={<TheNewCarePlan />} />
                 </Routes>
               </div>
             </div>
