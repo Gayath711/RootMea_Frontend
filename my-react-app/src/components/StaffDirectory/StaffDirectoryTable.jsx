@@ -11,7 +11,8 @@ import { styled } from "@mui/material/styles";
 import MUIDataGridWrapper from "../HOC/MUIDataGridWrapper";
 
 import EditPNG from "../images/edit.png";
-import DeletePNG from "../images/delete.png";
+// import DeletePNG from "../images/delete.png";
+import DeactivatePNG from "../images/deactivate.png";
 
 import { notifySuccess, notifyError } from "../../helper/toastNotication";
 
@@ -52,7 +53,7 @@ export default function StaffDirectoryTable() {
       });
   };
 
-  const deleteRecord = (id) => {
+  const deactivateRecord = (id) => {
     axios
       .delete(`/api/users/${id}`)
       .then((response) => {
@@ -342,6 +343,7 @@ export default function StaffDirectoryTable() {
                         <div className="h-100 w-100 flex flex-row gap-2 justify-center items-center">
                           <button
                             className="p-1 hover:bg-teal-400 bg-opacity-50 hover:rounded"
+                            title="Edit"
                             onClick={() => {
                               navigate(
                                 `/update-staff-directory/${params.row.id}`
@@ -356,12 +358,13 @@ export default function StaffDirectoryTable() {
                           </button>
                           <button
                             className="p-1 hover:bg-red-400 bg-opacity-50 hover:rounded"
+                            title="Deactivate"
                             onClick={() => {
-                              deleteRecord(params.row.id);
+                              deactivateRecord(params.row.id);
                             }}
                           >
                             <img
-                              src={DeletePNG}
+                              src={DeactivatePNG}
                               className="w-4 h-4"
                               style={{ display: "block", margin: "0 auto" }}
                             />
