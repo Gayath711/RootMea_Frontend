@@ -138,9 +138,6 @@ const TheNewCarePlan = () => {
     ],
     []
   );
-  useEffect(() => {
-    console.log(data, columns, "data............");
-  });
 
   return (
     <div className="mx-1" style={{ fontFamily: "poppins" }}>

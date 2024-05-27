@@ -73,7 +73,6 @@ function App() {
   // };
 
   const { width } = useWindowSize();
-  console.log(width);
 
   // window.addEventListener('beforeunload', () => {
   //   // Dispatch the logout action
@@ -84,7 +83,6 @@ function App() {
   // });
 
   const isLoggedIn = useSelector((state) => {
-    console.log(state);
     return state.auth.isLoggedIn;
   });
   const dispatch = useDispatch();
@@ -113,7 +111,6 @@ function App() {
       : ["admin"],
     // permissions: ["admin"],
   });
-  console.log("user", user);
 
   const isSidebarExpanded = useSelector(selectIsSidebarExpanded);
 
