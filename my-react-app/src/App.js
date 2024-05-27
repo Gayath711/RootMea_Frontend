@@ -303,7 +303,7 @@ function App() {
                     element={<NewEncounterNote />}
                   />
                   <Route path="/encounter-note/add/:clientId" element={<EncounterNoteForm />} />
-                  <Route path="/care-plan" element={<TheNewCarePlan />} />
+                  <Route path="/care-plan/add/:clientId" element={<TheNewCarePlan />} />
                 </Routes>
               </div>
             </div>

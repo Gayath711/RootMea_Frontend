@@ -195,6 +195,15 @@ const styles = {
       },
     },
   },
+  carePlanStatus: {
+    // client chart page
+    header: {
+      classes: "bg-[#41CEBA] border border-[#41CEBA]",
+      styles: {
+        color: "white",
+      },
+    },
+  },
 };
 
 // ==============================|| REACT TABLE ||============================== //

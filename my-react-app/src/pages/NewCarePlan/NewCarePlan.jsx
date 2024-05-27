@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import PageTitle from "../../components/PageTitle/PageTitle";
 import InputElement from "../../components/dynamicform/FormElements/InputElement";
 import ProfilePicture from "../../image/profile_picture.svg";
@@ -6,6 +6,11 @@ import SelectElement from "../../components/dynamicform/FormElements/SelectEleme
 import TextAreaElement from "../../components/dynamicform/FormElements/TextAreaElement";
 import DateInput from "../../components/common/DateInput";
 import FormLabel from "../../components/dynamicform/FormElements/FormLabel";
+import { protectedApi } from "../../services/api";
+import { useNavigate, useParams } from "react-router-dom";
+import { notifyError } from "../../helper/toastNotication";
+import { format } from "date-fns";
+import BasicTable from "../../components/react-table/BasicTable";
 function FormWrapper({ children, label }) {
   return (
     <div className="rounded-[6px] bg-white">
@@ -46,18 +51,115 @@ function FormButtonWrapper({ children, label, button }) {
     </div>
   );
 }
+async function fetchClientDetails({ clientId }) {
+  try {
+    if (clientId === undefined) {
+      notifyError("Client ID is required");
+    }
+    const respone = await protectedApi.get(
+      `/encounter-note-client-details/?id=${clientId}`
+    );
+
+    if (respone.status === 200) {
+      return respone.data;
+    }
+  } catch (error) {
+    console.error(error.message);
+  }
+}
 
 const TheNewCarePlan = () => {
+  const { clientId } = useParams();
+  const [status, setStatus] = useState(true);
+  const [clientDetails, setClientDetails] = useState({});
+  const navigate = useNavigate();
+  const [data, setdata] = useState([
+    {
+      user: "Marcus",
+      action: "Lorem ipsum dolor sit .....",
+      date: "1/3/2022",
+      time: "4:00 PM",
+    },
+    {
+      user: "Kioni",
+      action: "Lorem ipsum dolor sit .....",
+      date: "1/2/2000",
+      time: "8:00 AM",
+    },
+    {
+      user: "Marcus",
+      action: "Lorem ipsum dolor sit .....",
+      date: "1/2/2000",
+      time: "4:00 PM",
+    },
+  ]);
+  useEffect(() => {
+    fetchClientDetails({ clientId })
+      .then((clientDetailsResponse) => {
+        setClientDetails(clientDetailsResponse);
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  }, []);
+  useEffect(() => {
+    console.log(clientDetails);
+  }, [clientDetails]);
+
+  const handleButtonClick = (component) => {
+    if (component === "goal_1") {
+      setStatus(true);
+    } else if (component === "carePlanStatus") {
+      setStatus(false);
+    }
+  };
+  const columns = useMemo(
+    () => [
+      {
+        Header: "User",
+        accessor: "user",
+        align: "left",
+      },
+      {
+        Header: "Action",
+        accessor: "action",
+        align: "left",
+      },
+      {
+        Header: "Date",
+        accessor: "date",
+        align: "left",
+      },
+      {
+        Header: "Time",
+        accessor: "time",
+        align: "left",
+      },
+    ],
+    []
+  );
+  useEffect(() => {
+    console.log(data, columns, "data............");
+  });
+
   return (
     <div className="mx-1" style={{ fontFamily: "poppins" }}>
-      <PageTitle title="Care Plan" onClick={() => {}} />
+      <PageTitle
+        title="Care Plan"
+        clientId={clientId}
+        onClick={() => navigate(`/clientchart/${clientId}`)}
+      />
       <div className="rounded-[5px] my-6">
         <div className="grid gap-y-8">
           <FormWrapper label="Client care plan details">
             <div className="col-span-3">
               <InputElement
                 type="text"
-                value={"Lucas David"}
+                value={
+                  (clientDetails?.first_name || "") +
+                  " " +
+                  (clientDetails?.last_name || "")
+                }
                 disabled
                 className=""
                 placeholder="Enter Client Name"
@@ -67,7 +169,7 @@ const TheNewCarePlan = () => {
             <div className="col-span-3">
               <InputElement
                 type="text"
-                value={"He"}
+                value={clientDetails?.preferred_pronouns || ""}
                 disabled
                 className=""
                 placeholder="Enter Preferred pronouns"
@@ -76,7 +178,11 @@ const TheNewCarePlan = () => {
             </div>
             <div className="col-span-3">
               <DateInput
-                value={""}
+                value={
+                  clientDetails?.date_of_birth
+                    ? format(clientDetails?.date_of_birth, "MM-dd-yyyy")
+                    : ""
+                }
                 dateFormat="MM-dd-yyyy"
                 className=" h-[37.6px]"
                 isEdittable
@@ -94,7 +200,7 @@ const TheNewCarePlan = () => {
             <div className="col-span-3">
               <InputElement
                 type="text"
-                value={"54321a"}
+                value={clientDetails?.system_id || "12345"}
                 disabled
                 className=""
                 placeholder="Enter System Id"
@@ -104,7 +210,7 @@ const TheNewCarePlan = () => {
             <div className="col-span-3">
               <InputElement
                 type="text"
-                value={"807811280"}
+                value={clientDetails?.primary_phone || ""}
                 disabled
                 className=""
                 placeholder="Enter Primary phone"
@@ -114,7 +220,7 @@ const TheNewCarePlan = () => {
             <div className="col-span-3">
               <InputElement
                 type="text"
-                value={"Lucas1@roots.org"}
+                value={clientDetails?.email_address || ""}
                 disabled
                 className=""
                 placeholder="Enter Email"
@@ -126,125 +232,168 @@ const TheNewCarePlan = () => {
       </div>
       <div className="rounded-[5px] my-6 bg-white">
         <div className="flex gap-3 p-4 flex-wrap">
-          <button className="bg-[#5BC4BF] text-white p-2 w-[200px] font-normal text-base rounded-sm">
+          <button
+            className={`p-2 w-[200px] font-normal text-base rounded-sm ${
+              status
+                ? "bg-[#5BC4BF] text-white"
+                : "bg-white border border-[#5BC4BF]"
+            }`}
+            onClick={() => handleButtonClick("goal_1")}
+          >
             GOAL 1
           </button>
-          <button className="border border-[#5BC4BF] w-[200px] font-normal text-base rounded-sm">
+          <button
+            className={` w-[200px] font-normal text-base rounded-sm ${
+              !status
+                ? "bg-[#5BC4BF] text-white"
+                : "bg-white border border-[#5BC4BF]"
+            }`}
+            onClick={() => handleButtonClick("carePlanStatus")}
+          >
             CARE PLAN STATUS
           </button>
         </div>
-        <div className="grid m-6">
-          <FormButtonWrapper label="Goal 1" button={"Add new"}>
-            <div className="col-span-6">
-              <DateInput
-                value={""}
-                dateFormat="MM-dd-yyyy"
-                className="m-1 h-[37.6px] border-keppel"
-                height="37.6px"
-                label={"Start Date"}
-                // placeholder="DOB"
-              />
+        {status ? (
+          <>
+            <div className="grid m-6">
+              <FormButtonWrapper label="Goal 1" button={"Add new"}>
+                <div className="col-span-6">
+                  <DateInput
+                    value={""}
+                    dateFormat="MM-dd-yyyy"
+                    className="m-1 h-[37.6px] border-keppel"
+                    height="37.6px"
+                    label={"Start Date"}
+                    // placeholder="DOB"
+                  />
+                </div>
+                <div className="col-span-6 flex items-end">
+                  <InputElement
+                    type="text"
+                    value={""}
+                    width={"w-full"}
+                    className="border-keppel "
+                    placeholder="Problem"
+                  />
+                </div>
+                <div className="col-span-12">
+                  <TextAreaElement
+                    className="h-32 border-keppel"
+                    value={""}
+                    onChange={() => {}}
+                    placeholder="SMART Goal Summary"
+                  />
+                </div>
+                <div className="col-span-6">
+                  <SelectElement
+                    placeholder="Goal Priority"
+                    className="border border-[#5BC4BF] border-keppel"
+                    value={""}
+                    options={[]}
+                  />
+                </div>
+                <div className="col-span-6">
+                  <SelectElement
+                    placeholder="Stage of Readiness"
+                    className="border border-[#5BC4BF] border-keppel"
+                    value={""}
+                    options={[]}
+                  />
+                </div>
+                <div className="col-span-12">
+                  <TextAreaElement
+                    className="h-32 border-keppel"
+                    value={""}
+                    onChange={() => {}}
+                    placeholder="Client Strengths"
+                  />
+                </div>
+                <div className="col-span-12">
+                  <TextAreaElement
+                    className="h-32 border-keppel"
+                    value={""}
+                    onChange={() => {}}
+                    placeholder="Potential Barriers"
+                  />
+                </div>
+                <div className="col-span-12">
+                  <AddNewElement
+                    className="border border-keppel"
+                    label="Interventions"
+                    button={"Add new"}
+                  />
+                </div>
+              </FormButtonWrapper>
             </div>
-            <div className="col-span-6 flex items-end">
-              <InputElement
-                type="text"
-                value={""}
-                width={"w-full"}
-                className="border-keppel "
-                placeholder="Problem"
-              />
+            <div className="grid m-6">
+              <FormButtonWrapper label={"Goal 1 Outcome"}>
+                <div className="col-span-6">
+                  <SelectElement
+                    placeholder="Status"
+                    className="border border-[#5BC4BF] border-keppel"
+                    value={""}
+                    options={[]}
+                  />
+                </div>
+                <div className="col-span-6">
+                  <DateInput
+                    value={""}
+                    placeholder="Stage of Readiness"
+                    dateFormat="MM-dd-yyyy"
+                    className="m-1  h-[37.6px] border-keppel"
+                    height="37.6px"
+                  />
+                </div>
+                <div className="col-span-12">
+                  <TextAreaElement
+                    className="h-32 border-keppel"
+                    value={""}
+                    onChange={() => {}}
+                    placeholder="Custom Sections / Fields"
+                  />
+                </div>
+                <div className="col-span-12">
+                  <TextAreaElement
+                    className="h-32 border-keppel"
+                    value={""}
+                    onChange={() => {}}
+                    placeholder="Comments"
+                  />
+                </div>
+              </FormButtonWrapper>
+              <div className="text-center my-3">
+                <button className="bg-[#C4EBEF] px-5 py-3 m-2 rounded-sm text-lg">
+                  Request Approval
+                </button>
+              </div>
             </div>
-            <div className="col-span-12">
-              <TextAreaElement
-                className="h-32 border-keppel"
-                value={""}
-                onChange={() => {}}
-                placeholder="SMART Goal Summary"
-              />
+          </>
+        ) : (
+          <>
+            <div className="m-6">
+              <FormButtonWrapper
+                label="Care plan status"
+                button={"View history"}
+              >
+                <div className="col-span-12">
+                  <BasicTable
+                    type={"carePlanStatus"}
+                    columns={columns}
+                    data={data}
+                  />
+                </div>
+                <div className="col-span-12 m-auto">
+                  <button className="border border-[#5BC4BF] w-[150px] font-normal text-base rounded-sm p-2 mr-3">
+                    Cancel
+                  </button>
+                  <button className="bg-[#5BC4BF] text-white p-2 w-[150px] font-normal text-base rounded-sm ">
+                    Save/edit
+                  </button>
+                </div>
+              </FormButtonWrapper>
             </div>
-            <div className="col-span-6">
-              <SelectElement
-                placeholder="Goal Priority"
-                className="border border-[#5BC4BF] border-keppel"
-                value={""}
-                options={[]}
-              />
-            </div>
-            <div className="col-span-6">
-              <SelectElement
-                placeholder="Stage of Readiness"
-                className="border border-[#5BC4BF] border-keppel"
-                value={""}
-                options={[]}
-              />
-            </div>
-            <div className="col-span-12">
-              <TextAreaElement
-                className="h-32 border-keppel"
-                value={""}
-                onChange={() => {}}
-                placeholder="Client Strengths"
-              />
-            </div>
-            <div className="col-span-12">
-              <TextAreaElement
-                className="h-32 border-keppel"
-                value={""}
-                onChange={() => {}}
-                placeholder="Potential Barriers"
-              />
-            </div>
-            <div className="col-span-12">
-              <AddNewElement
-                className="border border-keppel"
-                label="Interventions"
-                button={"Add new"}
-              />
-            </div>
-          </FormButtonWrapper>
-        </div>
-        <div className="grid m-6">
-          <FormButtonWrapper label={"Goal 1 Outcome"}>
-            <div className="col-span-6">
-              <SelectElement
-                placeholder="Status"
-                className="border border-[#5BC4BF] border-keppel"
-                value={""}
-                options={[]}
-              />
-            </div>
-            <div className="col-span-6">
-              <DateInput
-                value={""}
-                placeholder="Stage of Readiness"
-                dateFormat="MM-dd-yyyy"
-                className="m-1  h-[37.6px] border-keppel"
-                height="37.6px"
-              />
-            </div>
-            <div className="col-span-12">
-              <TextAreaElement
-                className="h-32 border-keppel"
-                value={""}
-                onChange={() => {}}
-                placeholder="Custom Sections / Fields"
-              />
-            </div>
-            <div className="col-span-12">
-              <TextAreaElement
-                className="h-32 border-keppel"
-                value={""}
-                onChange={() => {}}
-                placeholder="Comments"
-              />
-            </div>
-          </FormButtonWrapper>
-          <div className="text-center my-3">
-            <button className="bg-[#C4EBEF] px-5 py-3 m-2 rounded-sm text-lg">
-              Request Approval
-            </button>
-          </div>
-        </div>
+          </>
+        )}
       </div>
     </div>
   );
