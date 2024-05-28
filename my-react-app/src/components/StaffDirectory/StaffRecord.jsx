@@ -8,7 +8,6 @@ import axios from "../../helper/axiosInstance";
 import { notifyError, notifySuccess } from "../../helper/toastNotication";
 
 import EditPNG from "../images/edit.png";
-// import DeletePNG from "../images/delete.png";
 import DeactivatePNG from "../images/deactivate.png";
 
 import MUIDataGridWrapper from "../HOC/MUIDataGridWrapper";
@@ -19,7 +18,7 @@ export default function StaffRecord() {
   const [recordData, setRecordData] = useState({});
   const [usersData, setUsersData] = useState({});
   const [loadingData, setLoadingData] = useState(true);
-  const [isDeleting, setIsDeleting] = useState(false);
+  const [isDeactivating, setIsDeactivating] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -84,7 +83,7 @@ export default function StaffRecord() {
   }`;
 
   const deactivateRecord = () => {
-    setIsDeleting(true);
+    setIsDeactivating(true);
     axios
       .delete(`/api/users/${recordid}`)
       .then((response) => {
@@ -97,7 +96,7 @@ export default function StaffRecord() {
         console.error("Error deactivating:", error);
       })
       .finally(() => {
-        setIsDeleting(false);
+        setIsDeactivating(false);
       });
   };
 
