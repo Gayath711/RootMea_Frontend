@@ -56,6 +56,7 @@ import { selectIsSidebarExpanded } from "./store/slices/utilsSlice";
 import EncounterNoteForm from "./pages/EncounterNote/EncounterNoteForm";
 import AddNewProgram from "./components/ProgramDirectory/AddNewProgram";
 import AddNewStaff from "./components/StaffDirectory/AddNewStaff";
+import NewEncounterNote from "./pages/EncounterNote/EncounterNoteForm";
 
 // New Client Profile - Create/View/Edit
 import ClientProfile from "./components/ClientProfileForm";
