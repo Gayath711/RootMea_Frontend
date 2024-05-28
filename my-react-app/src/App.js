@@ -299,7 +299,7 @@ function App() {
                   {/* Encounter notes */}
                   <Route
                     path="/encounter-note/add/:clientId"
-                    element={<NewEncounterNote />}
+                    element={<EncounterNoteForm />}
                   />
                 </Routes>
               </div>

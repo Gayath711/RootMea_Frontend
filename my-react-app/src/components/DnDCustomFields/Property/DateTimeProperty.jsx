@@ -6,9 +6,11 @@ import DateInput from "../../dynamicform/FormElements/DateInput";
 import CheckBoxElement from "../../dynamicform/FormElements/CheckBoxElement";
 
 export default function DateTimeProperty() {
-  const { selectedElement, elements, updateElement } =
+  const { selectedElement, elements, updateElement, config } =
     useDnDCustomFieldsContext();
   const fieldElement = elements[selectedElement];
+
+  const { enableAnswer, enableQuestion } = config;
 
   const handlePropsChange = (e) => {
     const {
@@ -60,25 +62,29 @@ export default function DateTimeProperty() {
 
   return (
     <div className="flex flex-column gap-1">
-      <InputElement
-        className="m-0 p-0"
-        type="text"
-        name="label"
-        value={fieldElement.props.label}
-        placeholder="Write a question..."
-        label="Question"
-        onChange={handlePropsChange}
-      />
+      {enableQuestion && (
+        <InputElement
+          className="m-0 p-0"
+          type="text"
+          name="label"
+          value={fieldElement.props.label}
+          placeholder="Write a question..."
+          label="Question"
+          onChange={handlePropsChange}
+        />
+      )}
 
-      <DateInput
-        className="m-0 p-0"
-        type="text"
-        name="value"
-        label={"Answer"}
-        value={fieldElement.props.value}
-        placeholder="Write an answer.."
-        onChange={handleDatePropsChange}
-      />
+      {enableAnswer && (
+        <DateInput
+          className="m-0 p-0"
+          type="text"
+          name="value"
+          label={"Answer"}
+          value={fieldElement.props.value}
+          placeholder="Write an answer.."
+          onChange={handleDatePropsChange}
+        />
+      )}
     </div>
   );
 }
