@@ -204,6 +204,15 @@ const styles = {
       },
     },
   },
+  intervention: {
+    // client chart page
+    header: {
+      classes: "bg-[#5BC4BF] border border-[#41CEBA]",
+      styles: {
+        color: "white",
+      },
+    },
+  },
 };
 
 // ==============================|| REACT TABLE ||============================== //
