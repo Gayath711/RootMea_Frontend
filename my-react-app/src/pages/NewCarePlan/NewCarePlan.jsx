@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import PageTitle from "../../components/PageTitle/PageTitle";
 import InputElement from "../../components/dynamicform/FormElements/InputElement";
 import ProfilePicture from "../../image/profile_picture.svg";
-import SelectElement from "../../components/dynamicform/FormElements/SelectElement";
 import TextAreaElement from "../../components/dynamicform/FormElements/TextAreaElement";
 import DateInput from "../../components/common/DateInput";
 import FormLabel from "../../components/dynamicform/FormElements/FormLabel";
@@ -16,6 +15,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import CancelRoundedIcon from "../../image/Cancel.svg";
+import DropDown from "../../components/common/Dropdown";
 function FormWrapper({ children, label }) {
   return (
     <div className="rounded-[6px] bg-white">
@@ -26,13 +26,16 @@ function FormWrapper({ children, label }) {
     </div>
   );
 }
-function AddNewElement({ label, button, required, className ,onclick}) {
+function AddNewElement({ label, button, required, className, onclick }) {
   return (
     <div
       className={`flex rounded-[5px] justify-between items-center p-3 m-1 ${className}`}
     >
       {label && <FormLabel required={required}>{label}</FormLabel>}
-      <button className="px-4 py-2 bg-[#2F9384] text-sm text-white rounded-[3px]" onClick={onclick}>
+      <button
+        className="px-4 py-2 bg-[#2F9384] text-sm text-white rounded-[3px]"
+        onClick={onclick}
+      >
         {button}
       </button>
     </div>
@@ -315,7 +318,7 @@ const TheNewCarePlan = () => {
                       (clientDetails?.last_name || "")
                     }
                     disabled
-                    className=""
+                    className="rounded-[3px]"
                     placeholder="Enter Client Name"
                     label={"Client Name"}
                   />
@@ -325,7 +328,7 @@ const TheNewCarePlan = () => {
                     type="text"
                     value={clientDetails?.preferred_pronouns || ""}
                     disabled
-                    className=""
+                    className="rounded-[3px]"
                     placeholder="Enter Preferred pronouns"
                     label={"Preferred pronouns"}
                   />
@@ -338,7 +341,7 @@ const TheNewCarePlan = () => {
                         : ""
                     }
                     dateFormat="MM-dd-yyyy"
-                    className=" h-[37.6px]"
+                    className=" h-[37.6px] rounded-[3px]"
                     isEdittable
                     height="37.6px"
                     label="Date of birth"
@@ -356,7 +359,7 @@ const TheNewCarePlan = () => {
                     type="text"
                     value={clientDetails?.system_id || "12345"}
                     disabled
-                    className=""
+                    className="rounded-[3px]"
                     placeholder="Enter System Id"
                     label={"System Id"}
                   />
@@ -366,7 +369,7 @@ const TheNewCarePlan = () => {
                     type="text"
                     value={clientDetails?.primary_phone || ""}
                     disabled
-                    className=""
+                    className="rounded-[3px]"
                     placeholder="Enter Primary phone"
                     label={"Primary phone"}
                   />
@@ -376,42 +379,46 @@ const TheNewCarePlan = () => {
                     type="text"
                     value={clientDetails?.email_address || ""}
                     disabled
-                    className=""
+                    className="rounded-[3px]"
                     placeholder="Enter Email"
                     label={"Email"}
                   />
                 </div>
                 <div className="col-span-3">
-                  <SelectElement
-                    placeholder="54321a"
-                    className=""
+                  <DropDown
+                    // placeholder="54321a"
+                    className="rounded-[3px]"
+                    height="39px"
                     label={"User Name"}
                     value={""}
                     options={[]}
                   />
                 </div>
                 <div className="col-span-3">
-                  <SelectElement
-                    placeholder="Facility"
-                    className=""
+                  <DropDown
+                    // placeholder="Facility"
+                    className="rounded-[3px]"
+                    height="39px"
                     label={"Facility"}
                     value={""}
                     options={[]}
                   />
                 </div>
                 <div className="col-span-3">
-                  <SelectElement
-                    placeholder="Program"
-                    className=""
+                  <DropDown
+                    height="37.6px"
+                    // placeholder="Program"
+                    className="rounded-[3px]"
                     label={"Program"}
                     value={""}
                     options={[]}
                   />
                 </div>
                 <div className="col-span-6">
-                  <SelectElement
-                    placeholder="Care Plan Template"
-                    className=""
+                  <DropDown
+                    height="37.6px"
+                    // placeholder="Care Plan Template"
+                    className="rounded-[3px]"
                     label={"Care Plan Template"}
                     value={""}
                     options={[]}
@@ -425,7 +432,7 @@ const TheNewCarePlan = () => {
                         : ""
                     }
                     dateFormat="MM-dd-yyyy"
-                    className=" h-[37.6px]"
+                    className=" h-[37.6px] rounded-[3px]"
                     height="37.6px"
                     label="Created Date"
                   />
@@ -464,7 +471,7 @@ const TheNewCarePlan = () => {
                       <DateInput
                         value={""}
                         dateFormat="MM-dd-yyyy"
-                        className="m-1 h-[37.6px] border-keppel"
+                        className="m-1 h-[37.6px] border-keppel rounded-[3px]"
                         height="37.6px"
                         label={"Start Date"}
                         // placeholder="DOB"
@@ -475,22 +482,23 @@ const TheNewCarePlan = () => {
                         type="text"
                         value={""}
                         width={"w-full"}
-                        className="border-keppel "
+                        className="border-keppel rounded-[3px]"
                         placeholder="Problem"
                       />
                     </div>
                     <div className="col-span-12">
                       <TextAreaElement
-                        className="h-32 border-keppel"
+                        className="h-32 border-keppel rounded-[3px]"
                         value={""}
                         onChange={() => {}}
                         placeholder="SMART Goal Summary"
                       />
                     </div>
                     <div className="col-span-6">
-                      <SelectElement
-                        placeholder="Goal Priority"
-                        className="border border-[#5BC4BF] border-keppel text-[#858585]"
+                      <DropDown
+                        height="37.6px"
+                        // placeholder="Goal Priority"
+                        className="border border-[#5BC4BF] border-keppel text-[#858585] rounded-[7px]"
                         value={""}
                         options={[
                           { label: "High", value: "High" },
@@ -500,9 +508,10 @@ const TheNewCarePlan = () => {
                       />
                     </div>
                     <div className="col-span-6">
-                      <SelectElement
-                        placeholder="Stage of Readiness"
-                        className="border border-[#5BC4BF] border-keppel text-[#858585]"
+                      <DropDown
+                        height="37.6px"
+                        // placeholder="Stage of Readiness"
+                        className="border border-[#5BC4BF] border-keppel text-[#858585] rounded-[7px]"
                         value={""}
                         options={[
                           {
@@ -518,7 +527,7 @@ const TheNewCarePlan = () => {
                     </div>
                     <div className="col-span-12">
                       <TextAreaElement
-                        className="h-32 border-keppel"
+                        className="h-32 border-keppel rounded-[3px]"
                         value={""}
                         onChange={() => {}}
                         placeholder="Client Strengths"
@@ -526,7 +535,7 @@ const TheNewCarePlan = () => {
                     </div>
                     <div className="col-span-12">
                       <TextAreaElement
-                        className="h-32 border-keppel"
+                        className="h-32 border-keppel rounded-[3px]"
                         value={""}
                         onChange={() => {}}
                         placeholder="Potential Barriers"
@@ -535,7 +544,7 @@ const TheNewCarePlan = () => {
                     {!interventionData.length ? (
                       <div className="col-span-12">
                         <AddNewElement
-                          className="border border-keppel"
+                          className="border border-keppel rounded-[3px]"
                           label="Interventions"
                           button={"Add new"}
                           onclick={handleClickOpen}
@@ -546,7 +555,7 @@ const TheNewCarePlan = () => {
                         <FormButtonWrapper
                           label="Interventions"
                           button={"Add new"}
-                          className={"mt-6"}
+                          className={"mt-6 rounded-[3px]"}
                           onclick={handleClickOpen}
                         >
                           <div className="col-span-12">
@@ -564,9 +573,10 @@ const TheNewCarePlan = () => {
                 <div className="grid m-6">
                   <FormButtonWrapper label={"Goal 1 Outcome"}>
                     <div className="col-span-6">
-                      <SelectElement
-                        placeholder="Status"
-                        className="border border-[#5BC4BF] border-keppel text-[#858585]"
+                      <DropDown
+                        height="37.6px"
+                        // placeholder="Status"
+                        className="border border-[#5BC4BF] border-keppel text-[#858585] mt-[3px] rounded-[7px]"
                         value={""}
                         options={[
                           { label: "Not Started", value: "Not Started" },
@@ -581,13 +591,13 @@ const TheNewCarePlan = () => {
                         value={""}
                         placeholder="Stage of Readiness"
                         dateFormat="MM-dd-yyyy"
-                        className="m-1  h-[37.6px] border-keppel"
+                        className="m-1  h-[37.6px] border-keppel rounded-[3px]"
                         height="37.6px"
                       />
                     </div>
                     <div className="col-span-12">
                       <TextAreaElement
-                        className="h-32 border-keppel"
+                        className="h-32 border-keppel rounded-[3px]"
                         value={""}
                         onChange={() => {}}
                         placeholder="Custom Sections / Fields"
@@ -595,7 +605,7 @@ const TheNewCarePlan = () => {
                     </div>
                     <div className="col-span-12">
                       <TextAreaElement
-                        className="h-32 border-keppel"
+                        className="h-32 border-keppel rounded-[3px]"
                         value={""}
                         onChange={() => {}}
                         placeholder="Comments"
