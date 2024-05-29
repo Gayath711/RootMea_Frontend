@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import PageTitle from "../../components/PageTitle/PageTitle";
 import InputElement from "../../components/dynamicform/FormElements/InputElement";
 import ProfilePicture from "../../image/profile_picture.svg";
@@ -7,7 +7,7 @@ import DateInput from "../../components/common/DateInput";
 import FormLabel from "../../components/dynamicform/FormElements/FormLabel";
 import { protectedApi } from "../../services/api";
 import { useNavigate, useParams } from "react-router-dom";
-import { notifyError } from "../../helper/toastNotication";
+import { notifyError, notifySuccess } from "../../helper/toastNotication";
 import { format } from "date-fns";
 import BasicTable from "../../components/react-table/BasicTable";
 import ThreeDotsIcon from "../../image/threedots.svg";
@@ -90,7 +90,43 @@ async function fetchClientDetails({ clientId }) {
     console.error(error.message);
   }
 }
-function AlertDialog({ open, handleClose }) {
+
+async function fetchUsers() {
+  try {
+    const response = await protectedApi.get("/encounter-notes-users/");
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function fetchFacilities() {
+  try {
+    const response = await protectedApi.get("/api/resources/facilities");
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+function AlertDialog({ setFormData, goalIndex, open, handleClose }) {
+  const [interventionData, setInterventionData] = useState({});
+
+  const handleAddNewIntervention = useCallback(() => {
+    setFormData((prevData) => {
+      const goals = [...prevData.goals];
+      goals[goalIndex].interventions.push(interventionData);
+      return { ...prevData, goals };
+    });
+    handleClose();
+  }, [interventionData]);
+
+  const handleInterventionDataChange = useCallback(
+    (fieldName, value) =>
+      setInterventionData((prevData) => ({ ...prevData, [fieldName]: value })),
+    []
+  );
+
   return (
     <>
       <Dialog
@@ -112,34 +148,52 @@ function AlertDialog({ open, handleClose }) {
               <div className="col-span-12">
                 <TextAreaElement
                   className="border-keppel"
-                  value={""}
-                  onChange={() => {}}
+                  value={interventionData?.intervention || ""}
+                  onChange={(e) =>
+                    handleInterventionDataChange("intervention", e.target.value)
+                  }
                   label="Interventions"
                 />
               </div>
               <div className="col-span-6">
                 <DateInput
-                  value={""}
                   dateFormat="MM-dd-yyyy"
                   className="m-1 h-[37.6px] border-keppel"
                   height="37.6px"
                   label={"Completed Date"}
+                  value={
+                    interventionData?.completed_date
+                      ? format(interventionData?.completed_date, "MM-dd-yyyy")
+                      : ""
+                  }
+                  handleChange={(date) =>
+                    handleInterventionDataChange("completed_date", date)
+                  }
                 />
               </div>
               <div className="col-span-6">
                 <DateInput
-                  value={""}
                   dateFormat="MM-dd-yyyy"
                   className="m-1 h-[37.6px] border-keppel"
                   height="37.6px"
                   label={"Due Date"}
+                  value={
+                    interventionData?.due_date
+                      ? format(interventionData?.due_date, "MM-dd-yyyy")
+                      : ""
+                  }
+                  handleChange={(date) =>
+                    handleInterventionDataChange("due_date", date)
+                  }
                 />
               </div>
               <div className="col-span-12">
                 <TextAreaElement
                   className="border-keppel"
-                  value={""}
-                  onChange={() => {}}
+                  value={interventionData?.notes || ""}
+                  onChange={(e) =>
+                    handleInterventionDataChange("notes", e.target.value)
+                  }
                   label="Notes"
                 />
               </div>
@@ -152,7 +206,7 @@ function AlertDialog({ open, handleClose }) {
                 Cancel
               </button>
               <button
-                onClick={handleClose}
+                onClick={handleAddNewIntervention}
                 className="bg-[#5BC4BF] text-black p-2 w-[150px] font-normal text-base rounded-[3px] "
               >
                 Add New
@@ -164,70 +218,197 @@ function AlertDialog({ open, handleClose }) {
     </>
   );
 }
+
 const TheNewCarePlan = () => {
   const { clientId } = useParams();
-  const [status, setStatus] = useState(true);
   const [clientDetails, setClientDetails] = useState({});
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  const [data, setdata] = useState([
+  const [goalIndex, setGoalIndex] = useState(0);
+  const [userOptions, setUserOptions] = useState([]);
+  const [faclityOptions, setFacilityOptions] = useState([]);
+  const [programOptions, setProgramOptions] = useState([
     {
-      user: "Marcus",
-      action: "Lorem ipsum dolor sit .....",
-      date: "1/3/2022",
-      time: "4:00 PM",
+      label: "Program 1",
+      value: 1,
     },
     {
-      user: "Kioni",
-      action: "Lorem ipsum dolor sit .....",
-      date: "1/2/2000",
-      time: "8:00 AM",
+      label: "Program 2",
+      value: 2,
     },
     {
-      user: "Marcus",
-      action: "Lorem ipsum dolor sit .....",
-      date: "1/2/2000",
-      time: "4:00 PM",
+      label: "Program 3",
+      value: 3,
+    },
+    {
+      label: "Program 4",
+      value: 4,
+    },
+    {
+      label: "Program 5",
+      value: 5,
     },
   ]);
+  const [carePlanTemplateOptions, setCarePlanTemplateOptions] = useState([
+    {
+      label: "Care Plan Template 1",
+      value: 1,
+    },
+    {
+      label: "Care Plan Template 2",
+      value: 2,
+    },
+    {
+      label: "Care Plan Template 3",
+      value: 3,
+    },
+  ]);
+
+  const goalPriorityOptions = useMemo(
+    () => [
+      { label: "High", value: "High" },
+      { label: "Medium", value: "Medium" },
+      { label: "Low", value: "Low" },
+    ],
+    []
+  );
+
+  const stageOfReadinessOptions = useMemo(
+    () => [
+      {
+        label: "Precontemplation",
+        value: "Precontemplation",
+      },
+      { label: "Contemplation", value: "Contemplation" },
+      { label: "Preparation", value: "Preparation" },
+      { label: "Action", value: "Action" },
+      { label: "Maintenance", value: "Maintenance" },
+    ],
+    []
+  );
+
+  const goalStatusOptions = useMemo(
+    () => [
+      { label: "Not Started", value: "Not Started" },
+      { label: "In Progress", value: "In Progress" },
+      { label: "Completed (Closed)", value: "Completed (Closed)" },
+      { label: "Not Completed (Closed)", value: "Not Completed (Closed)" },
+    ],
+    []
+  );
+
+  const [formData, setFormData] = useState({
+    client_id: Number(clientId),
+    system_id: "12345",
+    goals: [{ interventions: [] }],
+  });
+
+  const disableSubmit = useMemo(() => {
+    return (
+      !formData.user_name ||
+      !formData.facility ||
+      !formData.program ||
+      !formData?.care_plan_template ||
+      !formData.created_date
+    );
+  }, [formData]);
+
+  useEffect(() => {
+    console.log(formData);
+  }, [formData]);
+
+  const handleFormDataChange = useCallback(
+    (fieldName, value) => {
+      setFormData((prevData) => ({ ...prevData, [fieldName]: value }));
+    },
+    [formData]
+  );
+
+  const handleAddNewGoal = useCallback(() => {
+    setFormData((prevData) => ({
+      ...prevData,
+      goals: [...prevData.goals, { interventions: [] }],
+    }));
+  }, []);
+
+  const handleCreateNewCarePlan = useCallback(async () => {
+    try {
+      const response = await protectedApi.post("/api/careplan/", formData);
+
+      if (response.status === 201) {
+        notifySuccess("Care Plan created successfully");
+        navigate(`/clientchart/${clientId}`);
+      }
+
+    } catch {
+      console.error("Error creating care plan");
+    }
+  }, [formData])
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  const [carePlanStatusData, setCarePlanStatusData] = useState([
+    // {
+    //   user: "Marcus",
+    //   action: "Lorem ipsum dolor sit .....",
+    //   date: "1/3/2022",
+    //   time: "4:00 PM",
+    // },
+    // {
+    //   user: "Kioni",
+    //   action: "Lorem ipsum dolor sit .....",
+    //   date: "1/2/2000",
+    //   time: "8:00 AM",
+    // },
+    // {
+    //   user: "Marcus",
+    //   action: "Lorem ipsum dolor sit .....",
+    //   date: "1/2/2000",
+    //   time: "4:00 PM",
+    // },
+  ]);
+
   const [interventionData, setInterventionData] = useState([
-    {
-      id: 1,
-      name: "John",
-      dueDate: "08/12/2024",
-      completedDate: "08/18/2024",
-      notes: "Lorem ipsum dolor sit .....",
-    },
-    {
-      id: 2,
-      name: "Jane",
-      dueDate: "08/12/2024",
-      completedDate: "08/18/2024",
-      notes: "Lorem ipsum dolor sit .....",
-    },
-    {
-      id: 3,
-      name: "Doe",
-      dueDate: "08/12/2024",
-      completedDate: "08/18/2024",
-      notes: "Lorem ipsum dolor sit .....",
-    },
-    {
-      id: 4,
-      name: "Mark",
-      dueDate: "08/12/2024",
-      completedDate: "08/18/2024",
-      notes: "Lorem ipsum dolor sit .....",
-    },
+    // {
+    //   id: 1,
+    //   name: "John",
+    //   dueDate: "08/12/2024",
+    //   completedDate: "08/18/2024",
+    //   notes: "Lorem ipsum dolor sit .....",
+    // },
+    // {
+    //   id: 2,
+    //   name: "Jane",
+    //   dueDate: "08/12/2024",
+    //   completedDate: "08/18/2024",
+    //   notes: "Lorem ipsum dolor sit .....",
+    // },
+    // {
+    //   id: 3,
+    //   name: "Doe",
+    //   dueDate: "08/12/2024",
+    //   completedDate: "08/18/2024",
+    //   notes: "Lorem ipsum dolor sit .....",
+    // },
+    // {
+    //   id: 4,
+    //   name: "Mark",
+    //   dueDate: "08/12/2024",
+    //   completedDate: "08/18/2024",
+    //   notes: "Lorem ipsum dolor sit .....",
+    // },
   ]);
 
-  const handleClickOpen = () => {
+  const handleClickOpen = useCallback(() => {
     setOpen(true);
-  };
+  }, []);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setOpen(false);
-  };
+  }, []);
+
   useEffect(() => {
     fetchClientDetails({ clientId })
       .then((clientDetailsResponse) => {
@@ -237,17 +418,43 @@ const TheNewCarePlan = () => {
         console.error(error.message);
       });
   }, []);
-  useEffect(() => {
-    console.log(clientDetails, "clientDetails");
-  }, [clientDetails]);
 
-  const handleButtonClick = (component) => {
-    if (component === "goal_1") {
-      setStatus(true);
-    } else if (component === "carePlanStatus") {
-      setStatus(false);
-    }
-  };
+  useEffect(() => {
+    fetchUsers()
+      .then((fetchUsersResponse) => {
+        const convertedUserOptions = fetchUsersResponse.map((user) => ({
+          label: user.username,
+          value: user.id,
+        }));
+        setUserOptions(convertedUserOptions);
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetchFacilities()
+      .then((fetchFaclitiesResponse) => {
+        const convertedUserOptions = fetchFaclitiesResponse.map((facility) => ({
+          label: facility.name,
+          value: facility.id,
+        }));
+        setFacilityOptions(convertedUserOptions);
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  }, []);
+
+  const handleGoalDataUpdate = useCallback((index, fieldName, value) => {
+    setFormData((prevData) => {
+      const goals = [...prevData.goals];
+      goals[index][fieldName] = value;
+      return { ...prevData, goals };
+    });
+  }, []);
+
   const columns = useMemo(
     () => [
       {
@@ -277,9 +484,9 @@ const TheNewCarePlan = () => {
   const intervention_columns = useMemo(
     () => [
       { Header: "#", accessor: "id" },
-      { Header: "Intervention", accessor: "name" },
-      { Header: "Due Date", accessor: "dueDate" },
-      { Header: "Completed Date", accessor: "completedDate" },
+      { Header: "Intervention", accessor: "intervention" },
+      { Header: "Due Date", accessor: "due_date" },
+      { Header: "Completed Date", accessor: "completed_date" },
       { Header: "Notes", accessor: "notes" },
       {
         Header: "Add section",
@@ -295,6 +502,7 @@ const TheNewCarePlan = () => {
     ],
     []
   );
+
   return (
     <div className="mx-1" style={{ fontFamily: "poppins" }}>
       <PageTitle
@@ -302,352 +510,457 @@ const TheNewCarePlan = () => {
         clientId={clientId}
         onClick={() => navigate(`/clientchart/${clientId}`)}
       />
-      {open ? (
-        <AlertDialog open={open} handleClose={handleClose} />
-      ) : (
-        <>
-          <div className="rounded-[5px] my-6">
-            <div className="grid gap-y-8">
-              <FormWrapper label="Client care plan details">
-                <div className="col-span-3">
-                  <InputElement
-                    type="text"
-                    value={
-                      (clientDetails?.first_name || "") +
-                      " " +
-                      (clientDetails?.last_name || "")
-                    }
-                    disabled
-                    className="rounded-[3px]"
-                    placeholder="Enter Client Name"
-                    label={"Client Name"}
-                  />
-                </div>
-                <div className="col-span-3">
-                  <InputElement
-                    type="text"
-                    value={clientDetails?.preferred_pronouns || ""}
-                    disabled
-                    className="rounded-[3px]"
-                    placeholder="Enter Preferred pronouns"
-                    label={"Preferred pronouns"}
-                  />
-                </div>
-                <div className="col-span-3">
-                  <DateInput
-                    value={
-                      clientDetails?.date_of_birth
-                        ? format(clientDetails?.date_of_birth, "MM-dd-yyyy")
-                        : ""
-                    }
-                    dateFormat="MM-dd-yyyy"
-                    className=" h-[37.6px] rounded-[3px]"
-                    isEdittable
-                    height="37.6px"
-                    label="Date of birth"
-                  />
-                </div>
-                <div className="col-span-2 row-span-4 ml-8 flex justify-center items-center">
-                  <img
-                    src={ProfilePicture}
-                    className="w-full"
-                    alt="profile_picture"
-                  />
-                </div>
-                <div className="col-span-3">
-                  <InputElement
-                    type="text"
-                    value={clientDetails?.system_id || "12345"}
-                    disabled
-                    className="rounded-[3px]"
-                    placeholder="Enter System Id"
-                    label={"System Id"}
-                  />
-                </div>
-                <div className="col-span-3">
-                  <InputElement
-                    type="text"
-                    value={clientDetails?.primary_phone || ""}
-                    disabled
-                    className="rounded-[3px]"
-                    placeholder="Enter Primary phone"
-                    label={"Primary phone"}
-                  />
-                </div>
-                <div className="col-span-3">
-                  <InputElement
-                    type="text"
-                    value={clientDetails?.email_address || ""}
-                    disabled
-                    className="rounded-[3px]"
-                    placeholder="Enter Email"
-                    label={"Email"}
-                  />
-                </div>
-                <div className="col-span-3">
-                  <DropDown
-                    // placeholder="54321a"
-                    className="rounded-[3px]"
-                    height="39px"
-                    label={"User Name"}
-                    value={""}
-                    options={[]}
-                  />
-                </div>
-                <div className="col-span-3">
-                  <DropDown
-                    // placeholder="Facility"
-                    className="rounded-[3px]"
-                    height="39px"
-                    label={"Facility"}
-                    value={""}
-                    options={[]}
-                  />
-                </div>
-                <div className="col-span-3">
-                  <DropDown
-                    height="37.6px"
-                    // placeholder="Program"
-                    className="rounded-[3px]"
-                    label={"Program"}
-                    value={""}
-                    options={[]}
-                  />
-                </div>
+      <div className="rounded-[5px] my-6">
+        <div className="grid gap-y-8">
+          <FormWrapper label="Client care plan details">
+            <div className="col-span-3">
+              <InputElement
+                type="text"
+                value={
+                  (clientDetails?.first_name || "") +
+                  " " +
+                  (clientDetails?.last_name || "")
+                }
+                disabled
+                className="rounded-[3px]"
+                placeholder="Enter Client Name"
+                label={"Client Name"}
+              />
+            </div>
+            <div className="col-span-3">
+              <InputElement
+                type="text"
+                value={clientDetails?.preferred_pronouns || ""}
+                disabled
+                className="rounded-[3px]"
+                placeholder="Enter Preferred pronouns"
+                label={"Preferred pronouns"}
+              />
+            </div>
+            <div className="col-span-3">
+              <DateInput
+                value={
+                  clientDetails?.date_of_birth
+                    ? format(clientDetails?.date_of_birth, "MM-dd-yyyy")
+                    : ""
+                }
+                dateFormat="MM-dd-yyyy"
+                className=" h-[37.6px] rounded-[3px]"
+                isEdittable
+                height="37.6px"
+                label="Date of birth"
+              />
+            </div>
+            <div className="col-span-2 row-span-4 ml-8 flex justify-center items-center">
+              <img
+                src={ProfilePicture}
+                className="w-full"
+                alt="profile_picture"
+              />
+            </div>
+            <div className="col-span-3">
+              <InputElement
+                type="text"
+                value={clientDetails?.system_id || "12345"}
+                disabled
+                className="rounded-[3px]"
+                placeholder="Enter System Id"
+                label={"System Id"}
+              />
+            </div>
+            <div className="col-span-3">
+              <InputElement
+                type="text"
+                value={clientDetails?.primary_phone || ""}
+                disabled
+                className="rounded-[3px]"
+                placeholder="Enter Primary phone"
+                label={"Primary phone"}
+              />
+            </div>
+            <div className="col-span-3">
+              <InputElement
+                type="text"
+                value={clientDetails?.email_address || ""}
+                disabled
+                className="rounded-[3px]"
+                placeholder="Enter Email"
+                label={"Email"}
+              />
+            </div>
+            <div className="col-span-3">
+              <DropDown
+                // placeholder="54321a"
+                className="rounded-[3px]"
+                height="39px"
+                fontSize="14px"
+                label={"User Name"}
+                selectedOption={
+                  userOptions.find((user) => formData?.user_name === user.value)
+                    ?.label || ""
+                }
+                options={userOptions}
+                handleChange={(option) =>
+                  handleFormDataChange("user_name", option.value)
+                }
+              />
+            </div>
+            <div className="col-span-3">
+              <DropDown
+                // placeholder="Facility"
+                className="rounded-[3px]"
+                height="39px"
+                fontSize="14px"
+                label={"Facility"}
+                selectedOption={
+                  faclityOptions.find(
+                    (facility) => formData?.facility === facility.value
+                  )?.label || ""
+                }
+                options={faclityOptions}
+                handleChange={(option) =>
+                  handleFormDataChange("facility", option.value)
+                }
+              />
+            </div>
+            <div className="col-span-3">
+              <DropDown
+                height="37.6px"
+                fontSize="14px"
+                // placeholder="Program"
+                className="rounded-[3px]"
+                label={"Program"}
+                selectedOption={
+                  programOptions.find(
+                    (program) => formData?.program === program.value
+                  )?.label || ""
+                }
+                options={programOptions}
+                handleChange={(option) =>
+                  handleFormDataChange("program", option.value)
+                }
+              />
+            </div>
+            <div className="col-span-6">
+              <DropDown
+                height="37.6px"
+                fontSize="14px"
+                // placeholder="Care Plan Template"
+                className="rounded-[3px]"
+                label={"Care Plan Template"}
+                selectedOption={
+                  carePlanTemplateOptions.find(
+                    (care_plan) =>
+                      formData?.care_plan_template === care_plan.value
+                  )?.label || ""
+                }
+                options={carePlanTemplateOptions}
+                handleChange={(option) =>
+                  handleFormDataChange("care_plan_template", option.value)
+                }
+              />
+            </div>
+            <div className="col-span-3">
+              <DateInput
+                dateFormat="MM-dd-yyyy"
+                className=" h-[37.6px] rounded-[3px]"
+                height="37.6px"
+                label="Created Date"
+                value={
+                  formData?.created_date
+                    ? format(formData?.created_date, "MM-dd-yyyy")
+                    : ""
+                }
+                handleChange={(date) =>
+                  handleFormDataChange("created_date", date)
+                }
+              />
+            </div>
+          </FormWrapper>
+        </div>
+      </div>
+      <div className="rounded-[5px] my-6 bg-white">
+        <div className="flex gap-3 p-4 flex-wrap">
+          {formData?.goals?.map((_, index) => (
+            <button
+              className={`p-2 w-[200px] font-normal text-base rounded-sm ${
+                index === goalIndex
+                  ? "bg-[#5BC4BF] text-white"
+                  : "bg-white border border-[#5BC4BF]"
+              }`}
+              onClick={() => setGoalIndex(index)}
+            >
+              GOAL {index + 1}
+            </button>
+          ))}
+          <button
+            className={` w-[200px] font-normal text-base rounded-sm ${
+              goalIndex === null
+                ? "bg-[#5BC4BF] text-white"
+                : "bg-white border border-[#5BC4BF]"
+            }`}
+            onClick={() => setGoalIndex(null)}
+          >
+            CARE PLAN STATUS
+          </button>
+        </div>
+        {goalIndex !== null ? (
+          <>
+            <div className="grid m-6">
+              <FormButtonWrapper
+                label={`Goal ${goalIndex + 1}`}
+                button={"Add new"}
+                onclick={handleAddNewGoal}
+              >
                 <div className="col-span-6">
-                  <DropDown
-                    height="37.6px"
-                    // placeholder="Care Plan Template"
-                    className="rounded-[3px]"
-                    label={"Care Plan Template"}
-                    value={""}
-                    options={[]}
-                  />
-                </div>
-                <div className="col-span-3">
                   <DateInput
+                    dateFormat="MM-dd-yyyy"
+                    className="m-1 h-[37.6px] border-keppel rounded-[3px]"
+                    height="37.6px"
+                    label={"Start Date"}
                     value={
-                      clientDetails?.date_of_birth
-                        ? format(clientDetails?.date_of_birth, "MM-dd-yyyy")
+                      formData?.goals?.[goalIndex]?.start_date
+                        ? format(formData?.goals?.[goalIndex]?.start_date, "MM-dd-yyyy")
                         : ""
                     }
-                    dateFormat="MM-dd-yyyy"
-                    className=" h-[37.6px] rounded-[3px]"
-                    height="37.6px"
-                    label="Created Date"
+                    handleChange={(value) => {
+                      handleGoalDataUpdate(goalIndex, "start_date", value);
+                    }}
+                    // placeholder="DOB"
                   />
                 </div>
-              </FormWrapper>
-            </div>
-          </div>
-          <div className="rounded-[5px] my-6 bg-white">
-            <div className="flex gap-3 p-4 flex-wrap">
-              <button
-                className={`p-2 w-[200px] font-normal text-base rounded-sm ${
-                  status
-                    ? "bg-[#5BC4BF] text-white"
-                    : "bg-white border border-[#5BC4BF]"
-                }`}
-                onClick={() => handleButtonClick("goal_1")}
-              >
-                GOAL 1
-              </button>
-              <button
-                className={` w-[200px] font-normal text-base rounded-sm ${
-                  !status
-                    ? "bg-[#5BC4BF] text-white"
-                    : "bg-white border border-[#5BC4BF]"
-                }`}
-                onClick={() => handleButtonClick("carePlanStatus")}
-              >
-                CARE PLAN STATUS
-              </button>
-            </div>
-            {status ? (
-              <>
-                <div className="grid m-6">
-                  <FormButtonWrapper label="Goal 1" button={"Add new"}>
-                    <div className="col-span-6">
-                      <DateInput
-                        value={""}
-                        dateFormat="MM-dd-yyyy"
-                        className="m-1 h-[37.6px] border-keppel rounded-[3px]"
-                        height="37.6px"
-                        label={"Start Date"}
-                        // placeholder="DOB"
-                      />
-                    </div>
-                    <div className="col-span-6 flex items-end">
-                      <InputElement
-                        type="text"
-                        value={""}
-                        width={"w-full"}
-                        className="border-keppel rounded-[3px]"
-                        placeholder="Problem"
-                      />
-                    </div>
-                    <div className="col-span-12">
-                      <TextAreaElement
-                        className="h-32 border-keppel rounded-[3px]"
-                        value={""}
-                        onChange={() => {}}
-                        placeholder="SMART Goal Summary"
-                      />
-                    </div>
-                    <div className="col-span-6">
-                      <DropDown
-                        height="37.6px"
-                        // placeholder="Goal Priority"
-                        className="border border-[#5BC4BF] border-keppel text-[#858585] rounded-[7px]"
-                        value={""}
-                        options={[
-                          { label: "High", value: "High" },
-                          { label: "Medium", value: "Medium" },
-                          { label: "Low", value: "Low" },
-                        ]}
-                      />
-                    </div>
-                    <div className="col-span-6">
-                      <DropDown
-                        height="37.6px"
-                        // placeholder="Stage of Readiness"
-                        className="border border-[#5BC4BF] border-keppel text-[#858585] rounded-[7px]"
-                        value={""}
-                        options={[
-                          {
-                            label: "Precontemplation",
-                            value: "Precontemplation",
-                          },
-                          { label: "Contemplation", value: "Contemplation" },
-                          { label: "Preparation", value: "Preparation" },
-                          { label: "Action", value: "Action" },
-                          { label: "Maintenance", value: "Maintenance" },
-                        ]}
-                      />
-                    </div>
-                    <div className="col-span-12">
-                      <TextAreaElement
-                        className="h-32 border-keppel rounded-[3px]"
-                        value={""}
-                        onChange={() => {}}
-                        placeholder="Client Strengths"
-                      />
-                    </div>
-                    <div className="col-span-12">
-                      <TextAreaElement
-                        className="h-32 border-keppel rounded-[3px]"
-                        value={""}
-                        onChange={() => {}}
-                        placeholder="Potential Barriers"
-                      />
-                    </div>
-                    {!interventionData.length ? (
+                <div className="col-span-6 flex items-end">
+                  <InputElement
+                    type="text"
+                    value={formData?.goals?.[goalIndex]?.problem || ""}
+                    width={"w-full"}
+                    className="border-keppel rounded-[3px]"
+                    placeholder="Problem"
+                    handleChange={(value) =>
+                      handleGoalDataUpdate(goalIndex, "problem", value)
+                    }
+                  />
+                </div>
+                <div className="col-span-12">
+                  <TextAreaElement
+                    className="h-32 border-keppel rounded-[3px]"
+                    value={
+                      formData?.goals?.[goalIndex]?.smart_goal_summary || ""
+                    }
+                    onChange={(e) =>
+                      handleGoalDataUpdate(
+                        goalIndex,
+                        "smart_goal_summary",
+                        e.target.value
+                      )
+                    }
+                    placeholder="SMART Goal Summary"
+                  />
+                </div>
+                <div className="col-span-6 m-1">
+                  <DropDown
+                    height="37.6px"
+                    fontSize="14px"
+                    placeholder="Goal Priority"
+                    className="border border-[#5BC4BF] border-keppel text-[#858585] rounded-[7px]"
+                    selectedOption={
+                      formData?.goals?.[goalIndex]?.goal_priority || ""
+                    }
+                    options={goalPriorityOptions}
+                    handleChange={(option) =>
+                      handleGoalDataUpdate(
+                        goalIndex,
+                        "goal_priority",
+                        option.value
+                      )
+                    }
+                  />
+                </div>
+                <div className="col-span-6 m-1">
+                  <DropDown
+                    height="37.6px"
+                    fontSize="14px"
+                    placeholder="Stage of Readiness"
+                    className="border border-[#5BC4BF] border-keppel text-[#858585] rounded-[7px]"
+                    selectedOption={
+                      formData?.goals?.[goalIndex]?.stage_of_readiness || ""
+                    }
+                    options={stageOfReadinessOptions}
+                    handleChange={(option) =>
+                      handleGoalDataUpdate(
+                        goalIndex,
+                        "stage_of_readiness",
+                        option.value
+                      )
+                    }
+                  />
+                </div>
+                <div className="col-span-12">
+                  <TextAreaElement
+                    className="h-32 border-keppel rounded-[3px]"
+                    value={formData?.goals?.[goalIndex]?.client_strengths || ""}
+                    onChange={(e) =>
+                      handleGoalDataUpdate(
+                        goalIndex,
+                        "client_strengths",
+                        e.target.value
+                      )
+                    }
+                    placeholder="Client Strengths"
+                  />
+                </div>
+                <div className="col-span-12">
+                  <TextAreaElement
+                    className="h-32 border-keppel rounded-[3px]"
+                    value={
+                      formData?.goals?.[goalIndex]?.potential_barriers || ""
+                    }
+                    onChange={(e) =>
+                      handleGoalDataUpdate(
+                        goalIndex,
+                        "potential_barriers",
+                        e.target.value
+                      )
+                    }
+                    placeholder="Potential Barriers"
+                  />
+                </div>
+                {!formData?.goals?.[goalIndex]?.interventions?.length ? (
+                  <div className="col-span-12">
+                    <AddNewElement
+                      className="border border-keppel rounded-[3px]"
+                      label="Interventions"
+                      button={"Add new"}
+                      onclick={handleClickOpen}
+                    />
+                  </div>
+                ) : (
+                  <div className="col-span-12">
+                    <FormButtonWrapper
+                      label="Interventions"
+                      button={"Add new"}
+                      className={"mt-6 rounded-[3px]"}
+                      onclick={handleClickOpen}
+                    >
                       <div className="col-span-12">
-                        <AddNewElement
-                          className="border border-keppel rounded-[3px]"
-                          label="Interventions"
-                          button={"Add new"}
-                          onclick={handleClickOpen}
+                        <BasicTable
+                          type={"intervention"}
+                          columns={intervention_columns}
+                          data={formData?.goals?.[goalIndex]?.interventions || []}
                         />
                       </div>
-                    ) : (
-                      <div className="col-span-12">
-                        <FormButtonWrapper
-                          label="Interventions"
-                          button={"Add new"}
-                          className={"mt-6 rounded-[3px]"}
-                          onclick={handleClickOpen}
-                        >
-                          <div className="col-span-12">
-                            <BasicTable
-                              type={"intervention"}
-                              columns={intervention_columns}
-                              data={interventionData}
-                            />
-                          </div>
-                        </FormButtonWrapper>
-                      </div>
-                    )}
-                  </FormButtonWrapper>
-                </div>
-                <div className="grid m-6">
-                  <FormButtonWrapper label={"Goal 1 Outcome"}>
-                    <div className="col-span-6">
-                      <DropDown
-                        height="37.6px"
-                        // placeholder="Status"
-                        className="border border-[#5BC4BF] border-keppel text-[#858585] mt-[3px] rounded-[7px]"
-                        value={""}
-                        options={[
-                          { label: "Not Started", value: "Not Started" },
-                          { label: "In Progress", value: "In Progress" },
-                          { label: "Completed", value: "Completed" },
-                          { label: "Not Completed", value: "Not Completed" },
-                        ]}
-                      />
-                    </div>
-                    <div className="col-span-6">
-                      <DateInput
-                        value={""}
-                        placeholder="Stage of Readiness"
-                        dateFormat="MM-dd-yyyy"
-                        className="m-1  h-[37.6px] border-keppel rounded-[3px]"
-                        height="37.6px"
-                      />
-                    </div>
-                    <div className="col-span-12">
-                      <TextAreaElement
-                        className="h-32 border-keppel rounded-[3px]"
-                        value={""}
-                        onChange={() => {}}
-                        placeholder="Custom Sections / Fields"
-                      />
-                    </div>
-                    <div className="col-span-12">
-                      <TextAreaElement
-                        className="h-32 border-keppel rounded-[3px]"
-                        value={""}
-                        onChange={() => {}}
-                        placeholder="Comments"
-                      />
-                    </div>
-                  </FormButtonWrapper>
-                  <div className="text-center my-3">
-                    <button className="bg-[#C4EBEF] px-5 py-3 m-2 rounded-sm text-lg">
-                      Request Approval
-                    </button>
+                    </FormButtonWrapper>
                   </div>
+                )}
+              </FormButtonWrapper>
+            </div>
+            <div className="grid m-6">
+              <FormButtonWrapper label={"Goal 1 Outcome"}>
+                <div className="col-span-6 mx-1">
+                  <DropDown
+                    height="37.6px"
+                    fontSize="14px"
+                    placeholder="Status"
+                    className="border border-[#5BC4BF] border-keppel text-[#858585] mt-[3px] rounded-[7px]"
+                    selectedOption={
+                      formData?.goals?.[goalIndex]?.goal_status || ""
+                    }
+                    options={goalStatusOptions}
+                    handleChange={(option) =>
+                      handleGoalDataUpdate(
+                        goalIndex,
+                        "goal_status",
+                        option.value
+                      )
+                    }
+                  />
                 </div>
-              </>
-            ) : (
-              <>
-                <div className="m-6">
-                  <FormButtonWrapper
-                    label="Care plan status"
-                    button={"View history"}
-                  >
-                    <div className="col-span-12">
-                      <BasicTable
-                        type={"carePlanStatus"}
-                        columns={columns}
-                        data={data}
-                      />
-                    </div>
-                    <div className="col-span-12 m-auto">
-                      <button className="border border-[#5BC4BF] w-[150px] font-normal text-base rounded-sm p-2 mr-3">
-                        Cancel
-                      </button>
-                      <button className="bg-[#5BC4BF] text-white p-2 w-[150px] font-normal text-base rounded-sm ">
-                        Save/edit
-                      </button>
-                    </div>
-                  </FormButtonWrapper>
+                <div className="col-span-6 mx-1">
+                  <DateInput
+                    placeholder="Stage of Readiness"
+                    dateFormat="MM-dd-yyyy"
+                    className="m-1  h-[37.6px] border-keppel rounded-[3px]"
+                    height="37.6px"
+                    value={
+                      formData?.goals?.[goalIndex]?.goal_date
+                        ? format(
+                            formData?.goals?.[goalIndex]?.goal_date,
+                            "MM-dd-yyyy"
+                          )
+                        : ""
+                    }
+                    handleChange={(date) =>
+                      handleGoalDataUpdate(goalIndex, "goal_date", date)
+                    }
+                  />
                 </div>
-              </>
-            )}
-          </div>
-        </>
-      )}
+                <div className="col-span-12">
+                  <TextAreaElement
+                    className="h-32 border-keppel rounded-[3px]"
+                    value={""}
+                    onChange={() => {}}
+                    placeholder="Custom Sections / Fields"
+                  />
+                </div>
+                <div className="col-span-12">
+                  <TextAreaElement
+                    className="h-32 border-keppel rounded-[3px]"
+                    value={formData?.goals?.[goalIndex]?.comments || ""}
+                    onChange={(e) =>
+                      handleGoalDataUpdate(
+                        goalIndex,
+                        "comments",
+                        e.target.value
+                      )
+                    }
+                    placeholder="Comments"
+                  />
+                </div>
+              </FormButtonWrapper>
+              <div className="text-center my-3">
+                <button
+                  disabled={disableSubmit}
+                  onClick={handleCreateNewCarePlan}
+                  className="bg-[#C4EBEF] px-5 py-3 m-2 rounded-sm text-lg disabled:cursor-not-allowed"
+                >
+                  Request Approval
+                </button>
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="m-6">
+              <FormButtonWrapper
+                label="Care plan status"
+                button={"View history"}
+              >
+                <div className="col-span-12">
+                  <BasicTable
+                    type={"carePlanStatus"}
+                    columns={columns}
+                    data={carePlanStatusData}
+                  />
+                </div>
+                <div className="col-span-12 m-auto">
+                  <button className="border border-[#5BC4BF] w-[150px] font-normal text-base rounded-sm p-2 mr-3">
+                    Cancel
+                  </button>
+                  <button className="bg-[#5BC4BF] text-white p-2 w-[150px] font-normal text-base rounded-sm ">
+                    Save/edit
+                  </button>
+                </div>
+              </FormButtonWrapper>
+            </div>
+          </>
+        )}
+      </div>
+      <AlertDialog
+        setFormData={setFormData}
+        goalIndex={goalIndex}
+        open={open}
+        handleClose={handleClose}
+      />
     </div>
   );
 };
