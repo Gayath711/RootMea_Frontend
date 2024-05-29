@@ -19,37 +19,17 @@ export default function ClientReferral() {
   const { paramid } = useParams();
 
   const [formDetail, setFormDetail] = useState({
-    clientName: null,
-    DOB: "",
-    Program: null,
-
-    client_name: "John Doe",
-    referral_to: "Dr. Smith",
-    dob: "1990-05-15",
-    activity: "Therapy",
-    referred_by: "Dr. Johnson",
-    submitted_date: "2024-05-27",
-    submitted_time: "08:30:00",
-
-    // --------
-    LastName: "",
-    FirstName: "",
-    PhoneNumber: "",
-    EmailId: "",
-    AdditionalContactInformation: "",
-    PositionTitle: null,
-    PrimaryFaculity: null,
-    Supervisor: null,
-    SupervisorEmail: "",
-    NavigationClients: "",
+    client_name: null,
+    dob: "",
+    activity: null,
+    referred_by: "",
+    submitted_date: "",
+    submitted_time: "",
+    comments: "",
   });
 
   const [errFields, setErrFields] = useState({});
 
-  const [usersData, setUsersData] = useState({});
-  const [positionTitleOptions, setPositionTitleOptions] = useState([]);
-  const [primaryFaculityOptions, setPrimaryFaculityOptions] = useState([]);
-  const [supervisorOptions, setSupervisorOptions] = useState([]);
   const [programsOptions, setProgramsOptions] = useState([]);
   const [loadingData, setLoadingData] = useState(true);
 
@@ -57,13 +37,34 @@ export default function ClientReferral() {
 
   const [allusers, setAllUsers] = useState([]);
 
+  const [customFields, setCustomFields] = useState([]);
+
+  let customFieldsTags = useMemo(() => {
+    return customFields.map((field) => {
+      let cf = {
+        datatype: field.type,
+        question: field.props.label,
+        answer: "",
+      };
+
+      if (field.type === "imageupload" || field.type === "fileupload") {
+        cf.answer = field.props.base64;
+      } else {
+        cf.answer = field.props.value;
+      }
+
+      // if (mode === "edit") {
+      //   if (field.id) {
+      //     cf.id = field.id;
+      //   }
+      // }
+
+      return cf;
+    });
+  }, [customFields]);
+
   useEffect(() => {
-    fetchAllUser();
-    fetchPrograms();
-    getCurrentDateTime();
-    // fetchPrimaryFaculity();
-    // fetchSupervisor();
-    // fetchPrograms();
+    getData();
 
     // Clean up effect
     return () => {
@@ -71,10 +72,17 @@ export default function ClientReferral() {
     };
   }, []); // Empty dependency array means this effect runs only once after the component mounts
 
+  const getData = () => {
+    fetchAllUser();
+    fetchPrograms();
+    getCurrentDateTime();
+    fetchUsername();
+  };
+
   useEffect(() => {
-    formDetail.clientName !== null &&
-      fetchSelectedUser(formDetail.clientName.id);
-  }, [formDetail.clientName]);
+    formDetail.client_name !== null &&
+      fetchSelectedUser(formDetail.client_name.id);
+  }, [formDetail.client_name]);
 
   function getCurrentDateTime() {
     const now = new Date();
@@ -369,6 +377,21 @@ export default function ClientReferral() {
     }
   };
 
+  const fetchUsername = async () => {
+    try {
+      const response = await axios.get("/api/username");
+      setFormDetail((prev) => {
+        return {
+          ...prev,
+          referred_by: response.data.username,
+        };
+      });
+    } catch (error) {
+      // Handle errors here
+      console.error("Error fetching all users:", error);
+    }
+  };
+
   const fetchPrograms = async () => {
     try {
       const response = await axios.get("/api/resources/all-programs");
@@ -391,7 +414,7 @@ export default function ClientReferral() {
     try {
       const response = await axios.get("/clientinfo-api/" + id);
       setFormDetail((prev) => {
-        return { ...prev, DOB: response.data.date_of_birth };
+        return { ...prev, dob: response.data.date_of_birth };
       });
     } catch (error) {
       // Handle errors here
@@ -402,36 +425,14 @@ export default function ClientReferral() {
   const fieldValidation = () => {
     let errorFields = {};
 
-    if (!formDetail.FirstName) {
-      errorFields.FirstName = "Please fill the first name";
+    if (!formDetail.client_name) {
+      errorFields.client_name = "Please select client";
     }
 
-    if (!formDetail.LastName) {
-      errorFields.LastName = "Please fill the last name";
+    if (!formDetail.activity) {
+      errorFields.activity = "Please select program";
     }
 
-    // if (!formDetail.PhoneNumber) {
-    //   errorFields.PhoneNumber = "Please fill the phone number";
-    // }
-
-    if (!formDetail.EmailId) {
-      errorFields.EmailId = "Please fill the email id";
-    }
-
-    // if (!formDetail.PositionTitle) {
-    //   errorFields.PositionTitle = "Please select the position";
-    // }
-
-    // if (!formDetail.PrimaryFaculity) {
-    //   errorFields.PrimaryFaculity = "Please select the faculty";
-    // }
-    // if (!formDetail.Supervisor) {
-    //   errorFields.Supervisor = "Please select the supervisor";
-    // }
-
-    // if (formDetail.Programs.length === 0) {
-    //   errorFields.Programs = "Please select minimum one Programs";
-    // }
     setErrFields(errorFields);
 
     if (JSON.stringify(errorFields) === "{}") {
@@ -446,84 +447,40 @@ export default function ClientReferral() {
       setIsSubmitting(true);
       try {
         // Concatenate first name and last name, remove spaces, and keep alphanumeric characters
-        const username = `${formDetail.FirstName}${formDetail.LastName}`
-          .replace(/\s+/g, "") // Remove spaces
-          .replace(/[^\w]+/g, "");
 
         let data = {
-          first_name: formDetail.FirstName,
-          last_name: formDetail.LastName,
-          email: formDetail.EmailId,
-          username: username,
+          client_name: formDetail.client_name?.username || "",
+          activity: formDetail.activity?.name || "",
+          // referral_to: formDetail.referred_by,
+          comments: formDetail.comments,
+          dob: formDetail.dob,
+          referred_by: formDetail.referred_by,
+          submitted_date: formDetail.submitted_date,
+          submitted_time: formDetail.submitted_time,
+          tags: customFieldsTags,
         };
 
-        let phone_no = formDetail.PhoneNumber || "";
-        let position = formDetail.PositionTitle?.id || "";
-        let facility = formDetail.PrimaryFaculity?.id || "";
-        let supervisor = formDetail.Supervisor?.id || "";
-        let program = formDetail.Programs.map((each) => {
-          return isEdit ? { id: each.id, program: each.program } : each.id;
-        });
-
-        let profile = {};
-
-        if (phone_no !== "") {
-          profile.phone_no = phone_no;
-        }
-
-        if (position !== "") {
-          profile.position = position;
-        }
-
-        if (facility !== "") {
-          profile.facility = facility;
-        }
-
-        if (supervisor !== "") {
-          profile.supervisor = supervisor;
-        }
-
-        if (program.length > 0) {
-          profile.program = program;
-        } else {
-          if (JSON.stringify(profile) !== "{}") {
-            profile.program = [];
-          }
-        }
-
-        if (JSON.stringify(profile) !== "{}") {
-          data.profile = profile;
-        }
-
-        // const data = {
-        //   first_name: formDetail.FirstName,
-        //   last_name: formDetail.LastName,
-        //   email: formDetail.EmailId,
-        //   username: username,
-        //   profile: {
-        //     phone_no: formDetail.PhoneNumber || "",
-        //     position: formDetail.PositionTitle?.id || "",
-        //     facility: formDetail.PrimaryFaculity?.id || "",
-        //     supervisor: formDetail.Supervisor?.id || "",
-        //     program: formDetail.Programs.map((each) => {
-        //       return isEdit ? { id: each.id, program: each.program } : each.id;
-        //     }),
-        //   },
-        // };
-
-        console.log({ data });
-
         let apiCall = axios.post;
-        let endpoint = "/api/users";
+        let endpoint = "/referrals/";
 
-        if (isEdit) {
-          apiCall = axios.put;
-          endpoint = `${endpoint}/${paramid}`;
-        }
+        // if (isEdit) {
+        //   apiCall = axios.put;
+        //   endpoint = `${endpoint}/${paramid}`;
+        // }
 
         const response = await apiCall(endpoint, data);
-        notifySuccess(`Staff ${isEdit ? "Updated" : "Added"} successfully`);
-        navigate(`/staff-directory/${response.data.id}`, { replace: true });
+        notifySuccess(`Client referral added successfully`);
+        setFormDetail((prev) => {
+          return {
+            ...prev,
+            client_name: null,
+            dob: "",
+            activity: null,
+          };
+        });
+        setCustomFields([]);
+        getData();
+        // navigate(`/staff-directory/${response.data.id}`, { replace: true });
       } catch (error) {
         if (error.response.status === 400) {
           if (error?.response?.data) {
@@ -532,12 +489,10 @@ export default function ClientReferral() {
             });
           }
         } else {
-          notifyError(
-            `Error ${isEdit ? "Updating" : "Adding"} staff, try after sometime`
-          );
+          notifyError(`Error adding client referral try after sometime`);
         }
 
-        console.error(`Error ${isEdit ? "Updating" : "Adding"} staff:`, error);
+        console.error(`Error Adding staff:`, error);
       } finally {
         setIsSubmitting(false);
       }
@@ -577,12 +532,11 @@ export default function ClientReferral() {
     }));
   };
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const toggleAccordion = () => {
     setIsOpen(!isOpen);
   };
 
-  const [customFields, setCustomFields] = useState([]);
   const onChange = (dndItems) => {
     setCustomFields(dndItems);
   };
@@ -601,16 +555,16 @@ export default function ClientReferral() {
           <div className="flex flex-column gap-1 p-3">
             <div className="flex flex-wrap">
               <div className="w-full md:w-1/2 p-3">
-                <FormField label="Client Name" error={errFields.clientName}>
+                <FormField label="Client Name" error={errFields.client_name}>
                   <Select
-                    name={"ClientName"}
+                    name={"client_name"}
                     options={
                       allusers /* You need to provide options for Programs */
                     }
                     placeholder="Select Client Name"
-                    value={formDetail.clientName}
+                    value={formDetail.client_name}
                     onChange={(selected) =>
-                      handleClientSelect("clientName", selected)
+                      handleClientSelect("client_name", selected)
                     }
                     styles={{
                       control: (styles) => ({
@@ -636,15 +590,15 @@ export default function ClientReferral() {
                 </FormField>
               </div>
               <div className="w-full md:w-1/2 p-3">
-                <FormField label="Program Name" error={errFields.Programs}>
+                <FormField label="Program Name" error={errFields.activity}>
                   <Select
-                    name={"ProgramName"}
+                    name={"activity"}
                     options={
                       programsOptions /* You need to provide options for Programs */
                     }
                     placeholder="Select Program Name"
-                    value={formDetail.Programs}
-                    onChange={(selected) => handleSelect("Program", selected)}
+                    value={formDetail.activity}
+                    onChange={(selected) => handleSelect("activity", selected)}
                     styles={{
                       control: (styles) => ({
                         ...styles,
@@ -672,21 +626,17 @@ export default function ClientReferral() {
 
             <div className="flex flex-wrap">
               <div className="w-full md:w-1/2 p-3">
-                <FormField label="DOB" error={errFields.EmailId}>
+                <FormField label="DOB" error={errFields.dob}>
                   <input
                     className="w-100 p-[0.725rem] rounded-[2px] border-[#5BC4BF] text-base"
                     style={{
-                      border: `1px solid ${
-                        !errFields.EmailId ? "#5BC4BF" : "red"
-                      }`,
+                      border: `1px solid ${!errFields.dob ? "#5BC4BF" : "red"}`,
                       fontSize: "14px",
                     }}
-                    name={"DOB"}
+                    name={"dob"}
                     placeholder="DOB"
-                    value={formDetail.DOB}
-                    onChange={(e) =>
-                      handleInputChange("EmailId", e.target.value)
-                    }
+                    value={formDetail.dob}
+                    onChange={(e) => handleInputChange("dob", e.target.value)}
                     disabled
                   />
                 </FormField>
@@ -694,35 +644,39 @@ export default function ClientReferral() {
               <div className="w-full md:w-1/2 p-3">
                 <FormField
                   label="Referred By"
-                  error={errFields.LastName}
+                  error={errFields.referred_by}
                   required={false}
                 >
                   <input
                     className="w-100 p-[0.725rem] rounded-[2px] border-[#5BC4BF] text-base"
                     style={{
                       border: `1px solid ${
-                        !errFields.LastName ? "#5BC4BF" : "red"
+                        !errFields.referral_to ? "#5BC4BF" : "red"
                       }`,
                       fontSize: "14px",
                     }}
-                    name={"ReferredBy"}
+                    name={"referred_by"}
                     placeholder="Referred By"
-                    value={formDetail.LastName}
-                    onChange={(e) =>
-                      handleInputChange("LastName", e.target.value)
-                    }
+                    value={formDetail.referred_by}
+                    // onChange={(e) =>
+                    //   handleInputChange("LastName", e.target.value)
+                    // }
+                    disabled
                   />
                 </FormField>
               </div>
             </div>
             <div className="flex flex-wrap">
               <div className="w-full md:w-1/2 p-3">
-                <FormField label="Submitted Date" error={errFields.EmailId}>
+                <FormField
+                  label="Submitted Date"
+                  error={errFields.submitted_date}
+                >
                   <input
                     className="w-100 p-[0.725rem] rounded-[2px] border-[#5BC4BF] text-base"
                     style={{
                       border: `1px solid ${
-                        !errFields.EmailId ? "#5BC4BF" : "red"
+                        !errFields.submitted_date ? "#5BC4BF" : "red"
                       }`,
                       fontSize: "14px",
                     }}
@@ -739,14 +693,14 @@ export default function ClientReferral() {
               <div className="w-full md:w-1/2 p-3">
                 <FormField
                   label="Submitted Time"
-                  error={errFields.LastName}
+                  error={errFields.submitted_time}
                   required={false}
                 >
                   <input
                     className="w-100 p-[0.725rem] rounded-[2px] border-[#5BC4BF] text-base"
                     style={{
                       border: `1px solid ${
-                        !errFields.LastName ? "#5BC4BF" : "red"
+                        !errFields.submitted_time ? "#5BC4BF" : "red"
                       }`,
                       fontSize: "14px",
                     }}
@@ -791,28 +745,20 @@ export default function ClientReferral() {
             </div>
 
             <div className="mx-[20px] my-[15px]">
-              <FormField
-                label="Additional Contact Information"
-                error={errFields.AdditionalContactInformation}
-              >
+              <FormField label="Comments" error={errFields.comments}>
                 <textarea
                   rows={5}
-                  name={"AdditionalContactInformation"}
-                  placeholder="Additional Contact Information"
-                  value={formDetail.AdditionalContactInformation}
+                  name={"Comments"}
+                  placeholder="Please provide comments"
+                  value={formDetail.comments}
                   onChange={(e) =>
-                    handleInputChange(
-                      "AdditionalContactInformation",
-                      e.target.value
-                    )
+                    handleInputChange("comments", e.target.value)
                   }
                   className="w-100 rounded-[2px]"
                   style={{
                     padding: "15px",
                     border: `1px solid ${
-                      !errFields.AdditionalContactInformation
-                        ? "#5BC4BF"
-                        : "red"
+                      !errFields.comments ? "#5BC4BF" : "red"
                     }`,
                     fontSize: "14px",
                   }}
@@ -827,7 +773,7 @@ export default function ClientReferral() {
 
             <button
               className="px-3 py-1 text-[13px] font-medium leading-5 bg-[#5BC4BF] border-1 border-[#5BC4BF] text-white rounded-sm font-medium hover:bg-[#429e97] focus:outline-none focus:ring-2 focus:ring-[#429e97] focus:ring-opacity-50 transition-colors duration-300"
-              //   onClick={handleSubmit}
+              onClick={handleSubmit}
             >
               {`${isEdit ? "Update" : "Submit"}`}
             </button>
