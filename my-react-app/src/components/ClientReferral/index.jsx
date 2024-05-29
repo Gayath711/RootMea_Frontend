@@ -19,6 +19,19 @@ export default function ClientReferral() {
   const { paramid } = useParams();
 
   const [formDetail, setFormDetail] = useState({
+    clientName: null,
+    DOB: "",
+    Program: null,
+
+    client_name: "John Doe",
+    referral_to: "Dr. Smith",
+    dob: "1990-05-15",
+    activity: "Therapy",
+    referred_by: "Dr. Johnson",
+    submitted_date: "2024-05-27",
+    submitted_time: "08:30:00",
+
+    // --------
     LastName: "",
     FirstName: "",
     PhoneNumber: "",
@@ -28,7 +41,6 @@ export default function ClientReferral() {
     PrimaryFaculity: null,
     Supervisor: null,
     SupervisorEmail: "",
-    Programs: [],
     NavigationClients: "",
   });
 
@@ -43,17 +55,49 @@ export default function ClientReferral() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  //   useEffect(() => {
-  //     fetchPositionTitles();
-  //     fetchPrimaryFaculity();
-  //     fetchSupervisor();
-  //     fetchPrograms();
+  const [allusers, setAllUsers] = useState([]);
 
-  //     // Clean up effect
-  //     return () => {
-  //       // Optionally do any cleanup here
-  //     };
-  //   }, []); // Empty dependency array means this effect runs only once after the component mounts
+  useEffect(() => {
+    fetchAllUser();
+    fetchPrograms();
+    getCurrentDateTime();
+    // fetchPrimaryFaculity();
+    // fetchSupervisor();
+    // fetchPrograms();
+
+    // Clean up effect
+    return () => {
+      // Optionally do any cleanup here
+    };
+  }, []); // Empty dependency array means this effect runs only once after the component mounts
+
+  useEffect(() => {
+    formDetail.clientName !== null &&
+      fetchSelectedUser(formDetail.clientName.id);
+  }, [formDetail.clientName]);
+
+  function getCurrentDateTime() {
+    const now = new Date();
+
+    // Format date as YYYY-MM-DD
+    const date = now.toISOString().split("T")[0];
+
+    // Format time as HH:MM:SS
+    const time = now.toTimeString().split(" ")[0];
+
+    setFormDetail((prev) => {
+      return {
+        ...prev,
+        submitted_date: date,
+        submitted_time: time,
+      };
+    });
+
+    return {
+      date: date,
+      time: time,
+    };
+  }
 
   //   useEffect(() => {
   //     if (JSON.stringify(errFields) !== "{}") {
@@ -122,135 +166,238 @@ export default function ClientReferral() {
 
   const isEdit = false;
 
-  //   const fetchData = () => {
-  //     axios
-  //       .get(`/api/users/${paramid}`)
-  //       .then((response) => {
-  //         setLoadingData(true);
-  //         const { data } = response;
-  //         setFormDetail((prev) => {
-  //           return {
-  //             LastName: data.last_name || "",
-  //             FirstName: data.first_name || "",
-  //             PhoneNumber: data.profile.phone_no || "",
-  //             EmailId: data.email || "",
-  //             AdditionalContactInformation: "",
-  //             PositionTitle: data?.profile?.position
-  //               ? {
-  //                   id: data.profile.position,
-  //                   value: data.profile.position,
-  //                 }
-  //               : null,
-  //             PrimaryFaculity: data?.profile?.facility
-  //               ? {
-  //                   id: data.profile.facility,
-  //                   value: data.profile.facility,
-  //                 }
-  //               : null,
-  //             Supervisor: data?.profile?.supervisor
-  //               ? {
-  //                   id: data.profile.supervisor,
-  //                   value: data.profile.supervisor,
-  //                 }
-  //               : null,
-  //             SupervisorEmail: data?.profile?.supervisor_email || "",
-  //             Programs: data?.profile?.program
-  //               ? data.profile.program.map((item) => {
-  //                   return {
-  //                     ...item,
-  //                     label: item.program,
-  //                     value: item.program,
-  //                   };
-  //                 })
-  //               : [],
-  //             NavigationClients: "",
-  //           };
-  //         });
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error fetching program details:", error);
-  //       })
-  //       .finally(() => {
-  //         setLoadingData(false);
+  // const fetchData = () => {
+  //   axios
+  //     .get(`/api/users/${paramid}`)
+  //     .then((response) => {
+  //       setLoadingData(true);
+  //       const { data } = response;
+  //       setFormDetail((prev) => {
+  //         return {
+  //           LastName: data.last_name || "",
+  //           FirstName: data.first_name || "",
+  //           PhoneNumber: data.profile.phone_no || "",
+  //           EmailId: data.email || "",
+  //           AdditionalContactInformation: "",
+  //           PositionTitle: data?.profile?.position
+  //             ? {
+  //                 id: data.profile.position,
+  //                 value: data.profile.position,
+  //               }
+  //             : null,
+  //           PrimaryFaculity: data?.profile?.facility
+  //             ? {
+  //                 id: data.profile.facility,
+  //                 value: data.profile.facility,
+  //               }
+  //             : null,
+  //           Supervisor: data?.profile?.supervisor
+  //             ? {
+  //                 id: data.profile.supervisor,
+  //                 value: data.profile.supervisor,
+  //               }
+  //             : null,
+  //           SupervisorEmail: data?.profile?.supervisor_email || "",
+  //           Programs: data?.profile?.program
+  //             ? data.profile.program.map((item) => {
+  //                 return {
+  //                   ...item,
+  //                   label: item.program,
+  //                   value: item.program,
+  //                 };
+  //               })
+  //             : [],
+  //           NavigationClients: "",
+  //         };
   //       });
-  //   };
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching program details:", error);
+  //     })
+  //     .finally(() => {
+  //       setLoadingData(false);
+  //     });
+  // };
 
-  //   const fetchUser = async () => {
-  //     try {
-  //       const { data } = await axios.get("/api/users");
-  //       const foundUser = data.find((user) => +user.id === +paramid);
-  //       if (foundUser) {
-  //         setUsersData(foundUser);
-  //       } else {
-  //         throw new Error("User not found");
-  //       }
-  //     } catch (error) {
-  //       // Handle errors here
-  //       console.error("Error fetching users list:", error);
+  // const fetchUser = async () => {
+  //   try {
+  //     const { data } = await axios.get("/api/users");
+  //     const foundUser = data.find((user) => +user.id === +paramid);
+  //     if (foundUser) {
+  //       setUsersData(foundUser);
+  //     } else {
+  //       throw new Error("User not found");
   //     }
-  //   };
+  //   } catch (error) {
+  //     // Handle errors here
+  //     console.error("Error fetching users list:", error);
+  //   }
+  // };
 
-  //   const fetchPositionTitles = async () => {
-  //     try {
-  //       const response = await axios.get("/api/resources/position");
-  //       setPositionTitleOptions(
-  //         response.data.map((itm) => {
-  //           return { ...itm, label: itm.name, value: itm.id };
-  //         })
-  //       );
-  //     } catch (error) {
-  //       // Handle errors here
-  //       console.error("Error fetching position titles:", error);
+  // const fetchPositionTitles = async () => {
+  //   try {
+  //     const response = await axios.get("/api/resources/position");
+  //     setPositionTitleOptions(
+  //       response.data.map((itm) => {
+  //         return { ...itm, label: itm.name, value: itm.id };
+  //       })
+  //     );
+  //   } catch (error) {
+  //     // Handle errors here
+  //     console.error("Error fetching position titles:", error);
+  //   }
+  // };
+  // const fetchPrimaryFaculity = async () => {
+  //   try {
+  //     const response = await axios.get("/api/resources/facilities");
+  //     setPrimaryFaculityOptions(
+  //       response.data.map((itm) => {
+  //         return { ...itm, label: itm.name, value: itm.id };
+  //       })
+  //     );
+  //   } catch (error) {
+  //     // Handle errors here
+  //     console.error("Error fetching position titles:", error);
+  //   }
+  // };
+  // const fetchSupervisor = async () => {
+  //   try {
+  //     const response = await axios.get("/api/users");
+  //     setSupervisorOptions(
+  //       response.data.map((itm) => {
+  //         return {
+  //           ...itm,
+  //           label: itm.first_name + " " + itm.last_name,
+  //           value: itm.id,
+  //         };
+  //       })
+  //     );
+  //   } catch (error) {
+  //     // Handle errors here
+  //     console.error("Error fetching position titles:", error);
+  //   }
+  // };
+
+  // const fetchUser = async () => {
+  //   try {
+  //     const { data } = await axios.get("/api/users");
+  //     const foundUser = data.find((user) => +user.id === +paramid);
+  //     if (foundUser) {
+  //       setUsersData(foundUser);
+  //     } else {
+  //       throw new Error("User not found");
   //     }
-  //   };
-  //   const fetchPrimaryFaculity = async () => {
-  //     try {
-  //       const response = await axios.get("/api/resources/facilities");
-  //       setPrimaryFaculityOptions(
-  //         response.data.map((itm) => {
-  //           return { ...itm, label: itm.name, value: itm.id };
-  //         })
-  //       );
-  //     } catch (error) {
-  //       // Handle errors here
-  //       console.error("Error fetching position titles:", error);
-  //     }
-  //   };
-  //   const fetchSupervisor = async () => {
-  //     try {
-  //       const response = await axios.get("/api/users");
-  //       setSupervisorOptions(
-  //         response.data.map((itm) => {
-  //           return {
-  //             ...itm,
-  //             label: itm.first_name + " " + itm.last_name,
-  //             value: itm.id,
-  //           };
-  //         })
-  //       );
-  //     } catch (error) {
-  //       // Handle errors here
-  //       console.error("Error fetching position titles:", error);
-  //     }
-  //   };
-  //   const fetchPrograms = async () => {
-  //     try {
-  //       const response = await axios.get("/api/resources/program");
-  //       setProgramsOptions(
-  //         response.data.map((itm) => {
-  //           return {
-  //             ...itm,
-  //             program: itm.name,
-  //             label: itm.name,
-  //             value: itm.name,
-  //           };
-  //         })
-  //       );
-  //     } catch (error) {
-  //       // Handle errors here
-  //       console.error("Error fetching position titles:", error);
-  //     }
-  //   };
+  //   } catch (error) {
+  //     // Handle errors here
+  //     console.error("Error fetching users list:", error);
+  //   }
+  // };
+
+  // const fetchPositionTitles = async () => {
+  //   try {
+  //     const response = await axios.get("/api/resources/position");
+  //     setPositionTitleOptions(
+  //       response.data.map((itm) => {
+  //         return { ...itm, label: itm.name, value: itm.id };
+  //       })
+  //     );
+  //   } catch (error) {
+  //     // Handle errors here
+  //     console.error("Error fetching position titles:", error);
+  //   }
+  // };
+  // const fetchPrimaryFaculity = async () => {
+  //   try {
+  //     const response = await axios.get("/api/resources/facilities");
+  //     setPrimaryFaculityOptions(
+  //       response.data.map((itm) => {
+  //         return { ...itm, label: itm.name, value: itm.id };
+  //       })
+  //     );
+  //   } catch (error) {
+  //     // Handle errors here
+  //     console.error("Error fetching position titles:", error);
+  //   }
+  // };
+  // const fetchSupervisor = async () => {
+  //   try {
+  //     const response = await axios.get("/api/users");
+  //     setSupervisorOptions(
+  //       response.data.map((itm) => {
+  //         return {
+  //           ...itm,
+  //           label: itm.first_name + " " + itm.last_name,
+  //           value: itm.id,
+  //         };
+  //       })
+  //     );
+  //   } catch (error) {
+  //     // Handle errors here
+  //     console.error("Error fetching position titles:", error);
+  //   }
+  // };
+  // const fetchPrograms = async () => {
+  //   try {
+  //     const response = await axios.get("/api/resources/program");
+  //     setProgramsOptions(
+  //       response.data.map((itm) => {
+  //         return {
+  //           ...itm,
+  //           program: itm.name,
+  //           label: itm.name,
+  //           value: itm.name,
+  //         };
+  //       })
+  //     );
+  //   } catch (error) {
+  //     // Handle errors here
+  //     console.error("Error fetching position titles:", error);
+  //   }
+  // };
+
+  const fetchAllUser = async () => {
+    try {
+      const response = await axios.get("/encounter-notes-users/");
+      setAllUsers(
+        response.data.map((itm) => {
+          return { ...itm, label: itm.username, value: itm.id };
+        })
+      );
+    } catch (error) {
+      // Handle errors here
+      console.error("Error fetching all users:", error);
+    }
+  };
+
+  const fetchPrograms = async () => {
+    try {
+      const response = await axios.get("/api/resources/all-programs");
+      setProgramsOptions(
+        response.data.map((itm) => {
+          return {
+            ...itm,
+            label: itm.name,
+            value: itm.name,
+          };
+        })
+      );
+    } catch (error) {
+      // Handle errors here
+      console.error("Error fetching position titles:", error);
+    }
+  };
+
+  const fetchSelectedUser = async (id) => {
+    try {
+      const response = await axios.get("/clientinfo-api/" + id);
+      setFormDetail((prev) => {
+        return { ...prev, DOB: response.data.date_of_birth };
+      });
+    } catch (error) {
+      // Handle errors here
+      console.error("Error fetching Client profile:", error);
+    }
+  };
 
   const fieldValidation = () => {
     let errorFields = {};
@@ -415,6 +562,21 @@ export default function ClientReferral() {
     }));
   };
 
+  const handleClientSelect = (key, selectedOptions) => {
+    setFormDetail((prevDetails) => ({
+      ...prevDetails,
+      [key]: selectedOptions,
+      DOB: null,
+    }));
+  };
+
+  const handleSelect = (key, selectedOptions) => {
+    setFormDetail((prevDetails) => ({
+      ...prevDetails,
+      [key]: selectedOptions,
+    }));
+  };
+
   const [isOpen, setIsOpen] = useState(false);
   const toggleAccordion = () => {
     setIsOpen(!isOpen);
@@ -439,22 +601,23 @@ export default function ClientReferral() {
           <div className="flex flex-column gap-1 p-3">
             <div className="flex flex-wrap">
               <div className="w-full md:w-1/2 p-3">
-                <FormField label="Client Name" error={errFields.Programs}>
+                <FormField label="Client Name" error={errFields.clientName}>
                   <Select
                     name={"ClientName"}
                     options={
-                      programsOptions /* You need to provide options for Programs */
+                      allusers /* You need to provide options for Programs */
                     }
                     placeholder="Select Client Name"
-                    value={formDetail.Programs}
-                    onChange={handleMultiSelectChange}
-                    isMulti
+                    value={formDetail.clientName}
+                    onChange={(selected) =>
+                      handleClientSelect("clientName", selected)
+                    }
                     styles={{
                       control: (styles) => ({
                         ...styles,
                         padding: "5px",
                         border: `1px solid ${
-                          !errFields.Programs ? "#5BC4BF" : "red"
+                          !errFields.clientName ? "#5BC4BF" : "red"
                         }`,
 
                         fontSize: "14px",
@@ -481,8 +644,7 @@ export default function ClientReferral() {
                     }
                     placeholder="Select Program Name"
                     value={formDetail.Programs}
-                    onChange={handleMultiSelectChange}
-                    isMulti
+                    onChange={(selected) => handleSelect("Program", selected)}
                     styles={{
                       control: (styles) => ({
                         ...styles,
@@ -521,10 +683,11 @@ export default function ClientReferral() {
                     }}
                     name={"DOB"}
                     placeholder="DOB"
-                    value={formDetail.EmailId}
+                    value={formDetail.DOB}
                     onChange={(e) =>
                       handleInputChange("EmailId", e.target.value)
                     }
+                    disabled
                   />
                 </FormField>
               </div>
@@ -565,10 +728,11 @@ export default function ClientReferral() {
                     }}
                     name={"SubmittedDate"}
                     placeholder="Submitted Date"
-                    value={formDetail.EmailId}
-                    onChange={(e) =>
-                      handleInputChange("EmailId", e.target.value)
-                    }
+                    value={formDetail.submitted_date}
+                    // onChange={(e) =>
+                    //   handleInputChange("EmailId", e.target.value)
+                    // }
+                    disabled
                   />
                 </FormField>
               </div>
@@ -588,10 +752,11 @@ export default function ClientReferral() {
                     }}
                     name={"SubmittedTime"}
                     placeholder="Submitted Time"
-                    value={formDetail.LastName}
-                    onChange={(e) =>
-                      handleInputChange("LastName", e.target.value)
-                    }
+                    value={formDetail.submitted_time}
+                    // onChange={(e) =>
+                    //   handleInputChange("LastName", e.target.value)
+                    // }
+                    disabled
                   />
                 </FormField>
               </div>
