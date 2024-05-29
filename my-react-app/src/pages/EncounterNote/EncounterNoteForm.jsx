@@ -96,6 +96,24 @@ async function fetchCarePlanOptions() {
   }
 }
 
+async function fetchFacilityOptions() {
+  try {
+    const response = await protectedApi.get("/api/resources/facilities");
+    return response.data;
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
+async function fetchProgramOptions() {
+  try {
+    const response = await protectedApi.get("/api/resources/program");
+    return response.data;
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
 async function fetchUsers() {
   try {
     const response = await protectedApi.get("/encounter-notes-users/");
@@ -128,6 +146,8 @@ function EncounterNoteForm() {
   const [clientDetails, setClientDetails] = useState({});
   const [formOptions, setFormOptions] = useState([]);
   const [carePlanOptions, setCarePlanOptions] = useState([]);
+  const [facilityOptions, setFacilityOptions] = useState([]);
+  const [programOptions, setProgramOptions] = useState([]);
   const [userOptions, setUserOptions] = useState([]);
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
@@ -332,6 +352,32 @@ function EncounterNoteForm() {
           (carePlan) => ({ label: carePlan.care_plan_name, value: carePlan.id })
         );
         setCarePlanOptions(convertedCarePlanOptions);
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetchFacilityOptions()
+      .then((facilityOptionsResponse) => {
+        const convertedFacilityOptions = facilityOptionsResponse.map(
+          (facility) => ({ label: facility.name, value: facility.id })
+        );
+        setFacilityOptions(convertedFacilityOptions);
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetchProgramOptions()
+      .then((programOptionsResponse) => {
+        const convertedProgramOptions = programOptionsResponse.map(
+          (program) => ({ label: program.name, value: program.id })
+        );
+        setProgramOptions(convertedProgramOptions);
       })
       .catch((error) => {
         console.error(error.message);
@@ -667,12 +713,12 @@ function EncounterNoteForm() {
                 isEdittable={mode === "view"}
                 fontSize="14px"
                 borderColor="#5bc4bf"
-                options={[
-                  { label: "Facility 1", value: "Facility 1" },
-                  { label: "Facility 2", value: "Facility 2" },
-                  { label: "Facility 3", value: "Facility 3" },
-                ]}
-                selectedOption={formData?.facility || ""}
+                options={facilityOptions}
+                selectedOption={
+                  facilityOptions?.find(
+                    (option) => option.value === formData?.facility
+                  )?.label || ""
+                }
               />
             </div>
             <div className="col-span-6">
@@ -793,12 +839,12 @@ function EncounterNoteForm() {
                 height="37.6px"
                 fontSize="14px"
                 borderColor="#5bc4bf"
-                options={[
-                  { label: "STOMP", value: "STOMP" },
-                  { label: "ECM", value: "ECM" },
-                  { label: "Diabetes", value: "Diabetes" },
-                ]}
-                selectedOption={formData?.program || ""}
+                options={programOptions}
+                selectedOption={
+                  programOptions?.find(
+                    (option) => option.value === formData?.program
+                  )?.label || ""
+                }
               />
             </div>
             <div className="col-span-6">
