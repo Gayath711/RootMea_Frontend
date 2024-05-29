@@ -18,13 +18,20 @@ const CustomFieldsForUser = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  console.log({ dndItems });
-
-  console.log({ viewMode, editMode });
-
   const toggleAccordion = () => {
     setIsOpen(!isOpen);
   };
+
+  useEffect(() => {
+    if (dndItems.length > 0) {
+      if (!isOpen) {
+        setIsOpen(true);
+      }
+    }
+  }, [dndItems]);
+
+  console.log({ dndItems });
+  console.count("dndItems");
 
   return (
     <div
