@@ -144,8 +144,6 @@ function EncounterNoteForm() {
 
   let customFieldsTags = useMemo(() => {
     return customFields.map((field) => {
-      console.log({ xx_field: field });
-
       let cf = {
         datatype: field.type,
         question: field.props.label,
@@ -220,8 +218,6 @@ function EncounterNoteForm() {
     });
   };
 
-  console.log({ xx_customFields: customFields });
-  console.log({ xx_customFieldsTags: customFieldsTags });
   const [showCutomFields, setShowCustomFields] = useState(false);
 
   const navigate = useNavigate();
@@ -833,16 +829,18 @@ function EncounterNoteForm() {
             </div>
           </FormWrapper>
 
-          <FormWrapper label="Custom Fields">
+          <FormWrapper
+            label="Custom Fields"
+            isCollapsable={true}
+            initialState={false}
+          >
             <div className="col-span-12">
-              <TextAreaElement
-                className="h-32 border-keppel"
-                value={formData?.custom_fields || ""}
-                onChange={(e) =>
-                  handleFormDataChange("custom_fields", e.target.value)
-                }
-                disabled={mode === "view"}
-                placeholder="Loreipusum..."
+              <DnDCustomFields
+                onChange={(dndItms) => {
+                  setCustomFields(dndItms);
+                }}
+                dndItems={customFields}
+                viewMode={mode === "view"}
               />
             </div>
           </FormWrapper>
@@ -993,22 +991,6 @@ function EncounterNoteForm() {
                 }}
                 setFormData={setFormData}
                 className="border-keppel m-1"
-              />
-            </div>
-          </FormWrapper>
-
-          <FormWrapper
-            label="Custom Fields"
-            isCollapsable={true}
-            initialState={false}
-          >
-            <div className="col-span-12">
-              <DnDCustomFields
-                onChange={(dndItms) => {
-                  setCustomFields(dndItms);
-                }}
-                dndItems={customFields}
-                viewMode={mode === "view"}
               />
             </div>
           </FormWrapper>

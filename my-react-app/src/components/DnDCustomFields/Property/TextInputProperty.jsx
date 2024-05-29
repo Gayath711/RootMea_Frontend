@@ -73,6 +73,8 @@ export default function TextInputProperty() {
           rows={5}
         />
       )}
+
+      {!enableAnswer && !enableQuestion && <p>No Property Availabel</p>}
     </div>
   );
 }

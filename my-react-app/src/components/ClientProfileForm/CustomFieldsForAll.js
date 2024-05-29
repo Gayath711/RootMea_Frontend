@@ -8,23 +8,15 @@ import ClosedAccordianPNG from "../images/closed-accordion.png";
 import axios from "../../helper/axiosInstance";
 import { notifySuccess } from "../../helper/toastNotication";
 
-const CustomFieldsForAll = ({ id, isEdittable, fields, handleFieldChange }) => {
+const CustomFieldsForAll = ({ id, onChange, dndItems, viewMode, mode }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleAccordion = () => {
     setIsOpen(!isOpen);
   };
 
-  const [customFields, setCustomFields] = useState([]);
-
-  useEffect(() => {
-    // fetchData();
-    setCustomFields(parseToDnDCustomFields(fields));
-  }, []);
-
-  let mode = "edit";
   let customFieldsTags = useMemo(() => {
-    return customFields.map((field) => {
+    return dndItems.map((field) => {
       let cf = {
         datatype: field.type,
         question: field.props.label,
@@ -45,62 +37,7 @@ const CustomFieldsForAll = ({ id, isEdittable, fields, handleFieldChange }) => {
 
       return cf;
     });
-  }, [customFields]);
-
-  const parseToDnDCustomFields = (items) => {
-    if (!items.some((im) => Boolean(im?.id))) {
-      return [];
-    }
-    return items.map((itm) => {
-      let constructField = {
-        type: itm.datatype,
-        props: {
-          label: itm.question,
-          value: itm.answer,
-          width: "w-full",
-        },
-        ...itm,
-      };
-
-      if (itm.datatype === "text" || itm.datatype === "textarea") {
-        constructField.props = {
-          ...constructField.props,
-          type: "text",
-        };
-      }
-
-      if (itm.datatype === "datetime") {
-        constructField.props = {
-          ...constructField.props,
-          type: "date",
-          width: "w-1/4",
-        };
-      }
-
-      if (itm.datatype === "imageupload") {
-        constructField.props = {
-          ...constructField.props,
-          type: "file",
-          accept: "image/*",
-          base64: itm.answer,
-        };
-      }
-
-      if (itm.datatype === "imageupload") {
-        constructField.props = {
-          ...constructField.props,
-          type: "file",
-          accept:
-            ".png, .jpg, .jpeg, .pdf, .doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-          type: "file",
-          isFile: true,
-          base64: itm.answer,
-        };
-      }
-
-      return constructField;
-    });
-  };
+  }, [dndItems]);
 
   const handleCreatePayload = () => {
     const formDataPayload = new FormData();
@@ -174,11 +111,9 @@ const CustomFieldsForAll = ({ id, isEdittable, fields, handleFieldChange }) => {
           <div className="p-4 border-t border-gray-300">
             <div className="flex flex-col justify-between space-y-6">
               <DnDCustomFields
-                onChange={(dndItms) => {
-                  setCustomFields(dndItms);
-                }}
-                dndItems={customFields}
-                viewMode={mode === "view"}
+                onChange={onChange}
+                dndItems={dndItems}
+                viewMode={viewMode}
                 config={{
                   enableAnswer: false,
                   enableQuestion: true,
