@@ -326,6 +326,7 @@ function RenderDnDCustomFields({
   useEffect(() => {
     if (
       onDnDItemsChange &&
+      items.length > 0 &&
       JSON.stringify(items) !== JSON.stringify(dndItems)
     ) {
       onDnDItemsChange(items);
