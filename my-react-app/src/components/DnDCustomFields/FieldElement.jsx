@@ -32,10 +32,12 @@ function FieldElement({
 }) {
   const { setSelectedElement, selectedElement } = useDnDCustomFieldsContext();
 
-  console.log({ field, selectedElement });
-
   if (viewMode && !editMode) {
     field.props = { ...field.props, disabled: true };
+  }
+
+  if (viewMode && editMode) {
+    field.props = { ...field.props, disabled: false };
   }
 
   const key = `${field.type}_${id}`;

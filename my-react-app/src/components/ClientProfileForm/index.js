@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -221,8 +221,86 @@ const ClientProfile = ({ isNew }) => {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [customFieldsAll, setCustomFieldsAll] = useState([]);
+  const [customFields, setCustomFields] = useState([]);
 
-  console.log({ XX_clientData: clientData });
+  const mode = clientId && !isNew ? "edit" : "new";
+
+  const parseToDnDCustomFields = (items) => {
+    return items.map((itm) => {
+      let constructField = {
+        type: itm.datatype,
+        props: {
+          label: itm.question,
+          value: itm.answer,
+          width: "w-full",
+        },
+        ...itm,
+      };
+
+      if (itm.datatype === "text" || itm.datatype === "textarea") {
+        constructField.props = {
+          ...constructField.props,
+          type: "text",
+        };
+      }
+
+      if (itm.datatype === "datetime") {
+        constructField.props = {
+          ...constructField.props,
+          type: "date",
+          width: "w-1/4",
+        };
+      }
+
+      if (itm.datatype === "imageupload") {
+        constructField.props = {
+          ...constructField.props,
+          type: "file",
+          accept: "image/*",
+          base64: itm.answer,
+        };
+      }
+
+      if (itm.datatype === "imageupload") {
+        constructField.props = {
+          ...constructField.props,
+          type: "file",
+          accept:
+            ".png, .jpg, .jpeg, .pdf, .doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          type: "file",
+          isFile: true,
+          base64: itm.answer,
+        };
+      }
+
+      return constructField;
+    });
+  };
+
+  let customFieldsTags = useMemo(() => {
+    return customFields.map((field) => {
+      let cf = {
+        datatype: field.type,
+        question: field.props.label,
+        answer: "",
+      };
+
+      if (field.type === "imageupload" || field.type === "fileupload") {
+        cf.answer = field.props.base64;
+      } else {
+        cf.answer = field.props.value;
+      }
+
+      if (mode === "edit") {
+        if (field.id) {
+          cf.id = field.id;
+        }
+      }
+
+      return cf;
+    });
+  }, [customFields]);
 
   useEffect(() => {
     if (clientId && !isNew) {
@@ -230,6 +308,13 @@ const ClientProfile = ({ isNew }) => {
         .get(`/clientinfo-api/${clientId}`)
         .then((response) => {
           setClientData(response.data);
+
+          const parsedCF = parseToDnDCustomFields(
+            response.data.custom_fields || []
+          );
+
+          setCustomFieldsAll(parsedCF);
+          setCustomFields(parsedCF);
         })
         .catch((error) => {
           console.error("Error fetching client data:", error);
@@ -336,6 +421,8 @@ const ClientProfile = ({ isNew }) => {
     return isValid;
   };
 
+  console.log({ customFieldsTags });
+
   const handleSave = (event) => {
     event.preventDefault();
 
@@ -350,13 +437,16 @@ const ClientProfile = ({ isNew }) => {
       return;
     }
 
+    let postClientData = { ...clientData, custom_fields: customFieldsTags };
+    console.log({ customFieldsTags, postClientData });
+
     const apiEndpoint = isNew
       ? `/clientinfo-api/`
       : `/clientinfo-api/${clientId}`;
 
     const axiosMethod = isNew ? axios.post : axios.put;
 
-    axiosMethod(apiEndpoint, clientData)
+    axiosMethod(apiEndpoint, postClientData)
       .then((response) => {
         setShowErrorAlert(false);
         setShowSuccessAlert(true);
@@ -563,23 +653,26 @@ const ClientProfile = ({ isNew }) => {
               />
             </div>
 
-            {/* <div>
-              {clientData.custom_fields && (
-                <CustomFieldsForUser
-                  fields={clientData.custom_fields}
-                  onChange={handleFieldChange}
-                  viewMode={!isEditable}
-                  editMode={!isEditable}
-                />
-              )}
-            </div> */}
+            <div>
+              <CustomFieldsForUser
+                onChange={(dndItms) => {
+                  setCustomFields(dndItms);
+                }}
+                dndItems={customFields}
+                viewMode={true}
+                editMode={!isEditable}
+              />
+            </div>
 
             {!isEditable && (
               <div>
                 <CustomFieldsForAll
-                  fields={clientData.custom_fields}
-                  viewMode={!isEditable}
-                  editMode={!isEditable}
+                  onChange={(dndItms) => {
+                    setCustomFieldsAll(dndItms);
+                  }}
+                  dndItems={customFieldsAll}
+                  viewMode={mode === "view"}
+                  mode={mode}
                 />
               </div>
             )}
