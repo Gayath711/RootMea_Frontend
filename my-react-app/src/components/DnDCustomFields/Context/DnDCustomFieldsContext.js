@@ -1,11 +1,102 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 
+// Icons
+import Attachments_Icon from "../../images/form_builder/attachments.svg";
+import Image_upload_Icon from "../../images/form_builder/image_upload.svg";
+import Drop_down_Icon from "../../images/form_builder/drop_down.svg";
+import Check_box_Icon from "../../images/form_builder/check_box.svg";
+import Date_Icon from "../../images/form_builder/date.svg";
+import Time_Icon from "../../images/form_builder/time.svg";
+import Date_and_time_Icon from "../../images/form_builder/date_and_time.svg";
+import Number_Icon from "../../images/form_builder/number.svg";
+import Single_line_text_Icon from "../../images/form_builder/single_line_text.svg";
+import Text_area_Icon from "../../images/form_builder/text_area.svg";
+import Radio_button_Icon from "../../images/form_builder/radio_button.svg";
+import DraggableIcon from "../../images/form_builder/draggable.svg";
+
 // Create the context
 const DnDCustomFieldsContext = createContext();
 
 // Create a provider component
 export const DnDCustomFieldsContextProvider = ({ children }) => {
+  const DnDFieldElements = [
+    {
+      type: "text",
+      label: "Text",
+      IconSrc: Single_line_text_Icon,
+      props: {
+        type: "text",
+        label: "",
+        value: "",
+        placeholder: "Start typing...",
+        width: "w-full",
+      },
+    },
+    {
+      type: "textarea",
+      label: "Text area",
+      IconSrc: Text_area_Icon,
+      props: {
+        type: "text",
+        label: "",
+        value: "",
+        placeholder: "Start Typing...",
+        width: "w-full",
+      },
+    },
+    {
+      type: "datetime",
+      label: "Date and Time",
+      IconSrc: Date_and_time_Icon,
+      props: {
+        type: "date",
+        label: "",
+        value: "",
+        width: "w-1/4",
+      },
+    },
+    {
+      type: "imageupload",
+      label: "Image",
+      IconSrc: Image_upload_Icon,
+      props: {
+        type: "file",
+        accept: "image/*",
+        label: "",
+        value: "",
+        width: "w-full",
+        base64: "",
+      },
+    },
+    {
+      type: "fileupload",
+      label: "File",
+      IconSrc: Attachments_Icon,
+      props: {
+        type: "file",
+        accept:
+          ".png, .jpg, .jpeg, .pdf, .doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        label: "",
+        value: "",
+        width: "w-full",
+        base64: "",
+        isFile: true,
+      },
+    },
+    {
+      type: "divider",
+      label: "Divider",
+      IconSrc: Single_line_text_Icon,
+      props: { width: "w-full" },
+    },
+    ,
+  ];
+
   // State to hold elements array
+  const [config, setConfig] = useState({
+    enableAnswer: true,
+    enableQuestion: true,
+  });
   const [elements, setElements] = useState([]);
 
   // State to hold index of selected element
@@ -56,6 +147,9 @@ export const DnDCustomFieldsContextProvider = ({ children }) => {
 
   // Value to be provided by the context
   const contextValue = {
+    config,
+    setConfig,
+    DnDFieldElements,
     elements,
     selectedElement,
     selectedFieldElement:

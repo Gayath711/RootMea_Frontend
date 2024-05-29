@@ -297,7 +297,7 @@ function App() {
                   {/* Encounter notes */}
                   <Route
                     path="/encounter-note/add/:clientId"
-                    element={<NewEncounterNote />}
+                    element={<EncounterNoteForm />}
                   />
                   <Route path="/encounter-note/add/:clientId" element={<EncounterNoteForm />} />
                   <Route path="/care-plan/add/:clientId" element={<TheNewCarePlan />} />

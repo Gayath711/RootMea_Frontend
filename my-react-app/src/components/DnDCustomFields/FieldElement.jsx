@@ -21,33 +21,53 @@ import DividerElement from "./FormElements/DividerElement";
 import FieldProperty from "./FieldProperty";
 import FileInputElement from "./FormElements/FileInputElement";
 
-function FieldElement({ field, index, id, preview }) {
+function FieldElement({
+  field,
+  index,
+  id,
+  onChange = () => {},
+  handleResetFile = () => {},
+  viewMode,
+  editMode,
+}) {
   const { setSelectedElement, selectedElement } = useDnDCustomFieldsContext();
 
   console.log({ field, selectedElement });
+
+  if (viewMode && !editMode) {
+    field.props = { ...field.props, disabled: true };
+  }
 
   const key = `${field.type}_${id}`;
   let inputElement;
   switch (field.type) {
     case "text":
       {
-        inputElement = <InputElement {...field.props} />;
+        inputElement = <InputElement {...field.props} onChange={onChange} />;
       }
       break;
     case "imageupload":
     case "fileupload":
       {
-        inputElement = <FileInputElement {...field.props} />;
+        inputElement = (
+          <FileInputElement
+            {...field.props}
+            onChange={onChange}
+            handleResetFile={handleResetFile}
+            viewMode={viewMode}
+            editMode={editMode}
+          />
+        );
       }
       break;
     case "textarea":
       {
-        inputElement = <TextAreaElement {...field.props} />;
+        inputElement = <TextAreaElement {...field.props} onChange={onChange} />;
       }
       break;
     case "datetime":
       {
-        inputElement = <DateInput {...field.props} />;
+        inputElement = <DateInput {...field.props} onChange={onChange} />;
       }
       break;
     case "divider":
@@ -60,7 +80,7 @@ function FieldElement({ field, index, id, preview }) {
       inputElement = null;
   }
 
-  if (preview) {
+  if (viewMode) {
     return <div data-id={index}>{inputElement}</div>;
   }
 

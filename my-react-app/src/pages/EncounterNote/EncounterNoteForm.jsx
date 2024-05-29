@@ -141,6 +141,87 @@ function EncounterNoteForm() {
   });
 
   const [customFields, setCustomFields] = useState([]);
+
+  let customFieldsTags = useMemo(() => {
+    return customFields.map((field) => {
+      console.log({ xx_field: field });
+
+      let cf = {
+        datatype: field.type,
+        question: field.props.label,
+        answer: "",
+      };
+
+      if (field.type === "imageupload" || field.type === "fileupload") {
+        cf.answer = field.props.base64;
+      } else {
+        cf.answer = field.props.value;
+      }
+
+      if (mode === "edit") {
+        if (field.id) {
+          cf.id = field.id;
+        }
+      }
+
+      return cf;
+    });
+  }, [customFields]);
+
+  const parseToDnDCustomFields = (items) => {
+    return items.map((itm) => {
+      let constructField = {
+        type: itm.datatype,
+        props: {
+          label: itm.question,
+          value: itm.answer,
+          width: "w-full",
+        },
+        ...itm,
+      };
+
+      if (itm.datatype === "text" || itm.datatype === "textarea") {
+        constructField.props = {
+          ...constructField.props,
+          type: "text",
+        };
+      }
+
+      if (itm.datatype === "datetime") {
+        constructField.props = {
+          ...constructField.props,
+          type: "date",
+          width: "w-1/4",
+        };
+      }
+
+      if (itm.datatype === "imageupload") {
+        constructField.props = {
+          ...constructField.props,
+          type: "file",
+          accept: "image/*",
+          base64: itm.answer,
+        };
+      }
+
+      if (itm.datatype === "imageupload") {
+        constructField.props = {
+          ...constructField.props,
+          type: "file",
+          accept:
+            ".png, .jpg, .jpeg, .pdf, .doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          type: "file",
+          isFile: true,
+          base64: itm.answer,
+        };
+      }
+
+      return constructField;
+    });
+  };
+
+  console.log({ xx_customFields: customFields });
+  console.log({ xx_customFieldsTags: customFieldsTags });
   const [showCutomFields, setShowCustomFields] = useState(false);
 
   const navigate = useNavigate();
@@ -192,6 +273,9 @@ function EncounterNoteForm() {
             (carePlan) => carePlan.care_plan_id
           );
           setFormData(data);
+
+          // CustomFields
+          setCustomFields(parseToDnDCustomFields(data.tags || []));
         } catch (error) {
           console.error(error.message);
         }
@@ -286,7 +370,7 @@ function EncounterNoteForm() {
     );
   }, [formData]);
 
-  const handleCreatePayload = useCallback(async () => {
+  const handleCreatePayload = () => {
     const {
       staff_name,
       facility,
@@ -385,23 +469,32 @@ function EncounterNoteForm() {
 
     // DND Custom Fields
 
-    let tags = customFields.map((field) => {
-      let answer = "";
-      if (field.type === "imageupload" || field.type === "fileupload") {
-        answer = field.props.base64;
-      } else {
-        answer = field.props.value;
-      }
-      return {
-        datatype: field.type,
-        question: field.props.label,
-        answer: answer,
-      };
-    });
+    // let tags = customFields.map((field) => {
+    //   console.log({ xx_field: field });
+    //   let answer = "";
+    //   if (field.type === "imageupload" || field.type === "fileupload") {
+    //     answer = field.props.base64;
+    //   } else {
+    //     answer = field.props.value;
+    //   }
 
-    formDataPayload.append("tags", JSON.stringify(tags || []));
+    //   console.log({
+    //     xx_rEle: {
+    //       datatype: field.type,
+    //       question: field.props.label,
+    //       answer: answer,
+    //     },
+    //   });
+    //   return {
+    //     datatype: field.type,
+    //     question: field.props.label,
+    //     answer: answer,
+    //   };
+    // });
+
+    formDataPayload.append("tags", JSON.stringify(customFieldsTags || []));
     return formDataPayload;
-  }, [formData, clientId, navigate, formsBackup, carePlansBackup]);
+  };
 
   const handleCreate = useCallback(async () => {
     try {
@@ -422,7 +515,15 @@ function EncounterNoteForm() {
     } catch (error) {
       console.error(error);
     }
-  }, [formData, clientId, navigate, formsBackup, carePlansBackup]);
+  }, [
+    formData,
+    clientId,
+    navigate,
+    formsBackup,
+    carePlansBackup,
+    customFields,
+    customFieldsTags,
+  ]);
 
   const handleUpdate = useCallback(async () => {
     try {
@@ -438,7 +539,16 @@ function EncounterNoteForm() {
     } catch (error) {
       console.error(error);
     }
-  }, [encounterId, formData, clientId, navigate, formsBackup, carePlansBackup]);
+  }, [
+    encounterId,
+    formData,
+    clientId,
+    navigate,
+    formsBackup,
+    carePlansBackup,
+    customFields,
+    customFieldsTags,
+  ]);
 
   return (
     <div className="mx-1" style={{ fontFamily: "poppins" }}>
@@ -898,6 +1008,7 @@ function EncounterNoteForm() {
                   setCustomFields(dndItms);
                 }}
                 dndItems={customFields}
+                viewMode={mode === "view"}
               />
             </div>
           </FormWrapper>

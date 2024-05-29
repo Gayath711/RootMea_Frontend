@@ -23,6 +23,8 @@ import EditPNG from "../images/edit.png";
 import SavePNG from "../images/save.png";
 import EditGreenPNG from "../images/edit-green.png";
 import SaveGreenPNG from "../images/save-green.png";
+import CustomFieldsForAll from "./CustomFieldsForAll";
+import CustomFieldsForUser from "./CustomFieldsForUser";
 // import DynamicFieldForm from './clientprofile/dynamicfield'
 
 const bulkupdate = {
@@ -195,6 +197,7 @@ const initialValues = {
   system_information_prn: null,
   system_information_chart_number: null,
   system_information_system_id: null,
+  custom_fields: null,
 };
 
 const errorInitialValues = {
@@ -218,6 +221,8 @@ const ClientProfile = ({ isNew }) => {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+
+  console.log({ XX_clientData: clientData });
 
   useEffect(() => {
     if (clientId && !isNew) {
@@ -557,6 +562,27 @@ const ClientProfile = ({ isNew }) => {
                 handleFieldChange={handleFieldChange}
               />
             </div>
+
+            {/* <div>
+              {clientData.custom_fields && (
+                <CustomFieldsForUser
+                  fields={clientData.custom_fields}
+                  onChange={handleFieldChange}
+                  viewMode={!isEditable}
+                  editMode={!isEditable}
+                />
+              )}
+            </div> */}
+
+            {!isEditable && (
+              <div>
+                <CustomFieldsForAll
+                  fields={clientData.custom_fields}
+                  viewMode={!isEditable}
+                  editMode={!isEditable}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

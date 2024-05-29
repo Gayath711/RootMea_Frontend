@@ -31,9 +31,18 @@ import FormHeader from "../dynamicform/FormBuilder/FormHeader";
 import FormPreview from "../dynamicform/FormBuilder/FormPreview";
 import DragOverlayWrapper from "../dynamicform/FormBuilder/DragOverlayWrapper";
 import { notify } from "../../helper/toastNotication";
+import CustomFieldsView from "./CustomFieldsView";
 
-function RenderDnDCustomFields({ onDnDItemsChange, dndItems = [] }) {
+function RenderDnDCustomFields({
+  onDnDItemsChange,
+  dndItems = [],
+  viewMode = false,
+  editMode = false,
+  config,
+}) {
   const {
+    setConfig,
+    DnDFieldElements: elements,
     elements: items,
     setElements,
     addElement,
@@ -314,85 +323,15 @@ function RenderDnDCustomFields({ onDnDItemsChange, dndItems = [] }) {
     },
   ];
 
-  const elements = [
-    {
-      type: "text",
-      label: "Text",
-      IconSrc: Single_line_text_Icon,
-      props: {
-        type: "text",
-        label: "",
-        value: "",
-        placeholder: "Start typing...",
-        width: "w-full",
-      },
-    },
-    {
-      type: "textarea",
-      label: "Text area",
-      IconSrc: Text_area_Icon,
-      props: {
-        type: "text",
-        label: "",
-        value: "",
-        placeholder: "Start Typing...",
-        width: "w-full",
-      },
-    },
-    {
-      type: "datetime",
-      label: "Date and Time",
-      IconSrc: Date_and_time_Icon,
-      props: {
-        type: "date",
-        label: "",
-        value: "",
-        width: "w-1/4",
-      },
-    },
-    {
-      type: "imageupload",
-      label: "Image",
-      IconSrc: Image_upload_Icon,
-      props: {
-        type: "file",
-        accept: "image/*",
-        label: "",
-        value: "",
-        width: "w-full",
-        base64: "",
-      },
-    },
-    {
-      type: "fileupload",
-      label: "File",
-      IconSrc: Attachments_Icon,
-      props: {
-        type: "file",
-        accept:
-          ".png, .jpg, .jpeg, .pdf, .doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        label: "",
-        value: "",
-        width: "w-full",
-        base64: "",
-        isFile: true,
-      },
-    },
-    {
-      type: "divider",
-      label: "Divider",
-      IconSrc: Single_line_text_Icon,
-      props: { width: "w-full" },
-    },
-    ,
-  ];
-
   useEffect(() => {
     onDnDItemsChange && onDnDItemsChange(items);
   }, [items]);
 
   useEffect(() => {
     setElements(dndItems);
+    setConfig((prev) => {
+      return { ...prev, ...config };
+    });
   }, []);
 
   // const onDragStart = (event) => {
@@ -519,6 +458,16 @@ function RenderDnDCustomFields({ onDnDItemsChange, dndItems = [] }) {
 
   console.log({ items });
 
+  if (viewMode) {
+    return (
+      <div className="row">
+        <div className="col-12 p-2">
+          <CustomFieldsView viewMode={viewMode} editMode={editMode} />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <DndContext
       // onDragStart={onDragStart}
@@ -541,11 +490,8 @@ function RenderDnDCustomFields({ onDnDItemsChange, dndItems = [] }) {
 
         {/* Form Drop Zone */}
         <div className="col-12 p-2">
-          <FormCanvas items={items} />
+          <FormCanvas />
         </div>
-
-        {/* Selected Element Property */}
-        <div className="col-12 p-2">{/* <FieldProperty /> */}</div>
       </div>
 
       {/* </SortableContext> */}
@@ -554,10 +500,25 @@ function RenderDnDCustomFields({ onDnDItemsChange, dndItems = [] }) {
   );
 }
 
-function DnDCustomFields({ onChange = () => {}, dndItems }) {
+// set viewMode = true ------ to view the form only
+// set editMode = true ------ to edit the form view
+// set viewMode & editMode = false ----- to create drag and drop form
+function DnDCustomFields({
+  onChange = () => {},
+  dndItems,
+  viewMode = false,
+  editMode = false,
+  config,
+}) {
   return (
     <DnDCustomFieldsContextProvider>
-      <RenderDnDCustomFields onDnDItemsChange={onChange} dndItems={dndItems} />
+      <RenderDnDCustomFields
+        onDnDItemsChange={onChange}
+        dndItems={dndItems}
+        viewMode={viewMode}
+        editMode={editMode}
+        config={config}
+      />
     </DnDCustomFieldsContextProvider>
   );
 }
