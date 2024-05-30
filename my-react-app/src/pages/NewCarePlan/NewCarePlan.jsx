@@ -16,6 +16,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import CancelRoundedIcon from "../../image/Cancel.svg";
 import DropDown from "../../components/common/Dropdown";
+import ApprovalSelection from "./ApprovalSelection/ApprovalSelection";
 function FormWrapper({ children, label }) {
   return (
     <div className="rounded-[6px] bg-white">
@@ -42,7 +43,7 @@ function AddNewElement({ label, button, required, className, onclick }) {
   );
 }
 
-function FormButtonWrapper({
+export function FormButtonWrapper({
   children,
   label,
   button,
@@ -263,6 +264,7 @@ const TheNewCarePlan = () => {
       value: 3,
     },
   ]);
+  const [openApprovalSelection, setApprovalSelection] = useState(false);
 
   const goalPriorityOptions = useMemo(
     () => [
@@ -333,17 +335,29 @@ const TheNewCarePlan = () => {
 
   const handleCreateNewCarePlan = useCallback(async () => {
     try {
-      const response = await protectedApi.post("/api/careplan/", formData);
+      const updatedFormData = {
+        ...formData,
+        approver_name: formData?.approver_name?.id,
+        is_approve: formData?.approver_name?.is_approve ? "Pending" : "Pending",
+      };
+      if (!formData?.approver_name) {
+        delete updatedFormData?.approver_name;
+        delete updatedFormData.is_approve;
+      }
+
+      const response = await protectedApi.post(
+        "/api/careplan/",
+        updatedFormData
+      );
 
       if (response.status === 201) {
         notifySuccess("Care Plan created successfully");
         navigate(`/clientchart/${clientId}`);
       }
-
     } catch {
       console.error("Error creating care plan");
     }
-  }, [formData])
+  }, [formData]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -720,7 +734,10 @@ const TheNewCarePlan = () => {
                     label={"Start Date"}
                     value={
                       formData?.goals?.[goalIndex]?.start_date
-                        ? format(formData?.goals?.[goalIndex]?.start_date, "MM-dd-yyyy")
+                        ? format(
+                            formData?.goals?.[goalIndex]?.start_date,
+                            "MM-dd-yyyy"
+                          )
                         : ""
                     }
                     handleChange={(value) => {
@@ -846,7 +863,9 @@ const TheNewCarePlan = () => {
                         <BasicTable
                           type={"intervention"}
                           columns={intervention_columns}
-                          data={formData?.goals?.[goalIndex]?.interventions || []}
+                          data={
+                            formData?.goals?.[goalIndex]?.interventions || []
+                          }
                         />
                       </div>
                     </FormButtonWrapper>
@@ -917,15 +936,61 @@ const TheNewCarePlan = () => {
                   />
                 </div>
               </FormButtonWrapper>
+              <div className="flex items-center space-x-2 pt-9 pb-6">
+                <input
+                  type="checkbox"
+                  id="approval"
+                  className="w-4 h-4"
+                  checked={formData?.is_approve}
+                  onChange={(e) => {
+                    setApprovalSelection(e.target.checked);
+                    handleFormDataChange("is_approve", e.target.checked);
+                    if (!e.target.checked) {
+                      handleFormDataChange("approver_name", null);
+                    }
+                  }}
+                />
+                <label htmlFor="approval" className="text-lg">
+                  Is approval Need?
+                </label>
+              </div>
+              {formData?.approver_name && (
+                <div
+                  className={`w-full flex justify-between items-center border rounded-[6px]`}
+                >
+                  <div className="px-3 text-[#8C8C8C]">
+                    {formData?.approver_name?.name}
+                  </div>
+                  <button
+                    onClick={() => {
+                      handleFormDataChange("approver_name", null);
+                      setApprovalSelection(false);
+                      handleFormDataChange("is_approve", false);
+                    }}
+                    className="bg-[#5BC4BF] text-white px-3 py-2"
+                  >
+                    -
+                  </button>
+                </div>
+              )}
               <div className="text-center my-3">
+                <button className="border border-[#5BC4BF] w-[150px] font-normal text-base rounded-sm p-2 mr-3">
+                  Cancel
+                </button>
                 <button
                   disabled={disableSubmit}
                   onClick={handleCreateNewCarePlan}
-                  className="bg-[#C4EBEF] px-5 py-3 m-2 rounded-sm text-lg disabled:cursor-not-allowed"
+                  className="bg-[#5BC4BF] text-white p-2 w-[150px] font-normal text-base rounded-sm "
                 >
-                  Request Approval
+                  Save
                 </button>
               </div>
+              <ApprovalSelection
+                userOptions={userOptions}
+                open={openApprovalSelection}
+                handleClose={() => setApprovalSelection(false)}
+                handleFormData={handleFormDataChange}
+              />
             </div>
           </>
         ) : (
