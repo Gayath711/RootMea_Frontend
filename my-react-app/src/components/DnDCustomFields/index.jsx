@@ -341,7 +341,9 @@ function RenderDnDCustomFields({
   // }, []);
 
   useEffect(() => {
-    setElements(dndItems);
+    if (JSON.stringify(items) !== JSON.stringify(dndItems)) {
+      setElements(dndItems);
+    }
   }, [dndItems]);
 
   useEffect(() => {
