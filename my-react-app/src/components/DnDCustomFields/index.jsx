@@ -324,15 +324,31 @@ function RenderDnDCustomFields({
   ];
 
   useEffect(() => {
-    onDnDItemsChange && onDnDItemsChange(items);
+    if (
+      onDnDItemsChange &&
+      items.length > 0 &&
+      JSON.stringify(items) !== JSON.stringify(dndItems)
+    ) {
+      onDnDItemsChange(items);
+    }
   }, [items]);
+
+  // useEffect(() => {
+  //   setElements(dndItems);
+  //   setConfig((prev) => {
+  //     return { ...prev, ...config };
+  //   });
+  // }, []);
 
   useEffect(() => {
     setElements(dndItems);
+  }, [dndItems]);
+
+  useEffect(() => {
     setConfig((prev) => {
       return { ...prev, ...config };
     });
-  }, []);
+  }, [config]);
 
   // const onDragStart = (event) => {
   //   console.log({ OnDragStart: event });

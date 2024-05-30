@@ -302,6 +302,21 @@ const ClientProfile = ({ isNew }) => {
     });
   }, [customFields]);
 
+  const refetchCustomFields = () => {
+    axios
+      .get(`/clientinfo-api/${clientId}`)
+      .then((response) => {
+        const parsedCF = parseToDnDCustomFields(
+          response.data.custom_fields || []
+        );
+        setCustomFieldsAll(parsedCF);
+        setCustomFields(parsedCF);
+      })
+      .catch((error) => {
+        console.error("Error fetching client data:", error);
+      });
+  };
+
   useEffect(() => {
     if (clientId && !isNew) {
       axios
@@ -420,8 +435,6 @@ const ClientProfile = ({ isNew }) => {
     setErrors(errors);
     return isValid;
   };
-
-  console.log({ customFieldsTags });
 
   const handleSave = (event) => {
     event.preventDefault();
@@ -588,7 +601,11 @@ const ClientProfile = ({ isNew }) => {
         )}
         <div className="border-b border-green-800 mt-2 mb-4"></div>
         <div className="flex">
-          <Sidebar handleClick={handleClick} />
+          <Sidebar
+            handleClick={handleClick}
+            isNew={isNew}
+            isEditable={isEditable}
+          />
           <div className="w-full px-2 space-y-4">
             <div>
               <GeneralInformation
@@ -655,24 +672,27 @@ const ClientProfile = ({ isNew }) => {
 
             <div>
               <CustomFieldsForUser
+                id={9}
                 onChange={(dndItms) => {
                   setCustomFields(dndItms);
                 }}
                 dndItems={customFields}
-                viewMode={true}
-                editMode={!isEditable}
+                viewMode={true && !isNew}
+                editMode={!isEditable && !isNew}
               />
             </div>
 
-            {!isEditable && (
+            {!isNew && !isEditable && (
               <div>
                 <CustomFieldsForAll
+                  id={10}
                   onChange={(dndItms) => {
                     setCustomFieldsAll(dndItms);
                   }}
                   dndItems={customFieldsAll}
                   viewMode={mode === "view"}
                   mode={mode}
+                  refresh={refetchCustomFields}
                 />
               </div>
             )}
