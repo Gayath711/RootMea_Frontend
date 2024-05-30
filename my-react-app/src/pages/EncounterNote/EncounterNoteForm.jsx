@@ -123,6 +123,15 @@ async function fetchUsers() {
   }
 }
 
+async function fetchUserInfo() {
+  try {
+    const response = await protectedApi.get("/user-details/");
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 function convertTimeToISOString(data, timeString) {
   // Get the current date in 'YYYY-MM-DD' format
   var timeParts = timeString.split(":");
@@ -149,12 +158,14 @@ function EncounterNoteForm() {
   const [facilityOptions, setFacilityOptions] = useState([]);
   const [programOptions, setProgramOptions] = useState([]);
   const [userOptions, setUserOptions] = useState([]);
+  const [userInfo, setUserInfo] = useState({});
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
   const [forms, setForms] = useState([]);
   const [formsBackup, setFormsBackup] = useState([]);
   const [carePlans, setCarePlans] = useState([]);
   const [carePlansBackup, setCarePlansBackup] = useState([]);
+  const [signedByBackup, setSignedByBackup] = useState([]);
   const [formData, setFormData] = useState({
     client_id: clientId,
     staff_name: 2,
@@ -398,6 +409,16 @@ function EncounterNoteForm() {
       });
   }, []);
 
+  useEffect(() => {
+    fetchUserInfo()
+      .then((userInfoResponse) => {
+        setUserInfo(userInfoResponse);
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  }, []);
+
   const disableSubmit = useMemo(() => {
     return (
       !formData?.staff_name ||
@@ -501,7 +522,16 @@ function EncounterNoteForm() {
     signed_by &&
       formDataPayload.append(
         "signed_by",
-        JSON.stringify(signed_by.filter((sign) => !sign?.id) || [])
+        JSON.stringify(
+          signed_by.filter(
+            (sign) =>
+              !signedByBackup.find(
+                (signBackup) =>
+                  signBackup?.id === sign?.id &&
+                  signBackup?.timestamp === sign?.timestamp
+              )
+          ) || []
+        )
       );
     for (let i = 0; i < uploaded_documents?.length; i++) {
       if (uploaded_documents[i] instanceof File) {
@@ -535,6 +565,7 @@ function EncounterNoteForm() {
     // });
 
     formDataPayload.append("tags", JSON.stringify(customFieldsTags || []));
+    formDataPayload.append("tags_deleted", JSON.stringify([]));
     return formDataPayload;
   };
 
@@ -1029,7 +1060,7 @@ function EncounterNoteForm() {
             <div className="col-span-12">
               <SignInput
                 signs={formData?.signed_by || []}
-                user={"User 1"}
+                user={userInfo}
                 disabled={mode === "view"}
                 mode={mode}
                 setSigns={(signs) => {
