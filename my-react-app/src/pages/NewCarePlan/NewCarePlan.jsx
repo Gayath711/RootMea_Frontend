@@ -15,6 +15,9 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import CancelRoundedIcon from "../../image/Cancel.svg";
+import Button from "@mui/material/Button";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import DropDown from "../../components/common/Dropdown";
 import ApprovalSelection from "./ApprovalSelection/ApprovalSelection";
 function FormWrapper({ children, label }) {
@@ -75,6 +78,47 @@ export function FormButtonWrapper({
     </div>
   );
 }
+
+const TableMenu = ({ onRemove }) => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <div>
+      <Button
+        id="basic-button"
+        aria-controls={open ? "basic-menu" : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? "true" : undefined}
+        onClick={handleClick}
+      >
+        <img
+          src={ThreeDotsIcon}
+          alt="Add Section"
+          className="cursor-pointer mx-auto"
+        />
+      </Button>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          "aria-labelledby": "basic-button",
+        }}
+      >
+        <MenuItem onClick={onRemove}>Remove</MenuItem>
+      </Menu>
+    </div>
+  );
+};
+
 async function fetchClientDetails({ clientId }) {
   try {
     if (clientId === undefined) {
@@ -129,6 +173,7 @@ function AlertDialog({ setFormData, goalIndex, open, handleClose }) {
       return { ...prevData, goals };
     });
     handleClose();
+    setInterventionData({});
   }, [interventionData]);
 
   const handleInterventionDataChange = useCallback(
@@ -230,8 +275,7 @@ function AlertDialog({ setFormData, goalIndex, open, handleClose }) {
 }
 
 const TheNewCarePlan = () => {
-
-  const {mode} = useParams();
+  const { mode } = useParams();
 
   const { clientId } = useParams();
   const [clientDetails, setClientDetails] = useState({});
@@ -344,9 +388,13 @@ const TheNewCarePlan = () => {
 
   useEffect(() => {
     if (!mode) {
-      setFormData((prevData) => ({...prevData, user_name: userOptions?.find((user) => user.value === userInfo?.user_id)?.value}));
+      setFormData((prevData) => ({
+        ...prevData,
+        user_name: userOptions?.find((user) => user.value === userInfo?.user_id)
+          ?.value,
+      }));
     }
-  }, [userOptions, userInfo])
+  }, [userOptions, userInfo]);
 
   const handleFormDataChange = useCallback(
     (fieldName, value) => {
@@ -410,37 +458,6 @@ const TheNewCarePlan = () => {
     //   action: "Lorem ipsum dolor sit .....",
     //   date: "1/2/2000",
     //   time: "4:00 PM",
-    // },
-  ]);
-
-  const [interventionData, setInterventionData] = useState([
-    // {
-    //   id: 1,
-    //   name: "John",
-    //   dueDate: "08/12/2024",
-    //   completedDate: "08/18/2024",
-    //   notes: "Lorem ipsum dolor sit .....",
-    // },
-    // {
-    //   id: 2,
-    //   name: "Jane",
-    //   dueDate: "08/12/2024",
-    //   completedDate: "08/18/2024",
-    //   notes: "Lorem ipsum dolor sit .....",
-    // },
-    // {
-    //   id: 3,
-    //   name: "Doe",
-    //   dueDate: "08/12/2024",
-    //   completedDate: "08/18/2024",
-    //   notes: "Lorem ipsum dolor sit .....",
-    // },
-    // {
-    //   id: 4,
-    //   name: "Mark",
-    //   dueDate: "08/12/2024",
-    //   completedDate: "08/18/2024",
-    //   notes: "Lorem ipsum dolor sit .....",
     // },
   ]);
 
@@ -526,7 +543,7 @@ const TheNewCarePlan = () => {
 
   const intervention_columns = useMemo(
     () => [
-      { Header: "#", accessor: "id" },
+      { Header: "#", Cell: ({ row }) => row.index + 1 },
       { Header: "Intervention", accessor: "intervention" },
       { Header: "Due Date", accessor: "due_date" },
       { Header: "Completed Date", accessor: "completed_date" },
@@ -534,16 +551,23 @@ const TheNewCarePlan = () => {
       {
         Header: "Add section",
         accessor: "addSection",
-        Cell: () => (
-          <img
-            src={ThreeDotsIcon}
-            alt="Add Section"
-            className="cursor-pointer mx-auto"
+        Cell: ({ row }) => (
+          <TableMenu
+            onRemove={() => {
+              console.log(row);
+              handleGoalDataUpdate(
+                goalIndex,
+                "interventions",
+                formData?.goals?.[goalIndex]?.interventions?.filter(
+                  (_, index) => index !== row.index
+                )
+              );
+            }}
           />
         ),
       },
     ],
-    []
+    [formData]
   );
 
   return (
