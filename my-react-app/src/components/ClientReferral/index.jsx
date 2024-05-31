@@ -479,7 +479,6 @@ export default function ClientReferral() {
           };
         });
         setCustomFields([]);
-        getData();
         // navigate(`/staff-directory/${response.data.id}`, { replace: true });
       } catch (error) {
         if (error.response.status === 400) {
@@ -544,8 +543,47 @@ export default function ClientReferral() {
   let viewMode = true;
   let editMode = true;
 
+  console.log({ customFields });
+
   return (
     <>
+      <button
+        onClick={() => {
+          setCustomFields([
+            {
+              type: "text",
+              label: "Text",
+              IconSrc:
+                "/static/media/single_line_text.5ffbc6b19a800a167015322ca15044f6.svg",
+              props: {
+                type: "text",
+                label: "",
+                value: "",
+                placeholder: "Start typing...",
+                width: "w-full",
+              },
+              eleKey: "e09825f6-5a19-4955-ba7d-62714201111b",
+            },
+            {
+              type: "textarea",
+              label: "Text area",
+              IconSrc:
+                "/static/media/text_area.5a827388a33f6d092925c7a9e111b135.svg",
+              props: {
+                type: "text",
+                label: "",
+                value: "",
+                placeholder: "Start Typing...",
+                width: "w-full",
+              },
+              eleKey: "a4cee4c9-a2ed-4c86-9227-55d826efcb2d",
+            },
+          ]);
+        }}
+      >
+        jj
+      </button>
+      <button onClick={() => setCustomFields([])}>kk</button>
       <div className="flex flex-column gap-2 items-center">
         <PageHeader title={`Client Referral`} />
         <div className="flex flex-column gap-2 w-100 shadow-md rounded-md relative">
