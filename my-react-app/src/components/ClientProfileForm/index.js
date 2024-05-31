@@ -223,6 +223,7 @@ const ClientProfile = ({ isNew }) => {
   const [errorMsg, setErrorMsg] = useState("");
   const [customFieldsAll, setCustomFieldsAll] = useState([]);
   const [customFields, setCustomFields] = useState([]);
+  const [badge, setBadge] = useState({});
 
   const mode = clientId && !isNew ? "edit" : "new";
 
@@ -334,6 +335,8 @@ const ClientProfile = ({ isNew }) => {
         .catch((error) => {
           console.error("Error fetching client data:", error);
         });
+
+      fetchBadge();
     }
   }, [clientId, isNew]);
 
@@ -493,6 +496,15 @@ const ClientProfile = ({ isNew }) => {
     setShowErrorAlert(false);
   };
 
+  const fetchBadge = async () => {
+    try {
+      const response = await axios.get(`/UserNameBadge/${clientId}`);
+      const { data } = response;
+      setBadge(data);
+    } catch (e) {
+      console.error({ e });
+    }
+  };
   return (
     <div className="h-full bg-gray-50">
       {/* <button
@@ -610,6 +622,7 @@ const ClientProfile = ({ isNew }) => {
             <div>
               <GeneralInformation
                 id={1}
+                badge={badge}
                 isEdittable={isEditable}
                 clientData={clientData}
                 handleFieldChange={handleFieldChange}
