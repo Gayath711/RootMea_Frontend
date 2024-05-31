@@ -20,7 +20,7 @@ import CollapseCloseSvg from "../../components/images/collapse-close.svg";
 import { format } from "date-fns";
 import "./EncounterNoteFormStyles.css";
 
-function FormWrapper({ children, label, isCollapsable, initialState = true }) {
+function FormWrapper({ children, label, isCollapsable, gridCols = 12, initialState = true }) {
   const [show, setShow] = useState(initialState);
 
   return (
@@ -40,7 +40,7 @@ function FormWrapper({ children, label, isCollapsable, initialState = true }) {
         )}
       </div>
       {show && (
-        <div className="px-4 py-3 grid grid-cols-12 gap-x-3 gap-y-3">
+        <div className={`px-4 py-3 grid grid-cols-${gridCols} gap-x-3 gap-y-3`}>
           {children}
         </div>
       )}
@@ -1081,12 +1081,30 @@ function EncounterNoteForm() {
             </div>
           </FormWrapper>
 
-          <FormWrapper label="Billing Details">
+          <FormWrapper label="Billing Details" gridCols={13}>
             <div className="col-span-4">
-              <InputElement
-                type="text"
-                className="border-keppel"
+            <DropDown
+                name="billing_status"
                 placeholder="Billing Status"
+                // handleChange={(data) =>
+                //   handleFormDataChange("billiing_status", data.value)
+                // }
+                isEdittable={mode === "view"}
+                className="border-keppel m-1 h-[37.6px]"
+                height="37.6px"
+                fontSize="14px"
+                borderColor="#5bc4bf"
+                options={[
+                  {
+                    label: "ECM Enabling Service",
+                    value: "ECM Enabling Service",
+                  },
+                  { label: "Submitted via AMD*", value: "Submitted via AMD*" },
+                  { label: "Submitted via invoice", value: "Submitted via invoice" },
+                  { label: "Missing Insurance", value: "Missing Insurance" },
+                  { label: "Missing/Insufficient Notes", value: "Missing/Insufficient Notes" },
+                ]}
+                // selectedOption={formData?.note_template || ""}
               />
             </div>
             <div className="col-span-4">
@@ -1103,26 +1121,10 @@ function EncounterNoteForm() {
                 placeholder="date/time"
               />
             </div>
-            <div className="col-span-4">
-              <InputElement
-                type="text"
-                className="border-keppel"
-                placeholder="Billing Status Comments"
-              />
-            </div>
-            <div className="col-span-4">
-              <InputElement
-                type="text"
-                className="border-keppel"
-                placeholder="Username"
-              />
-            </div>
-            <div className="col-span-4">
-              <InputElement
-                type="text"
-                className="border-keppel"
-                placeholder="date/time"
-              />
+            <div className="col-span-1 m-1">
+              <button className="w-full h-100 bg-[#5BC4BF] rounded-md text-white font-semibold text-lg">
+                +
+              </button>
             </div>
           </FormWrapper>
         </div>
