@@ -172,6 +172,7 @@ function EncounterNoteForm() {
   });
 
   const [customFields, setCustomFields] = useState([]);
+  const [deletedCustomFields, setDeletedCustomFields] = useState([]);
 
   let customFieldsTags = useMemo(() => {
     return customFields.map((field) => {
@@ -196,6 +197,19 @@ function EncounterNoteForm() {
       return cf;
     });
   }, [customFields]);
+
+  let deletedcustomFieldsID = useMemo(() => {
+    return deletedCustomFields
+      .map((field) => {
+        if (field.id) {
+          return field.id;
+        }
+        return null;
+      })
+      .filter(Boolean);
+  }, [deletedCustomFields]);
+
+  console.log({ customFieldsTags, deletedCustomFields, deletedcustomFieldsID });
 
   const parseToDnDCustomFields = (items) => {
     return items.map((itm) => {
@@ -565,7 +579,7 @@ function EncounterNoteForm() {
     // });
 
     formDataPayload.append("tags", JSON.stringify(customFieldsTags || []));
-    formDataPayload.append("tags_deleted", JSON.stringify([]));
+    formDataPayload.append("tags_deleted", deletedcustomFieldsID || []);
     return formDataPayload;
   };
 
@@ -916,6 +930,11 @@ function EncounterNoteForm() {
                 onChange={(dndItms) => {
                   setCustomFields(dndItms);
                 }}
+                onDelete={(dndItms) => {
+                  console.log({ onDelItm: dndItms });
+                  setDeletedCustomFields(dndItms);
+                }}
+                deletedItems={deletedCustomFields}
                 dndItems={customFields}
                 viewMode={mode === "view"}
               />

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import TextBox from "../common/TextBox";
 import DateInput from "../common/DateInput";
@@ -8,6 +8,7 @@ import ClosedAccordianPNG from "../images/closed-accordion.png";
 
 const GeneralInformation = ({
   id,
+  badge,
   isEdittable,
   clientData,
   handleFieldChange,
@@ -17,6 +18,7 @@ const GeneralInformation = ({
   const toggleAccordion = () => {
     setIsOpen(!isOpen);
   };
+
   return (
     <div
       className="border border-gray-300  bg-gray-50 rounded-md"
@@ -47,11 +49,16 @@ const GeneralInformation = ({
               className="border-1 w-[25.92vh] h-[32.40vh] border-1
                 border-gray-600/50 bg-white rounded-md flex flex-col justify-center items-center"
             >
-              <img
-                src={require("../images/avatar-man.png")}
-                alt="Client Photo"
-                className="w-28 h-28 object-cover rounded-full border-1 border-zinc-500"
-              />
+              <div className="relative">
+                <img
+                  src={require("../images/avatar-man.png")}
+                  alt="Client Photo"
+                  className="w-28 h-28 object-cover rounded-full border-1 border-zinc-500"
+                />
+                {badge?.badge && (
+                  <span className="absolute right-[15px] bottom-0"> </span>
+                )}
+              </div>
               <div className="mt-4 text-center text-green-800">
                 {clientData.first_name} {clientData.last_name}
               </div>
