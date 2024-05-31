@@ -110,6 +110,15 @@ async function fetchFacilities() {
   }
 }
 
+async function fetchUserInfo() {
+  try {
+    const response = await protectedApi.get("/user-details/");
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 function AlertDialog({ setFormData, goalIndex, open, handleClose }) {
   const [interventionData, setInterventionData] = useState({});
 
@@ -221,11 +230,15 @@ function AlertDialog({ setFormData, goalIndex, open, handleClose }) {
 }
 
 const TheNewCarePlan = () => {
+
+  const {mode} = useParams();
+
   const { clientId } = useParams();
   const [clientDetails, setClientDetails] = useState({});
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const [goalIndex, setGoalIndex] = useState(0);
+  const [userInfo, setUserInfo] = useState({});
   const [userOptions, setUserOptions] = useState([]);
   const [faclityOptions, setFacilityOptions] = useState([]);
   const [programOptions, setProgramOptions] = useState([
@@ -318,6 +331,22 @@ const TheNewCarePlan = () => {
   useEffect(() => {
     console.log(formData);
   }, [formData]);
+
+  useEffect(() => {
+    fetchUserInfo()
+      .then((userInfoResponse) => {
+        setUserInfo(userInfoResponse);
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (!mode) {
+      setFormData((prevData) => ({...prevData, user_name: userOptions?.find((user) => user.value === userInfo?.user_id)?.value}));
+    }
+  }, [userOptions, userInfo])
 
   const handleFormDataChange = useCallback(
     (fieldName, value) => {
