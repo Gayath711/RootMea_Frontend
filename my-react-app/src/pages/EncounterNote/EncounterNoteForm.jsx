@@ -327,6 +327,15 @@ function EncounterNoteForm() {
   }, [formData]);
 
   useEffect(() => {
+     if (!mode)
+    setFormData((prev) => ({
+      ...prev,
+      staff_name: userOptions?.find((user) => user.value === userInfo?.user_id)
+        ?.value,
+    }));
+  }, [userOptions, userInfo]);
+
+  useEffect(() => {
     fetchClientDetails({ clientId })
       .then((clientDetailsResponse) => {
         if (clientDetails?.date_of_birth) {
