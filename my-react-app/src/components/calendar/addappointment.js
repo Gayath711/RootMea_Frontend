@@ -10,7 +10,6 @@ import DropDown from "../common/Dropdown";
 import TextBox from "../common/TextBox";
 import DateInput from "../common/DateInput";
 import TimeInput from "../common/TimeInput";
-import CheckBox from "../common/CheckBox";
 import apiURL from "../.././apiConfig";
 
 import { Modal } from "react-bootstrap";
