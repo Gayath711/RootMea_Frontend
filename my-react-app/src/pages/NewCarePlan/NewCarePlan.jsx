@@ -163,6 +163,26 @@ async function fetchUserInfo() {
   }
 }
 
+async function fetchProgramsInfo() {
+  try {
+    const response = await protectedApi.get("/api/resources/program");
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function fetchCarePlanOptions() {
+  try {
+    const response = await protectedApi.get(
+      "/encounter-note-careplan-options/"
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 function AlertDialog({ setFormData, goalIndex, open, handleClose }) {
   const [interventionData, setInterventionData] = useState({});
 
@@ -285,42 +305,8 @@ const TheNewCarePlan = () => {
   const [userInfo, setUserInfo] = useState({});
   const [userOptions, setUserOptions] = useState([]);
   const [faclityOptions, setFacilityOptions] = useState([]);
-  const [programOptions, setProgramOptions] = useState([
-    {
-      label: "Program 1",
-      value: 1,
-    },
-    {
-      label: "Program 2",
-      value: 2,
-    },
-    {
-      label: "Program 3",
-      value: 3,
-    },
-    {
-      label: "Program 4",
-      value: 4,
-    },
-    {
-      label: "Program 5",
-      value: 5,
-    },
-  ]);
-  const [carePlanTemplateOptions, setCarePlanTemplateOptions] = useState([
-    {
-      label: "Care Plan Template 1",
-      value: 1,
-    },
-    {
-      label: "Care Plan Template 2",
-      value: 2,
-    },
-    {
-      label: "Care Plan Template 3",
-      value: 3,
-    },
-  ]);
+  const [programOptions, setProgramOptions] = useState([]);
+  const [carePlanTemplateOptions, setCarePlanTemplateOptions] = useState([]);
   const [openApprovalSelection, setApprovalSelection] = useState(false);
 
   const goalPriorityOptions = useMemo(
@@ -501,6 +487,34 @@ const TheNewCarePlan = () => {
           value: facility.id,
         }));
         setFacilityOptions(convertedUserOptions);
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetchProgramsInfo()
+      .then((fetchProgramsResponse) => {
+        const convertedUserOptions = fetchProgramsResponse.map((program) => ({
+          label: program.name,
+          value: program.id,
+        }));
+        setProgramOptions(convertedUserOptions);
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetchCarePlanOptions()
+      .then((fetchCarePlansResponse) => {
+        const convertedUserOptions = fetchCarePlansResponse.map((carePlan) => ({
+          label: carePlan.care_plan_name,
+          value: carePlan.id,
+        }));
+        setCarePlanTemplateOptions(convertedUserOptions);
       })
       .catch((error) => {
         console.error(error.message);
@@ -1033,7 +1047,7 @@ const TheNewCarePlan = () => {
                 <button
                   disabled={disableSubmit}
                   onClick={handleCreateNewCarePlan}
-                  className="bg-[#5BC4BF] text-white p-2 w-[150px] font-normal text-base rounded-sm "
+                  className="bg-[#5BC4BF] text-white p-2 w-[150px] font-normal text-base rounded-sm disabled:cursor-not-allowed"
                 >
                   Save
                 </button>
