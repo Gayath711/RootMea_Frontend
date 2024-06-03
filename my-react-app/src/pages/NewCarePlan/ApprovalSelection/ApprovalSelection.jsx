@@ -9,6 +9,7 @@ import AlertConfirmation from "../../../components/AlertConfirmation/AlertConfir
 const ApprovalSelection = ({
   open,
   handleClose,
+  handleDiscard,
   userOptions,
   handleFormData,
 }) => {
@@ -78,7 +79,7 @@ const ApprovalSelection = ({
               Request Approval
               <img
                 src={CancelRoundedIcon}
-                onClick={handleClose}
+                onClick={handleDiscard}
                 alt="CloseIcon"
                 className="cursor-pointer"
               />
@@ -95,7 +96,7 @@ const ApprovalSelection = ({
               />
               <div className="flex item-center justify-center">
               <button
-                onClick={handleClose}
+                onClick={handleDiscard}
                 className="border border-[#5BC4BF] w-[150px] font-normal text-base text-black rounded-[3px] p-2 mr-3"
               >
                 Close

@@ -306,7 +306,12 @@ const TheNewCarePlan = () => {
   const [userOptions, setUserOptions] = useState([]);
   const [faclityOptions, setFacilityOptions] = useState([]);
   const [programOptions, setProgramOptions] = useState([]);
-  const [carePlanTemplateOptions, setCarePlanTemplateOptions] = useState([]);
+  const [carePlanTemplateOptions, setCarePlanTemplateOptions] = useState([
+    { label: "Care Plan Template 1", value: "Care Plan Template 1" },
+    { label: "Care Plan Template 2", value: "Care Plan Template 2" },
+    { label: "Care Plan Template 3", value: "Care Plan Template 3" },
+    { label: "Care Plan Template 4", value: "Care Plan Template 4" },
+  ]);
   const [openApprovalSelection, setApprovalSelection] = useState(false);
 
   const goalPriorityOptions = useMemo(
@@ -401,11 +406,14 @@ const TheNewCarePlan = () => {
       const updatedFormData = {
         ...formData,
         approver_name: formData?.approver_name?.id,
-        is_approve: formData?.approver_name?.is_approve ? "Pending" : "Pending",
+        request_approval: "Yes",
+        approval_status: formData?.approver_name?.approval_status
+          ? "Pending"
+          : "Pending",
       };
       if (!formData?.approver_name) {
         delete updatedFormData?.approver_name;
-        delete updatedFormData.is_approve;
+        delete updatedFormData.approval_status;
       }
 
       const response = await protectedApi.post(
@@ -496,11 +504,13 @@ const TheNewCarePlan = () => {
   useEffect(() => {
     fetchProgramsInfo()
       .then((fetchProgramsResponse) => {
-        const convertedUserOptions = fetchProgramsResponse.map((program) => ({
-          label: program.name,
-          value: program.id,
-        }));
-        setProgramOptions(convertedUserOptions);
+        const convertedProgramOptions = fetchProgramsResponse.map(
+          (program) => ({
+            label: program.name,
+            value: program.id,
+          })
+        );
+        setProgramOptions(convertedProgramOptions);
       })
       .catch((error) => {
         console.error(error.message);
@@ -510,11 +520,13 @@ const TheNewCarePlan = () => {
   useEffect(() => {
     fetchCarePlanOptions()
       .then((fetchCarePlansResponse) => {
-        const convertedUserOptions = fetchCarePlansResponse.map((carePlan) => ({
-          label: carePlan.care_plan_name,
-          value: carePlan.id,
-        }));
-        setCarePlanTemplateOptions(convertedUserOptions);
+        const convertedCarePlanOptions = fetchCarePlansResponse.map(
+          (carePlan) => ({
+            label: carePlan.care_plan_name,
+            value: carePlan.id,
+          })
+        );
+        // setCarePlanTemplateOptions(convertedCarePlanOptions);
       })
       .catch((error) => {
         console.error(error.message);
@@ -774,16 +786,18 @@ const TheNewCarePlan = () => {
               GOAL {index + 1}
             </button>
           ))}
-          <button
-            className={` w-[200px] font-normal text-base rounded-sm ${
-              goalIndex === null
-                ? "bg-[#5BC4BF] text-white"
-                : "bg-white border border-[#5BC4BF]"
-            }`}
-            onClick={() => setGoalIndex(null)}
-          >
-            CARE PLAN STATUS
-          </button>
+          {mode && (
+            <button
+              className={` w-[200px] font-normal text-base rounded-sm ${
+                goalIndex === null
+                  ? "bg-[#5BC4BF] text-white"
+                  : "bg-white border border-[#5BC4BF]"
+              }`}
+              onClick={() => setGoalIndex(null)}
+            >
+              CARE PLAN STATUS
+            </button>
+          )}
         </div>
         {goalIndex !== null ? (
           <>
@@ -963,7 +977,7 @@ const TheNewCarePlan = () => {
                 </div>
                 <div className="col-span-6 mx-1">
                   <DateInput
-                    placeholder="Stage of Readiness"
+                    placeholder="Date"
                     dateFormat="MM-dd-yyyy"
                     className="m-1  h-[37.6px] border-keppel rounded-[3px]"
                     height="37.6px"
@@ -1008,10 +1022,10 @@ const TheNewCarePlan = () => {
                   type="checkbox"
                   id="approval"
                   className="w-4 h-4"
-                  checked={formData?.is_approve}
+                  checked={formData?.approval_status}
                   onChange={(e) => {
                     setApprovalSelection(e.target.checked);
-                    handleFormDataChange("is_approve", e.target.checked);
+                    handleFormDataChange("approval_status", e.target.checked);
                     if (!e.target.checked) {
                       handleFormDataChange("approver_name", null);
                     }
@@ -1032,7 +1046,7 @@ const TheNewCarePlan = () => {
                     onClick={() => {
                       handleFormDataChange("approver_name", null);
                       setApprovalSelection(false);
-                      handleFormDataChange("is_approve", false);
+                      handleFormDataChange("approval_status", false);
                     }}
                     className="bg-[#5BC4BF] text-white px-3 py-2"
                   >
@@ -1041,7 +1055,10 @@ const TheNewCarePlan = () => {
                 </div>
               )}
               <div className="text-center my-3">
-                <button className="border border-[#5BC4BF] w-[150px] font-normal text-base rounded-sm p-2 mr-3">
+                <button
+                  onClick={() => navigate(`/clientchart/${clientId}`)}
+                  className="border border-[#5BC4BF] w-[150px] font-normal text-base rounded-sm p-2 mr-3"
+                >
                   Cancel
                 </button>
                 <button
@@ -1055,7 +1072,14 @@ const TheNewCarePlan = () => {
               <ApprovalSelection
                 userOptions={userOptions}
                 open={openApprovalSelection}
-                handleClose={() => setApprovalSelection(false)}
+                handleClose={() => {
+                  setApprovalSelection(false);
+                }}
+                handleDiscard={() => {
+                  handleFormDataChange("approver_name", null);
+                  setApprovalSelection(false);
+                  handleFormDataChange("approval_status", false);
+                }}
                 handleFormData={handleFormDataChange}
               />
             </div>
