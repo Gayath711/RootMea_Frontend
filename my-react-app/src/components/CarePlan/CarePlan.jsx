@@ -1,10 +1,11 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import ExternalLinkIcon from "../images/externalLink.svg";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import BasicTable from "../react-table/BasicTable";
 import EyeIcon from "../images/eye.svg";
 import EditIcon from "../images/edit.svg";
 import { Link } from "react-router-dom";
+import { protectedApi } from "../../services/api";
 
 const options = {
   Pending: "bg-[#FFE5E5] text-[#E0382D]",
@@ -37,46 +38,26 @@ const Content = ({ data, columns }) => {
   );
 };
 
+const fetchCarePlans = async (clientId) => {
+  try {
+    const response = await protectedApi.get(
+      `/client-careplan-list/${clientId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 function CarePlan({ clientId }) {
   const [open, setOpen] = useState(true);
-  const [data, setData] = useState([
-    {
-      program: "ECM",
-      username: "...",
-      problems_addressed: "...",
-      goal_1_problem: "...",
-      goal_2_problem: "...",
-      approval_status: "Requested",
-      approval_status_date: "1-1-2000",
-      date_created: "1-1-2000",
-      goal_1_status: "Active",
-      goal_2_status: "Done",
-    },
-    {
-      program: "Diabetes",
-      username: "...",
-      problems_addressed: "...",
-      goal_1_problem: "...",
-      goal_2_problem: "...",
-      approval_status: "Requested",
-      approval_status_date: "1-1-2000",
-      date_created: "1-1-2000",
-      goal_1_status: "Active",
-      goal_2_status: "Pending",
-    },
-    {
-      program: "STOMP",
-      username: "...",
-      problems_addressed: "...",
-      goal_1_problem: "...",
-      goal_2_problem: "...",
-      approval_status: "Requested",
-      approval_status_date: "1-1-2000",
-      date_created: "1-1-2000",
-      goal_1_status: "Done",
-      goal_2_status: "Pending",
-    },
-  ]);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    fetchCarePlans(clientId)
+      .then((res) => setData(res))
+      .catch((err) => console.log(err));
+  }, []);
 
   const columns = useMemo(
     () => [
@@ -87,7 +68,7 @@ function CarePlan({ clientId }) {
       },
       {
         Header: "User name",
-        accessor: "username",
+        accessor: "user_name",
         align: "left",
       },
       {
@@ -106,27 +87,27 @@ function CarePlan({ clientId }) {
       },
       {
         Header: "Date Created",
-        accessor: "date_created",
+        accessor: "created_date",
         align: "left",
       },
-      {
-        Header: "Goal 1 Problem",
-        accessor: "goal_1_problem",
-        align: "left",
-      },
-      {
-        Header: "Goal 2 Problem",
-        accessor: "goal_2_problem",
-        align: "left",
-      },
-      {
-        Header: "Goal 1 status",
-        Cell: ({ row }) => <Tag text={row.original.goal_1_status} />,
-      },
-      {
-        Header: "Goal 2 status",
-        Cell: ({ row }) => <Tag text={row.original.goal_2_status} />,
-      },
+      // {
+      //   Header: "Goal 1 Problem",
+      //   accessor: "goal_1_problem",
+      //   align: "left",
+      // },
+      // {
+      //   Header: "Goal 2 Problem",
+      //   accessor: "goal_2_problem",
+      //   align: "left",
+      // },
+      // {
+      //   Header: "Goal 1 status",
+      //   Cell: ({ row }) => <Tag text={row.original.goal_1_status} />,
+      // },
+      // {
+      //   Header: "Goal 2 status",
+      //   Cell: ({ row }) => <Tag text={row.original.goal_2_status} />,
+      // },
       {
         Header: "Actions",
         Cell: ({ row }) => (
