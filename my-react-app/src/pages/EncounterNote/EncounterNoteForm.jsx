@@ -20,7 +20,7 @@ import CollapseCloseSvg from "../../components/images/collapse-close.svg";
 import { format } from "date-fns";
 import "./EncounterNoteFormStyles.css";
 
-function FormWrapper({ children, label, isCollapsable, gridCols = 12, initialState = true }) {
+function FormWrapper({ children, label, isCollapsable, gridClass = "grid-cols-12", initialState = true }) {
   const [show, setShow] = useState(initialState);
 
   return (
@@ -40,7 +40,7 @@ function FormWrapper({ children, label, isCollapsable, gridCols = 12, initialSta
         )}
       </div>
       {show && (
-        <div className={`px-4 py-3 grid grid-cols-${gridCols} gap-x-3 gap-y-3`}>
+        <div className={`px-4 py-3 grid ${gridClass} gap-x-3 gap-y-3`}>
           {children}
         </div>
       )}
@@ -1081,7 +1081,7 @@ function EncounterNoteForm() {
             </div>
           </FormWrapper>
 
-          <FormWrapper label="Billing Details" gridCols={13}>
+          <FormWrapper label="Billing Details" gridClass="grid-cols-13">
             <div className="col-span-4">
             <DropDown
                 name="billing_status"
