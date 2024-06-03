@@ -13,10 +13,15 @@ import TimeInput from "../common/TimeInput";
 import apiURL from "../.././apiConfig";
 
 import { Modal } from "react-bootstrap";
+import { Button } from "react-bootstrap";
+import { Controller } from "react-hook-form";
 
 import Swal from "sweetalert2";
+import axiosInstance from "../../helper/axiosInstance";
 
-const AddAppointment = ({
+import Select from "react-select";
+
+const AddAppointment_ = ({
   toggleModal,
   fetchEvents,
   setShowAlert,
@@ -29,7 +34,6 @@ const AddAppointment = ({
     { value: "on time", label: "on time" },
   ];
   const [selectedTime, setSelectedTime] = useState(null);
-
   const [isExternal, setIsExternal] = useState(true);
 
   const {
@@ -343,6 +347,620 @@ const AddAppointment = ({
                       : "Submit Your Appointment"}
                   </button>
                 </div>
+              </div>
+            </div>
+          </form>
+          {isSubmitting && (
+            <div className="flex flex-column absolute top-0 left-0 items-center justify-center gap-2 w-100 h-100 bg-gray-100/80">
+              <svg
+                className="animate-spin -ml-1 mr-3 h-8 w-8 text-teal-500"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              <p className="text-base">
+                {isUpdate ? "Updating..." : "Creating.."}
+              </p>
+            </div>
+          )}
+        </div>
+      </Modal.Body>
+    </Modal>
+  );
+};
+
+const AddAppointment = ({
+  toggleModal,
+  fetchEvents,
+  setShowAlert,
+  show,
+  appointmentDetail,
+  isUpdate = false,
+}) => {
+  const options = [
+    { value: "15 mins before time", label: "15 mins before time" },
+    { value: "on time", label: "on time" },
+  ];
+  const [selectedTime, setSelectedTime] = useState(null);
+
+  const [isExternal, setIsExternal] = useState(true);
+
+  // const {
+  //   register,
+  //   handleSubmit,
+  //   setValue,
+  //   formState: { errors },
+  //   reset,
+  // } = useForm({
+  //   defaultValues: {
+  //     type: "Group",
+  //   },
+  // });
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    setValue,
+    reset,
+    formState: { errors },
+  } = useForm();
+
+  const [date, setDate] = useState(null);
+  const [startTime, setStartTime] = useState(null);
+  const [endTime, setEndTime] = useState(null);
+
+  const [programsOptions, setProgramsOptions] = useState([]);
+  const [facilityOptions, setFacilityOptions] = useState([
+    {
+      label: "Facility 1",
+      value: "1",
+    },
+  ]);
+  const [activityOptions, setActivityOptions] = useState([
+    {
+      label: "Activity 1",
+      value: 1,
+    },
+    {
+      label: "Activity 2",
+      value: 2,
+    },
+    {
+      label: "Activity 3",
+      value: 3,
+    },
+    {
+      label: "Activity 4",
+      value: 4,
+    },
+  ]);
+  const [encounterNotesOptions, setEncounterNotesOptions] = useState([
+    { label: "Encounter Notes 1", value: "Encounter Notes 1" },
+    { label: "Encounter Notes 2", value: "Encounter Notes 2" },
+    { label: "Encounter Notes 3", value: "Encounter Notes 3" },
+    { label: "Encounter Notes 4", value: "Encounter Notes 4" },
+  ]);
+  const [clientsOption, setClientsOption] = useState([]);
+  const [isTopicChecked, setIsTopicChecked] = useState(false);
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleDateChange = (name, value) => {
+    console.log({ name, value });
+    if (name === "date") {
+      const formattedDate = format(value, "MM-dd-yyyy");
+      setDate(formattedDate);
+    } else if (name === "start_time") {
+      setStartTime(value);
+    } else if (name === "end_time") {
+      setEndTime(value);
+    }
+    setValue(name, value);
+  };
+
+  const onSubmit = (data) => {
+    // setIsSubmitting(true);
+
+    // let start_datetime = new Date(data.date);
+    // start_datetime.setHours(data.start_time.getHours());
+    // start_datetime.setMinutes(data.start_time.getMinutes());
+    // start_datetime.setSeconds(data.start_time.getSeconds());
+
+    // let end_datetime = new Date(data.date);
+    // end_datetime.setHours(data.end_time.getHours());
+    // end_datetime.setMinutes(data.end_time.getMinutes());
+    // end_datetime.setSeconds(data.end_time.getSeconds());
+
+    // let endpoint = isExternal ? "/create_event/" : "/django/create_event/";
+    // let axiosCall = axios.post;
+
+    console.log({ data });
+
+    // if (isUpdate) {
+    //   endpoint = `/update_event/${appointmentDetail.fullEvent.id}/`;
+    //   axiosCall = isUpdate ? axios.put : axios.post;
+    // }
+
+    // let splittedAttendees = data.attendees.split(",").map((email) => {
+    //   return {
+    //     email,
+    //   };
+    // });
+
+    // let event = {
+    //   summary: data.appointement_title,
+    //   start_datetime: start_datetime.toISOString(),
+    //   end_datetime: end_datetime.toISOString(),
+    //   attendees: splittedAttendees,
+    // };
+
+    // axiosCall(`${apiURL}${endpoint}`, event)
+    //   .then((response) => {
+    //     Swal.fire({
+    //       title: "Success!",
+    //       text: `Appointment ${isUpdate ? "Updated" : "Created"}`,
+    //       icon: "success",
+    //       timer: 2000,
+    //     });
+    //     setShowAlert && setShowAlert(true);
+    //     fetchEvents && fetchEvents();
+    //     window.scrollTo({ top: 0, behavior: "smooth" });
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error", error);
+    //     Swal.fire({
+    //       title: "Error!",
+    //       text: `Unable to ${isUpdate ? "Update" : "Create"} Appointment`,
+    //       icon: "error",
+    //       timer: 2000,
+    //     });
+    //   })
+    //   .finally(() => {
+    //     resetAll();
+    //     setIsSubmitting(false);
+    //     toggleModal();
+    //   });
+  };
+
+  const handleToggle = (value) => {
+    setIsExternal(value === "external");
+  };
+
+  const resetAll = () => {
+    reset();
+    setDate(null);
+    setStartTime(null);
+    setEndTime(null);
+  };
+
+  useEffect(() => {
+    if (isUpdate && show && appointmentDetail) {
+      const { summary, start, end, fullEvent, isExternal } = appointmentDetail;
+      setValue("appointement_title", summary);
+      handleDateChange("date", start.dateTime); // Assuming start.dateTime contains date
+      handleDateChange("start_time", new Date(start.dateTime));
+      handleDateChange("end_time", new Date(end.dateTime));
+      setValue(
+        "attendees",
+        fullEvent.attendees.map((attendee) => attendee.email).join(",")
+      );
+      setIsExternal(isExternal);
+    } else {
+      resetAll();
+      setIsExternal(true);
+    }
+  }, [show, isUpdate, appointmentDetail]);
+
+  useEffect(() => {
+    {
+      show && fetchPrograms();
+      fetchUsername();
+      fetchClients();
+    }
+  }, [show]);
+
+  const fetchPrograms = async () => {
+    try {
+      const response = await axiosInstance.get("/api/resources/program");
+      setProgramsOptions(
+        response.data.map((itm) => {
+          return {
+            ...itm,
+            label: itm.name,
+            value: itm.id,
+          };
+        })
+      );
+    } catch (error) {
+      // Handle errors here
+      console.error("Error fetching position titles:", error);
+    }
+  };
+
+  const fetchClients = async () => {
+    try {
+      const response = await axiosInstance.get("/clientinfo-api");
+      setClientsOption(
+        response.data.map((itm) => {
+          return {
+            ...itm,
+            label: itm?.first_name || "" + itm?.last_name || "",
+            value: itm?.id,
+          };
+        })
+      );
+    } catch (error) {
+      // Handle errors here
+      console.error("Error fetching client:", error);
+    }
+  };
+
+  const fetchEncounterNotes = async () => {
+    try {
+      const response = await axiosInstance.get("/clientinfo-api");
+      setClientsOption(
+        response.data.map((itm) => {
+          return {
+            ...itm,
+            label: itm.name,
+            value: itm.name,
+          };
+        })
+      );
+    } catch (error) {
+      // Handle errors here
+      console.error("Error fetching client:", error);
+    }
+  };
+
+  const fetchUsername = async () => {
+    try {
+      const response = await axiosInstance.get("/api/username");
+      setValue("staff", response.data.username);
+    } catch (error) {
+      // Handle errors here
+      console.error("Error fetching all users:", error);
+    }
+  };
+
+  const [errFields, setErrFields] = useState({});
+
+  return (
+    <Modal
+      show={show}
+      onHide={() => toggleModal()}
+      backdrop="static"
+      keyboard={false}
+      centered
+    >
+      <Modal.Header className="m-0 p-2 w-100 text-white text-base bg-[#5BC4BF] font-medium">
+        <Modal.Title className="m-0 p-0 w-100">
+          <div className="flex justify-between items-center w-100">
+            <span className="text-white text-base">
+              {isUpdate ? "Update Appointment" : "Add New Appointment"}
+            </span>
+            <button onClick={() => toggleModal()}>
+              <img
+                src={CloseIcon}
+                style={{
+                  height: "20px",
+                  width: "100%",
+                }}
+              />
+            </button>
+          </div>
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <div className="flex relative items-center justify-center">
+          <form onSubmit={handleSubmit(onSubmit)} className="p-4">
+            <div className="mb-4">
+              <label className="block mb-2">Topic</label>
+              <input
+                type="checkbox"
+                {...register("topic")}
+                onChange={(e) => setIsTopicChecked(e.target.checked)} // Update state on change
+              />
+            </div>
+
+            <div className="mb-4 grid grid-cols-2 gap-4">
+              <div>
+                <label className="block mb-2">Client</label>
+                <Controller
+                  name="client"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      options={clientsOption}
+                      isMulti
+                      isDisabled={isTopicChecked}
+                      styles={{
+                        control: (styles) => ({
+                          ...styles,
+                          padding: "3px",
+                          border: `1px solid ${
+                            !errFields.Facility ? "#5BC4BF" : "red"
+                          }`,
+                          fontSize: "14px",
+                        }),
+                        menu: (styles) => ({
+                          ...styles,
+                          background: "white",
+                          zIndex: 9999,
+                        }),
+                      }}
+                    />
+                  )}
+                  rules={{ required: "Client is required" }}
+                />
+                {errors.client && (
+                  <p className="text-red-500">{errors.client.message}</p>
+                )}
+              </div>
+              <div>
+                <label className="block mb-2">Staff</label>
+                <input
+                  type="text"
+                  className="form-control text-xs p-2.5 border-teal-500"
+                  disabled
+                  {...register("staff", { required: "Staff is required" })}
+                />
+                {errors.staff && (
+                  <p className="text-red-500">{errors.staff.message}</p>
+                )}
+              </div>
+            </div>
+
+            <div className="mb-4 grid grid-cols-2 gap-4">
+              <div>
+                <label className="block mb-2">Facility</label>
+                <Controller
+                  name="facility"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      options={facilityOptions}
+                      disabled={isUpdate}
+                      styles={{
+                        control: (styles) => ({
+                          ...styles,
+                          padding: "3px",
+                          border: `1px solid ${
+                            !errFields.Facility ? "#5BC4BF" : "red"
+                          }`,
+                          fontSize: "14px",
+                        }),
+                        menu: (styles) => ({
+                          ...styles,
+                          background: "white",
+                          zIndex: 9999,
+                        }),
+                      }}
+                    />
+                  )}
+                  rules={{ required: "Facility is required" }}
+                />
+                {errors.facility && (
+                  <p className="text-red-500">{errors.facility.message}</p>
+                )}
+              </div>
+              <div>
+                <label className="block mb-2">Program</label>
+                <Controller
+                  name="program"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      options={programsOptions}
+                      disabled={isUpdate}
+                      styles={{
+                        control: (styles) => ({
+                          ...styles,
+                          padding: "3px",
+                          border: `1px solid ${
+                            !errFields.Programs ? "#5BC4BF" : "red"
+                          }`,
+                          fontSize: "14px",
+                        }),
+                        menu: (styles) => ({
+                          ...styles,
+                          background: "white",
+                          zIndex: 9999,
+                        }),
+                      }}
+                    />
+                  )}
+                  rules={{ required: "Program is required" }}
+                />
+                {errors.program && (
+                  <p className="text-red-500">{errors.program.message}</p>
+                )}
+              </div>
+            </div>
+
+            <div className="mb-4">
+              <label className="block mb-2">Activity</label>
+              <Controller
+                name="activity"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    options={activityOptions}
+                    disabled={isUpdate}
+                    className="w-100"
+                    styles={{
+                      control: (styles) => ({
+                        ...styles,
+                        padding: "3px",
+                        border: `1px solid ${
+                          !errFields.Activity ? "#5BC4BF" : "red"
+                        }`,
+                        fontSize: "14px",
+                      }),
+                      menu: (styles) => ({
+                        ...styles,
+                        background: "white",
+                        zIndex: 9999,
+                      }),
+                    }}
+                  />
+                )}
+                rules={{ required: "Activity is required" }}
+              />
+              {errors.activity && (
+                <p className="text-red-500">{errors.activity.message}</p>
+              )}
+            </div>
+
+            <div className="mb-4 grid grid-cols-2 gap-4">
+              <div>
+                <label className="block mb-2">Type</label>
+                <input
+                  type="text"
+                  defaultValue="Group Visit"
+                  className="form-control text-xs p-2.5 border-teal-500"
+                  {...register("type", { required: "Type is required" })}
+                />
+                {errors.type && (
+                  <p className="text-red-500">{errors.type.message}</p>
+                )}
+              </div>
+              <div>
+                <label className="block mb-2">Meeting Title</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  {...register("meetingTitle", {
+                    required: "Meeting Title is required",
+                  })}
+                />
+                {errors.meetingTitle && (
+                  <p className="text-red-500">{errors.meetingTitle.message}</p>
+                )}
+              </div>
+            </div>
+
+            <div className="mb-4 grid grid-cols-2 gap-4">
+              <div>
+                <label className="block mb-2">Start Time</label>
+                {/* Your Date component should go here, replace <DateComponent /> with actual component */}
+                <DateInput
+                  name="date"
+                  // placeholder="Date"
+                  register={register}
+                  registerProps={{ required: true }}
+                  value={date}
+                  handleChange={(date) => handleDateChange("date", date)}
+                  className="text-xs p-2.5 border-teal-500"
+                />
+                {errors.startTime && (
+                  <p className="text-red-500">{errors.startTime.message}</p>
+                )}
+              </div>
+              <div>
+                <label className="block mb-2">Duration</label>
+                <Controller
+                  name="duration"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      options={[30, 45, 60, 120, 180].map((value) => ({
+                        value,
+                        label: value,
+                      }))}
+                      styles={{
+                        control: (styles) => ({
+                          ...styles,
+                          padding: "3px",
+                          border: `1px solid ${
+                            !errFields.Facility ? "#5BC4BF" : "red"
+                          }`,
+                          fontSize: "14px",
+                        }),
+                        menu: (styles) => ({
+                          ...styles,
+                          background: "white",
+                          zIndex: 9999,
+                        }),
+                      }}
+                    />
+                  )}
+                />
+              </div>
+            </div>
+
+            <div className="mb-4">
+              <label className="block mb-2">Description</label>
+              <textarea
+                rows={5}
+                {...register("description")}
+                className="form-control text-xs p-2.5 border-teal-500"
+              />
+            </div>
+
+            <div className="mb-4">
+              <div>
+                <label className="block mb-2">Linked Encounter Notes</label>
+                <Controller
+                  name="linkedEncounterNotes"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      options={encounterNotesOptions}
+                      isMulti
+                      styles={{
+                        control: (styles) => ({
+                          ...styles,
+                          padding: "3px",
+                          border: `1px solid ${
+                            !errFields.Facility ? "#5BC4BF" : "red"
+                          }`,
+                          fontSize: "14px",
+                        }),
+                        menu: (styles) => ({
+                          ...styles,
+                          background: "white",
+                          zIndex: 9999,
+                        }),
+                      }}
+                    />
+                  )}
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-row justify-between items-center mb-2">
+              <div className="p-3">
+                {/* <div className="text-gray-400 text-xs">Save to Draft</div> */}
+              </div>
+              <div className="p-3">
+                <button
+                  type="submit"
+                  className="w-54 h-10 bg-[#43B09C] rounded text-xs text-white p-2"
+                >
+                  {isUpdate ? "Update Appointment" : "Submit Your Appointment"}
+                </button>
               </div>
             </div>
           </form>

@@ -1,22 +1,23 @@
 import React from "react";
 
 function toggleSign(user, signs, setSigns, mode, setFormData) {
-  if (signs.find((sign) => sign.staff_name === user)) {
-    const signId = signs?.find((sign) => sign.staff_name === user)?.id;
+  if (signs.find((sign) => sign.id === user?.user_id)) {
+    const signId = signs?.find((sign) => sign.id === user?.user_id)?.id;
     if (mode === "edit") {
       setFormData((prev) => ({
         ...prev,
         signed_by_deleted: [...prev.signed_by_deleted, signId],
-        signed_by: prev.signed_by.filter((sign) => sign.staff_name !== user),
+        signed_by: prev.signed_by.filter((sign) => sign.id !== user?.user_id),
       }));
     } else {
-      setSigns(signs.filter((sign) => sign.staff_name !== user));
+      setSigns(signs.filter((sign) => sign.id !== user?.user_id));
     }
   } else {
     setSigns([
       ...signs,
       {
-        staff_name: user,
+        id: user?.user_id,
+        staff_name: user?.user_name,
         timestamp: new Date().toISOString().replace("T", " ").slice(0, 19),
       },
     ]);

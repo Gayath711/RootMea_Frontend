@@ -223,6 +223,7 @@ const ClientProfile = ({ isNew }) => {
   const [errorMsg, setErrorMsg] = useState("");
   const [customFieldsAll, setCustomFieldsAll] = useState([]);
   const [customFields, setCustomFields] = useState([]);
+  const [badge, setBadge] = useState({});
 
   const mode = clientId && !isNew ? "edit" : "new";
 
@@ -302,6 +303,21 @@ const ClientProfile = ({ isNew }) => {
     });
   }, [customFields]);
 
+  const refetchCustomFields = () => {
+    axios
+      .get(`/clientinfo-api/${clientId}`)
+      .then((response) => {
+        const parsedCF = parseToDnDCustomFields(
+          response.data.custom_fields || []
+        );
+        setCustomFieldsAll(parsedCF);
+        setCustomFields(parsedCF);
+      })
+      .catch((error) => {
+        console.error("Error fetching client data:", error);
+      });
+  };
+
   useEffect(() => {
     if (clientId && !isNew) {
       axios
@@ -319,6 +335,8 @@ const ClientProfile = ({ isNew }) => {
         .catch((error) => {
           console.error("Error fetching client data:", error);
         });
+
+      fetchBadge();
     }
   }, [clientId, isNew]);
 
@@ -421,8 +439,6 @@ const ClientProfile = ({ isNew }) => {
     return isValid;
   };
 
-  console.log({ customFieldsTags });
-
   const handleSave = (event) => {
     event.preventDefault();
 
@@ -480,6 +496,15 @@ const ClientProfile = ({ isNew }) => {
     setShowErrorAlert(false);
   };
 
+  const fetchBadge = async () => {
+    try {
+      const response = await axios.get(`/UserNameBadge/${clientId}`);
+      const { data } = response;
+      setBadge(data);
+    } catch (e) {
+      console.error({ e });
+    }
+  };
   return (
     <div className="h-full bg-gray-50">
       {/* <button
@@ -588,11 +613,16 @@ const ClientProfile = ({ isNew }) => {
         )}
         <div className="border-b border-green-800 mt-2 mb-4"></div>
         <div className="flex">
-          <Sidebar handleClick={handleClick} />
+          <Sidebar
+            handleClick={handleClick}
+            isNew={isNew}
+            isEditable={isEditable}
+          />
           <div className="w-full px-2 space-y-4">
             <div>
               <GeneralInformation
                 id={1}
+                badge={badge}
                 isEdittable={isEditable}
                 clientData={clientData}
                 handleFieldChange={handleFieldChange}
@@ -655,24 +685,27 @@ const ClientProfile = ({ isNew }) => {
 
             <div>
               <CustomFieldsForUser
+                id={9}
                 onChange={(dndItms) => {
                   setCustomFields(dndItms);
                 }}
                 dndItems={customFields}
-                viewMode={true}
-                editMode={!isEditable}
+                viewMode={true && !isNew}
+                editMode={!isEditable && !isNew}
               />
             </div>
 
-            {!isEditable && (
+            {!isNew && !isEditable && (
               <div>
                 <CustomFieldsForAll
+                  id={10}
                   onChange={(dndItms) => {
                     setCustomFieldsAll(dndItms);
                   }}
                   dndItems={customFieldsAll}
                   viewMode={mode === "view"}
                   mode={mode}
+                  refresh={refetchCustomFields}
                 />
               </div>
             )}

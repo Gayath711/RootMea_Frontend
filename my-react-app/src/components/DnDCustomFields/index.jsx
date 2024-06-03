@@ -35,6 +35,8 @@ import CustomFieldsView from "./CustomFieldsView";
 
 function RenderDnDCustomFields({
   onDnDItemsChange,
+  onDnDItemsDeleted,
+  deletedDnDItems = [],
   dndItems = [],
   viewMode = false,
   editMode = false,
@@ -48,6 +50,8 @@ function RenderDnDCustomFields({
     addElement,
     removeElement,
     setSelectedElement,
+    deletedElements,
+    setDeletedElements,
   } = useDnDCustomFieldsContext();
 
   //   {
@@ -323,16 +327,202 @@ function RenderDnDCustomFields({
     },
   ];
 
-  useEffect(() => {
-    onDnDItemsChange && onDnDItemsChange(items);
-  }, [items]);
+  const prevDnDItems = useRef([]); // from parent
+  const prevItems = useRef([]); // in context
 
   useEffect(() => {
-    setElements(dndItems);
+    if (dndItems.length === 0) {
+      if (items.length === 0) {
+        // ignore
+        prevDnDItems.current = [];
+        console.log(
+          "Not Updated: Got new Incomming State both items & dndItems are [] :",
+          dndItems
+        );
+      } else {
+        prevDnDItems.current = [];
+        prevItems.current = items;
+        setElements(dndItems);
+        console.log(
+          "Updated: Got new Incomming State dndItems [] but items [] > 0 :",
+          dndItems
+        );
+      }
+    } else if (
+      JSON.stringify(prevDnDItems.current) !== JSON.stringify(dndItems) &&
+      JSON.stringify(items) !== JSON.stringify(dndItems)
+    ) {
+      prevDnDItems.current = dndItems;
+      prevItems.current = items;
+      setElements(dndItems);
+      console.log("Got new Incomming State :", dndItems);
+    } else {
+      prevDnDItems.current = dndItems;
+      console.log({
+        prevAndDnD:
+          JSON.stringify(prevDnDItems.current) === JSON.stringify(dndItems),
+      });
+      console.log({
+        itemsAndDnD: JSON.stringify(items) === JSON.stringify(dndItems),
+      });
+      console.log("Not Updated");
+    }
+  }, [dndItems]);
+
+  useEffect(() => {
+    if (onDnDItemsChange) {
+      if (items.length === 0) {
+        if (dndItems.length === 0) {
+          // ignore
+          prevItems.current = [];
+          console.log("Not Notified: both items & dndItems are [] :", items);
+        } else {
+          prevItems.current = [];
+          onDnDItemsChange(dndItems);
+          console.log("Notified: items [] but dndItems [] > 0 :", dndItems);
+        }
+      } else if (
+        JSON.stringify(prevDnDItems.current) !== JSON.stringify(items) &&
+        JSON.stringify(items) !== JSON.stringify(dndItems)
+      ) {
+        onDnDItemsChange(items);
+        console.log("Notifying new change :", items);
+      }
+    }
+  }, [items]);
+
+  //--------- Deleted Elements ----------------//
+
+  const prevDnDDeletedItems = useRef([]); // from parent
+  const prevDeleted = useRef([]); // in context
+
+  useEffect(() => {
+    if (deletedDnDItems.length === 0) {
+      if (deletedElements.length === 0) {
+        // ignore
+        prevDnDDeletedItems.current = [];
+        console.log(
+          "Not Updated: Got new Incomming State both deletedElements & deletedDnDItems are [] :",
+          deletedDnDItems
+        );
+      } else {
+        prevDnDDeletedItems.current = [];
+        prevDeleted.current = deletedElements;
+        setDeletedElements(deletedDnDItems);
+        console.log(
+          "Updated: Got new Incomming State deletedDnDItems [] but deletedElements [] > 0 :",
+          deletedDnDItems
+        );
+      }
+    } else if (
+      JSON.stringify(prevDnDDeletedItems.current) !==
+        JSON.stringify(deletedDnDItems) &&
+      JSON.stringify(deletedElements) !== JSON.stringify(deletedDnDItems)
+    ) {
+      prevDnDDeletedItems.current = deletedDnDItems;
+      prevDeleted.current = deletedElements;
+      setDeletedElements(deletedDnDItems);
+      console.log("Got new Incomming State :", deletedDnDItems);
+    } else {
+      prevDnDDeletedItems.current = deletedDnDItems;
+      console.log({
+        prevAndDnD:
+          JSON.stringify(prevDnDDeletedItems.current) ===
+          JSON.stringify(deletedDnDItems),
+      });
+      console.log({
+        deletedElementsAndDnD:
+          JSON.stringify(deletedElements) === JSON.stringify(deletedDnDItems),
+      });
+      console.log("Not Updated");
+    }
+  }, [deletedDnDItems]);
+
+  useEffect(() => {
+    if (onDnDItemsChange) {
+      if (deletedElements.length === 0) {
+        if (deletedDnDItems.length === 0) {
+          // ignore
+          prevDeleted.current = [];
+          console.log(
+            "Not Notified: both deletedElements & deletedDnDItems are [] :",
+            deletedElements
+          );
+        } else {
+          prevDeleted.current = [];
+          onDnDItemsDeleted(deletedDnDItems);
+          console.log(
+            "Notified: deletedElements [] but deletedDnDItems [] > 0 :",
+            deletedDnDItems
+          );
+        }
+      } else if (
+        JSON.stringify(prevDnDDeletedItems.current) !==
+          JSON.stringify(deletedElements) &&
+        JSON.stringify(deletedElements) !== JSON.stringify(deletedDnDItems)
+      ) {
+        onDnDItemsDeleted(deletedElements);
+        console.log("Notifying new change :", deletedElements);
+      }
+    }
+  }, [deletedElements]);
+
+  // ----------------------------------------
+
+  // useEffect(() => {
+  //   if (
+  //     onDnDItemsChange &&
+  //     JSON.stringify(items) !== JSON.stringify(dndItems)
+  //   ) {
+  //     onDnDItemsChange(items);
+  //   }
+  // }, [items]);
+
+  // useEffect(() => {
+  //   if (dndItems) {
+  //     if (JSON.stringify(items) !== JSON.stringify(dndItems)) {
+  //       setElements(dndItems);
+  //     }
+  //   }
+  // }, [dndItems]);
+
+  // useEffect(() => {
+  //   setDeletedElements(deletedDnDItems);
+  // }, []);
+
+  // useEffect(() => {
+  //   if (
+  //     onDnDItemsDeleted &&
+  //     deletedElements.length > 0 &&
+  //     JSON.stringify(deletedElements) !== JSON.stringify(deletedDnDItems)
+  //   ) {
+  //     onDnDItemsDeleted(deletedElements);
+  //   }
+  // }, [deletedElements]);
+
+  // ----------------------------------------------------
+
+  // useEffect(() => {
+  //   if (
+  //     onDnDItemsDeleted &&
+  //     deletedElements.length > 0 &&
+  //     JSON.stringify(deletedElements) !== JSON.stringify(deletedDnDItems)
+  //   ) {
+  //     onDnDItemsDeleted(deletedElements);
+  //   }
+  // }, [deletedElements]);
+
+  // useEffect(() => {
+  //   if (JSON.stringify(deletedElements) !== JSON.stringify(deletedDnDItems)) {
+  //     setDeletedElements(deletedDnDItems);
+  //   }
+  // }, [deletedDnDItems]);
+
+  useEffect(() => {
     setConfig((prev) => {
       return { ...prev, ...config };
     });
-  }, []);
+  }, [config]);
 
   // const onDragStart = (event) => {
   //   console.log({ OnDragStart: event });
@@ -509,6 +699,8 @@ function DnDCustomFields({
   viewMode = false,
   editMode = false,
   config,
+  onDelete = () => {},
+  deletedItems = [],
 }) {
   return (
     <DnDCustomFieldsContextProvider>
@@ -518,6 +710,8 @@ function DnDCustomFields({
         viewMode={viewMode}
         editMode={editMode}
         config={config}
+        onDnDItemsDeleted={onDelete}
+        deletedDnDItems={deletedItems}
       />
     </DnDCustomFieldsContextProvider>
   );

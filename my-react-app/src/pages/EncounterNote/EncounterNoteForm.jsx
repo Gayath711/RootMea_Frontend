@@ -96,9 +96,36 @@ async function fetchCarePlanOptions() {
   }
 }
 
+async function fetchFacilityOptions() {
+  try {
+    const response = await protectedApi.get("/api/resources/facilities");
+    return response.data;
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
+async function fetchProgramOptions() {
+  try {
+    const response = await protectedApi.get("/api/resources/program");
+    return response.data;
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
 async function fetchUsers() {
   try {
     const response = await protectedApi.get("/encounter-notes-users/");
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function fetchUserInfo() {
+  try {
+    const response = await protectedApi.get("/user-details/");
     return response.data;
   } catch (error) {
     console.error(error);
@@ -128,19 +155,24 @@ function EncounterNoteForm() {
   const [clientDetails, setClientDetails] = useState({});
   const [formOptions, setFormOptions] = useState([]);
   const [carePlanOptions, setCarePlanOptions] = useState([]);
+  const [facilityOptions, setFacilityOptions] = useState([]);
+  const [programOptions, setProgramOptions] = useState([]);
   const [userOptions, setUserOptions] = useState([]);
+  const [userInfo, setUserInfo] = useState({});
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
   const [forms, setForms] = useState([]);
   const [formsBackup, setFormsBackup] = useState([]);
   const [carePlans, setCarePlans] = useState([]);
   const [carePlansBackup, setCarePlansBackup] = useState([]);
+  const [signedByBackup, setSignedByBackup] = useState([]);
   const [formData, setFormData] = useState({
     client_id: clientId,
     staff_name: 2,
   });
 
   const [customFields, setCustomFields] = useState([]);
+  const [deletedCustomFields, setDeletedCustomFields] = useState([]);
 
   let customFieldsTags = useMemo(() => {
     return customFields.map((field) => {
@@ -165,6 +197,19 @@ function EncounterNoteForm() {
       return cf;
     });
   }, [customFields]);
+
+  let deletedcustomFieldsID = useMemo(() => {
+    return deletedCustomFields
+      .map((field) => {
+        if (field.id) {
+          return field.id;
+        }
+        return null;
+      })
+      .filter(Boolean);
+  }, [deletedCustomFields]);
+
+  console.log({ customFieldsTags, deletedCustomFields, deletedcustomFieldsID });
 
   const parseToDnDCustomFields = (items) => {
     return items.map((itm) => {
@@ -339,6 +384,32 @@ function EncounterNoteForm() {
   }, []);
 
   useEffect(() => {
+    fetchFacilityOptions()
+      .then((facilityOptionsResponse) => {
+        const convertedFacilityOptions = facilityOptionsResponse.map(
+          (facility) => ({ label: facility.name, value: facility.id })
+        );
+        setFacilityOptions(convertedFacilityOptions);
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetchProgramOptions()
+      .then((programOptionsResponse) => {
+        const convertedProgramOptions = programOptionsResponse.map(
+          (program) => ({ label: program.name, value: program.id })
+        );
+        setProgramOptions(convertedProgramOptions);
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  }, []);
+
+  useEffect(() => {
     fetchUsers()
       .then((fetchUsersResponse) => {
         const convertedUserOptions = fetchUsersResponse.map((user) => ({
@@ -346,6 +417,16 @@ function EncounterNoteForm() {
           value: user.id,
         }));
         setUserOptions(convertedUserOptions);
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetchUserInfo()
+      .then((userInfoResponse) => {
+        setUserInfo(userInfoResponse);
       })
       .catch((error) => {
         console.error(error.message);
@@ -455,7 +536,16 @@ function EncounterNoteForm() {
     signed_by &&
       formDataPayload.append(
         "signed_by",
-        JSON.stringify(signed_by.filter((sign) => !sign?.id) || [])
+        JSON.stringify(
+          signed_by.filter(
+            (sign) =>
+              !signedByBackup.find(
+                (signBackup) =>
+                  signBackup?.id === sign?.id &&
+                  signBackup?.timestamp === sign?.timestamp
+              )
+          ) || []
+        )
       );
     for (let i = 0; i < uploaded_documents?.length; i++) {
       if (uploaded_documents[i] instanceof File) {
@@ -489,6 +579,7 @@ function EncounterNoteForm() {
     // });
 
     formDataPayload.append("tags", JSON.stringify(customFieldsTags || []));
+    formDataPayload.append("tags_deleted", deletedcustomFieldsID || []);
     return formDataPayload;
   };
 
@@ -667,12 +758,12 @@ function EncounterNoteForm() {
                 isEdittable={mode === "view"}
                 fontSize="14px"
                 borderColor="#5bc4bf"
-                options={[
-                  { label: "Facility 1", value: "Facility 1" },
-                  { label: "Facility 2", value: "Facility 2" },
-                  { label: "Facility 3", value: "Facility 3" },
-                ]}
-                selectedOption={formData?.facility || ""}
+                options={facilityOptions}
+                selectedOption={
+                  facilityOptions?.find(
+                    (option) => option.value === formData?.facility
+                  )?.label || ""
+                }
               />
             </div>
             <div className="col-span-6">
@@ -793,12 +884,12 @@ function EncounterNoteForm() {
                 height="37.6px"
                 fontSize="14px"
                 borderColor="#5bc4bf"
-                options={[
-                  { label: "STOMP", value: "STOMP" },
-                  { label: "ECM", value: "ECM" },
-                  { label: "Diabetes", value: "Diabetes" },
-                ]}
-                selectedOption={formData?.program || ""}
+                options={programOptions}
+                selectedOption={
+                  programOptions?.find(
+                    (option) => option.value === formData?.program
+                  )?.label || ""
+                }
               />
             </div>
             <div className="col-span-6">
@@ -839,6 +930,11 @@ function EncounterNoteForm() {
                 onChange={(dndItms) => {
                   setCustomFields(dndItms);
                 }}
+                onDelete={(dndItms) => {
+                  console.log({ onDelItm: dndItms });
+                  setDeletedCustomFields(dndItms);
+                }}
+                deletedItems={deletedCustomFields}
                 dndItems={customFields}
                 viewMode={mode === "view"}
               />
@@ -983,7 +1079,7 @@ function EncounterNoteForm() {
             <div className="col-span-12">
               <SignInput
                 signs={formData?.signed_by || []}
-                user={"User 1"}
+                user={userInfo}
                 disabled={mode === "view"}
                 mode={mode}
                 setSigns={(signs) => {

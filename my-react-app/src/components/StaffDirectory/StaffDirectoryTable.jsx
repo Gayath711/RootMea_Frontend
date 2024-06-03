@@ -11,7 +11,6 @@ import { styled } from "@mui/material/styles";
 import MUIDataGridWrapper from "../HOC/MUIDataGridWrapper";
 
 import EditPNG from "../images/edit.png";
-// import DeletePNG from "../images/delete.png";
 import DeactivatePNG from "../images/deactivate.png";
 
 import { notifySuccess, notifyError } from "../../helper/toastNotication";
@@ -58,11 +57,11 @@ export default function StaffDirectoryTable() {
       .delete(`/api/users/${id}`)
       .then((response) => {
         fetchData();
-        notifySuccess("Deleted Successfully");
+        notifySuccess("Deactivated Successfully");
       })
       .catch((error) => {
-        notifyError("Could not delete, please try again later");
-        console.error("Error deleting:", error);
+        notifyError("Could not deactivate, please try again later");
+        console.error("Error deactivating:", error);
       })
       .finally(() => {});
   };

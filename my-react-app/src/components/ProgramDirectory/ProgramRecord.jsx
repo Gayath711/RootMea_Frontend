@@ -8,7 +8,6 @@ import MUIDataGridWrapper from "../HOC/MUIDataGridWrapper";
 import { notifyError, notifySuccess } from "../../helper/toastNotication";
 
 import EditPNG from "../images/edit.png";
-// import DeletePNG from "../images/delete.png";
 import DeactivatePNG from "../images/deactivate.png";
 
 export default function ProgramRecord() {
@@ -17,7 +16,7 @@ export default function ProgramRecord() {
 
   const [recordData, setRecordData] = useState({});
   const [loadingData, setLoadingData] = useState(true);
-  const [isDeleting, setIsDeleting] = useState(false);
+  const [isDeactivating, setIsDeactivating] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -88,7 +87,7 @@ export default function ProgramRecord() {
   }, [recordData, loadingData]);
 
   const deactivateRecord = () => {
-    setIsDeleting(true);
+    setIsDeactivating(true);
     axios
       .delete(`/api/resources/program/${recordid}`)
       .then((response) => {
@@ -101,7 +100,7 @@ export default function ProgramRecord() {
         console.error("Error Deactivating:", error);
       })
       .finally(() => {
-        setIsDeleting(false);
+        setIsDeactivating(false);
       });
   };
 
@@ -136,7 +135,7 @@ export default function ProgramRecord() {
         </button>
       </div>
       <div class="container mx-auto sm:grid-cols-12 md:grid-cols-7 shadow p-0">
-        {isDeleting && (
+        {isDeactivating && (
           <div className="flex flex-column absolute top-0 left-0 items-center justify-center gap-2 w-100 h-100 bg-gray-100/80">
             <svg
               className="animate-spin -ml-1 mr-3 h-8 w-8 text-teal-500"
@@ -158,7 +157,9 @@ export default function ProgramRecord() {
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
               ></path>
             </svg>
-            <p className="text-base">{isDeleting ? "Deleting..." : ""}</p>
+            <p className="text-base">
+              {isDeactivating ? "Deactivating..." : ""}
+            </p>
           </div>
         )}
 

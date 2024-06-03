@@ -10,7 +10,7 @@ import SystemInformationPNG from "../../image/system-information.png";
 import ExportPNG from "../../image/export.png";
 import ResizePNG from "../../image/resize-sidebar.png";
 
-const Sidebar = ({ handleClick }) => {
+const Sidebar = ({ handleClick, isNew, isEditable }) => {
   const [showSidebar, setShowSidebar] = useState(true);
   const [sidebarWidth, setSidebarWidth] = useState("38.22vh");
 
@@ -120,6 +120,31 @@ const Sidebar = ({ handleClick }) => {
                     />
                     Report Builder
                   </li>
+
+                  <button onClick={() => handleClick(9)}>
+                    {" "}
+                    <li className=" flex items-center mt-10 mb-3">
+                      <img
+                        src={ExportPNG}
+                        className="h-[25px] w-[25px] mr-2"
+                        alt="export"
+                      />
+                      Custom Fields
+                    </li>
+                  </button>
+
+                  {!isNew && !isEditable && (
+                    <button onClick={() => handleClick(10)}>
+                      <li className=" flex items-center mt-10 mb-3">
+                        <img
+                          src={ExportPNG}
+                          className="h-[25px] w-[25px] mr-2"
+                          alt="export"
+                        />
+                        Custom Fields For All
+                      </li>
+                    </button>
+                  )}
                 </ul>
               )}
             </div>
