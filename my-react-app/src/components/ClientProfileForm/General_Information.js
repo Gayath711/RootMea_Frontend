@@ -1,10 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import TextBox from "../common/TextBox";
 import DateInput from "../common/DateInput";
 import TestJPG from "../images/test.jpg";
 import OpenAccordianPNG from "../images/open-accordion.png";
 import ClosedAccordianPNG from "../images/closed-accordion.png";
+
+import SilverBadgeIcon from "../images/badge/silver_badge.svg";
+import GoldBadgeIcon from "../images/badge/gold_badge.svg";
+import BronzeBadgeIcon from "../images/badge/bronze_badge.svg";
 
 const GeneralInformation = ({
   id,
@@ -17,6 +21,25 @@ const GeneralInformation = ({
 
   const toggleAccordion = () => {
     setIsOpen(!isOpen);
+  };
+
+  const renderBadge = () => {
+    let bdgImg = BronzeBadgeIcon;
+    if (badge.badge === "Silver") {
+      bdgImg = SilverBadgeIcon;
+    }
+    if (badge.badge === "Gold") {
+      bdgImg = GoldBadgeIcon;
+    }
+    return (
+      <img
+        src={bdgImg}
+        style={{
+          height: "37px",
+          width: "auto",
+        }}
+      />
+    );
   };
 
   return (
@@ -56,7 +79,9 @@ const GeneralInformation = ({
                   className="w-28 h-28 object-cover rounded-full border-1 border-zinc-500"
                 />
                 {badge?.badge && (
-                  <span className="absolute right-[15px] bottom-0"> </span>
+                  <span className="absolute right-[2px] bottom-0">
+                    {renderBadge()}
+                  </span>
                 )}
               </div>
               <div className="mt-4 text-center text-green-800">
