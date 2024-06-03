@@ -61,6 +61,7 @@ import ClientReferral from "./components/ClientReferral";
 
 // New Client Profile - Create/View/Edit
 import ClientProfile from "./components/ClientProfileForm";
+import BulkUpload from "./components/BulkUpload/BulkUpload";
 
 function App() {
   // Retrieve isLoggedIn state from localStorage on initial render
@@ -193,6 +194,7 @@ function App() {
                     path="/clientprofileform"
                     element={<ClientProfileInputForm />}
                   />
+                  <Route path="/bulk-upload" element={<BulkUpload />} />
 
                   <Route
                     path="/create_form"
