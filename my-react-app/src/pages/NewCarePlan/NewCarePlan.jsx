@@ -6,7 +6,7 @@ import TextAreaElement from "../../components/dynamicform/FormElements/TextAreaE
 import DateInput from "../../components/common/DateInput";
 import FormLabel from "../../components/dynamicform/FormElements/FormLabel";
 import { protectedApi } from "../../services/api";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { notifyError, notifySuccess } from "../../helper/toastNotication";
 import { format } from "date-fns";
 import BasicTable from "../../components/react-table/BasicTable";
@@ -30,14 +30,22 @@ function FormWrapper({ children, label }) {
     </div>
   );
 }
-function AddNewElement({ label, button, required, className, onclick }) {
+function AddNewElement({
+  label,
+  button,
+  required,
+  className,
+  onclick,
+  disabled,
+}) {
   return (
     <div
       className={`flex rounded-[5px] justify-between items-center p-3 m-1 ${className}`}
     >
       {label && <FormLabel required={required}>{label}</FormLabel>}
       <button
-        className="px-4 py-2 bg-[#2F9384] text-sm text-white rounded-[3px]"
+        className="px-4 py-2 bg-[#2F9384] text-sm text-white rounded-[3px] disabled:cursor-not-allowed"
+        disabled={disabled}
         onClick={onclick}
       >
         {button}
@@ -52,6 +60,7 @@ export function FormButtonWrapper({
   button,
   className,
   onclick,
+  disabled,
   img,
 }) {
   return (
@@ -65,7 +74,8 @@ export function FormButtonWrapper({
         )}
         {button ? (
           <button
-            className="px-4 py-2 bg-[#2F9384] text-sm text-white rounded-[3px]"
+            className="px-4 py-2 bg-[#2F9384] text-sm text-white rounded-[3px] disabled:cursor-not-allowed"
+            disabled={disabled}
             onClick={onclick}
           >
             {button}
@@ -79,7 +89,7 @@ export function FormButtonWrapper({
   );
 }
 
-const TableMenu = ({ onRemove }) => {
+const TableMenu = ({ onRemove, disabled }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -93,6 +103,7 @@ const TableMenu = ({ onRemove }) => {
     <div>
       <Button
         id="basic-button"
+        disabled={disabled}
         aria-controls={open ? "basic-menu" : undefined}
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
@@ -101,7 +112,9 @@ const TableMenu = ({ onRemove }) => {
         <img
           src={ThreeDotsIcon}
           alt="Add Section"
-          className="cursor-pointer mx-auto"
+          className={`mx-auto ${
+            disabled ? "cursor-pointer" : "cursor-not-allowed"
+          }`}
         />
       </Button>
       <Menu
@@ -180,6 +193,15 @@ async function fetchCarePlanOptions() {
     return response.data;
   } catch (error) {
     console.error(error);
+  }
+}
+
+async function fetchCarePlanData({ carePlanId }) {
+  try {
+    const response = await protectedApi.get(`/client-care-plans/${carePlanId}`);
+    return response.data;
+  } catch (err) {
+    console.error(err);
   }
 }
 
@@ -295,7 +317,10 @@ function AlertDialog({ setFormData, goalIndex, open, handleClose }) {
 }
 
 const TheNewCarePlan = () => {
-  const { mode } = useParams();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const carePlanId = queryParams.get("carePlanId");
+  const mode = queryParams.get("mode");
 
   const { clientId } = useParams();
   const [clientDetails, setClientDetails] = useState({});
@@ -355,6 +380,7 @@ const TheNewCarePlan = () => {
 
   const disableSubmit = useMemo(() => {
     return (
+      mode === "view" ||
       !formData.user_name ||
       !formData.facility ||
       !formData.program ||
@@ -366,6 +392,18 @@ const TheNewCarePlan = () => {
   useEffect(() => {
     console.log(formData);
   }, [formData]);
+
+  useEffect(() => {
+    if (mode && carePlanId) {
+      fetchCarePlanData({ carePlanId: carePlanId })
+        .then((carePlanDataResponse) => {
+          setFormData(carePlanDataResponse);
+        })
+        .catch((error) => {
+          console.error(error.message);
+        });
+    }
+  }, []);
 
   useEffect(() => {
     fetchUserInfo()
@@ -387,6 +425,25 @@ const TheNewCarePlan = () => {
     }
   }, [userOptions, userInfo]);
 
+  useEffect(() => {
+    console.log(userOptions?.length, typeof formData?.approver_name);
+    if (userOptions?.length && typeof formData?.approver_name === "number") {
+      const user = userOptions.find(
+        (user) => user.value === formData?.approver_name
+      );
+      console.log(user);
+      if (user) {
+        setFormData((prevData) => ({
+          ...prevData,
+          approver_name: {
+            name: user?.label,
+            id: user?.value,
+          },
+        }));
+      }
+    }
+  }, [userOptions, formData]);
+
   const handleFormDataChange = useCallback(
     (fieldName, value) => {
       setFormData((prevData) => ({ ...prevData, [fieldName]: value }));
@@ -406,7 +463,7 @@ const TheNewCarePlan = () => {
       const updatedFormData = {
         ...formData,
         approver_name: formData?.approver_name?.id,
-        request_approval: "Yes",
+        request_approval: true,
         approval_status: formData?.approver_name?.approval_status
           ? "Pending"
           : "Pending",
@@ -541,11 +598,11 @@ const TheNewCarePlan = () => {
     });
   }, []);
 
-  const columns = useMemo(
+  const carePlanStatusColumns = useMemo(
     () => [
       {
         Header: "User",
-        accessor: "user",
+        accessor: "user_name",
         align: "left",
       },
       {
@@ -557,6 +614,8 @@ const TheNewCarePlan = () => {
         Header: "Date",
         accessor: "date",
         align: "left",
+        Cell: ({ value }) =>
+          value ? format(new Date(value), "MM-dd-yyyy") : "",
       },
       {
         Header: "Time",
@@ -571,16 +630,26 @@ const TheNewCarePlan = () => {
     () => [
       { Header: "#", Cell: ({ row }) => row.index + 1 },
       { Header: "Intervention", accessor: "intervention" },
-      { Header: "Due Date", accessor: "due_date" },
-      { Header: "Completed Date", accessor: "completed_date" },
+      {
+        Header: "Due Date",
+        accessor: "due_date",
+        Cell: ({ value }) =>
+          value ? format(new Date(value), "MM-dd-yyyy") : "",
+      },
+      {
+        Header: "Completed Date",
+        accessor: "completed_date",
+        Cell: ({ value }) =>
+          value ? format(new Date(value), "MM-dd-yyyy") : "",
+      },
       { Header: "Notes", accessor: "notes" },
       {
         Header: "Add section",
         accessor: "addSection",
         Cell: ({ row }) => (
           <TableMenu
+            disabled={mode === "view"}
             onRemove={() => {
-              console.log(row);
               handleGoalDataUpdate(
                 goalIndex,
                 "interventions",
@@ -688,6 +757,7 @@ const TheNewCarePlan = () => {
                 height="39px"
                 fontSize="14px"
                 label={"User Name"}
+                isEdittable={mode === "view"}
                 selectedOption={
                   userOptions.find((user) => formData?.user_name === user.value)
                     ?.label || ""
@@ -705,6 +775,7 @@ const TheNewCarePlan = () => {
                 height="39px"
                 fontSize="14px"
                 label={"Facility"}
+                isEdittable={mode === "view"}
                 selectedOption={
                   faclityOptions.find(
                     (facility) => formData?.facility === facility.value
@@ -723,6 +794,7 @@ const TheNewCarePlan = () => {
                 // placeholder="Program"
                 className="rounded-[3px]"
                 label={"Program"}
+                isEdittable={mode === "view"}
                 selectedOption={
                   programOptions.find(
                     (program) => formData?.program === program.value
@@ -741,6 +813,7 @@ const TheNewCarePlan = () => {
                 // placeholder="Care Plan Template"
                 className="rounded-[3px]"
                 label={"Care Plan Template"}
+                isEdittable={mode === "view"}
                 selectedOption={
                   carePlanTemplateOptions.find(
                     (care_plan) =>
@@ -759,6 +832,7 @@ const TheNewCarePlan = () => {
                 className=" h-[37.6px] rounded-[3px]"
                 height="37.6px"
                 label="Created Date"
+                isEdittable={mode === "view"}
                 value={
                   formData?.created_date
                     ? format(formData?.created_date, "MM-dd-yyyy")
@@ -805,6 +879,7 @@ const TheNewCarePlan = () => {
               <FormButtonWrapper
                 label={`Goal ${goalIndex + 1}`}
                 button={"Add new"}
+                disabled={mode === "view"}
                 onclick={handleAddNewGoal}
               >
                 <div className="col-span-6">
@@ -813,6 +888,7 @@ const TheNewCarePlan = () => {
                     className="m-1 h-[37.6px] border-keppel rounded-[3px]"
                     height="37.6px"
                     label={"Start Date"}
+                    isEdittable={mode === "view"}
                     value={
                       formData?.goals?.[goalIndex]?.start_date
                         ? format(
@@ -834,6 +910,7 @@ const TheNewCarePlan = () => {
                     width={"w-full"}
                     className="border-keppel rounded-[3px]"
                     placeholder="Problem"
+                    disabled={mode === "view"}
                     handleChange={(value) =>
                       handleGoalDataUpdate(goalIndex, "problem", value)
                     }
@@ -842,6 +919,7 @@ const TheNewCarePlan = () => {
                 <div className="col-span-12">
                   <TextAreaElement
                     className="h-32 border-keppel rounded-[3px]"
+                    disabled={mode === "view"}
                     value={
                       formData?.goals?.[goalIndex]?.smart_goal_summary || ""
                     }
@@ -860,6 +938,7 @@ const TheNewCarePlan = () => {
                     height="37.6px"
                     fontSize="14px"
                     placeholder="Goal Priority"
+                    isEdittable={mode === "view"}
                     className="border border-[#5BC4BF] border-keppel text-[#858585] rounded-[7px]"
                     selectedOption={
                       formData?.goals?.[goalIndex]?.goal_priority || ""
@@ -879,6 +958,7 @@ const TheNewCarePlan = () => {
                     height="37.6px"
                     fontSize="14px"
                     placeholder="Stage of Readiness"
+                    isEdittable={mode === "view"}
                     className="border border-[#5BC4BF] border-keppel text-[#858585] rounded-[7px]"
                     selectedOption={
                       formData?.goals?.[goalIndex]?.stage_of_readiness || ""
@@ -897,6 +977,7 @@ const TheNewCarePlan = () => {
                   <TextAreaElement
                     className="h-32 border-keppel rounded-[3px]"
                     value={formData?.goals?.[goalIndex]?.client_strengths || ""}
+                    disabled={mode === "view"}
                     onChange={(e) =>
                       handleGoalDataUpdate(
                         goalIndex,
@@ -913,6 +994,7 @@ const TheNewCarePlan = () => {
                     value={
                       formData?.goals?.[goalIndex]?.potential_barriers || ""
                     }
+                    disabled={mode === "view"}
                     onChange={(e) =>
                       handleGoalDataUpdate(
                         goalIndex,
@@ -928,6 +1010,7 @@ const TheNewCarePlan = () => {
                     <AddNewElement
                       className="border border-keppel rounded-[3px]"
                       label="Interventions"
+                      disabled={mode === "view"}
                       button={"Add new"}
                       onclick={handleClickOpen}
                     />
@@ -937,6 +1020,7 @@ const TheNewCarePlan = () => {
                     <FormButtonWrapper
                       label="Interventions"
                       button={"Add new"}
+                      disabled={mode === "view"}
                       className={"mt-6 rounded-[3px]"}
                       onclick={handleClickOpen}
                     >
@@ -961,6 +1045,7 @@ const TheNewCarePlan = () => {
                     height="37.6px"
                     fontSize="14px"
                     placeholder="Status"
+                    isEdittable={mode === "view"}
                     className="border border-[#5BC4BF] border-keppel text-[#858585] mt-[3px] rounded-[7px]"
                     selectedOption={
                       formData?.goals?.[goalIndex]?.goal_status || ""
@@ -981,6 +1066,7 @@ const TheNewCarePlan = () => {
                     dateFormat="MM-dd-yyyy"
                     className="m-1  h-[37.6px] border-keppel rounded-[3px]"
                     height="37.6px"
+                    isEdittable={mode === "view"}
                     value={
                       formData?.goals?.[goalIndex]?.goal_date
                         ? format(
@@ -998,6 +1084,7 @@ const TheNewCarePlan = () => {
                   <TextAreaElement
                     className="h-32 border-keppel rounded-[3px]"
                     value={""}
+                    disabled={mode === "view"}
                     onChange={() => {}}
                     placeholder="Custom Sections / Fields"
                   />
@@ -1006,6 +1093,7 @@ const TheNewCarePlan = () => {
                   <TextAreaElement
                     className="h-32 border-keppel rounded-[3px]"
                     value={formData?.goals?.[goalIndex]?.comments || ""}
+                    disabled={mode === "view"}
                     onChange={(e) =>
                       handleGoalDataUpdate(
                         goalIndex,
@@ -1023,6 +1111,7 @@ const TheNewCarePlan = () => {
                   id="approval"
                   className="w-4 h-4"
                   checked={formData?.approval_status}
+                  disabled={mode === "view"}
                   onChange={(e) => {
                     setApprovalSelection(e.target.checked);
                     handleFormDataChange("approval_status", e.target.checked);
@@ -1043,12 +1132,13 @@ const TheNewCarePlan = () => {
                     {formData?.approver_name?.name}
                   </div>
                   <button
+                    disabled={mode === "view"}
                     onClick={() => {
                       handleFormDataChange("approver_name", null);
                       setApprovalSelection(false);
                       handleFormDataChange("approval_status", false);
                     }}
-                    className="bg-[#5BC4BF] text-white px-3 py-2"
+                    className="bg-[#5BC4BF] text-white px-3 py-2 disabled:cursor-not-allowed"
                   >
                     -
                   </button>
@@ -1085,30 +1175,25 @@ const TheNewCarePlan = () => {
             </div>
           </>
         ) : (
-          <>
-            <div className="m-6">
-              <FormButtonWrapper
-                label="Care plan status"
-                button={"View history"}
-              >
-                <div className="col-span-12">
-                  <BasicTable
-                    type={"carePlanStatus"}
-                    columns={columns}
-                    data={carePlanStatusData}
-                  />
-                </div>
-                <div className="col-span-12 m-auto">
+          <div className="m-6 pb-10">
+            <FormButtonWrapper label="Care plan status" button={"View history"}>
+              <div className="col-span-12">
+                <BasicTable
+                  type={"carePlanStatus"}
+                  columns={carePlanStatusColumns}
+                  data={formData?.care_plan_history}
+                />
+              </div>
+              {/* <div className="col-span-12 m-auto">
                   <button className="border border-[#5BC4BF] w-[150px] font-normal text-base rounded-sm p-2 mr-3">
                     Cancel
                   </button>
                   <button className="bg-[#5BC4BF] text-white p-2 w-[150px] font-normal text-base rounded-sm ">
                     Save/edit
                   </button>
-                </div>
-              </FormButtonWrapper>
-            </div>
-          </>
+                </div> */}
+            </FormButtonWrapper>
+          </div>
         )}
       </div>
       <AlertDialog

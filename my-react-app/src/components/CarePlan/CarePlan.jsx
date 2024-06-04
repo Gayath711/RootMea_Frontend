@@ -3,6 +3,7 @@ import ExternalLinkIcon from "../images/externalLink.svg";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import BasicTable from "../react-table/BasicTable";
 import EyeIcon from "../images/eye.svg";
+import { format } from "date-fns";
 import EditIcon from "../images/edit.svg";
 import { Link } from "react-router-dom";
 import { protectedApi } from "../../services/api";
@@ -47,7 +48,7 @@ const fetchCarePlans = async (clientId) => {
   } catch (error) {
     console.error(error);
   }
-}
+};
 
 function CarePlan({ clientId }) {
   const [open, setOpen] = useState(true);
@@ -72,11 +73,6 @@ function CarePlan({ clientId }) {
         align: "left",
       },
       {
-        Header: "Problems addressed",
-        accessor: "problems_addressed",
-        align: "left",
-      },
-      {
         Header: "Approval status",
         accessor: "approval_status",
       },
@@ -89,6 +85,8 @@ function CarePlan({ clientId }) {
         Header: "Date Created",
         accessor: "created_date",
         align: "left",
+        Cell: ({ value }) =>
+          value ? format(new Date(value), "MM-dd-yyyy") : "",
       },
       // {
       //   Header: "Goal 1 Problem",
@@ -112,8 +110,16 @@ function CarePlan({ clientId }) {
         Header: "Actions",
         Cell: ({ row }) => (
           <div className="flex gap-x-3 items-center mx-auto justify-center">
-            <img src={EditIcon} className="size-4" alt="edit" />
-            <img src={EyeIcon} className="size-4" alt="view" />
+            <Link
+              to={`/care-plan/add/${clientId}/?carePlanId=${row.original.id}&mode=edit`}
+            >
+              <img src={EditIcon} className="size-4" alt="edit" />
+            </Link>
+            <Link
+              to={`/care-plan/add/${clientId}/?carePlanId=${row.original.id}&mode=view`}
+            >
+              <img src={EyeIcon} className="size-4" alt="view" />
+            </Link>
           </div>
         ),
       },
