@@ -81,7 +81,7 @@ const EventModal = ({
                               </span>
                             </div>
                           </div>
-                          {!event.isExternal && !isPast && (
+                          {!event.isExternal && (
                             <div className="flex items-center justify-center gap-2">
                               <button
                                 className="hover:bg-teal-400 rounded p-1.5 m-1"
@@ -104,6 +104,7 @@ const EventModal = ({
                       setShowAlert={null}
                       fetchEvents={fetchEvents}
                       appointmentDetail={event}
+                      appointmentId={event.id}
                       isUpdate
                     />
                   </>

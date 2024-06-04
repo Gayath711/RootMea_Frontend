@@ -15,7 +15,13 @@ const config = {
       boxShadow: {
         'md': '4px 4px 15px 0px rgba(0, 0, 0, 0.13)',
         'lg': '4px 4px 25px 0px rgba(0, 0, 0, 0.15)',
-      }
+      },
+      gridTemplateColumns: {
+        '13': 'repeat(13, minmax(0, 1fr))',
+      },
+      gridColumn: {
+        'span-13': 'span 13 / span 13',
+      },
     },
   },
   plugins: [],

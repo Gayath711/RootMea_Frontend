@@ -91,7 +91,8 @@ export function AppointmentDetail_Modal({
   showPreview,
   event,
   toggleModal,
-  toggleEdit,
+  toggleEdit = () => {},
+  toggleView = () => {},
 }) {
   const startTime = dayjs(event.start.dateTime).format("hh:mm A");
   const endTime = dayjs(event.end.dateTime).format("hh:mm A");
@@ -138,7 +139,24 @@ export function AppointmentDetail_Modal({
                 </span>
               </div>
             </div>
-            {event.attendees && (
+
+            <div className="flex justify-center items-center my-2 gap-2">
+              <button
+                onClick={toggleView}
+                className="px-2.5 sm:px-4 py-1.5 rounded-sm text-white h-fit w-fit bg-[#43B09C] text-[10px] sm:text-xs font-medium"
+              >
+                View
+              </button>
+
+              <button
+                onClick={toggleEdit}
+                className="px-2.5 sm:px-4 py-1.5 rounded-sm text-white h-fit w-fit bg-[#43B09C] text-[10px] sm:text-xs font-medium"
+              >
+                Edit
+              </button>
+            </div>
+
+            {/* {event.attendees && (
               <div className="flex flex-column gap-2 w-full m-1 my-3">
                 {event.attendees.map((each) => {
                   return (
@@ -153,15 +171,15 @@ export function AppointmentDetail_Modal({
                   );
                 })}
               </div>
-            )}
+            )} 
             <div className="flex justify-center items-center my-2 gap-2">
-              <Link
+             <Link
                 to={event.htmlLink}
                 target="_blank"
                 className="px-2.5 sm:px-4 py-1.5 rounded-sm text-white h-fit w-fit bg-[#43B09C] text-[10px] sm:text-xs font-medium"
               >
                 Join
-              </Link>
+              </Link> 
 
               {!event.isExternal && !isPast && (
                 <button
@@ -171,7 +189,7 @@ export function AppointmentDetail_Modal({
                   Edit
                 </button>
               )}
-            </div>
+            </div>*/}
           </div>
         </div>
       </Modal.Body>

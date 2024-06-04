@@ -1,10 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchClientInfoAsync } from "../../store/slices/clientInfoSlice";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import ProfileIcon from "../images/profileIcon2.svg";
-import BadgeIcon from "../images/badge.svg";
+// import BadgeIcon from "../images/badge.svg";
 import "./ClientProfileStyles.css";
+
+import SilverBadgeIcon from "../images/badge/silver_badge.svg";
+import GoldBadgeIcon from "../images/badge/gold_badge.svg";
+import BronzeBadgeIcon from "../images/badge/bronze_badge.svg";
+import axiosInstance from "../../helper/axiosInstance";
 
 const FormInput = ({ title, label, value, disabled = false, ...restProps }) => {
   return (
@@ -24,8 +29,17 @@ const FormInput = ({ title, label, value, disabled = false, ...restProps }) => {
   );
 };
 
-const Content = ({ data }) => {
+const Content = ({ data, badge }) => {
   // Function to format date as 'mm-dd-yyyy'
+
+  let BadgeIcon = BronzeBadgeIcon;
+  if (badge.badge === "Silver") {
+    BadgeIcon = SilverBadgeIcon;
+  }
+  if (badge.badge === "Gold") {
+    BadgeIcon = GoldBadgeIcon;
+  }
+
   const formatDate = (dateString) => {
     if (!dateString) return ""; // Return empty string if date is null or undefined
     const date = new Date(dateString);
@@ -130,7 +144,7 @@ const Content = ({ data }) => {
             <img src={ProfileIcon} className="mx-auto size-44" alt="profile" />
             <img
               src={BadgeIcon}
-              className="absolute bottom-8 left-[9.5rem] size-10 "
+              className="absolute bottom-[1.5rem] left-[8.2rem] size-10 "
               alt="badge"
             />
           </div>
@@ -148,6 +162,22 @@ function ClientProfile({ clientId }) {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.clientInfo.data);
   const dataLoading = useSelector((state) => state.clientInfo.loading);
+
+  const [badge, setBadge] = useState({});
+
+  const fetchBadge = async () => {
+    try {
+      const response = await axiosInstance.get(`/UserNameBadge/${clientId}`);
+      const { data } = response;
+      setBadge(data);
+    } catch (e) {
+      console.error({ e });
+    }
+  };
+
+  useEffect(() => {
+    fetchBadge();
+  }, []);
 
   useState(() => {
     if (!dataLoading) {
@@ -169,7 +199,7 @@ function ClientProfile({ clientId }) {
           className="text-[#585A60] hover:cursor-pointer"
         />
       </div>
-      {open && <Content data={data} />}
+      {open && <Content data={data} badge={badge} />}
     </div>
   );
 }
