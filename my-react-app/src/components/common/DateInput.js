@@ -13,11 +13,24 @@ const DateInput = ({
   height = "7vh",
   className,
   isEdittable,
-  dateFormat="MM/dd/yyyy",
+  dateFormat = "MM/dd/yyyy",
   value,
-  handleChange,
+  handleChange = () => {},
+  handleDateTimeChange = () => {},
   register,
+  showTime = false,
 }) => {
+  let extraProps = {};
+
+  if (showTime) {
+    extraProps = {
+      ...extraProps,
+      timeInputLabel: "Start Time:",
+      dateFormat: "MM/dd/yyyy h:mm aa",
+      showTimeInput: true,
+    };
+  }
+
   const [startDate, setStartDate] = useState(value || null);
   const bgDisabled = isEdittable ? "#F6F7F7" : "";
   const bgLabelDisabled = isEdittable ? "#F6F7F7" : "white";
@@ -54,11 +67,14 @@ const DateInput = ({
         // selected={startDate}
         disabled={isEdittable}
         value={value}
-        onChange={handleDateChange}
+        onChange={(e) => {
+          handleDateChange(e);
+          showTime && handleDateTimeChange && handleDateTimeChange(e);
+        }}
         onFocus={handleFocus}
         onBlur={handleBlur}
         dateFormat={dateFormat}
-        minDate={new Date()} // Disable past dates
+        // minDate={new Date()} // Disable past dates
         // dateFormatCalendar=""
         className={`
                 custom-datepicker
@@ -75,6 +91,7 @@ const DateInput = ({
                 `}
         placeholderText=" "
         selected={value}
+        {...extraProps}
         // onChange={date => setSelectedDate(date)}
         // {...register(name)}
         // style={styles["react-datepicker__month-container"]}
