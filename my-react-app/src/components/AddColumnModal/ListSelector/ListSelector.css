@@ -1,0 +1,44 @@
+.list-selector {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .available-items, .selected-items {
+    width: 200px;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  li {
+    padding: 5px;
+    border: 1px solid #ddd;
+    margin-bottom: 5px;
+    text-align: center;
+  }
+  
+  .buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  button {
+    margin: 5px 0;
+  }
+  
+  h4 {
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  h3, h4 {
+    text-align: center;
+  }
+  

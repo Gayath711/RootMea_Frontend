@@ -33,7 +33,7 @@ function PriorityList() {
       );
 
       setData(response.data);
-      console.log(data);
+      console.log("Priority list",data);
     } catch (error) {
       console.error("Error fetching Client Data:", error);
     }

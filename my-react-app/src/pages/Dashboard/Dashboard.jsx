@@ -1,6 +1,4 @@
 import React from "react";
-import DashboardMainArea from "../../components/DashboardMainArea/DashboardMainArea";
-import Panel from "../../components/Panel/Panel";
 import { useWindowSize } from "../../components/Utils/windowResize";
 import GreetingCard from "../../components/GreetingCard/GreetingCard";
 import TopStats from "../../components/TopStatsCard/TopStatsCard";
@@ -16,6 +14,7 @@ import PriorityListMyPrograms from "../../components/PriorityListMyPrograms/Prio
 import ReferralPrograms from "../../components/ReferralPrograms/ReferralPrograms";
 import AppointmentCalendar from "../../components/AppointmentCalendar/AppointmentCalendar";
 import Encounters from "../../components/Encounters/Encounters";
+import PriorityListNew from "../../components/PriorityListNew/PriorityListNew";
 
 function Dashboard({ onLogout }) {
   const { width } = useWindowSize();
@@ -43,8 +42,8 @@ function Dashboard({ onLogout }) {
           <div className="grid grid-cols-1 sm:gap-7 gap-y-3">
             <div className="col-span-8 grid grid-cols-1 gap-y-7">
               <ClientGoal />
-              <PriorityList />
-              <PriorityListMyPrograms />
+              <PriorityListNew/>
+          
               <ReferralPrograms />
               <AppointmentCalendar />
               <Encounters />
@@ -72,8 +71,7 @@ function Dashboard({ onLogout }) {
           <div className="grid sm:grid-cols-11 grid-cols-1 sm:gap-4 gap-y-3">
             <div className="col-span-8 grid grid-cols-1 gap-y-4">
               <ClientGoal />
-              <PriorityList />
-              <PriorityListMyPrograms />
+              <PriorityListNew/>
               <ReferralPrograms />
               <AppointmentCalendar />
               <Encounters />
