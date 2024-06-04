@@ -10,6 +10,9 @@ import { notifyError, notifySuccess } from "../../helper/toastNotication";
 import EditPNG from "../images/edit.png";
 import DeactivatePNG from "../images/deactivate.png";
 
+import ActivateIcon from "../images/activate_icon.svg";
+import DeactivateIcon from "../images/deactivate_icon.svg";
+
 import MUIDataGridWrapper from "../HOC/MUIDataGridWrapper";
 
 export default function StaffRecord() {
@@ -39,6 +42,8 @@ export default function StaffRecord() {
         setLoadingData(false);
       });
   };
+
+  console.log({ usersData });
 
   const fetchUser = async () => {
     try {
@@ -102,7 +107,6 @@ export default function StaffRecord() {
 
   return (
     <>
-      {" "}
       <div className="w-100 flex flex-row gap-2 justify-end items-center my-1">
         <button
           className="p-1 px-2 hover:bg-teal-400 hover:text-white bg-opacity-50 hover:rounded flex justify-center items-center gap-2"
@@ -118,15 +122,17 @@ export default function StaffRecord() {
           />
         </button>
         <button
-          className="p-1 px-2 hover:bg-red-400 hover:text-white bg-opacity-50 hover:rounded flex justify-center items-center gap-2"
+          className={`p-1 px-2 hover:bg-${
+            !usersData.isActive ? "red" : "teal"
+          }-400 hover:text-white bg-opacity-50 hover:rounded flex justify-center items-center gap-2`}
           onClick={() => {
             deactivateRecord();
           }}
         >
-          <span>Deactivate</span>
+          <span>{!usersData?.isActive ? "Deactivate" : "Activate"}</span>
           <img
-            src={DeactivatePNG}
-            className="w-4 h-4"
+            src={!usersData?.isActive ? DeactivateIcon : ActivateIcon}
+            className="w-6 h-6"
             style={{ display: "block", margin: "0 auto" }}
           />
         </button>
