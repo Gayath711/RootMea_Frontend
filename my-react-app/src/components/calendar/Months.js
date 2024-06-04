@@ -70,6 +70,7 @@ export default function Months({ month, savedEvents, fetchEvents }) {
   };
 
   const [editEvent, setEditEvent] = useState(false);
+  const [viewEvent, setViewEvent] = useState(false);
 
   return (
     <>
@@ -79,55 +80,74 @@ export default function Months({ month, savedEvents, fetchEvents }) {
             {`${month.format("MMM")} ${month.format("YYYY")}`}
           </p>
         </div>
-        {displayedEvents.map((event, index) => (
-          <>
-            {" "}
-            <div key={index} className="m-2 mb-0 relative">
-              <a
-                // href={event.htmlLink}
-                target="_blank"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  toggleDetailModal(index);
-                }}
-              >
-                <div
-                  className={`flex flex-row gap-1 items-center w-full h-7 ${getTitleBackGround()} rounded-tl-sm rounded-tr-sm mx-1`}
+        {displayedEvents.map((event, index) => {
+          let showAppointment = editEvent === index;
+          if (viewEvent === index) {
+            showAppointment = true;
+          }
+
+          return (
+            <>
+              {" "}
+              <div key={index} className="m-2 mb-0 relative">
+                <a
+                  // href={event.htmlLink}
+                  target="_blank"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleDetailModal(index);
+                  }}
                 >
-                  <img
-                    src={event.isExternal ? GoogleIcon : InternalCalendarIcon}
-                    className={`${
-                      event.isExternal
-                        ? "h-[16px] w-[16px] ms-1 bg-white rounded-full"
-                        : "h-[20px] w-[20px] ms-1"
-                    }`}
-                    alt="event-meet"
-                  />
-                  <div className="text-center text-xs font-normal truncate">
-                    {event.summary}
+                  <div
+                    className={`flex flex-row gap-1 items-center w-full h-7 ${getTitleBackGround()} rounded-tl-sm rounded-tr-sm mx-1`}
+                  >
+                    <img
+                      src={event.isExternal ? GoogleIcon : InternalCalendarIcon}
+                      className={`${
+                        event.isExternal
+                          ? "h-[16px] w-[16px] ms-1 bg-white rounded-full"
+                          : "h-[20px] w-[20px] ms-1"
+                      }`}
+                      alt="event-meet"
+                    />
+                    <div className="text-center text-xs font-normal truncate">
+                      {event.meeting_title}
+                    </div>
                   </div>
-                </div>
-              </a>
-            </div>
-            {showDetailModal === index && (
-              <AppointmentDetail_Modal
-                showPreview={showDetailModal === index}
-                toggleModal={() => toggleDetailModal(null)}
-                event={event}
-                toggleEdit={() => setEditEvent(index)}
+                </a>
+              </div>
+              {showDetailModal === index && (
+                <AppointmentDetail_Modal
+                  showPreview={showDetailModal === index}
+                  toggleModal={() => toggleDetailModal(null)}
+                  event={event}
+                  toggleEdit={() => {
+                    setEditEvent(index);
+                    setViewEvent(null);
+                  }}
+                  toggleView={() => {
+                    setEditEvent(null);
+                    setViewEvent(index);
+                  }}
+                />
+              )}
+              <AddAppointment
+                show={showAppointment}
+                toggleModal={() => {
+                  setViewEvent(null);
+                  setEditEvent(null);
+                }}
+                setShowAlert={null}
+                fetchEvents={fetchEvents}
+                appointmentDetail={event}
+                appointmentId={event.id}
+                isUpdate={editEvent === index}
+                isView={viewEvent === index}
               />
-            )}
-            <AddAppointment
-              show={editEvent === index}
-              toggleModal={() => setEditEvent(null)}
-              setShowAlert={null}
-              fetchEvents={fetchEvents}
-              appointmentDetail={event}
-              isUpdate
-            />
-          </>
-        ))}
+            </>
+          );
+        })}
         {additionalEventsCount > 0 && (
           <div
             className="flex items-center justify-center mt-2 text-sm text-[#2F9384] cursor-pointer"

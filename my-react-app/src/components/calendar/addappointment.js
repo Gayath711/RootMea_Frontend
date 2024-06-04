@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import DatePicker from "react-datepicker";
 import { useForm } from "react-hook-form";
 import { format } from "date-fns";
@@ -20,6 +20,8 @@ import Swal from "sweetalert2";
 import axiosInstance from "../../helper/axiosInstance";
 
 import Select from "react-select";
+import { notify } from "../../helper/toastNotication";
+import dayjs from "dayjs";
 
 const AddAppointment_ = ({
   toggleModal,
@@ -390,6 +392,8 @@ const AddAppointment = ({
   show,
   appointmentDetail,
   isUpdate = false,
+  isView = false,
+  appointmentId = null,
 }) => {
   const options = [
     { value: "15 mins before time", label: "15 mins before time" },
@@ -425,40 +429,38 @@ const AddAppointment = ({
   const [endTime, setEndTime] = useState(null);
 
   const [programsOptions, setProgramsOptions] = useState([]);
-  const [facilityOptions, setFacilityOptions] = useState([
-    {
-      label: "Facility 1",
-      value: "1",
-    },
-  ]);
+  const [facilityOptions, setFacilityOptions] = useState([]);
   const [activityOptions, setActivityOptions] = useState([
     {
       label: "Activity 1",
       value: 1,
+      id: 1,
     },
     {
       label: "Activity 2",
       value: 2,
+      id: 2,
     },
     {
       label: "Activity 3",
       value: 3,
+      id: 3,
     },
     {
       label: "Activity 4",
       value: 4,
+      id: 4,
     },
   ]);
-  const [encounterNotesOptions, setEncounterNotesOptions] = useState([
-    { label: "Encounter Notes 1", value: "Encounter Notes 1" },
-    { label: "Encounter Notes 2", value: "Encounter Notes 2" },
-    { label: "Encounter Notes 3", value: "Encounter Notes 3" },
-    { label: "Encounter Notes 4", value: "Encounter Notes 4" },
-  ]);
+  const encounterOptionCache = useRef([]);
+  const [encounterNotesOptions, setEncounterNotesOptions] = useState([]);
   const [clientsOption, setClientsOption] = useState([]);
-  const [isTopicChecked, setIsTopicChecked] = useState(false);
+  const [selectedClients, setSelectedClients] = useState([]);
 
+  const [isTopicChecked, setIsTopicChecked] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [appointmentData, setAppointmentData] = useState({});
 
   const handleDateChange = (name, value) => {
     console.log({ name, value });
@@ -473,8 +475,31 @@ const AddAppointment = ({
     setValue(name, value);
   };
 
+  const handleDateTimeChange = (name, value) => {
+    console.log({ name, value });
+    setValue(name, value);
+    setDate(value);
+  };
+
   const onSubmit = (data) => {
-    // setIsSubmitting(true);
+    setIsSubmitting(true);
+
+    let postData = {
+      topic: data.topic,
+      type: data.type,
+      meeting_title: data.meeting_title,
+      start_time: date,
+      duration: data.duration?.value || "0",
+      description: data.description,
+      google_calendar_link: data.google_calendar_link,
+      // staff: data.staff,
+      facility: data.facility?.value,
+      program: data.program?.value,
+      activity: data.activity?.value,
+      clients: selectedClients.map((itm) => itm.value),
+      linked_encounter_notes:
+        data.linkedEncounterNotes?.map((itm) => itm.value) || [],
+    };
 
     // let start_datetime = new Date(data.date);
     // start_datetime.setHours(data.start_time.getHours());
@@ -486,15 +511,15 @@ const AddAppointment = ({
     // end_datetime.setMinutes(data.end_time.getMinutes());
     // end_datetime.setSeconds(data.end_time.getSeconds());
 
-    // let endpoint = isExternal ? "/create_event/" : "/django/create_event/";
-    // let axiosCall = axios.post;
+    let endpoint = "/appointments/";
+    let axiosCall = axios.post;
 
     console.log({ data });
 
-    // if (isUpdate) {
-    //   endpoint = `/update_event/${appointmentDetail.fullEvent.id}/`;
-    //   axiosCall = isUpdate ? axios.put : axios.post;
-    // }
+    if (isUpdate) {
+      endpoint = `/appointments/${appointmentId}/`;
+      axiosCall = isUpdate ? axios.put : axios.post;
+    }
 
     // let splittedAttendees = data.attendees.split(",").map((email) => {
     //   return {
@@ -509,32 +534,32 @@ const AddAppointment = ({
     //   attendees: splittedAttendees,
     // };
 
-    // axiosCall(`${apiURL}${endpoint}`, event)
-    //   .then((response) => {
-    //     Swal.fire({
-    //       title: "Success!",
-    //       text: `Appointment ${isUpdate ? "Updated" : "Created"}`,
-    //       icon: "success",
-    //       timer: 2000,
-    //     });
-    //     setShowAlert && setShowAlert(true);
-    //     fetchEvents && fetchEvents();
-    //     window.scrollTo({ top: 0, behavior: "smooth" });
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error", error);
-    //     Swal.fire({
-    //       title: "Error!",
-    //       text: `Unable to ${isUpdate ? "Update" : "Create"} Appointment`,
-    //       icon: "error",
-    //       timer: 2000,
-    //     });
-    //   })
-    //   .finally(() => {
-    //     resetAll();
-    //     setIsSubmitting(false);
-    //     toggleModal();
-    //   });
+    axiosCall(`${apiURL}${endpoint}`, postData)
+      .then((response) => {
+        Swal.fire({
+          title: "Success!",
+          text: `Appointment ${isUpdate ? "Updated" : "Created"}`,
+          icon: "success",
+          timer: 2000,
+        });
+        setShowAlert && setShowAlert(true);
+        fetchEvents && fetchEvents();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      })
+      .catch((error) => {
+        console.error("Error", error);
+        Swal.fire({
+          title: "Error!",
+          text: `Unable to ${isUpdate ? "Update" : "Create"} Appointment`,
+          icon: "error",
+          timer: 2000,
+        });
+      })
+      .finally(() => {
+        resetAll();
+        setIsSubmitting(false);
+        toggleModal();
+      });
   };
 
   const handleToggle = (value) => {
@@ -548,31 +573,88 @@ const AddAppointment = ({
     setEndTime(null);
   };
 
-  useEffect(() => {
-    if (isUpdate && show && appointmentDetail) {
-      const { summary, start, end, fullEvent, isExternal } = appointmentDetail;
-      setValue("appointement_title", summary);
-      handleDateChange("date", start.dateTime); // Assuming start.dateTime contains date
-      handleDateChange("start_time", new Date(start.dateTime));
-      handleDateChange("end_time", new Date(end.dateTime));
-      setValue(
-        "attendees",
-        fullEvent.attendees.map((attendee) => attendee.email).join(",")
-      );
-      setIsExternal(isExternal);
-    } else {
-      resetAll();
-      setIsExternal(true);
-    }
-  }, [show, isUpdate, appointmentDetail]);
+  // useEffect(() => {
+  //   if (isUpdate && show && appointmentDetail) {
+  //     const { summary, start, end, fullEvent, isExternal } = appointmentDetail;
+  //     setValue("appointement_title", summary);
+  //     handleDateChange("date", start.dateTime); // Assuming start.dateTime contains date
+  //     handleDateChange("start_time", new Date(start.dateTime));
+  //     handleDateChange("end_time", new Date(end.dateTime));
+  //     setValue(
+  //       "attendees",
+  //       fullEvent.attendees.map((attendee) => attendee.email).join(",")
+  //     );
+  //     setIsExternal(isExternal);
+  //   } else {
+  //     resetAll();
+  //     setIsExternal(true);
+  //   }
+  // }, [show, isUpdate, appointmentDetail]);
 
   useEffect(() => {
-    {
-      show && fetchPrograms();
-      fetchUsername();
-      fetchClients();
+    fetchPrograms();
+    fetchUsername();
+    fetchClients();
+    fetchFacilities();
+  }, []);
+
+  useEffect(() => {
+    if ((isView || isUpdate) && appointmentId) {
+      fetchData();
     }
-  }, [show]);
+  }, [isView, isUpdate, appointmentId]);
+
+  useEffect(() => {
+    let cacheEncounterID = encounterOptionCache.current;
+    const idsNeedToFetch = selectedClients.filter(
+      (item) => !cacheEncounterID.includes(item.id)
+    );
+
+    idsNeedToFetch.map((itm) => fetchEncounterNotes(itm.id));
+  }, [selectedClients]);
+
+  const fetchData = async () => {
+    try {
+      const { data } = await axiosInstance.get(
+        "/appointments/" + appointmentId
+      );
+
+      let setData = {
+        topic: data.topic,
+        type: data.type,
+        meeting_title: data.meeting_title,
+        start_time: data.start_time,
+        duration: data.duration,
+        description: data.description,
+        google_calendar_link: data.google_calendar_link,
+        // staff: data.staff,
+        facility: data.facility,
+        program: data.program,
+        activity: data.activity,
+        clients: data.clients,
+        linked_encounter_notes:
+          data.linked_encounter_notes?.map((itm) => {
+            return itm;
+          }) || [],
+      };
+      handleDateTimeChange("date", data.start_time);
+      setValue("duration", {
+        label: 30,
+        value: 30,
+      });
+      setValue("google_calendar_link", setData.google_calendar_link);
+      setValue("topic", setData.topic);
+      setIsTopicChecked(setData.topic);
+      setValue("type", setData.type);
+      setValue("meeting_title", setData.meeting_title);
+      setValue("description", setData.description);
+      console.log({ setData });
+      setAppointmentData(setData);
+    } catch (error) {
+      // Handle errors here
+      console.error("Error fetching position titles:", error);
+    }
+  };
 
   const fetchPrograms = async () => {
     try {
@@ -589,6 +671,24 @@ const AddAppointment = ({
     } catch (error) {
       // Handle errors here
       console.error("Error fetching position titles:", error);
+    }
+  };
+
+  const fetchFacilities = async () => {
+    try {
+      const response = await axiosInstance.get("/api/resources/facilities");
+      setFacilityOptions(
+        response.data.map((itm) => {
+          return {
+            ...itm,
+            label: itm.name,
+            value: itm.id,
+          };
+        })
+      );
+    } catch (error) {
+      // Handle errors here
+      console.error("Error fetching facilities :", error);
     }
   };
 
@@ -610,18 +710,24 @@ const AddAppointment = ({
     }
   };
 
-  const fetchEncounterNotes = async () => {
+  const fetchEncounterNotes = async (id) => {
     try {
-      const response = await axiosInstance.get("/clientinfo-api");
-      setClientsOption(
-        response.data.map((itm) => {
-          return {
-            ...itm,
-            label: itm.name,
-            value: itm.name,
-          };
-        })
+      encounterOptionCache.current = [...encounterOptionCache.current, id];
+
+      const response = await axiosInstance.get(
+        `/encounters-notes-client/${id}/`
       );
+
+      let data = response.data.map((itm) => {
+        return {
+          ...itm,
+          label: itm.encounter_summary_text_template || `ID : ${itm.id}`,
+          value: itm.id,
+        };
+      });
+      setEncounterNotesOptions((prev) => {
+        return [...prev, ...data];
+      });
     } catch (error) {
       // Handle errors here
       console.error("Error fetching client:", error);
@@ -638,7 +744,67 @@ const AddAppointment = ({
     }
   };
 
+  useEffect(() => {
+    if (appointmentData.program) {
+      let found = programsOptions.find(
+        (itm) => itm.id === appointmentData.program
+      );
+      if (found) {
+        setValue("program", found);
+      }
+    }
+  }, [programsOptions, isView, isUpdate, appointmentData]);
+
+  useEffect(() => {
+    if (appointmentData.facility) {
+      let found = facilityOptions.find(
+        (itm) => itm.id === appointmentData.facility
+      );
+      if (found) {
+        setValue("facility", found);
+      }
+    }
+  }, [facilityOptions, isView, isUpdate, appointmentData]);
+
+  useEffect(() => {
+    if (appointmentData.activity) {
+      let found = activityOptions.find(
+        (itm) => itm.id === appointmentData.activity
+      );
+
+      if (found) {
+        setValue("activity", found);
+      }
+    }
+  }, [activityOptions, isView, isUpdate, appointmentData]);
+
+  useEffect(() => {
+    if (appointmentData.clients) {
+      let clients = clientsOption
+        .filter((itm) => appointmentData.clients.includes(itm.id))
+        .map((itm) => itm);
+
+      console.log({ clients });
+      setValue("clients", clients);
+      setValue("client", clients);
+      setSelectedClients(clients);
+    }
+  }, [clientsOption, isView, isUpdate, appointmentData]);
+
+  useEffect(() => {
+    if (appointmentData.linked_encounter_notes) {
+      let item = encounterNotesOptions
+        .filter((itm) =>
+          appointmentData.linked_encounter_notes.includes(itm.id)
+        )
+        .map((itm) => itm);
+      setValue("linkedEncounterNotes", item);
+    }
+  }, [encounterNotesOptions, isView, isUpdate, appointmentData]);
+
   const [errFields, setErrFields] = useState({});
+
+  let disableEdit = isView;
 
   return (
     <Modal
@@ -647,12 +813,17 @@ const AddAppointment = ({
       backdrop="static"
       keyboard={false}
       centered
+      size="lg"
     >
       <Modal.Header className="m-0 p-2 w-100 text-white text-base bg-[#5BC4BF] font-medium">
         <Modal.Title className="m-0 p-0 w-100">
           <div className="flex justify-between items-center w-100">
             <span className="text-white text-base">
-              {isUpdate ? "Update Appointment" : "Add New Appointment"}
+              {isView
+                ? "Appointment"
+                : isUpdate
+                ? "Update Appointment"
+                : "Add New Appointment"}
             </span>
             <button onClick={() => toggleModal()}>
               <img
@@ -667,15 +838,18 @@ const AddAppointment = ({
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <div className="flex relative items-center justify-center">
-          <form onSubmit={handleSubmit(onSubmit)} className="p-4">
+        <div className="flex relative items-center justify-centerx">
+          <form onSubmit={handleSubmit(onSubmit)} className="p-4 w-100">
             <div className="mb-4">
-              <label className="block mb-2">Topic</label>
-              <input
-                type="checkbox"
-                {...register("topic")}
-                onChange={(e) => setIsTopicChecked(e.target.checked)} // Update state on change
-              />
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  {...register("topic")}
+                  disabled={disableEdit}
+                  onChange={(e) => setIsTopicChecked(e.target.checked)} // Update state on change
+                />
+                <label className="block mb-2">Topic</label>
+              </div>
             </div>
 
             <div className="mb-4 grid grid-cols-2 gap-4">
@@ -687,9 +861,14 @@ const AddAppointment = ({
                   render={({ field }) => (
                     <Select
                       {...field}
+                      name="clients"
                       options={clientsOption}
                       isMulti
-                      isDisabled={isTopicChecked}
+                      isDisabled={isTopicChecked || disableEdit}
+                      onChange={(sel) => {
+                        setSelectedClients(sel);
+                        setValue("client", sel);
+                      }}
                       styles={{
                         control: (styles) => ({
                           ...styles,
@@ -707,7 +886,7 @@ const AddAppointment = ({
                       }}
                     />
                   )}
-                  rules={{ required: "Client is required" }}
+                  // rules={{ required: "Client is required" }}
                 />
                 {errors.client && (
                   <p className="text-red-500">{errors.client.message}</p>
@@ -719,7 +898,9 @@ const AddAppointment = ({
                   type="text"
                   className="form-control text-xs p-2.5 border-teal-500"
                   disabled
-                  {...register("staff", { required: "Staff is required" })}
+                  {...register("staff", {
+                    // required: "Staff is required"
+                  })}
                 />
                 {errors.staff && (
                   <p className="text-red-500">{errors.staff.message}</p>
@@ -737,7 +918,7 @@ const AddAppointment = ({
                     <Select
                       {...field}
                       options={facilityOptions}
-                      disabled={isUpdate}
+                      isDisabled={disableEdit}
                       styles={{
                         control: (styles) => ({
                           ...styles,
@@ -770,7 +951,7 @@ const AddAppointment = ({
                     <Select
                       {...field}
                       options={programsOptions}
-                      disabled={isUpdate}
+                      isDisabled={disableEdit}
                       styles={{
                         control: (styles) => ({
                           ...styles,
@@ -805,7 +986,7 @@ const AddAppointment = ({
                   <Select
                     {...field}
                     options={activityOptions}
-                    disabled={isUpdate}
+                    isDisabled={disableEdit}
                     className="w-100"
                     styles={{
                       control: (styles) => ({
@@ -835,6 +1016,7 @@ const AddAppointment = ({
               <div>
                 <label className="block mb-2">Type</label>
                 <input
+                  disabled={disableEdit}
                   type="text"
                   defaultValue="Group Visit"
                   className="form-control text-xs p-2.5 border-teal-500"
@@ -847,14 +1029,15 @@ const AddAppointment = ({
               <div>
                 <label className="block mb-2">Meeting Title</label>
                 <input
+                  disabled={disableEdit}
                   type="text"
-                  className="form-control"
-                  {...register("meetingTitle", {
+                  className="form-control text-xs p-2.5 border-teal-500"
+                  {...register("meeting_title", {
                     required: "Meeting Title is required",
                   })}
                 />
-                {errors.meetingTitle && (
-                  <p className="text-red-500">{errors.meetingTitle.message}</p>
+                {errors.meeting_title && (
+                  <p className="text-red-500">{errors.meeting_title.message}</p>
                 )}
               </div>
             </div>
@@ -864,16 +1047,28 @@ const AddAppointment = ({
                 <label className="block mb-2">Start Time</label>
                 {/* Your Date component should go here, replace <DateComponent /> with actual component */}
                 <DateInput
-                  name="date"
+                  name="dateTime"
                   // placeholder="Date"
                   register={register}
+                  isEdittable={disableEdit}
                   registerProps={{ required: true }}
                   value={date}
-                  handleChange={(date) => handleDateChange("date", date)}
+                  handleDateTimeChange={(date) => {
+                    const givenDate = dayjs(date);
+                    const currentDate = dayjs();
+                    const isBefore = givenDate.isBefore(currentDate);
+                    if (isBefore) {
+                      notify("The choosen date is in past", "warning", {
+                        position: "top-center",
+                      });
+                    }
+                    handleDateTimeChange("dateTime", date);
+                  }}
+                  showTime
                   className="text-xs p-2.5 border-teal-500"
                 />
-                {errors.startTime && (
-                  <p className="text-red-500">{errors.startTime.message}</p>
+                {errors.dateTime && (
+                  <p className="text-red-500">{errors.dateTime.message}</p>
                 )}
               </div>
               <div>
@@ -888,6 +1083,7 @@ const AddAppointment = ({
                         value,
                         label: value,
                       }))}
+                      isDisabled={disableEdit}
                       styles={{
                         control: (styles) => ({
                           ...styles,
@@ -909,9 +1105,29 @@ const AddAppointment = ({
               </div>
             </div>
 
+            <div>
+              <div className="mb-4">
+                <label className="block mb-2">Google Calendar Link</label>
+                <input
+                  type="text"
+                  className="form-control text-xs p-2.5 border-teal-500"
+                  disabled={disableEdit}
+                  {...register("google_calendar_link", {
+                    // required: "google_calendar_link is required"
+                  })}
+                />
+                {errors.google_calendar_link && (
+                  <p className="text-red-500">
+                    {errors.google_calendar_link.message}
+                  </p>
+                )}
+              </div>
+            </div>
+
             <div className="mb-4">
               <label className="block mb-2">Description</label>
               <textarea
+                disabled={disableEdit}
                 rows={5}
                 {...register("description")}
                 className="form-control text-xs p-2.5 border-teal-500"
@@ -929,6 +1145,7 @@ const AddAppointment = ({
                       {...field}
                       options={encounterNotesOptions}
                       isMulti
+                      isDisabled={disableEdit}
                       styles={{
                         control: (styles) => ({
                           ...styles,
@@ -954,14 +1171,18 @@ const AddAppointment = ({
               <div className="p-3">
                 {/* <div className="text-gray-400 text-xs">Save to Draft</div> */}
               </div>
-              <div className="p-3">
-                <button
-                  type="submit"
-                  className="w-54 h-10 bg-[#43B09C] rounded text-xs text-white p-2"
-                >
-                  {isUpdate ? "Update Appointment" : "Submit Your Appointment"}
-                </button>
-              </div>
+              {!disableEdit && (
+                <div className="p-3">
+                  <button
+                    type="submit"
+                    className="w-54 h-10 bg-[#43B09C] rounded text-xs text-white p-2"
+                  >
+                    {isUpdate
+                      ? "Update Appointment"
+                      : "Submit Your Appointment"}
+                  </button>
+                </div>
+              )}
             </div>
           </form>
           {isSubmitting && (
