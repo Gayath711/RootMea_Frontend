@@ -94,7 +94,7 @@ export default function ProgramRecord() {
     axios
       .delete(`/api/resources/program/${recordid}`)
       .then((response) => {
-        navigate(-1);
+        // navigate(-1);
         fetchData();
         notifySuccess("Deactivated Successfully");
       })
@@ -125,15 +125,15 @@ export default function ProgramRecord() {
         </button>
         <button
           className={`p-1 px-2 hover:bg-${
-            !recordData.isActive ? "red" : "teal"
+            recordData.is_active ? "red" : "teal"
           }-400 hover:text-white bg-opacity-50 hover:rounded flex justify-center items-center gap-2`}
           onClick={() => {
             deactivateRecord();
           }}
         >
-          <span>{!recordData?.isActive ? "Deactivate" : "Activate"}</span>
+          <span>{recordData?.is_active ? "Deactivate" : "Activate"}</span>
           <img
-            src={!recordData?.isActive ? DeactivateIcon : ActivateIcon}
+            src={recordData?.is_active ? DeactivateIcon : ActivateIcon}
             className="w-6 h-6"
             style={{ display: "block", margin: "0 auto" }}
           />

@@ -92,8 +92,9 @@ export default function StaffRecord() {
     axios
       .delete(`/api/users/${recordid}`)
       .then((response) => {
-        navigate(-1);
+        // navigate(-1);
         fetchData();
+        fetchUser();
         notifySuccess("Deactivated Successfully");
       })
       .catch((error) => {
@@ -123,15 +124,15 @@ export default function StaffRecord() {
         </button>
         <button
           className={`p-1 px-2 hover:bg-${
-            !usersData.isActive ? "red" : "teal"
+            usersData.is_active ? "red" : "teal"
           }-400 hover:text-white bg-opacity-50 hover:rounded flex justify-center items-center gap-2`}
           onClick={() => {
             deactivateRecord();
           }}
         >
-          <span>{!usersData?.isActive ? "Deactivate" : "Activate"}</span>
+          <span>{usersData?.is_active ? "Deactivate" : "Activate"}</span>
           <img
-            src={!usersData?.isActive ? DeactivateIcon : ActivateIcon}
+            src={usersData?.is_active ? DeactivateIcon : ActivateIcon}
             className="w-6 h-6"
             style={{ display: "block", margin: "0 auto" }}
           />
