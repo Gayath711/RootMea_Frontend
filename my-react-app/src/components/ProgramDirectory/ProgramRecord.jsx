@@ -10,6 +10,9 @@ import { notifyError, notifySuccess } from "../../helper/toastNotication";
 import EditPNG from "../images/edit.png";
 import DeactivatePNG from "../images/deactivate.png";
 
+import ActivateIcon from "../images/activate_icon.svg";
+import DeactivateIcon from "../images/deactivate_icon.svg";
+
 export default function ProgramRecord() {
   const { recordid } = useParams();
   const navigate = useNavigate();
@@ -91,7 +94,7 @@ export default function ProgramRecord() {
     axios
       .delete(`/api/resources/program/${recordid}`)
       .then((response) => {
-        navigate(-1);
+        // navigate(-1);
         fetchData();
         notifySuccess("Deactivated Successfully");
       })
@@ -121,17 +124,19 @@ export default function ProgramRecord() {
           />
         </button>
         <button
-          className="p-1 px-2 hover:bg-red-400 hover:text-white bg-opacity-50 hover:rounded flex justify-center items-center gap-2"
+          className={`p-1 px-2 hover:bg-${
+            recordData.is_active ? "red" : "teal"
+          }-400 hover:text-white bg-opacity-50 hover:rounded flex justify-center items-center gap-2`}
           onClick={() => {
             deactivateRecord();
           }}
         >
-          <span>Deactivate</span>
+          <span>{recordData?.is_active ? "Deactivate" : "Activate"}</span>
           <img
-            src={DeactivatePNG}
-            className="w-4 h-4"
+            src={recordData?.is_active ? DeactivateIcon : ActivateIcon}
+            className="w-6 h-6"
             style={{ display: "block", margin: "0 auto" }}
-          />{" "}
+          />
         </button>
       </div>
       <div class="container mx-auto sm:grid-cols-12 md:grid-cols-7 shadow p-0">
