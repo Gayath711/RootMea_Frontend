@@ -32,20 +32,21 @@ function BulkUploadComponent() {
 
   const handleUpload = () => {
     if (!selectedTableName || !file) {
-      setMessage("Table name and CSV file are required");
+      setMessage("Table name and XLS file are required");
       setErrorReport(null);
       return;
     }
 
-    setMessage("Uploading CSV file...");
+    setMessage("Uploading XLS file...");
     setErrorReport(null);
 
     const formData = new FormData();
     formData.append("table_name", selectedTableName);
-    formData.append("csv_file", file);
+    formData.append("xls_file", file); // Change 'csv_file' to 'xls_file'
 
     axios
       .post(`${apiURL}/upload_csv_to_table/`, formData, {
+        // Change the endpoint URL
         responseType: "blob",
       })
       .then((response) => {
@@ -56,8 +57,13 @@ function BulkUploadComponent() {
           const errorMessage = response.data.message;
           setMessage(errorMessage);
           setErrorReport(null);
-        } else if (response.headers["content-type"] === "text/csv") {
-          const blob = new Blob([response.data], { type: "text/csv" });
+        } else if (
+          response.headers["content-type"] ===
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        ) {
+          const blob = new Blob([response.data], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          });
           const url = window.URL.createObjectURL(blob);
           setErrorReport(url);
           setMessage(
@@ -85,7 +91,7 @@ function BulkUploadComponent() {
     if (errorReport) {
       const link = document.createElement("a");
       link.href = errorReport;
-      link.setAttribute("download", "error_report.csv");
+      link.setAttribute("download", "error_report.xlsx"); // Change the file extension
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -109,7 +115,7 @@ function BulkUploadComponent() {
 
       const link = document.createElement("a");
       link.href = url;
-      link.download = `${selectedTableName}.csv`;
+      link.download = `${selectedTableName}.xlsx`; // Change the file extension
       document.body.appendChild(link);
       link.click();
 
@@ -179,7 +185,7 @@ function BulkUploadComponent() {
                   id="file"
                   onChange={handleFileChange}
                   className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
-                  accept=".csv"
+                  accept=".xls, .xlsx" // Update this line
                 />
                 <span className="text-gray-600 mr-2">Upload your file</span>
                 <svg
