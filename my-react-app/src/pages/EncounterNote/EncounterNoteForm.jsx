@@ -20,8 +20,20 @@ import CollapseCloseSvg from "../../components/images/collapse-close.svg";
 import { format } from "date-fns";
 import "./EncounterNoteFormStyles.css";
 
-function FormWrapper({ children, label, isCollapsable, gridClass = "grid-cols-12", initialState = true }) {
+function FormWrapper({
+  children,
+  label,
+  isCollapsable,
+  gridClass = "grid-cols-12",
+  initialState = true,
+}) {
   const [show, setShow] = useState(initialState);
+
+  useEffect(() => {
+    if (!show) {
+      setShow(initialState);
+    }
+  }, [initialState]);
 
   return (
     <div className="rounded-[6px] border border-keppel">
@@ -341,12 +353,13 @@ function EncounterNoteForm() {
   }, [formData]);
 
   useEffect(() => {
-     if (!mode)
-    setFormData((prev) => ({
-      ...prev,
-      staff_name: userOptions?.find((user) => user.value === userInfo?.user_id)
-        ?.value,
-    }));
+    if (!mode)
+      setFormData((prev) => ({
+        ...prev,
+        staff_name: userOptions?.find(
+          (user) => user.value === userInfo?.user_id
+        )?.value,
+      }));
   }, [userOptions, userInfo]);
 
   useEffect(() => {
@@ -587,12 +600,19 @@ function EncounterNoteForm() {
     //   };
     // });
 
+    console.log("--- Payload Start ----");
+    console.log({ customFieldsTags, deletedcustomFieldsID });
+    console.log("--- Payload End ----");
+
     formDataPayload.append("tags", JSON.stringify(customFieldsTags || []));
-    formDataPayload.append("tags_deleted", deletedcustomFieldsID || []);
+    formDataPayload.append(
+      "tags_deleted",
+      JSON.stringify(deletedcustomFieldsID || [])
+    );
     return formDataPayload;
   };
 
-  const handleCreate = useCallback(async () => {
+  const handleCreate = async () => {
     try {
       const formDataPayload = await handleCreatePayload();
       const response = await protectedApi.post(
@@ -611,19 +631,12 @@ function EncounterNoteForm() {
     } catch (error) {
       console.error(error);
     }
-  }, [
-    formData,
-    clientId,
-    navigate,
-    formsBackup,
-    carePlansBackup,
-    customFields,
-    customFieldsTags,
-  ]);
+  };
 
-  const handleUpdate = useCallback(async () => {
+  const handleUpdate = async () => {
     try {
-      const formDataPayload = await handleCreatePayload();
+      const formDataPayload = handleCreatePayload();
+      console.log({ formDataPayload });
       const response = await protectedApi.put(
         `/encounter-notes-update/${encounterId}/`,
         formDataPayload
@@ -635,16 +648,7 @@ function EncounterNoteForm() {
     } catch (error) {
       console.error(error);
     }
-  }, [
-    encounterId,
-    formData,
-    clientId,
-    navigate,
-    formsBackup,
-    carePlansBackup,
-    customFields,
-    customFieldsTags,
-  ]);
+  };
 
   return (
     <div className="mx-1" style={{ fontFamily: "poppins" }}>
@@ -932,7 +936,7 @@ function EncounterNoteForm() {
           <FormWrapper
             label="Custom Fields"
             isCollapsable={true}
-            initialState={false}
+            initialState={customFields.length > 0}
           >
             <div className="col-span-12">
               <DnDCustomFields
@@ -1102,7 +1106,7 @@ function EncounterNoteForm() {
 
           <FormWrapper label="Billing Details" gridClass="grid-cols-13">
             <div className="col-span-4">
-            <DropDown
+              <DropDown
                 name="billing_status"
                 placeholder="Billing Status"
                 // handleChange={(data) =>
@@ -1119,9 +1123,15 @@ function EncounterNoteForm() {
                     value: "ECM Enabling Service",
                   },
                   { label: "Submitted via AMD*", value: "Submitted via AMD*" },
-                  { label: "Submitted via invoice", value: "Submitted via invoice" },
+                  {
+                    label: "Submitted via invoice",
+                    value: "Submitted via invoice",
+                  },
                   { label: "Missing Insurance", value: "Missing Insurance" },
-                  { label: "Missing/Insufficient Notes", value: "Missing/Insufficient Notes" },
+                  {
+                    label: "Missing/Insufficient Notes",
+                    value: "Missing/Insufficient Notes",
+                  },
                 ]}
                 // selectedOption={formData?.note_template || ""}
               />
