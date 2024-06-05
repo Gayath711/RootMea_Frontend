@@ -1,4 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import PageTitle from "../../components/PageTitle/PageTitle";
 import InputElement from "../../components/dynamicform/FormElements/InputElement";
 import ProfilePicture from "../../image/profile_picture.svg";
@@ -89,7 +94,13 @@ export function FormButtonWrapper({
   );
 }
 
-const TableMenu = ({ onRemove, disabled }) => {
+const TableMenu = ({
+  index,
+  onRemove,
+  handleClickOpen,
+  disabled,
+  setInterventionUpdateIndex,
+}) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -97,6 +108,12 @@ const TableMenu = ({ onRemove, disabled }) => {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+  const onEdit = () => {
+    console.log(index);
+    setInterventionUpdateIndex(index);
+    handleClickOpen();
+    handleClose();
   };
 
   return (
@@ -126,6 +143,7 @@ const TableMenu = ({ onRemove, disabled }) => {
           "aria-labelledby": "basic-button",
         }}
       >
+        <MenuItem onClick={onEdit}>Edit</MenuItem>
         <MenuItem onClick={onRemove}>Remove</MenuItem>
       </Menu>
     </div>
@@ -205,8 +223,24 @@ async function fetchCarePlanData({ carePlanId }) {
   }
 }
 
-function AlertDialog({ setFormData, goalIndex, open, handleClose }) {
+function AlertDialog({
+  formData,
+  setFormData,
+  goalIndex,
+  open,
+  handleClose,
+  interventionUpdateIndex,
+  setInterventionUpdateIndex,
+}) {
   const [interventionData, setInterventionData] = useState({});
+
+  useEffect(() => {
+    if (interventionUpdateIndex !== null) {
+      setInterventionData(
+        formData?.goals?.[goalIndex]?.interventions?.[interventionUpdateIndex]
+      );
+    }
+  }, [interventionUpdateIndex]);
 
   const handleAddNewIntervention = useCallback(() => {
     setFormData((prevData) => {
@@ -214,6 +248,19 @@ function AlertDialog({ setFormData, goalIndex, open, handleClose }) {
       goals[goalIndex].interventions.push(interventionData);
       return { ...prevData, goals };
     });
+    handleClose();
+    setInterventionData({});
+  }, [interventionData]);
+
+  const handleUpdateIntervention = useCallback(() => {
+    setFormData((prevData) => {
+      const goals = [...prevData.goals];
+      goals[goalIndex].interventions[interventionUpdateIndex] =
+        interventionData;
+      return { ...prevData, goals };
+    });
+
+    setInterventionUpdateIndex(null);
     handleClose();
     setInterventionData({});
   }, [interventionData]);
@@ -303,10 +350,14 @@ function AlertDialog({ setFormData, goalIndex, open, handleClose }) {
                 Cancel
               </button>
               <button
-                onClick={handleAddNewIntervention}
+                onClick={
+                  interventionUpdateIndex !== null
+                    ? handleUpdateIntervention
+                    : handleAddNewIntervention
+                }
                 className="bg-[#5BC4BF] text-black p-2 w-[150px] font-normal text-base rounded-[3px] "
               >
-                Add New
+                {interventionUpdateIndex !== null ? "Update" : "Add New"}
               </button>
             </div>
           </DialogContentText>
@@ -338,6 +389,8 @@ const TheNewCarePlan = () => {
     { label: "Care Plan Template 4", value: "Care Plan Template 4" },
   ]);
   const [openApprovalSelection, setApprovalSelection] = useState(false);
+  const [interventionUpdateIndex, setInterventionUpdateIndex] = useState(null);
+  const [previousApprover, setPreviousApprover] = useState(null);
 
   const goalPriorityOptions = useMemo(
     () => [
@@ -397,7 +450,12 @@ const TheNewCarePlan = () => {
     if (mode && carePlanId) {
       fetchCarePlanData({ carePlanId: carePlanId })
         .then((carePlanDataResponse) => {
-          setFormData(carePlanDataResponse);
+          const convertedGoals = carePlanDataResponse?.goals?.map((goal) => ({
+            ...goal,
+            interventions_deleted: [],
+          }));
+          setFormData({ ...carePlanDataResponse, goals: convertedGoals });
+          setPreviousApprover(carePlanDataResponse?.approver_name);
         })
         .catch((error) => {
           console.error(error.message);
@@ -426,12 +484,10 @@ const TheNewCarePlan = () => {
   }, [userOptions, userInfo]);
 
   useEffect(() => {
-    console.log(userOptions?.length, typeof formData?.approver_name);
     if (userOptions?.length && typeof formData?.approver_name === "number") {
       const user = userOptions.find(
         (user) => user.value === formData?.approver_name
       );
-      console.log(user);
       if (user) {
         setFormData((prevData) => ({
           ...prevData,
@@ -458,20 +514,26 @@ const TheNewCarePlan = () => {
     }));
   }, []);
 
+  const createPayloadData = useCallback(() => {
+    const updatedFormData = {
+      ...formData,
+      approver_name: formData?.approver_name?.id,
+      request_approval: true,
+      approval_status: formData?.approver_name?.approval_status
+        ? "Pending"
+        : "Pending",
+    };
+    if (!formData?.approver_name) {
+      delete updatedFormData?.approver_name;
+      delete updatedFormData?.approval_status;
+      delete updatedFormData?.request_approval;
+    }
+    return updatedFormData;
+  }, [formData]);
+
   const handleCreateNewCarePlan = useCallback(async () => {
     try {
-      const updatedFormData = {
-        ...formData,
-        approver_name: formData?.approver_name?.id,
-        request_approval: true,
-        approval_status: formData?.approver_name?.approval_status
-          ? "Pending"
-          : "Pending",
-      };
-      if (!formData?.approver_name) {
-        delete updatedFormData?.approver_name;
-        delete updatedFormData.approval_status;
-      }
+      const updatedFormData = createPayloadData();
 
       const response = await protectedApi.post(
         "/api/careplan/",
@@ -486,6 +548,32 @@ const TheNewCarePlan = () => {
       console.error("Error creating care plan");
     }
   }, [formData]);
+
+  const handleUpdateCarePlan = useCallback(async () => {
+    try {
+      const updatedFormData = createPayloadData();
+      updatedFormData.approval_updated =
+        updatedFormData?.approver_name === previousApprover
+          ? false
+          : true;
+
+      delete updatedFormData?.care_plan_history;
+
+      console.log(updatedFormData);
+
+      const response = await protectedApi.put(
+        `/care-plan_update/${carePlanId}/`,
+        updatedFormData
+      );
+
+      if (response.status === 200) {
+        notifySuccess("Care Plan updated successfully");
+        navigate(`/clientchart/${clientId}`);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }, [formData, previousApprover, carePlanId]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -598,6 +686,37 @@ const TheNewCarePlan = () => {
     });
   }, []);
 
+  const handleRemoveIntervention = useCallback(
+    (goalIndex, interventionIndex) => {
+      setFormData((prevData) => {
+        const updatedInterventions = formData?.goals?.[
+          goalIndex
+        ]?.interventions?.filter((_, index) => index !== interventionIndex);
+        let interventionsDeleted = [];
+        const interventionObj =
+          formData?.goals?.[goalIndex]?.interventions?.[interventionIndex];
+        if (formData?.goals?.[goalIndex]?.interventions_deleted) {
+          interventionsDeleted = [
+            ...formData?.goals?.[goalIndex]?.interventions_deleted,
+          ];
+        }
+        if (interventionObj?.id) {
+          interventionsDeleted.push(
+            formData?.goals?.[goalIndex]?.interventions?.[interventionIndex]?.id
+          );
+        }
+        const updatedGoals = [...prevData.goals];
+        updatedGoals[goalIndex].interventions = updatedInterventions;
+        updatedGoals[goalIndex].interventions_deleted = interventionsDeleted;
+
+        const updatedFormData = { ...prevData, goals: updatedGoals };
+
+        return updatedFormData;
+      });
+    },
+    [formData]
+  );
+
   const carePlanStatusColumns = useMemo(
     () => [
       {
@@ -631,14 +750,14 @@ const TheNewCarePlan = () => {
       { Header: "#", Cell: ({ row }) => row.index + 1 },
       { Header: "Intervention", accessor: "intervention" },
       {
-        Header: "Due Date",
-        accessor: "due_date",
+        Header: "Completed Date",
+        accessor: "completed_date",
         Cell: ({ value }) =>
           value ? format(new Date(value), "MM-dd-yyyy") : "",
       },
       {
-        Header: "Completed Date",
-        accessor: "completed_date",
+        Header: "Due Date",
+        accessor: "due_date",
         Cell: ({ value }) =>
           value ? format(new Date(value), "MM-dd-yyyy") : "",
       },
@@ -648,15 +767,12 @@ const TheNewCarePlan = () => {
         accessor: "addSection",
         Cell: ({ row }) => (
           <TableMenu
+            index={row.index}
+            handleClickOpen={handleClickOpen}
             disabled={mode === "view"}
+            setInterventionUpdateIndex={setInterventionUpdateIndex}
             onRemove={() => {
-              handleGoalDataUpdate(
-                goalIndex,
-                "interventions",
-                formData?.goals?.[goalIndex]?.interventions?.filter(
-                  (_, index) => index !== row.index
-                )
-              );
+              handleRemoveIntervention(goalIndex, row.index);
             }}
           />
         ),
@@ -757,7 +873,7 @@ const TheNewCarePlan = () => {
                 height="39px"
                 fontSize="14px"
                 label={"User Name"}
-                isEdittable={mode === "view"}
+                isEdittable={mode}
                 selectedOption={
                   userOptions.find((user) => formData?.user_name === user.value)
                     ?.label || ""
@@ -775,7 +891,7 @@ const TheNewCarePlan = () => {
                 height="39px"
                 fontSize="14px"
                 label={"Facility"}
-                isEdittable={mode === "view"}
+                isEdittable={mode}
                 selectedOption={
                   faclityOptions.find(
                     (facility) => formData?.facility === facility.value
@@ -794,7 +910,7 @@ const TheNewCarePlan = () => {
                 // placeholder="Program"
                 className="rounded-[3px]"
                 label={"Program"}
-                isEdittable={mode === "view"}
+                isEdittable={mode}
                 selectedOption={
                   programOptions.find(
                     (program) => formData?.program === program.value
@@ -813,7 +929,7 @@ const TheNewCarePlan = () => {
                 // placeholder="Care Plan Template"
                 className="rounded-[3px]"
                 label={"Care Plan Template"}
-                isEdittable={mode === "view"}
+                isEdittable={mode}
                 selectedOption={
                   carePlanTemplateOptions.find(
                     (care_plan) =>
@@ -832,7 +948,7 @@ const TheNewCarePlan = () => {
                 className=" h-[37.6px] rounded-[3px]"
                 height="37.6px"
                 label="Created Date"
-                isEdittable={mode === "view"}
+                isEdittable={mode}
                 value={
                   formData?.created_date
                     ? format(formData?.created_date, "MM-dd-yyyy")
@@ -1039,7 +1155,7 @@ const TheNewCarePlan = () => {
               </FormButtonWrapper>
             </div>
             <div className="grid m-6">
-              <FormButtonWrapper label={"Goal 1 Outcome"}>
+              <FormButtonWrapper label={`Goal ${goalIndex + 1} Outcome`}>
                 <div className="col-span-6 mx-1">
                   <DropDown
                     height="37.6px"
@@ -1111,7 +1227,7 @@ const TheNewCarePlan = () => {
                   id="approval"
                   className="w-4 h-4"
                   checked={formData?.approval_status}
-                  disabled={mode === "view"}
+                  disabled={mode === "view" || (mode === "edit" && typeof previousApprover === "number")}
                   onChange={(e) => {
                     setApprovalSelection(e.target.checked);
                     handleFormDataChange("approval_status", e.target.checked);
@@ -1132,7 +1248,7 @@ const TheNewCarePlan = () => {
                     {formData?.approver_name?.name}
                   </div>
                   <button
-                    disabled={mode === "view"}
+                    disabled={mode === "view" || (mode === "edit" && typeof previousApprover === "number")}
                     onClick={() => {
                       handleFormDataChange("approver_name", null);
                       setApprovalSelection(false);
@@ -1153,7 +1269,9 @@ const TheNewCarePlan = () => {
                 </button>
                 <button
                   disabled={disableSubmit}
-                  onClick={handleCreateNewCarePlan}
+                  onClick={
+                    !mode ? handleCreateNewCarePlan : handleUpdateCarePlan
+                  }
                   className="bg-[#5BC4BF] text-white p-2 w-[150px] font-normal text-base rounded-sm disabled:cursor-not-allowed"
                 >
                   Save
@@ -1197,10 +1315,13 @@ const TheNewCarePlan = () => {
         )}
       </div>
       <AlertDialog
+        formData={formData}
         setFormData={setFormData}
         goalIndex={goalIndex}
         open={open}
         handleClose={handleClose}
+        interventionUpdateIndex={interventionUpdateIndex}
+        setInterventionUpdateIndex={setInterventionUpdateIndex}
       />
     </div>
   );
