@@ -1168,18 +1168,25 @@ const AddAppointment = ({
             </div>
 
             <div className="flex flex-row justify-between items-center mb-2">
-              <div className="p-3">
-                {/* <div className="text-gray-400 text-xs">Save to Draft</div> */}
+              <div className="p-3 ps-0">
+                <a
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleModal();
+                  }}
+                  className="text-gray-400 text-xs border-[1px] border-[#43B09C] p-2 px-4"
+                >
+                  Cancel Changes
+                </a>
               </div>
               {!disableEdit && (
-                <div className="p-3">
+                <div className="p-3 pe-0">
                   <button
                     type="submit"
-                    className="w-54 h-10 bg-[#43B09C] rounded text-xs text-white p-2"
+                    className="w-54 h-10 bg-[#43B09C] text-xs text-white p-2 px-4"
                   >
-                    {isUpdate
-                      ? "Update Appointment"
-                      : "Submit Your Appointment"}
+                    {isUpdate ? "Update Change" : "Save Changes"}
                   </button>
                 </div>
               )}
