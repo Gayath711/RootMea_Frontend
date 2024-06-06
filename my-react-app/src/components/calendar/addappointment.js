@@ -421,6 +421,7 @@ const AddAppointment = ({
     control,
     setValue,
     reset,
+    getValues,
     formState: { errors },
   } = useForm();
 
@@ -592,11 +593,13 @@ const AddAppointment = ({
   // }, [show, isUpdate, appointmentDetail]);
 
   useEffect(() => {
-    fetchPrograms();
-    fetchUsername();
-    fetchClients();
-    fetchFacilities();
-  }, []);
+    if (show) {
+      fetchPrograms();
+      fetchUsername();
+      fetchClients();
+      fetchFacilities();
+    }
+  }, [show]);
 
   useEffect(() => {
     if ((isView || isUpdate) && appointmentId) {
@@ -697,9 +700,15 @@ const AddAppointment = ({
       const response = await axiosInstance.get("/clientinfo-api");
       setClientsOption(
         response.data.map((itm) => {
+          const label = `${itm?.first_name || ""} ${itm?.last_name || ""} ${
+            itm?.date_of_birth ? "(" + itm?.date_of_birth + ")" : ""
+          }`;
+
+          console.log({ label });
+
           return {
             ...itm,
-            label: itm?.first_name || "" + itm?.last_name || "",
+            label,
             value: itm?.id,
           };
         })
@@ -1058,9 +1067,13 @@ const AddAppointment = ({
                     const currentDate = dayjs();
                     const isBefore = givenDate.isBefore(currentDate);
                     if (isBefore) {
-                      notify("The choosen date is in past", "warning", {
-                        position: "top-center",
-                      });
+                      notify(
+                        "You are trying to book an appointment in the past",
+                        "warning",
+                        {
+                          position: "top-center",
+                        }
+                      );
                     }
                     handleDateTimeChange("dateTime", date);
                   }}
@@ -1108,14 +1121,25 @@ const AddAppointment = ({
             <div>
               <div className="mb-4">
                 <label className="block mb-2">Google Calendar Link</label>
-                <input
-                  type="text"
-                  className="form-control text-xs p-2.5 border-teal-500"
-                  disabled={disableEdit}
-                  {...register("google_calendar_link", {
-                    // required: "google_calendar_link is required"
-                  })}
-                />
+                {!isView || isUpdate ? (
+                  <input
+                    type="text"
+                    className="form-control text-xs p-2.5 border-teal-500"
+                    disabled={disableEdit || isTopicChecked}
+                    {...register("google_calendar_link", {
+                      // required: "google_calendar_link is required"
+                    })}
+                  />
+                ) : (
+                  <a
+                    href={getValues("google_calendar_link")}
+                    target="_blank"
+                    className="hover:text-teal-700 text-teal-400"
+                  >
+                    {getValues("google_calendar_link") ||
+                      "No Google Calendar Link Exist"}
+                  </a>
+                )}
                 {errors.google_calendar_link && (
                   <p className="text-red-500">
                     {errors.google_calendar_link.message}
@@ -1177,7 +1201,7 @@ const AddAppointment = ({
                   }}
                   className="text-gray-400 text-xs border-[1px] border-[#43B09C] p-2 px-4"
                 >
-                  Cancel Changes
+                  Cancel
                 </a>
               </div>
               {!disableEdit && (
@@ -1186,7 +1210,7 @@ const AddAppointment = ({
                     type="submit"
                     className="w-54 h-10 bg-[#43B09C] text-xs text-white p-2 px-4"
                   >
-                    {isUpdate ? "Update Change" : "Save Changes"}
+                    {isUpdate ? "Update" : "Save"}
                   </button>
                 </div>
               )}
