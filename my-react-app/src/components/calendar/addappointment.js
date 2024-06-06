@@ -422,6 +422,8 @@ const AddAppointment = ({
     setValue,
     reset,
     getValues,
+    watch,
+    resetField,
     formState: { errors },
   } = useForm();
 
@@ -497,7 +499,10 @@ const AddAppointment = ({
       facility: data.facility?.value,
       program: data.program?.value,
       activity: data.activity?.value,
-      clients: selectedClients.map((itm) => itm.value),
+      clients:
+        selectedClients.length > 0
+          ? selectedClients.map((itm) => itm.value)
+          : [],
       linked_encounter_notes:
         data.linkedEncounterNotes?.map((itm) => itm.value) || [],
     };
@@ -811,6 +816,17 @@ const AddAppointment = ({
     }
   }, [encounterNotesOptions, isView, isUpdate, appointmentData]);
 
+  const isTopicWatch = watch("topic");
+
+  useEffect(() => {
+    if (isTopicWatch) {
+      console.log("setting client to []");
+      resetField("client", { defaultValue: [] });
+      resetField("clients", { defaultValue: [] });
+      setSelectedClients([]);
+    }
+  }, [isTopicWatch]);
+
   const [errFields, setErrFields] = useState({});
 
   let disableEdit = isView;
@@ -855,7 +871,7 @@ const AddAppointment = ({
                   type="checkbox"
                   {...register("topic")}
                   disabled={disableEdit}
-                  onChange={(e) => setIsTopicChecked(e.target.checked)} // Update state on change
+                  // onChange={(e) => setIsTopicChecked(e.target.checked)} // Update state on change
                 />
                 <label className="block mb-2">Topic</label>
               </div>
@@ -873,7 +889,7 @@ const AddAppointment = ({
                       name="clients"
                       options={clientsOption}
                       isMulti
-                      isDisabled={isTopicChecked || disableEdit}
+                      isDisabled={isTopicWatch || disableEdit}
                       onChange={(sel) => {
                         setSelectedClients(sel);
                         setValue("client", sel);
@@ -1125,7 +1141,7 @@ const AddAppointment = ({
                   <input
                     type="text"
                     className="form-control text-xs p-2.5 border-teal-500"
-                    disabled={disableEdit || isTopicChecked}
+                    disabled={disableEdit}
                     {...register("google_calendar_link", {
                       // required: "google_calendar_link is required"
                     })}
