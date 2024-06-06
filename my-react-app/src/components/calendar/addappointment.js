@@ -433,28 +433,7 @@ const AddAppointment = ({
 
   const [programsOptions, setProgramsOptions] = useState([]);
   const [facilityOptions, setFacilityOptions] = useState([]);
-  const [activityOptions, setActivityOptions] = useState([
-    {
-      label: "Activity 1",
-      value: 1,
-      id: 1,
-    },
-    {
-      label: "Activity 2",
-      value: 2,
-      id: 2,
-    },
-    {
-      label: "Activity 3",
-      value: 3,
-      id: 3,
-    },
-    {
-      label: "Activity 4",
-      value: 4,
-      id: 4,
-    },
-  ]);
+  const [activityOptions, setActivityOptions] = useState([]);
   const encounterOptionCache = useRef([]);
   const [encounterNotesOptions, setEncounterNotesOptions] = useState([]);
   const [clientsOption, setClientsOption] = useState([]);
@@ -603,6 +582,7 @@ const AddAppointment = ({
       fetchUsername();
       fetchClients();
       fetchFacilities();
+      fetchActivity();
     }
   }, [show]);
 
@@ -679,6 +659,24 @@ const AddAppointment = ({
     } catch (error) {
       // Handle errors here
       console.error("Error fetching position titles:", error);
+    }
+  };
+
+  const fetchActivity = async () => {
+    try {
+      const response = await axiosInstance.get("/activities/");
+      setActivityOptions(
+        response.data.map((itm) => {
+          return {
+            ...itm,
+            label: itm.name,
+            value: itm.id,
+          };
+        })
+      );
+    } catch (error) {
+      // Handle errors here
+      console.error("Error fetching activities :", error);
     }
   };
 

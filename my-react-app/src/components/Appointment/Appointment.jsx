@@ -132,7 +132,11 @@ const AppointmentItem = ({ id, event, fetchEvents, clientList }) => {
 };
 
 function Appointment() {
-  const { eventList, fetchEvents, appointmentsList } = useAppointments();
+  const {
+    eventList,
+    fetchAppointments: fetchEvents,
+    appointmentsList,
+  } = useAppointments();
 
   let upcomingEvents = getUpcomingEvents(appointmentsList);
 
