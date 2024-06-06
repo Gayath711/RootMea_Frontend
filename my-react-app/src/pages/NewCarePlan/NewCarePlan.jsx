@@ -873,6 +873,7 @@ const TheNewCarePlan = () => {
                 height="39px"
                 fontSize="14px"
                 label={"User Name"}
+                required={true}
                 isEdittable={mode}
                 selectedOption={
                   userOptions.find((user) => formData?.user_name === user.value)
@@ -891,6 +892,7 @@ const TheNewCarePlan = () => {
                 height="39px"
                 fontSize="14px"
                 label={"Facility"}
+                required={true}
                 isEdittable={mode}
                 selectedOption={
                   faclityOptions.find(
@@ -910,6 +912,7 @@ const TheNewCarePlan = () => {
                 // placeholder="Program"
                 className="rounded-[3px]"
                 label={"Program"}
+                required={true}
                 isEdittable={mode}
                 selectedOption={
                   programOptions.find(
@@ -930,6 +933,7 @@ const TheNewCarePlan = () => {
                 className="rounded-[3px]"
                 label={"Care Plan Template"}
                 isEdittable={mode}
+                required={true}
                 selectedOption={
                   carePlanTemplateOptions.find(
                     (care_plan) =>
@@ -948,6 +952,7 @@ const TheNewCarePlan = () => {
                 className=" h-[37.6px] rounded-[3px]"
                 height="37.6px"
                 label="Created Date"
+                required={true}
                 isEdittable={mode}
                 value={
                   formData?.created_date

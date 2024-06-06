@@ -10,11 +10,11 @@ const DropDown = ({
   borderColor = "#E5E7EA",
   fontSize = "1.125rem",
   isEdittable,
+  required=false,
   value,
   handleChange,
   options,
   label,
-  required, 
   selectedOption,
   className
 }) => {
