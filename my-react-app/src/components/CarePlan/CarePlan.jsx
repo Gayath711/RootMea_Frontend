@@ -1,9 +1,12 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import ExternalLinkIcon from "../images/externalLink.svg";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import BasicTable from "../react-table/BasicTable";
 import EyeIcon from "../images/eye.svg";
+import { format } from "date-fns";
 import EditIcon from "../images/edit.svg";
+import { Link } from "react-router-dom";
+import { protectedApi } from "../../services/api";
 
 const options = {
   Pending: "bg-[#FFE5E5] text-[#E0382D]",
@@ -36,46 +39,26 @@ const Content = ({ data, columns }) => {
   );
 };
 
+const fetchCarePlans = async (clientId) => {
+  try {
+    const response = await protectedApi.get(
+      `/client-careplan-list/${clientId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 function CarePlan({ clientId }) {
   const [open, setOpen] = useState(true);
-  const [data, setData] = useState([
-    {
-      program: "ECM",
-      username: "...",
-      problems_addressed: "...",
-      goal_1_problem: "...",
-      goal_2_problem: "...",
-      approval_status: "Requested",
-      approval_status_date: "1-1-2000",
-      date_created: "1-1-2000",
-      goal_1_status: "Active",
-      goal_2_status: "Done",
-    },
-    {
-      program: "Diabetes",
-      username: "...",
-      problems_addressed: "...",
-      goal_1_problem: "...",
-      goal_2_problem: "...",
-      approval_status: "Requested",
-      approval_status_date: "1-1-2000",
-      date_created: "1-1-2000",
-      goal_1_status: "Active",
-      goal_2_status: "Pending",
-    },
-    {
-      program: "STOMP",
-      username: "...",
-      problems_addressed: "...",
-      goal_1_problem: "...",
-      goal_2_problem: "...",
-      approval_status: "Requested",
-      approval_status_date: "1-1-2000",
-      date_created: "1-1-2000",
-      goal_1_status: "Done",
-      goal_2_status: "Pending",
-    },
-  ]);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    fetchCarePlans(clientId)
+      .then((res) => setData(res))
+      .catch((err) => console.log(err));
+  }, []);
 
   const columns = useMemo(
     () => [
@@ -86,12 +69,7 @@ function CarePlan({ clientId }) {
       },
       {
         Header: "User name",
-        accessor: "username",
-        align: "left",
-      },
-      {
-        Header: "Problems addressed",
-        accessor: "problems_addressed",
+        accessor: "user_name",
         align: "left",
       },
       {
@@ -105,33 +83,43 @@ function CarePlan({ clientId }) {
       },
       {
         Header: "Date Created",
-        accessor: "date_created",
+        accessor: "created_date",
         align: "left",
+        Cell: ({ value }) =>
+          value ? format(new Date(value), "MM-dd-yyyy") : "",
       },
-      {
-        Header: "Goal 1 Problem",
-        accessor: "goal_1_problem",
-        align: "left",
-      },
-      {
-        Header: "Goal 2 Problem",
-        accessor: "goal_2_problem",
-        align: "left",
-      },
-      {
-        Header: "Goal 1 status",
-        Cell: ({ row }) => <Tag text={row.original.goal_1_status} />,
-      },
-      {
-        Header: "Goal 2 status",
-        Cell: ({ row }) => <Tag text={row.original.goal_2_status} />,
-      },
+      // {
+      //   Header: "Goal 1 Problem",
+      //   accessor: "goal_1_problem",
+      //   align: "left",
+      // },
+      // {
+      //   Header: "Goal 2 Problem",
+      //   accessor: "goal_2_problem",
+      //   align: "left",
+      // },
+      // {
+      //   Header: "Goal 1 status",
+      //   Cell: ({ row }) => <Tag text={row.original.goal_1_status} />,
+      // },
+      // {
+      //   Header: "Goal 2 status",
+      //   Cell: ({ row }) => <Tag text={row.original.goal_2_status} />,
+      // },
       {
         Header: "Actions",
         Cell: ({ row }) => (
           <div className="flex gap-x-3 items-center mx-auto justify-center">
-            <img src={EditIcon} className="size-4" alt="edit" />
-            <img src={EyeIcon} className="size-4" alt="view" />
+            <Link
+              to={`/care-plan/add/${clientId}/?carePlanId=${row.original.id}&mode=edit`}
+            >
+              <img src={EditIcon} className="size-4" alt="edit" />
+            </Link>
+            <Link
+              to={`/care-plan/add/${clientId}/?carePlanId=${row.original.id}&mode=view`}
+            >
+              <img src={EyeIcon} className="size-4" alt="view" />
+            </Link>
           </div>
         ),
       },
@@ -152,9 +140,11 @@ function CarePlan({ clientId }) {
           <img src={ExternalLinkIcon} className="size-4" alt="link" />
         </div>
         <div className="flex items-center gap-x-10">
-          <button className="px-3 py-2 text-sm bg-[#FFF2E9] text-[#1A1F25] rounded-sm font-medium">
-            Add New
-          </button>
+          <Link to={`/care-plan/add/${clientId}`}>
+            <button className="px-3 py-2 text-sm bg-[#FFF2E9] text-[#1A1F25] rounded-sm font-medium">
+              Add New
+            </button>
+          </Link>
           <RemoveCircleIcon
             onClick={() => setOpen(!open)}
             className="text-[#585A60] hover:cursor-pointer"

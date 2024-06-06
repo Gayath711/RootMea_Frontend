@@ -4,8 +4,10 @@ import DatePicker from "react-datepicker";
 import "./DateInput.css";
 
 import { format } from "date-fns"; // Import the format function from date-fns
+import FormLabel from "../dynamicform/FormElements/FormLabel";
 
 const DateInput = ({
+  label,
   name,
   id,
   placeholder,
@@ -61,6 +63,7 @@ const DateInput = ({
   }
   return (
     <div className="relative customDatePickerWidth">
+      {label && <FormLabel>{label}</FormLabel>}
       <DatePicker
         name={name}
         id={id || name}
