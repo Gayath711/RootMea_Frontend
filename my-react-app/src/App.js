@@ -62,6 +62,7 @@ import ClientReferral from "./components/ClientReferral";
 
 // New Client Profile - Create/View/Edit
 import ClientProfile from "./components/ClientProfileForm";
+import AddDocument from "./pages/AddDocument/AddDocument";
 
 function App() {
   // Retrieve isLoggedIn state from localStorage on initial render
@@ -303,6 +304,8 @@ function App() {
                   <Route path="/encounter-note/add/:clientId" element={<EncounterNoteForm />} />
                   <Route path="/care-plan/add/:clientId" element={<TheNewCarePlan />} />
                   <Route path="/client-referral" element={<ClientReferral />} />
+                  <Route path="/document/add/:clientId" element={<AddDocument />} />
+                  <Route path="/document/add" element={<AddDocument />} />
                 </Routes>
               </div>
             </div>

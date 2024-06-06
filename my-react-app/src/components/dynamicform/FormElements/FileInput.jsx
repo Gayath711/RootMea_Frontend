@@ -1,10 +1,12 @@
 import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { protectedApi } from "../../../services/api";
+import FormLabel from "./FormLabel";
 
 function FileInput({
   title,
   className,
+  label,
   files,
   setFiles,
   formData,
@@ -12,6 +14,8 @@ function FileInput({
   mode,
   deletedFilesKey,
   disabled,
+  multiple = true,
+  rounded = true,
   ...rest
 }) {
   const onDrop = useCallback(
@@ -45,6 +49,7 @@ function FileInput({
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
+    multiple: multiple,
     disabled,
     // accept: {
     // "application/pdf": [".pdf"],
@@ -82,23 +87,25 @@ function FileInput({
   }, []);
 
   return (
+    <>
+    {label && <FormLabel>{label}</FormLabel>}
     <div
-      className={`border flex rounded-[6px] justify-between items-center pl-2 pr-2 ${className}`}
+      className={`border flex ${rounded ? "rounded-[6px]" : ""} justify-between items-center pl-2 pr-2 ${!disabled ? "hover:cursor-pointer" : ""} ${className}`}
       {...getRootProps()}
-    >
+      >
       <input {...getInputProps({ disabled })} />
       {!files?.length && <div className="text-[#8C8C8C]">{title}</div>}
       {files?.length > 0 && (
         <div className="flex items-center gap-x-2 overflow-x-auto mr-3">
           {files.map((file) => (
             <button
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                downloadFile(file?.file_id);
-              }}
-              key={file.path}
-              className="bg-[#D4EDEC] my-1 p-1 flex gap-x-2 rounded-sm justify-center items-center"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              downloadFile(file?.file_id);
+            }}
+            key={file.path}
+            className="bg-[#D4EDEC] my-1 p-1 flex gap-x-2 rounded-sm justify-center items-center"
             >
               <div className="text-nowrap">{file.path || file.file_name}</div>
               <button
@@ -109,7 +116,7 @@ function FileInput({
                   handleRemove(file.path, file?.file_id);
                 }}
                 className="size-4 disabled:cursor-not-allowed"
-              >
+                >
                 <img src="/close.svg" className="size-4" alt="" />
               </button>
             </button>
@@ -118,6 +125,7 @@ function FileInput({
       )}
       <img src="/attach.svg" className="size-8 my-0.5" alt="" />
     </div>
+      </>
   );
 }
 
