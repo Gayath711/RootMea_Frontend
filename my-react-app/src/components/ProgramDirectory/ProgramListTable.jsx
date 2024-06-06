@@ -10,7 +10,6 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 
 import ViewPNG from "../images/view.png";
 import EditPNG from "../images/edit.png";
-// import DeletePNG from "../images/delete.png";
 import DeactivatePNG from "../images/deactivate.png";
 import MUIDataGridWrapper from "../HOC/MUIDataGridWrapper";
 

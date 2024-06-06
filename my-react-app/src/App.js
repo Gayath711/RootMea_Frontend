@@ -57,7 +57,8 @@ import EncounterNoteForm from "./pages/EncounterNote/EncounterNoteForm";
 import TheNewCarePlan from "./pages/NewCarePlan/NewCarePlan";
 import AddNewProgram from "./components/ProgramDirectory/AddNewProgram";
 import AddNewStaff from "./components/StaffDirectory/AddNewStaff";
-import NewEncounterNote from "./pages/EncounterNote/EncounterNoteForm";
+
+import ClientReferral from "./components/ClientReferral";
 
 // New Client Profile - Create/View/Edit
 import ClientProfile from "./components/ClientProfileForm";
@@ -301,6 +302,7 @@ function App() {
                   />
                   <Route path="/encounter-note/add/:clientId" element={<EncounterNoteForm />} />
                   <Route path="/care-plan/add/:clientId" element={<TheNewCarePlan />} />
+                  <Route path="/client-referral" element={<ClientReferral />} />
                 </Routes>
               </div>
             </div>

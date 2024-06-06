@@ -3,14 +3,48 @@ import axios from "axios";
 import apiURL from ".././apiConfig";
 
 function useAppointments() {
+  const [appointments, setAppointments] = useState([]);
   const [internalEvents, setInternalEvents] = useState([]);
   const [externalEvents, setExternalEvents] = useState([]);
   const [internalEventsLoading, setInternalEventsLoading] = useState(true);
   const [externalEventsLoading, setExternalEventsLoading] = useState(true);
+  const [appointmentsLoading, setAppointmentsLoading] = useState(true);
 
   useEffect(() => {
     fetchEvents();
+    fetchAppointments();
   }, []);
+
+  const fetchAppointments = async () => {
+    try {
+      setAppointmentsLoading(true);
+      const response = await axios.get(`${apiURL}/appointments`);
+      let eventData = response.data.map((event) => {
+        const date = new Date(event.start_time);
+        // Add 30 minutes
+        date.setMinutes(date.getMinutes() + 30);
+        // Convert back to ISO string
+        const endDateTime = date.toISOString();
+
+        return {
+          ...event,
+          isExternal: false,
+          summary: event.meeting_title,
+          start: {
+            dateTime: event.start_time,
+          },
+          end: {
+            dateTime: endDateTime,
+          },
+        };
+      });
+      setAppointments(eventData);
+    } catch (error) {
+      console.error("Error fetching calendar appointments:", error);
+    } finally {
+      setAppointmentsLoading(false);
+    }
+  };
 
   const fetchGoogleEvents = async () => {
     try {
@@ -62,12 +96,15 @@ function useAppointments() {
   return {
     internalEventsLoading,
     externalEventsLoading,
+    appointmentsLoading,
     internalEvents,
     externalEvents,
     eventList: [...internalEvents, ...externalEvents],
+    appointmentsList: appointments,
     fetchGoogleEvents,
     fetchInternalEvents,
     fetchEvents,
+    fetchAppointments,
   };
 }
 

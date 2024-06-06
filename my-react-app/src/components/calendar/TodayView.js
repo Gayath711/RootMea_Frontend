@@ -94,6 +94,7 @@ function TimeBlock({ time, savedEvents, fetchEvents }) {
   };
 
   const [editEvent, setEditEvent] = useState(false);
+  const [viewEvent, setViewEvent] = useState(false);
 
   return (
     <div className="flex-1 grid grid-cols-9 gap-2 m-0 opacity-75 border border-gray-200">
@@ -106,6 +107,11 @@ function TimeBlock({ time, savedEvents, fetchEvents }) {
         {eventsForHour.map((event, index) => {
           const startTime = dayjs(event.start.dateTime).format("HH:mm A");
           const endTime = dayjs(event.end.dateTime).format("HH:mm A");
+
+          let showAppointment = editEvent === index;
+          if (viewEvent === index) {
+            showAppointment = true;
+          }
 
           return (
             <>
@@ -143,16 +149,28 @@ function TimeBlock({ time, savedEvents, fetchEvents }) {
                   showPreview={showDetailModal === index}
                   toggleModal={() => toggleDetailModal(null)}
                   event={event}
-                  toggleEdit={() => setEditEvent(index)}
+                  toggleEdit={() => {
+                    setEditEvent(index);
+                    setViewEvent(null);
+                  }}
+                  toggleView={() => {
+                    setEditEvent(null);
+                    setViewEvent(index);
+                  }}
                 />
               )}
               <AddAppointment
-                show={editEvent === index}
-                toggleModal={() => setEditEvent(null)}
+                show={showAppointment}
+                toggleModal={() => {
+                  setViewEvent(null);
+                  setEditEvent(null);
+                }}
                 setShowAlert={null}
                 fetchEvents={fetchEvents}
                 appointmentDetail={event}
-                isUpdate
+                appointmentId={event.id}
+                isUpdate={editEvent === index}
+                isView={viewEvent === index}
               />
             </>
           );

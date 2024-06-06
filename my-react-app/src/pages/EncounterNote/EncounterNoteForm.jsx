@@ -20,8 +20,20 @@ import CollapseCloseSvg from "../../components/images/collapse-close.svg";
 import { format } from "date-fns";
 import "./EncounterNoteFormStyles.css";
 
-function FormWrapper({ children, label, isCollapsable, initialState = true }) {
+function FormWrapper({
+  children,
+  label,
+  isCollapsable,
+  gridClass = "grid-cols-12",
+  initialState = true,
+}) {
   const [show, setShow] = useState(initialState);
+
+  useEffect(() => {
+    if (!show) {
+      setShow(initialState);
+    }
+  }, [initialState]);
 
   return (
     <div className="rounded-[6px] border border-keppel">
@@ -40,7 +52,7 @@ function FormWrapper({ children, label, isCollapsable, initialState = true }) {
         )}
       </div>
       {show && (
-        <div className="px-4 py-3 grid grid-cols-12 gap-x-3 gap-y-3">
+        <div className={`px-4 py-3 grid ${gridClass} gap-x-3 gap-y-3`}>
           {children}
         </div>
       )}
@@ -96,9 +108,36 @@ async function fetchCarePlanOptions() {
   }
 }
 
+async function fetchFacilityOptions() {
+  try {
+    const response = await protectedApi.get("/api/resources/facilities");
+    return response.data;
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
+async function fetchProgramOptions() {
+  try {
+    const response = await protectedApi.get("/api/resources/program");
+    return response.data;
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
 async function fetchUsers() {
   try {
     const response = await protectedApi.get("/encounter-notes-users/");
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function fetchUserInfo() {
+  try {
+    const response = await protectedApi.get("/user-details/");
     return response.data;
   } catch (error) {
     console.error(error);
@@ -128,24 +167,27 @@ function EncounterNoteForm() {
   const [clientDetails, setClientDetails] = useState({});
   const [formOptions, setFormOptions] = useState([]);
   const [carePlanOptions, setCarePlanOptions] = useState([]);
+  const [facilityOptions, setFacilityOptions] = useState([]);
+  const [programOptions, setProgramOptions] = useState([]);
   const [userOptions, setUserOptions] = useState([]);
+  const [userInfo, setUserInfo] = useState({});
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
   const [forms, setForms] = useState([]);
   const [formsBackup, setFormsBackup] = useState([]);
   const [carePlans, setCarePlans] = useState([]);
   const [carePlansBackup, setCarePlansBackup] = useState([]);
+  const [signedByBackup, setSignedByBackup] = useState([]);
   const [formData, setFormData] = useState({
     client_id: clientId,
     staff_name: 2,
   });
 
   const [customFields, setCustomFields] = useState([]);
+  const [deletedCustomFields, setDeletedCustomFields] = useState([]);
 
   let customFieldsTags = useMemo(() => {
     return customFields.map((field) => {
-      console.log({ xx_field: field });
-
       let cf = {
         datatype: field.type,
         question: field.props.label,
@@ -167,6 +209,19 @@ function EncounterNoteForm() {
       return cf;
     });
   }, [customFields]);
+
+  let deletedcustomFieldsID = useMemo(() => {
+    return deletedCustomFields
+      .map((field) => {
+        if (field.id) {
+          return field.id;
+        }
+        return null;
+      })
+      .filter(Boolean);
+  }, [deletedCustomFields]);
+
+  console.log({ customFieldsTags, deletedCustomFields, deletedcustomFieldsID });
 
   const parseToDnDCustomFields = (items) => {
     return items.map((itm) => {
@@ -220,8 +275,6 @@ function EncounterNoteForm() {
     });
   };
 
-  console.log({ xx_customFields: customFields });
-  console.log({ xx_customFieldsTags: customFieldsTags });
   const [showCutomFields, setShowCustomFields] = useState(false);
 
   const navigate = useNavigate();
@@ -300,6 +353,16 @@ function EncounterNoteForm() {
   }, [formData]);
 
   useEffect(() => {
+    if (!mode)
+      setFormData((prev) => ({
+        ...prev,
+        staff_name: userOptions?.find(
+          (user) => user.value === userInfo?.user_id
+        )?.value,
+      }));
+  }, [userOptions, userInfo]);
+
+  useEffect(() => {
     fetchClientDetails({ clientId })
       .then((clientDetailsResponse) => {
         if (clientDetails?.date_of_birth) {
@@ -343,6 +406,32 @@ function EncounterNoteForm() {
   }, []);
 
   useEffect(() => {
+    fetchFacilityOptions()
+      .then((facilityOptionsResponse) => {
+        const convertedFacilityOptions = facilityOptionsResponse.map(
+          (facility) => ({ label: facility.name, value: facility.id })
+        );
+        setFacilityOptions(convertedFacilityOptions);
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetchProgramOptions()
+      .then((programOptionsResponse) => {
+        const convertedProgramOptions = programOptionsResponse.map(
+          (program) => ({ label: program.name, value: program.id })
+        );
+        setProgramOptions(convertedProgramOptions);
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  }, []);
+
+  useEffect(() => {
     fetchUsers()
       .then((fetchUsersResponse) => {
         const convertedUserOptions = fetchUsersResponse.map((user) => ({
@@ -350,6 +439,16 @@ function EncounterNoteForm() {
           value: user.id,
         }));
         setUserOptions(convertedUserOptions);
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetchUserInfo()
+      .then((userInfoResponse) => {
+        setUserInfo(userInfoResponse);
       })
       .catch((error) => {
         console.error(error.message);
@@ -459,7 +558,16 @@ function EncounterNoteForm() {
     signed_by &&
       formDataPayload.append(
         "signed_by",
-        JSON.stringify(signed_by.filter((sign) => !sign?.id) || [])
+        JSON.stringify(
+          signed_by.filter(
+            (sign) =>
+              !signedByBackup.find(
+                (signBackup) =>
+                  signBackup?.id === sign?.id &&
+                  signBackup?.timestamp === sign?.timestamp
+              )
+          ) || []
+        )
       );
     for (let i = 0; i < uploaded_documents?.length; i++) {
       if (uploaded_documents[i] instanceof File) {
@@ -492,11 +600,19 @@ function EncounterNoteForm() {
     //   };
     // });
 
+    console.log("--- Payload Start ----");
+    console.log({ customFieldsTags, deletedcustomFieldsID });
+    console.log("--- Payload End ----");
+
     formDataPayload.append("tags", JSON.stringify(customFieldsTags || []));
+    formDataPayload.append(
+      "tags_deleted",
+      JSON.stringify(deletedcustomFieldsID || [])
+    );
     return formDataPayload;
   };
 
-  const handleCreate = useCallback(async () => {
+  const handleCreate = async () => {
     try {
       const formDataPayload = await handleCreatePayload();
       const response = await protectedApi.post(
@@ -515,19 +631,12 @@ function EncounterNoteForm() {
     } catch (error) {
       console.error(error);
     }
-  }, [
-    formData,
-    clientId,
-    navigate,
-    formsBackup,
-    carePlansBackup,
-    customFields,
-    customFieldsTags,
-  ]);
+  };
 
-  const handleUpdate = useCallback(async () => {
+  const handleUpdate = async () => {
     try {
-      const formDataPayload = await handleCreatePayload();
+      const formDataPayload = handleCreatePayload();
+      console.log({ formDataPayload });
       const response = await protectedApi.put(
         `/encounter-notes-update/${encounterId}/`,
         formDataPayload
@@ -539,16 +648,7 @@ function EncounterNoteForm() {
     } catch (error) {
       console.error(error);
     }
-  }, [
-    encounterId,
-    formData,
-    clientId,
-    navigate,
-    formsBackup,
-    carePlansBackup,
-    customFields,
-    customFieldsTags,
-  ]);
+  };
 
   return (
     <div className="mx-1" style={{ fontFamily: "poppins" }}>
@@ -671,12 +771,12 @@ function EncounterNoteForm() {
                 isEdittable={mode === "view"}
                 fontSize="14px"
                 borderColor="#5bc4bf"
-                options={[
-                  { label: "Facility 1", value: "Facility 1" },
-                  { label: "Facility 2", value: "Facility 2" },
-                  { label: "Facility 3", value: "Facility 3" },
-                ]}
-                selectedOption={formData?.facility || ""}
+                options={facilityOptions}
+                selectedOption={
+                  facilityOptions?.find(
+                    (option) => option.value === formData?.facility
+                  )?.label || ""
+                }
               />
             </div>
             <div className="col-span-6">
@@ -797,12 +897,12 @@ function EncounterNoteForm() {
                 height="37.6px"
                 fontSize="14px"
                 borderColor="#5bc4bf"
-                options={[
-                  { label: "STOMP", value: "STOMP" },
-                  { label: "ECM", value: "ECM" },
-                  { label: "Diabetes", value: "Diabetes" },
-                ]}
-                selectedOption={formData?.program || ""}
+                options={programOptions}
+                selectedOption={
+                  programOptions?.find(
+                    (option) => option.value === formData?.program
+                  )?.label || ""
+                }
               />
             </div>
             <div className="col-span-6">
@@ -833,16 +933,23 @@ function EncounterNoteForm() {
             </div>
           </FormWrapper>
 
-          <FormWrapper label="Custom Fields">
+          <FormWrapper
+            label="Custom Fields"
+            isCollapsable={true}
+            initialState={customFields.length > 0}
+          >
             <div className="col-span-12">
-              <TextAreaElement
-                className="h-32 border-keppel"
-                value={formData?.custom_fields || ""}
-                onChange={(e) =>
-                  handleFormDataChange("custom_fields", e.target.value)
-                }
-                disabled={mode === "view"}
-                placeholder="Loreipusum..."
+              <DnDCustomFields
+                onChange={(dndItms) => {
+                  setCustomFields(dndItms);
+                }}
+                onDelete={(dndItms) => {
+                  console.log({ onDelItm: dndItms });
+                  setDeletedCustomFields(dndItms);
+                }}
+                deletedItems={deletedCustomFields}
+                dndItems={customFields}
+                viewMode={mode === "view"}
               />
             </div>
           </FormWrapper>
@@ -985,7 +1092,7 @@ function EncounterNoteForm() {
             <div className="col-span-12">
               <SignInput
                 signs={formData?.signed_by || []}
-                user={"User 1"}
+                user={userInfo}
                 disabled={mode === "view"}
                 mode={mode}
                 setSigns={(signs) => {
@@ -997,28 +1104,36 @@ function EncounterNoteForm() {
             </div>
           </FormWrapper>
 
-          <FormWrapper
-            label="Custom Fields"
-            isCollapsable={true}
-            initialState={false}
-          >
-            <div className="col-span-12">
-              <DnDCustomFields
-                onChange={(dndItms) => {
-                  setCustomFields(dndItms);
-                }}
-                dndItems={customFields}
-                viewMode={mode === "view"}
-              />
-            </div>
-          </FormWrapper>
-
-          <FormWrapper label="Billing Details">
+          <FormWrapper label="Billing Details" gridClass="grid-cols-13">
             <div className="col-span-4">
-              <InputElement
-                type="text"
-                className="border-keppel"
+              <DropDown
+                name="billing_status"
                 placeholder="Billing Status"
+                // handleChange={(data) =>
+                //   handleFormDataChange("billiing_status", data.value)
+                // }
+                isEdittable={mode === "view"}
+                className="border-keppel m-1 h-[37.6px]"
+                height="37.6px"
+                fontSize="14px"
+                borderColor="#5bc4bf"
+                options={[
+                  {
+                    label: "ECM Enabling Service",
+                    value: "ECM Enabling Service",
+                  },
+                  { label: "Submitted via AMD*", value: "Submitted via AMD*" },
+                  {
+                    label: "Submitted via invoice",
+                    value: "Submitted via invoice",
+                  },
+                  { label: "Missing Insurance", value: "Missing Insurance" },
+                  {
+                    label: "Missing/Insufficient Notes",
+                    value: "Missing/Insufficient Notes",
+                  },
+                ]}
+                // selectedOption={formData?.note_template || ""}
               />
             </div>
             <div className="col-span-4">
@@ -1035,26 +1150,10 @@ function EncounterNoteForm() {
                 placeholder="date/time"
               />
             </div>
-            <div className="col-span-4">
-              <InputElement
-                type="text"
-                className="border-keppel"
-                placeholder="Billing Status Comments"
-              />
-            </div>
-            <div className="col-span-4">
-              <InputElement
-                type="text"
-                className="border-keppel"
-                placeholder="Username"
-              />
-            </div>
-            <div className="col-span-4">
-              <InputElement
-                type="text"
-                className="border-keppel"
-                placeholder="date/time"
-              />
+            <div className="col-span-1 m-1">
+              <button className="w-full h-100 bg-[#5BC4BF] rounded-md text-white font-semibold text-lg">
+                +
+              </button>
             </div>
           </FormWrapper>
         </div>
