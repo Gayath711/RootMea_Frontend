@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import "./AppointmentStyles.css";
 import useAppointments from "../../hooks/useAppointments";
@@ -8,10 +8,12 @@ import AppointmentDetail, {
   AppointmentDetail_Modal,
 } from "./AppointmentDetail";
 import AddAppointment from "../calendar/addappointment";
+import axiosInstance from "../../helper/axiosInstance";
 
-const AppointmentItem = ({ id, event, fetchEvents }) => {
+const AppointmentItem = ({ id, event, fetchEvents, clientList }) => {
   const [showModal, setShowModal] = useState(false);
   const [editEvent, setEditEvent] = useState(false);
+  const [viewEvent, setViewEvent] = useState(false);
 
   const toggleModal = () => {
     setShowModal(!showModal);
@@ -28,6 +30,18 @@ const AppointmentItem = ({ id, event, fetchEvents }) => {
     minute: "2-digit",
     hour12: true,
   });
+
+  const clients = useMemo(() => {
+    let foundList = clientList.filter((itm) =>
+      event.clients.includes(itm.value)
+    );
+    return foundList;
+  }, [clientList]);
+
+  let showAppointment = editEvent === id;
+  if (viewEvent === id) {
+    showAppointment = true;
+  }
 
   return (
     <>
@@ -55,7 +69,12 @@ const AppointmentItem = ({ id, event, fetchEvents }) => {
               target="_blank"
               className="text-[13px] sm:text-sm font-medium"
             >
-              {event.summary || "Untitled Appointment"}
+              {event.topic
+                ? event.meeting_title
+                : clients.length > 0
+                ? clients[0].label
+                : "No Clients"}
+              {/* {event.summary || "Untitled Appointment"} */}
             </Link>
             <div className="text-[11px] sm:text-xs py-1 flex flex-wrap gap-1">
               <span>Created by:</span>
@@ -83,25 +102,75 @@ const AppointmentItem = ({ id, event, fetchEvents }) => {
           showPreview={showModal}
           toggleModal={toggleModal}
           event={event}
-          toggleEdit={() => setEditEvent(true)}
+          // toggleEdit={() => setEditEvent(true)}
+          toggleEdit={() => {
+            setEditEvent(id);
+            setViewEvent(null);
+          }}
+          toggleView={() => {
+            setEditEvent(null);
+            setViewEvent(id);
+          }}
         />
       )}
+
       <AddAppointment
-        show={editEvent}
-        toggleModal={() => setEditEvent(false)}
+        show={showAppointment}
+        toggleModal={() => {
+          setViewEvent(null);
+          setEditEvent(null);
+        }}
         setShowAlert={null}
         fetchEvents={fetchEvents}
         appointmentDetail={event}
-        isUpdate
+        appointmentId={event.id}
+        isUpdate={editEvent === id}
+        isView={viewEvent === id}
       />
     </>
   );
 };
 
 function Appointment() {
-  const { eventList, fetchEvents } = useAppointments();
+  const {
+    eventList,
+    fetchAppointments: fetchEvents,
+    appointmentsList,
+  } = useAppointments();
 
-  let upcomingEvents = getUpcomingEvents(eventList);
+  let upcomingEvents = getUpcomingEvents(appointmentsList);
+
+  console.log({ upcomingEvents });
+
+  const [clientOption, setClientsOption] = useState([]);
+
+  useEffect(() => {
+    fetchClients();
+  }, []);
+
+  const fetchClients = async () => {
+    try {
+      const response = await axiosInstance.get("/clientinfo-api");
+      setClientsOption(
+        response.data.map((itm) => {
+          const label = `${itm?.first_name || ""} ${itm?.last_name || ""} ${
+            itm?.date_of_birth ? "(" + itm?.date_of_birth + ")" : ""
+          }`;
+
+          console.log({ label });
+
+          return {
+            ...itm,
+            label,
+            value: itm?.id,
+          };
+        })
+      );
+    } catch (error) {
+      // Handle errors here
+      console.error("Error fetching client:", error);
+    }
+  };
 
   return (
     <div className="bg-white w-full rounded-md shadow-md sm:col-span-8">
@@ -130,6 +199,7 @@ function Appointment() {
             event={event}
             id={idx}
             fetchEvents={fetchEvents}
+            clientList={clientOption}
           />
         ))}
       </div>

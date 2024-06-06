@@ -422,6 +422,8 @@ const AddAppointment = ({
     setValue,
     reset,
     getValues,
+    watch,
+    resetField,
     formState: { errors },
   } = useForm();
 
@@ -431,28 +433,7 @@ const AddAppointment = ({
 
   const [programsOptions, setProgramsOptions] = useState([]);
   const [facilityOptions, setFacilityOptions] = useState([]);
-  const [activityOptions, setActivityOptions] = useState([
-    {
-      label: "Activity 1",
-      value: 1,
-      id: 1,
-    },
-    {
-      label: "Activity 2",
-      value: 2,
-      id: 2,
-    },
-    {
-      label: "Activity 3",
-      value: 3,
-      id: 3,
-    },
-    {
-      label: "Activity 4",
-      value: 4,
-      id: 4,
-    },
-  ]);
+  const [activityOptions, setActivityOptions] = useState([]);
   const encounterOptionCache = useRef([]);
   const [encounterNotesOptions, setEncounterNotesOptions] = useState([]);
   const [clientsOption, setClientsOption] = useState([]);
@@ -497,7 +478,10 @@ const AddAppointment = ({
       facility: data.facility?.value,
       program: data.program?.value,
       activity: data.activity?.value,
-      clients: selectedClients.map((itm) => itm.value),
+      clients:
+        selectedClients.length > 0
+          ? selectedClients.map((itm) => itm.value)
+          : [],
       linked_encounter_notes:
         data.linkedEncounterNotes?.map((itm) => itm.value) || [],
     };
@@ -598,6 +582,7 @@ const AddAppointment = ({
       fetchUsername();
       fetchClients();
       fetchFacilities();
+      fetchActivity();
     }
   }, [show]);
 
@@ -674,6 +659,24 @@ const AddAppointment = ({
     } catch (error) {
       // Handle errors here
       console.error("Error fetching position titles:", error);
+    }
+  };
+
+  const fetchActivity = async () => {
+    try {
+      const response = await axiosInstance.get("/activities/");
+      setActivityOptions(
+        response.data.map((itm) => {
+          return {
+            ...itm,
+            label: itm.name,
+            value: itm.id,
+          };
+        })
+      );
+    } catch (error) {
+      // Handle errors here
+      console.error("Error fetching activities :", error);
     }
   };
 
@@ -811,6 +814,17 @@ const AddAppointment = ({
     }
   }, [encounterNotesOptions, isView, isUpdate, appointmentData]);
 
+  const isTopicWatch = watch("topic");
+
+  useEffect(() => {
+    if (isTopicWatch) {
+      console.log("setting client to []");
+      resetField("client", { defaultValue: [] });
+      resetField("clients", { defaultValue: [] });
+      setSelectedClients([]);
+    }
+  }, [isTopicWatch]);
+
   const [errFields, setErrFields] = useState({});
 
   let disableEdit = isView;
@@ -855,7 +869,7 @@ const AddAppointment = ({
                   type="checkbox"
                   {...register("topic")}
                   disabled={disableEdit}
-                  onChange={(e) => setIsTopicChecked(e.target.checked)} // Update state on change
+                  // onChange={(e) => setIsTopicChecked(e.target.checked)} // Update state on change
                 />
                 <label className="block mb-2">Topic</label>
               </div>
@@ -873,7 +887,7 @@ const AddAppointment = ({
                       name="clients"
                       options={clientsOption}
                       isMulti
-                      isDisabled={isTopicChecked || disableEdit}
+                      isDisabled={isTopicWatch || disableEdit}
                       onChange={(sel) => {
                         setSelectedClients(sel);
                         setValue("client", sel);
@@ -1125,7 +1139,7 @@ const AddAppointment = ({
                   <input
                     type="text"
                     className="form-control text-xs p-2.5 border-teal-500"
-                    disabled={disableEdit || isTopicChecked}
+                    disabled={disableEdit}
                     {...register("google_calendar_link", {
                       // required: "google_calendar_link is required"
                     })}
