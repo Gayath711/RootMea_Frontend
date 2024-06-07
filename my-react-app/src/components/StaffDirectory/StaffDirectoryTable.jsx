@@ -12,7 +12,8 @@ import MUIDataGridWrapper from "../HOC/MUIDataGridWrapper";
 
 import EditPNG from "../images/edit.png";
 import DeactivatePNG from "../images/deactivate.png";
-
+import ActivateIcon from "../images/activate_icon.svg";
+import DeactivateIcon from "../images/deactivate_icon.svg";
 import { notifySuccess, notifyError } from "../../helper/toastNotication";
 
 const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
@@ -52,15 +53,16 @@ export default function StaffDirectoryTable() {
       });
   };
 
-  const deactivateRecord = (id) => {
+  const deactivateRecord = (id, isActive) => {
+    let actionPerformed = isActive ? "Deactivate" : "Activate";
     axios
       .delete(`/api/users/${id}`)
       .then((response) => {
         fetchData();
-        notifySuccess("Deactivated Successfully");
+        notifySuccess(`${actionPerformed}d Successfully`);
       })
       .catch((error) => {
-        notifyError("Could not deactivate, please try again later");
+        notifyError(`Could not ${actionPerformed}, please try again later`);
         console.error("Error deactivating:", error);
       })
       .finally(() => {});
@@ -356,14 +358,27 @@ export default function StaffDirectoryTable() {
                             />
                           </button>
                           <button
-                            className="p-1 hover:bg-red-400 bg-opacity-50 hover:rounded"
-                            title="Deactivate"
+                            className={`p-1 hover:bg-${
+                              params.row.SystemStatus ? "red-400" : "teal-400"
+                            } bg-opacity-50 hover:rounded`}
+                            title={
+                              params.row.SystemStatus
+                                ? "Deactivate"
+                                : "Activate"
+                            }
                             onClick={() => {
-                              deactivateRecord(params.row.id);
+                              deactivateRecord(
+                                params.row.id,
+                                params.row.SystemStatus
+                              );
                             }}
                           >
                             <img
-                              src={DeactivatePNG}
+                              src={
+                                params.row.SystemStatus
+                                  ? DeactivateIcon
+                                  : ActivateIcon
+                              }
                               className="w-4 h-4"
                               style={{ display: "block", margin: "0 auto" }}
                             />

@@ -89,18 +89,19 @@ export default function ProgramRecord() {
     });
   }, [recordData, loadingData]);
 
-  const deactivateRecord = () => {
+  const deactivateRecord = (isActive) => {
+    let actionPerformed = isActive ? "Deactivate" : "Activate";
     setIsDeactivating(true);
     axios
       .delete(`/api/resources/program/${recordid}`)
       .then((response) => {
         // navigate(-1);
         fetchData();
-        notifySuccess("Deactivated Successfully");
+        notifySuccess(`${actionPerformed}d Successfully`);
       })
       .catch((error) => {
-        notifyError("Could not deactivate, please try again later");
-        console.error("Error Deactivating:", error);
+        notifyError(`Could not ${actionPerformed}, please try again later`);
+        console.error("Error" + actionPerformed + ":", error);
       })
       .finally(() => {
         setIsDeactivating(false);
@@ -128,7 +129,7 @@ export default function ProgramRecord() {
             recordData.is_active ? "red" : "teal"
           }-400 hover:text-white bg-opacity-50 hover:rounded flex justify-center items-center gap-2`}
           onClick={() => {
-            deactivateRecord();
+            deactivateRecord(recordData.is_active);
           }}
         >
           <span>{recordData?.is_active ? "Deactivate" : "Activate"}</span>
