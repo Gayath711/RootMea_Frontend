@@ -12,6 +12,7 @@ import SignInput from "../../components/dynamicform/FormElements/SignInput";
 import { protectedApi } from "../../services/api";
 import { notifyError, notifySuccess } from "../../helper/toastNotication";
 import DropDown from "../../components/common/Dropdown";
+import BasicTable from "../../components/react-table/BasicTable";
 import DnDCustomFields from "../../components/DnDCustomFields";
 
 import CollapseOpenSvg from "../../components/images/collpase-open.svg";
@@ -20,7 +21,13 @@ import CollapseCloseSvg from "../../components/images/collapse-close.svg";
 import { format } from "date-fns";
 import "./EncounterNoteFormStyles.css";
 
-function FormWrapper({ children, label, isCollapsable, gridClass = "grid-cols-12", initialState = true }) {
+function FormWrapper({
+  children,
+  label,
+  isCollapsable,
+  gridClass = "grid-cols-12",
+  initialState = true,
+}) {
   const [show, setShow] = useState(initialState);
 
   return (
@@ -146,6 +153,190 @@ function convertTimeToISOString(data, timeString) {
   convertedDate.setSeconds(seconds);
   // Convert to ISO string
   return convertedDate;
+}
+
+function BillingStatus({ mode, handleFormDataChange, formData, userInfo }) {
+  const [billingStatus, setBillingStatus] = useState({});
+
+  const handleAddBillingStatus = useCallback(() => {
+    if (!userInfo?.user_id) {
+      notifyError("Can't find logged in user information");
+      return;
+    }
+    const data = {
+      status: billingStatus?.status,
+      user_name: { ...userInfo },
+      date_time: new Date().getTime(),
+    };
+    handleFormDataChange("billing_status", [...formData?.billing_status, data]);
+    setBillingStatus({});
+  }, [billingStatus, formData]);
+
+  const columnDefinition = useMemo(() => {
+    return [
+      {
+        Header: "Billing Status",
+        accessor: "status",
+        align: "left",
+      },
+      {
+        Header: "User name",
+        accessor: "user_name",
+        align: "left",
+        Cell: ({ value }) => value?.user_name || value || "NaN",
+      },
+      {
+        Header: "Date & Time",
+        accessor: "date_time",
+        align: "left",
+        Cell: ({ value }) =>
+          value ? format(new Date(Number(value)), "MM-dd-yyyy hh:mm a") : "NaN",
+      },
+    ];
+  }, []);
+
+  return (
+    <>
+      <div className="col-span-11">
+        <DropDown
+          name="status"
+          placeholder="Billing Status"
+          handleChange={(data) =>
+            setBillingStatus((prev) => ({
+              ...prev,
+              status: data.value,
+            }))
+          }
+          isEdittable={mode !== "edit"}
+          className="border-keppel m-1 h-[37.6px]"
+          height="37.6px"
+          fontSize="14px"
+          borderColor="#5bc4bf"
+          options={[
+            {
+              label: "ECM Enabling Service",
+              value: "ECM Enabling Service",
+            },
+            { label: "Submitted via AMD*", value: "Submitted via AMD*" },
+            {
+              label: "Submitted via invoice",
+              value: "Submitted via invoice",
+            },
+            { label: "Missing Insurance", value: "Missing Insurance" },
+            {
+              label: "Missing/Insufficient Notes",
+              value: "Missing/Insufficient Notes",
+            },
+          ]}
+          selectedOption={billingStatus?.status || ""}
+        />
+      </div>
+      <div className="col-span-1 m-1">
+        <button
+          onClick={handleAddBillingStatus}
+          disabled={!billingStatus?.status}
+          className="w-full h-100 bg-[#5BC4BF] rounded-md text-white font-semibold text-lg disabled:cursor-not-allowed"
+        >
+          +
+        </button>
+      </div>
+
+      <div className="col-span-12 mx-1">
+        <BasicTable
+          type={"billing"}
+          noMargin
+          defaultPageSize={5}
+          columns={columnDefinition}
+          data={formData?.billing_status || []}
+        />
+      </div>
+    </>
+  );
+}
+
+function BillingComments({ mode, handleFormDataChange, formData, userInfo }) {
+  const [billingComments, setBillingComments] = useState({});
+
+  const handleAddBillingComment = useCallback(() => {
+    if (!userInfo?.user_id) {
+      notifyError("Can't find logged in user information");
+      return;
+    }
+    const data = {
+      comment: billingComments?.comment,
+      user_name: { ...userInfo },
+      date_time: new Date().getTime(),
+    };
+    handleFormDataChange("billing_comments", [
+      ...formData?.billing_comments,
+      data,
+    ]);
+    setBillingComments({});
+  }, [billingComments, formData]);
+
+  const columnDefinition = useMemo(() => {
+    return [
+      {
+        Header: "Billing status Comments",
+        accessor: "comment",
+        align: "left",
+      },
+      {
+        Header: "User name",
+        accessor: "user_name",
+        align: "left",
+        Cell: ({ value }) => value?.user_name || value || "NaN",
+      },
+      {
+        Header: "Date & Time",
+        accessor: "date_time",
+        align: "left",
+        Cell: ({ value }) =>
+          value ? format(new Date(Number(value)), "MM-dd-yyyy hh:mm a") : "NaN",
+      },
+    ];
+  }, []);
+
+  return (
+    <>
+      <div className="col-span-11">
+        <InputElement
+          type="text"
+          name="comment"
+          disabled={mode !== "edit"}
+          placeholder="Billing Status Comment"
+          value={billingComments?.comment || ""}
+          onChange={(e) =>
+            setBillingComments((prev) => ({
+              ...prev,
+              comment: e.target.value,
+            }))
+          }
+          isEdittable={mode !== "edit"}
+          className="border-keppel"
+        />
+      </div>
+      <div className="col-span-1 m-1">
+        <button
+          onClick={handleAddBillingComment}
+          disabled={!billingComments?.comment}
+          className="w-full h-100 bg-[#5BC4BF] rounded-md text-white font-semibold text-lg disabled:cursor-not-allowed"
+        >
+          +
+        </button>
+      </div>
+
+      <div className="col-span-12 mx-1">
+        <BasicTable
+          type={"billing"}
+          noMargin
+          defaultPageSize={5}
+          columns={columnDefinition}
+          data={formData?.billing_comments || []}
+        />
+      </div>
+    </>
+  );
 }
 
 function EncounterNoteForm() {
@@ -299,6 +490,12 @@ function EncounterNoteForm() {
           data.care_plans = data.care_plans.map(
             (carePlan) => carePlan.care_plan_id
           );
+          if (!data?.billing_status) {
+            data.billing_status = [];
+          }
+          if (!data?.billing_comments) {
+            data.billing_comments = [];
+          }
           setFormData(data);
 
           // CustomFields
@@ -327,12 +524,13 @@ function EncounterNoteForm() {
   }, [formData]);
 
   useEffect(() => {
-     if (!mode)
-    setFormData((prev) => ({
-      ...prev,
-      staff_name: userOptions?.find((user) => user.value === userInfo?.user_id)
-        ?.value,
-    }));
+    if (!mode)
+      setFormData((prev) => ({
+        ...prev,
+        staff_name: userOptions?.find(
+          (user) => user.value === userInfo?.user_id
+        )?.value,
+      }));
   }, [userOptions, userInfo]);
 
   useEffect(() => {
@@ -464,6 +662,8 @@ function EncounterNoteForm() {
       signed_by_deleted,
       signed_by,
       uploaded_documents,
+      billing_status,
+      billing_comments,
     } = formData;
     const formDataPayload = new FormData();
     clientId && formDataPayload.append("client_id", Number(clientId));
@@ -542,6 +742,35 @@ function EncounterNoteForm() {
           ) || []
         )
       );
+    console.log(billing_status, billing_comments);
+    billing_status?.length
+      ? formDataPayload.append(
+          "billing_status",
+          JSON.stringify(
+            billing_status?.map((bs) => ({
+              ...bs,
+              user_name:
+                bs?.user_id !== undefined
+                  ? bs?.user_id
+                  : bs?.user_name?.user_id || bs?.user_name,
+            }))
+          )
+        )
+      : formDataPayload.append("billing_status", JSON.stringify([]));
+    billing_comments?.length
+      ? formDataPayload.append(
+          "billing_comments",
+          JSON.stringify(
+            billing_comments?.map((bc) => ({
+              ...bc,
+              user_name:
+                bc?.user_id !== undefined
+                  ? bc?.user_id
+                  : bc?.user_name?.user_id || bc?.user_name,
+            }))
+          )
+        )
+      : formDataPayload.append("billing_comments", JSON.stringify([]));
     for (let i = 0; i < uploaded_documents?.length; i++) {
       if (uploaded_documents[i] instanceof File) {
         formDataPayload.append("uploaded_documents", uploaded_documents[i]);
@@ -1081,51 +1310,19 @@ function EncounterNoteForm() {
             </div>
           </FormWrapper>
 
-          <FormWrapper label="Billing Details" gridClass="grid-cols-13">
-            <div className="col-span-4">
-            <DropDown
-                name="billing_status"
-                placeholder="Billing Status"
-                // handleChange={(data) =>
-                //   handleFormDataChange("billiing_status", data.value)
-                // }
-                isEdittable={mode === "view"}
-                className="border-keppel m-1 h-[37.6px]"
-                height="37.6px"
-                fontSize="14px"
-                borderColor="#5bc4bf"
-                options={[
-                  {
-                    label: "ECM Enabling Service",
-                    value: "ECM Enabling Service",
-                  },
-                  { label: "Submitted via AMD*", value: "Submitted via AMD*" },
-                  { label: "Submitted via invoice", value: "Submitted via invoice" },
-                  { label: "Missing Insurance", value: "Missing Insurance" },
-                  { label: "Missing/Insufficient Notes", value: "Missing/Insufficient Notes" },
-                ]}
-                // selectedOption={formData?.note_template || ""}
-              />
-            </div>
-            <div className="col-span-4">
-              <InputElement
-                type="text"
-                className="border-keppel"
-                placeholder="Username"
-              />
-            </div>
-            <div className="col-span-4">
-              <InputElement
-                type="text"
-                className="border-keppel"
-                placeholder="date/time"
-              />
-            </div>
-            <div className="col-span-1 m-1">
-              <button className="w-full h-100 bg-[#5BC4BF] rounded-md text-white font-semibold text-lg">
-                +
-              </button>
-            </div>
+          <FormWrapper label="Billing Details">
+            <BillingStatus
+              mode={mode}
+              handleFormDataChange={handleFormDataChange}
+              formData={formData}
+              userInfo={userInfo}
+            />
+            <BillingComments
+              mode={mode}
+              handleFormDataChange={handleFormDataChange}
+              formData={formData}
+              userInfo={userInfo}
+            />
           </FormWrapper>
         </div>
         <div className="mx-auto flex justify-center items-center gap-x-4 my-8">

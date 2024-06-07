@@ -195,11 +195,20 @@ const styles = {
       },
     },
   },
+  billing: {
+    // Add document page
+    header: {
+      classes: "bg-[#76818E] border border-[#76818E]",
+      styles: {
+        color: "white",
+      },
+    },
+  },
 };
 
 // ==============================|| REACT TABLE ||============================== //
 
-function ReactTable({ columns, data, striped, type, top, defaultPageSize }) {
+function ReactTable({ columns, data, striped, type, top, defaultPageSize, noMargin }) {
   const {
     getTableProps,
     getTableBodyProps,
@@ -223,7 +232,7 @@ function ReactTable({ columns, data, striped, type, top, defaultPageSize }) {
   const { width } = useWindowSize();
 
   return (
-    <Stack className="flex-grow flex flex-col m-3">
+    <Stack className={`flex-grow flex flex-col ${!noMargin ? "m-3" : ""}`}>
       {top && (
         <Box sx={{ p: 2 }}>
           <TablePagination
@@ -274,7 +283,7 @@ function ReactTable({ columns, data, striped, type, top, defaultPageSize }) {
             ))}
           </TableHead>
           <TableBody
-            style={{ border: "1px solid #EAECEB", borderRadius: "16px" }}
+            style={{ border: "1px solid #EAECEB" }}
             {...getTableBodyProps()}
             {...(striped && { className: "striped" })}
           >
@@ -330,7 +339,7 @@ function ReactTable({ columns, data, striped, type, top, defaultPageSize }) {
 // ==============================|| REACT TABLE - BASIC ||============================== //
 
 const BasicTable = React.memo(
-  ({ data, striped, title, columns, type, defaultPageSize }) => {
+  ({ data, striped, title, columns, type, defaultPageSize, noMargin }) => {
     // const columns = useMemo(
     //   () => [
     //     {
@@ -389,6 +398,7 @@ const BasicTable = React.memo(
         data={data}
         striped={striped}
         defaultPageSize={defaultPageSize}
+        noMargin={noMargin}
       />
       // </MainCard>
     );
