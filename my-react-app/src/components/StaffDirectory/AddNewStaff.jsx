@@ -289,14 +289,14 @@ export default function AddNewStaff() {
     if (!formDetail.EmailId) {
       errorFields.EmailId = "Please fill the email id";
     }
- 
-    var emailPattern = /^[A-Z0-9._%+-]+@rootsclinic\.org$/i;
+
+    var emailPattern = /^[A-Z0-9._%+-]+@rootscommunityhealth\.org$/i;
 
     if (formDetail.EmailId && !emailPattern.test(formDetail.EmailId)) {
-      errorFields.EmailId = "Please use an email ending with @rootsclinic.org";
+      errorFields.EmailId =
+        "Please use an email ending with @rootscommunityhealth.org";
       // Proceed with form submission or further processing
-    }  
-
+    }
 
     // if (!formDetail.PositionTitle) {
     //   errorFields.PositionTitle = "Please select the position";
