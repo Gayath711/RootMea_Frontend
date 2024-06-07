@@ -19,6 +19,8 @@ function NewPage() {
   const [tableColumns, setTableColumns] = useState([]);
   const [formData, setFormData] = useState({});
   const [tableHeaders, setTableHeaders] = useState([]);
+  const [tableStructure, setTableStructure] = useState([]);
+  const [columnInfo, setColumnInfo] = useState([]);
 
   const [droplist, setDroplist] = useState({});
 
@@ -112,11 +114,39 @@ function NewPage() {
         console.log("response.data.columns", response.data.columns);
         console.log("response.data", response.data);
         setTableColumns(response.data.columns);
+
+        // Fetch column info after fetching table structure
+        fetchColumnInfo();
       } else {
         console.error("Unexpected response format:", response);
       }
     } catch (error) {
       console.error("Error fetching table structure:", error);
+    }
+  };
+
+  const fetchColumnInfo = async () => {
+    try {
+      const response = await axios.get(
+        `${apiURL}/get_column_info/${tableName}`
+      );
+      if (response.headers["content-type"].includes("application/json")) {
+        console.log("response.data.columns_info", response.data.columns_info);
+
+        // Update existing columns with additional info
+        setTableColumns((prevColumns) =>
+          prevColumns.map((column) => ({
+            ...column,
+            ...response.data.columns_info.find(
+              (info) => info.name === column.name
+            ),
+          }))
+        );
+      } else {
+        console.error("Unexpected response format:", response);
+      }
+    } catch (error) {
+      console.error("Error fetching column info:", error);
     }
   };
 
@@ -131,6 +161,22 @@ function NewPage() {
 
   const handleSubmitPost = async (event) => {
     event.preventDefault();
+
+    // Filter out hidden columns before checking required fields
+    const visibleColumns = tableColumns.filter((column) => !column.hidden);
+    const requiredFieldsEmpty = visibleColumns.some(
+      (column) => column.required && !formData[column.name]
+    );
+
+    if (requiredFieldsEmpty) {
+      Swal.fire({
+        icon: "error",
+        title: "Error!",
+        text: "Please fill all required fields.",
+      });
+      return;
+    }
+
     try {
       console.log(formData);
       const response = await axios.post(
@@ -162,14 +208,15 @@ function NewPage() {
         title: "Error!",
         text: "An unexpected error occurred. Please try again later.",
       });
-    } // remove error here
+    }
   };
 
   const renderInputField = (column) => {
+    if (column.hidden) return null;
+
     let label = column.column_fullname;
-    let requiredLabel = "";
-    if (column.is_nullable === "NO") {
-      requiredLabel += "*";
+    if (column.required) {
+      label += " *";
     }
 
     switch (column.type) {

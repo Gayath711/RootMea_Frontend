@@ -195,6 +195,24 @@ const styles = {
       },
     },
   },
+  carePlanStatus: {
+    // client chart page
+    header: {
+      classes: "bg-[#41CEBA] border border-[#41CEBA]",
+      styles: {
+        color: "white",
+      },
+    },
+  },
+  intervention: {
+    // client chart page
+    header: {
+      classes: "bg-[#5BC4BF] border border-[#41CEBA]",
+      styles: {
+        color: "white",
+      },
+    },
+  },
   billing: {
     // Add document page
     header: {

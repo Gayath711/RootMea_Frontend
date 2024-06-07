@@ -18,6 +18,7 @@ function AlterTable({ onAddColumn }) {
   const [isTitleModalOpen, setIsTitleModalOpen] = useState(false);
   const [selectedColumn, setSelectedColumn] = useState(null);
   const [newColumnInputType, setNewColumnInputType] = useState("default");
+  const [hiddenColumns, setHiddenColumns] = useState([]);
 
   const handleModalOpen = () => {
     setIsModalOpen(true);
@@ -316,6 +317,28 @@ function AlterTable({ onAddColumn }) {
     }
   };
 
+  const handleHideColumn = async (columnName) => {
+    try {
+      await axios.patch(`${apiURL}/hide_column/${tableName}/${columnName}/`, {
+        hidden: true,
+      });
+      setHiddenColumns([...hiddenColumns, columnName]);
+    } catch (error) {
+      console.error("Error hiding column:", error);
+    }
+  };
+
+  const handleUnhideColumn = async (columnName) => {
+    try {
+      await axios.patch(`${apiURL}/hide_column/${tableName}/${columnName}/`, {
+        hidden: false,
+      });
+      setHiddenColumns(hiddenColumns.filter((name) => name !== columnName));
+    } catch (error) {
+      console.error("Error unhiding column:", error);
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -554,6 +577,28 @@ function AlterTable({ onAddColumn }) {
                 >
                   Drop Column
                 </button>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    hiddenColumns.includes(column.name)
+                      ? handleUnhideColumn(column.name)
+                      : handleHideColumn(column.name)
+                  }
+                  style={{
+                    backgroundColor: hiddenColumns.includes(column.name)
+                      ? "orange"
+                      : "green",
+                    color: "white",
+                    border: "none",
+                    padding: "10px 15px",
+                    cursor: "pointer",
+                    borderRadius: "5px",
+                    margin: "5px",
+                  }}
+                >
+                  {hiddenColumns.includes(column.name) ? "Unhide" : "Hide"}
+                </button>
               </div>
             ))}
 
@@ -566,7 +611,7 @@ function AlterTable({ onAddColumn }) {
                 onChange={handleColumnTypeChange} // Call handleColumnTypeChange when new column type changes
                 className="border border-gray-300 rounded px-4 py-2 w-full focus:outline-none focus:border-blue-500"
               >
-                <option value="VARCHAR(250)">Text</option>
+                {/* <option value="VARCHAR(250)">Text</option> */}
                 <option value="TEXT">Text</option>
                 <option value="TEXTAREA">Text Area</option>
                 <option value="DECIMAL">Decimal</option>

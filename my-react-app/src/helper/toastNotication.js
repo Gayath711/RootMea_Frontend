@@ -1,10 +1,11 @@
 import { toast } from "react-toastify";
 
-export const notify = (msg, type = "default") => {
+export const notify = (msg, type = "default", config = {}) => {
   toast(msg, {
     type: type,
     position: "bottom-right",
     autoClose: 4000,
+    ...config,
   });
 };
 

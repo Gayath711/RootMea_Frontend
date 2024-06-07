@@ -8,8 +8,10 @@ import axios from "../../helper/axiosInstance";
 import { notifyError, notifySuccess } from "../../helper/toastNotication";
 
 import EditPNG from "../images/edit.png";
-// import DeletePNG from "../images/delete.png";
 import DeactivatePNG from "../images/deactivate.png";
+
+import ActivateIcon from "../images/activate_icon.svg";
+import DeactivateIcon from "../images/deactivate_icon.svg";
 
 import MUIDataGridWrapper from "../HOC/MUIDataGridWrapper";
 
@@ -19,7 +21,7 @@ export default function StaffRecord() {
   const [recordData, setRecordData] = useState({});
   const [usersData, setUsersData] = useState({});
   const [loadingData, setLoadingData] = useState(true);
-  const [isDeleting, setIsDeleting] = useState(false);
+  const [isDeactivating, setIsDeactivating] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -40,6 +42,8 @@ export default function StaffRecord() {
         setLoadingData(false);
       });
   };
+
+  console.log({ usersData });
 
   const fetchUser = async () => {
     try {
@@ -84,12 +88,13 @@ export default function StaffRecord() {
   }`;
 
   const deactivateRecord = () => {
-    setIsDeleting(true);
+    setIsDeactivating(true);
     axios
       .delete(`/api/users/${recordid}`)
       .then((response) => {
-        navigate(-1);
+        // navigate(-1);
         fetchData();
+        fetchUser();
         notifySuccess("Deactivated Successfully");
       })
       .catch((error) => {
@@ -97,13 +102,12 @@ export default function StaffRecord() {
         console.error("Error deactivating:", error);
       })
       .finally(() => {
-        setIsDeleting(false);
+        setIsDeactivating(false);
       });
   };
 
   return (
     <>
-      {" "}
       <div className="w-100 flex flex-row gap-2 justify-end items-center my-1">
         <button
           className="p-1 px-2 hover:bg-teal-400 hover:text-white bg-opacity-50 hover:rounded flex justify-center items-center gap-2"
@@ -119,15 +123,17 @@ export default function StaffRecord() {
           />
         </button>
         <button
-          className="p-1 px-2 hover:bg-red-400 hover:text-white bg-opacity-50 hover:rounded flex justify-center items-center gap-2"
+          className={`p-1 px-2 hover:bg-${
+            usersData.is_active ? "red" : "teal"
+          }-400 hover:text-white bg-opacity-50 hover:rounded flex justify-center items-center gap-2`}
           onClick={() => {
             deactivateRecord();
           }}
         >
-          <span>Deactivate</span>
+          <span>{usersData?.is_active ? "Deactivate" : "Activate"}</span>
           <img
-            src={DeactivatePNG}
-            className="w-4 h-4"
+            src={usersData?.is_active ? DeactivateIcon : ActivateIcon}
+            className="w-6 h-6"
             style={{ display: "block", margin: "0 auto" }}
           />
         </button>

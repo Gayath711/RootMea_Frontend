@@ -8,12 +8,29 @@ import ClosedAccordianPNG from "../images/closed-accordion.png";
 import axios from "../../helper/axiosInstance";
 import { notifySuccess } from "../../helper/toastNotication";
 
-const CustomFieldsForAll = ({ id, onChange, dndItems, viewMode, mode }) => {
+const CustomFieldsForAll = ({
+  id,
+  onChange,
+  dndItems,
+  viewMode,
+  mode,
+  refresh,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const toggleAccordion = () => {
     setIsOpen(!isOpen);
   };
+
+  useEffect(() => {
+    if (dndItems.length > 0) {
+      if (!isOpen) {
+        setIsOpen(true);
+      }
+    }
+  }, [dndItems]);
 
   let customFieldsTags = useMemo(() => {
     return dndItems.map((field) => {
@@ -73,6 +90,7 @@ const CustomFieldsForAll = ({ id, onChange, dndItems, viewMode, mode }) => {
 
   const handleSave = async () => {
     try {
+      setIsLoading(true);
       const formDataPayload = await handleCreatePayload();
       const response = await axios.put(
         "/client/update_custom_field/",
@@ -80,9 +98,12 @@ const CustomFieldsForAll = ({ id, onChange, dndItems, viewMode, mode }) => {
       );
       if (response.status === 200) {
         notifySuccess("Custom fields updated successfully");
+        refresh();
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -114,18 +135,15 @@ const CustomFieldsForAll = ({ id, onChange, dndItems, viewMode, mode }) => {
                 onChange={onChange}
                 dndItems={dndItems}
                 viewMode={viewMode}
-                config={{
-                  enableAnswer: false,
-                  enableQuestion: true,
-                }}
               />
             </div>
             <div className="flex justify-end items-center">
               <button
                 onClick={handleSave}
                 className="bg-teal-400 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-2"
+                disabled={isLoading}
               >
-                Save Custom Fields
+                {isLoading ? "Loading" : "Save Custom Fields"}
               </button>
             </div>
           </div>

@@ -98,19 +98,33 @@ export const DnDCustomFieldsContextProvider = ({ children }) => {
     enableQuestion: true,
   });
   const [elements, setElements] = useState([]);
+  const [deletedElements, setDeletedElements] = useState([]);
 
   // State to hold index of selected element
   const [selectedElement, setSelectedElement] = useState(null);
 
+  console.log({ deletedElements });
+
   // Function to remove an element
   const removeElement = (index) => {
-    setElements((prevElements) => {
-      const updatedElements = [...prevElements];
-      const filteredElements = updatedElements.toSpliced(index, 1);
-      return filteredElements;
-    });
-    if (selectedElement === index) setSelectedElement(null);
-    else if (selectedElement > index) setSelectedElement(selectedElement - 1);
+    try {
+      const eleClone = [...elements];
+      setDeletedElements((prev) => {
+        console.log({ prev });
+        return [...prev, eleClone[index]];
+      });
+
+      setElements((prevElements) => {
+        const updatedElements = [...prevElements];
+        const filteredElements = updatedElements.toSpliced(index, 1);
+        return filteredElements;
+      });
+
+      if (selectedElement === index) setSelectedElement(null);
+      else if (selectedElement > index) setSelectedElement(selectedElement - 1);
+    } catch (e) {
+      console.log({ e });
+    }
   };
 
   // Function to update an element
@@ -155,6 +169,8 @@ export const DnDCustomFieldsContextProvider = ({ children }) => {
     selectedFieldElement:
       selectedElement !== null ? elements[selectedElement] : null,
     setSelectedElement,
+    deletedElements,
+    setDeletedElements,
     cloneElement,
     removeElement,
     updateElement,

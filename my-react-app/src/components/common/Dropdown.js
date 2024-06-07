@@ -1,5 +1,6 @@
 import Select from "react-select";
 import { useState } from "react";
+import FormLabel from "../dynamicform/FormElements/FormLabel";
 
 const DropDown = ({
   name,
@@ -9,9 +10,11 @@ const DropDown = ({
   borderColor = "#E5E7EA",
   fontSize = "1.125rem",
   isEdittable,
+  required=false,
   value,
   handleChange,
   options,
+  label,
   selectedOption,
   className
 }) => {
@@ -29,6 +32,7 @@ const DropDown = ({
 
   return (
     <div className="relative">
+       {label && <FormLabel required={required}>{label}</FormLabel>}
       <Select
         name={name}
         id={id}

@@ -30,6 +30,12 @@ function FormWrapper({
 }) {
   const [show, setShow] = useState(initialState);
 
+  useEffect(() => {
+    if (!show) {
+      setShow(initialState);
+    }
+  }, [initialState]);
+
   return (
     <div className="rounded-[6px] border border-keppel">
       <div
@@ -363,6 +369,7 @@ function EncounterNoteForm() {
   });
 
   const [customFields, setCustomFields] = useState([]);
+  const [deletedCustomFields, setDeletedCustomFields] = useState([]);
 
   let customFieldsTags = useMemo(() => {
     return customFields.map((field) => {
@@ -387,6 +394,19 @@ function EncounterNoteForm() {
       return cf;
     });
   }, [customFields]);
+
+  let deletedcustomFieldsID = useMemo(() => {
+    return deletedCustomFields
+      .map((field) => {
+        if (field.id) {
+          return field.id;
+        }
+        return null;
+      })
+      .filter(Boolean);
+  }, [deletedCustomFields]);
+
+  console.log({ customFieldsTags, deletedCustomFields, deletedcustomFieldsID });
 
   const parseToDnDCustomFields = (items) => {
     return items.map((itm) => {
@@ -802,12 +822,19 @@ function EncounterNoteForm() {
     //   };
     // });
 
+    console.log("--- Payload Start ----");
+    console.log({ customFieldsTags, deletedcustomFieldsID });
+    console.log("--- Payload End ----");
+
     formDataPayload.append("tags", JSON.stringify(customFieldsTags || []));
-    formDataPayload.append("tags_deleted", JSON.stringify([]));
+    formDataPayload.append(
+      "tags_deleted",
+      JSON.stringify(deletedcustomFieldsID || [])
+    );
     return formDataPayload;
   };
 
-  const handleCreate = useCallback(async () => {
+  const handleCreate = async () => {
     try {
       const formDataPayload = await handleCreatePayload();
       const response = await protectedApi.post(
@@ -826,19 +853,12 @@ function EncounterNoteForm() {
     } catch (error) {
       console.error(error);
     }
-  }, [
-    formData,
-    clientId,
-    navigate,
-    formsBackup,
-    carePlansBackup,
-    customFields,
-    customFieldsTags,
-  ]);
+  };
 
-  const handleUpdate = useCallback(async () => {
+  const handleUpdate = async () => {
     try {
-      const formDataPayload = await handleCreatePayload();
+      const formDataPayload = handleCreatePayload();
+      console.log({ formDataPayload });
       const response = await protectedApi.put(
         `/encounter-notes-update/${encounterId}/`,
         formDataPayload
@@ -850,16 +870,7 @@ function EncounterNoteForm() {
     } catch (error) {
       console.error(error);
     }
-  }, [
-    encounterId,
-    formData,
-    clientId,
-    navigate,
-    formsBackup,
-    carePlansBackup,
-    customFields,
-    customFieldsTags,
-  ]);
+  };
 
   return (
     <div className="mx-1" style={{ fontFamily: "poppins" }}>
@@ -1147,13 +1158,18 @@ function EncounterNoteForm() {
           <FormWrapper
             label="Custom Fields"
             isCollapsable={true}
-            initialState={false}
+            initialState={customFields.length > 0}
           >
             <div className="col-span-12">
               <DnDCustomFields
                 onChange={(dndItms) => {
                   setCustomFields(dndItms);
                 }}
+                onDelete={(dndItms) => {
+                  console.log({ onDelItm: dndItms });
+                  setDeletedCustomFields(dndItms);
+                }}
+                deletedItems={deletedCustomFields}
                 dndItems={customFields}
                 viewMode={mode === "view"}
               />
