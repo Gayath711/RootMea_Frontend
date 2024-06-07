@@ -1242,7 +1242,7 @@ const TheNewCarePlan = () => {
                   }}
                 />
                 <label htmlFor="approval" className="text-lg">
-                  Is approval Need?
+                  Is approval Needed?
                 </label>
               </div>
               {formData?.approver_name && (
