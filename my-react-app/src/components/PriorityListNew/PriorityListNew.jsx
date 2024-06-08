@@ -1,42 +1,44 @@
-import React from "react";
-import { useState, useMemo } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+// import { useState, useMemo } from "react";
 import ExternalLinkIcon from "../images/externalLink.svg";
 import BasicTable from "../react-table/BasicTable";
 import "./PriorityListNew.css";
 import Modal from 'react-bootstrap/Modal'
 import AddColumnModal from "../AddColumnModal/AddColumnModal";
+import apiURL from "../.././apiConfig";
 
 function PriorityListNew() {
-
+        const token = localStorage.getItem("access_token");
+        console.log("TOKEN",token);
         const [show, setShow] = useState(false);
+        const [state, setState] = useState({
+                            columns: [],
+                            data: []
+                        });
         const handleClose = () => setShow(false);
         const handleShow = () => setShow(true);
-
-        const columns = useMemo(
-            () => [
-              {
-                Header: "Program",
-                accessor: "program_name",
-                align: "left",
+        const requestBody = {
+          "dataview": "Admin",
+     
+        }
+        useEffect(() => {
+          axios
+            .post(`${apiURL}/priority_list/mapping/`,requestBody, {
+              headers: {
+                Authorization: `Bearer ${token}`,
               },
-              {
-                Header: "List Name",
-                accessor: "priority_list_name",
-                align: "left",
-              },
-              {
-                Header: "Total Clients",
-                accessor: "total_clients",
-              },
-              {
-                Header: "Assigned Staff",
-                accessor: "other_assigned_staff",
-                align: "left",
-              },
-            ],
-            []
-          );
-        const data = []
+            })
+            .then((response) => {
+              setState(response.data);
+              console.log("/priority_list/mapping/",response.data);
+            })
+            .catch((error) => {
+              console.error("Error fetching Client Medication Data:", error);
+            });
+        }, []);
+        
+        const { columns, data } = state;
         return (
             <div className="bg-white rounded-md shadow-md flex flex-col min-[320px]:w-full">
               <div

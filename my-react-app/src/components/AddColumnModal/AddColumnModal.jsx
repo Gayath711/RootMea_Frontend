@@ -4,7 +4,8 @@ import { useState, useEffect} from "react";
 import apiURL from "../../apiConfig";
 
 function AddColumnModal() {
-
+  const token = localStorage.getItem("access_token");
+  console.log("token", token);
     const [show, setShow] = useState(false);
         const handleClose = () => setShow(false);
         const handleSaveChanges = () => {
@@ -15,11 +16,12 @@ function AddColumnModal() {
             // console.log("item",selectedItems)
             // console.log("selectedSelectedItems", selectedSelectedItems);
             // Send the selected items to the API
-            fetch(`${apiURL}/priority_list`, {
+            fetch(`${apiURL}/priority_list/`, {
                 method: 'POST',
                 body: JSON.stringify(selectedItems),
                 headers: {
-                    'Content-Type': 'application/json'
+                  Authorization: `Bearer ${token}`,
+                  'Content-Type': 'application/json'
                 }
             })
             .then((response) => response.json())
