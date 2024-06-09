@@ -220,79 +220,79 @@ function PriorityListNew() {
                 
 
                 <Modal show={show} onHide={handleClose}>
-                <Modal.Body>
-            <div className="list-selector">
-      <div className="available-items">
-        <h3>Available Items</h3>
-        {Object.keys(groupedItems).map((group) => (
-          <div key={group}>
-            <h4 onClick={() => toggleGroup(group)} style={{ cursor: 'pointer' }}>
-              {group} {expandedGroups[group] ? '▲' : '▼'}
-            </h4>
-            {expandedGroups[group] && (
-              <ul>
-                {groupedItems[group].map((item) => (
-                
-                  <li
-                    key={item.name}
-                    onClick={() => !item.disabled && handleSelectAvailable(item.name)}
-                
-                    onDoubleClick={() => !item.disabled && handleDoubleClickAvailable(item.name)}
-                    style={{
-                      cursor: item.disabled ? 'not-allowed' : 'pointer',
-                      backgroundColor: selectedAvailableItems.includes(item.name) ? 'lightgrey' : 'white',
-                      textDecoration: item.disabled ? 'line-through' : 'none',
-                    }}
-                  >
-                    {/* {item.name} */}
-                    {item.name.split('.')[1]}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        ))}
-      </div>
-      <div className="buttons">
-        <button onClick={moveToSelected} disabled={selectedAvailableItems.length === 0}>
-          {'>>'}
-        </button>
-        <button onClick={moveToAvailable} disabled={selectedSelectedItems.length === 0}>
-          {'<<'}
-        </button>
-      </div>
-      <div className="selected-items">
-        <h3>Selected Items</h3>
-        <ul>
-          {selectedItems.length === 0 ? (
-            <li style={{ listStyle: 'none' }}>No items selected</li>
-          ) : (
-            selectedItems.map((item) => (
-              <li
-                key={item}
-                onClick={() => handleSelectSelected(item)}
-                onDoubleClick={() => handleDoubleClickSelected(item)}
-                style={{
-                  cursor: 'pointer',
-                  backgroundColor: selectedSelectedItems.includes(item) ? 'lightgrey' : 'white',
-                }}
-              >
-                {item}
-              </li>
-            ))
-          )}
-        </ul>
-      </div>
-    </div>
-            </Modal.Body>
-            <Modal.Footer>
-                <button onClick={handleClose}>
-                    Close
-                </button>
-                <button onClick={handleSaveChanges}>
-                    Save Changes
-                </button>
-            </Modal.Footer>
+                  <Modal.Body>
+                    <div className="list-selector">
+                            <div className="available-items">
+                              <h3>Available Items</h3>
+                              {Object.keys(groupedItems).map((group) => (
+                                <div key={group}>
+                                  <h4 onClick={() => toggleGroup(group)} style={{ cursor: 'pointer' }}>
+                                    {group} {expandedGroups[group] ? '▲' : '▼'}
+                                  </h4>
+                                  {expandedGroups[group] && (
+                                    <ul>
+                                      {groupedItems[group].map((item) => (
+                                      
+                                        <li
+                                          key={item.name}
+                                          onClick={() => !item.disabled && handleSelectAvailable(item.name)}
+                                      
+                                          onDoubleClick={() => !item.disabled && handleDoubleClickAvailable(item.name)}
+                                          style={{
+                                            cursor: item.disabled ? 'not-allowed' : 'pointer',
+                                            backgroundColor: selectedAvailableItems.includes(item.name) ? 'lightgrey' : 'white',
+                                            textDecoration: item.disabled ? 'line-through' : 'none',
+                                          }}
+                                        >
+                                          {/* {item.name} */}
+                                          {item.name.split('.')[1]}
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                            <div className="buttons">
+                              <button onClick={moveToSelected} disabled={selectedAvailableItems.length === 0}>
+                                {'>>'}
+                              </button>
+                              <button onClick={moveToAvailable} disabled={selectedSelectedItems.length === 0}>
+                                {'<<'}
+                              </button>
+                            </div>
+                            <div className="selected-items">
+                              <h3>Selected Items</h3>
+                              <ul>
+                                {selectedItems.length === 0 ? (
+                                  <li style={{ listStyle: 'none' }}>No items selected</li>
+                                ) : (
+                                  selectedItems.map((item) => (
+                                    <li
+                                      key={item}
+                                      onClick={() => handleSelectSelected(item)}
+                                      onDoubleClick={() => handleDoubleClickSelected(item)}
+                                      style={{
+                                        cursor: 'pointer',
+                                        backgroundColor: selectedSelectedItems.includes(item) ? 'lightgrey' : 'white',
+                                      }}
+                                    >
+                                      {item}
+                                    </li>
+                                  ))
+                                )}
+                              </ul>
+                            </div>
+                          </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <button onClick={handleClose}>
+                            Close
+                        </button>
+                        <button onClick={handleSaveChanges}>
+                            Save Changes
+                        </button>
+                    </Modal.Footer>
                 </Modal>
             
                 </div>
