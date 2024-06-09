@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 // import { useState, useMemo } from "react";
 import ExternalLinkIcon from "../images/externalLink.svg";
-import BasicTable from "../react-table/BasicTable";
+import BasicTable from "../react-table-filtered/BasicTable";
 import "./PriorityListNew.css";
 import Modal from 'react-bootstrap/Modal'
-import AddColumnModal from "../AddColumnModal/AddColumnModal";
+// import DataContext from './DataContext';
+// import AddColumnModal from "../AddColumnModal/AddColumnModal";
 import apiURL from "../.././apiConfig";
 
 function PriorityListNew() {
@@ -16,6 +17,7 @@ function PriorityListNew() {
                             columns: [],
                             data: []
                         });
+        // const [state,setState] = useContext(DataContext,{columns: [],data: []});
         const handleClose = () => setShow(false);
         const handleShow = () => setShow(true);
         const requestBody = {
@@ -221,11 +223,11 @@ function PriorityListNew() {
 
                 <Modal show={show} onHide={handleClose}>
                   <Modal.Body>
-                    <div className="list-selector">
-                            <div className="available-items">
+                          <div className="container">
+                            <div className="list-container">
                               <h3>Available Items</h3>
                               {Object.keys(groupedItems).map((group) => (
-                                <div key={group}>
+                                <div class="list" key={group}>
                                   <h4 onClick={() => toggleGroup(group)} style={{ cursor: 'pointer' }}>
                                     {group} {expandedGroups[group] ? '▲' : '▼'}
                                   </h4>
@@ -261,9 +263,9 @@ function PriorityListNew() {
                                 {'<<'}
                               </button>
                             </div>
-                            <div className="selected-items">
+                            <div className="list-container">
                               <h3>Selected Items</h3>
-                              <ul>
+                              <ul class="list" id="selected-list">
                                 {selectedItems.length === 0 ? (
                                   <li style={{ listStyle: 'none' }}>No items selected</li>
                                 ) : (
@@ -308,3 +310,4 @@ function PriorityListNew() {
 }
 
 export default PriorityListNew;
+
