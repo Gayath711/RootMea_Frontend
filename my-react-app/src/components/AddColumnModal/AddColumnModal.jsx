@@ -13,9 +13,6 @@ function AddColumnModal() {
             
             // Extract the names of the selected items
             const selectedItemsNames = selectedItems.map((item) => item.name);
-            // console.log("item",selectedItems)
-            // console.log("selectedSelectedItems", selectedSelectedItems);
-            // Send the selected items to the API
             fetch(`${apiURL}/priority_list/`, {
                 method: 'POST',
                 body: JSON.stringify(selectedItems),

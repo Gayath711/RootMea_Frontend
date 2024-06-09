@@ -13,6 +13,12 @@ let baseURL;
 
 // baseURL = "http://52.34.62.96";
 
-baseURL = "http://192.168.3.24:8000";
+// baseURL = "http://192.168.3.24:8000";
+baseURL = "http://127.0.0.1:8000";
 
 export default baseURL;
+
+// client information table
+// svs-education housing data
+// education
+// health
