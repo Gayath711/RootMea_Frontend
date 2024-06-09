@@ -57,14 +57,33 @@ function PriorityListNew() {
                 }
             })
             .then((response) => response.json())
-            .then((data) => {
-                console.log(data); // Print the response data
+            .then((datas) => {
+                console.log(datas); // Print the response data
+
+                axios
+                .post(`${apiURL}/priority_list/mapping/`,requestBody, {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                })
+                .then((response) => {
+                  setState(response.data);
+                  console.log("/priority_list/mapping/",response.data);
+                })
+                .catch((error) => {
+                  console.error("Error fetching Client Medication Data:", error);
+                });
+         
+            
+            const { columns, data } = state;
             })
             .catch(error => {
                 console.error('Error:', error);
             });
             
             handleClose();
+           
+              
         }
         
     const [items, setItems] = useState([]);
