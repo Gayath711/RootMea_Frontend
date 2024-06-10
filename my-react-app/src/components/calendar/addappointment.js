@@ -530,6 +530,9 @@ const AddAppointment = ({
           timer: 2000,
         });
         setShowAlert && setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert && setShowAlert(!true);
+        }, [2500]);
         fetchEvents && fetchEvents();
         window.scrollTo({ top: 0, behavior: "smooth" });
       })
@@ -1137,7 +1140,8 @@ const AddAppointment = ({
               </div>
             </div>
 
-            {isView && (
+            {/* ---------- Commented for future ---------- */}
+            {/* {isView && (
               <div>
                 <div className="mb-4">
                   <label className="block mb-2">Google Calendar Link</label>
@@ -1167,7 +1171,7 @@ const AddAppointment = ({
                   )}
                 </div>
               </div>
-            )}
+            )} */}
 
             <div className="mb-4">
               <label className="block mb-2">Description</label>

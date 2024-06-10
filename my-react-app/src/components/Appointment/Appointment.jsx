@@ -85,7 +85,7 @@ const AppointmentItem = ({ id, event, fetchEvents, clientList }) => {
 
                 {clients.length > 0
                   ? `${clients[0].first_name} ${
-                      clients.length > 1 ? "& " + clients.length : ""
+                      clients.length > 1 ? "+" + clients.length : ""
                     }`
                   : event.meeting_title || "No Title"}
                 {/* {event.summary || "Untitled Appointment"} */}
