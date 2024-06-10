@@ -54,6 +54,7 @@ import StaffRecord from "./components/StaffDirectory/StaffRecord";
 import ProgramRecord from "./components/ProgramDirectory/ProgramRecord";
 import { selectIsSidebarExpanded } from "./store/slices/utilsSlice";
 import EncounterNoteForm from "./pages/EncounterNote/EncounterNoteForm";
+import TheNewCarePlan from "./pages/NewCarePlan/NewCarePlan";
 import AddNewProgram from "./components/ProgramDirectory/AddNewProgram";
 import AddNewStaff from "./components/StaffDirectory/AddNewStaff";
 
@@ -74,7 +75,6 @@ function App() {
   // };
 
   const { width } = useWindowSize();
-  console.log(width);
 
   // window.addEventListener('beforeunload', () => {
   //   // Dispatch the logout action
@@ -85,7 +85,6 @@ function App() {
   // });
 
   const isLoggedIn = useSelector((state) => {
-    console.log(state);
     return state.auth.isLoggedIn;
   });
   const dispatch = useDispatch();
@@ -114,7 +113,6 @@ function App() {
       : ["admin"],
     // permissions: ["admin"],
   });
-  console.log("user", user);
 
   const isSidebarExpanded = useSelector(selectIsSidebarExpanded);
 
@@ -304,7 +302,8 @@ function App() {
                     path="/encounter-note/add/:clientId"
                     element={<EncounterNoteForm />}
                   />
-
+                  <Route path="/encounter-note/add/:clientId" element={<EncounterNoteForm />} />
+                  <Route path="/care-plan/add/:clientId" element={<TheNewCarePlan />} />
                   <Route path="/client-referral" element={<ClientReferral />} />
                 </Routes>
               </div>
