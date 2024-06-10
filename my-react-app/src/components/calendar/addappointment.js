@@ -1047,7 +1047,7 @@ const AddAppointment = ({
                   // disabled={disableEdit}
                   disabled={true}
                   type="text"
-                  defaultValue="Group Visit"
+                  defaultValue=""
                   className="form-control text-xs p-2.5 border-teal-500"
                   {...register("type", {
                     // required: "Type is required"
@@ -1139,8 +1139,6 @@ const AddAppointment = ({
                 />
               </div>
             </div>
-
-            {/* ---------- Commented for future ---------- */}
             {/* {isView && (
               <div>
                 <div className="mb-4">
