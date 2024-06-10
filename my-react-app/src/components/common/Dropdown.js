@@ -11,11 +11,11 @@ const DropDown = ({
   fontSize = "1.125rem",
   rounded = true,
   isEdittable,
+  required=false,
   value,
   handleChange,
   options,
   label,
-  required, 
   selectedOption,
   className
 }) => {

@@ -421,6 +421,9 @@ const AddAppointment = ({
     control,
     setValue,
     reset,
+    getValues,
+    watch,
+    resetField,
     formState: { errors },
   } = useForm();
 
@@ -430,28 +433,7 @@ const AddAppointment = ({
 
   const [programsOptions, setProgramsOptions] = useState([]);
   const [facilityOptions, setFacilityOptions] = useState([]);
-  const [activityOptions, setActivityOptions] = useState([
-    {
-      label: "Activity 1",
-      value: 1,
-      id: 1,
-    },
-    {
-      label: "Activity 2",
-      value: 2,
-      id: 2,
-    },
-    {
-      label: "Activity 3",
-      value: 3,
-      id: 3,
-    },
-    {
-      label: "Activity 4",
-      value: 4,
-      id: 4,
-    },
-  ]);
+  const [activityOptions, setActivityOptions] = useState([]);
   const encounterOptionCache = useRef([]);
   const [encounterNotesOptions, setEncounterNotesOptions] = useState([]);
   const [clientsOption, setClientsOption] = useState([]);
@@ -485,21 +467,26 @@ const AddAppointment = ({
     setIsSubmitting(true);
 
     let postData = {
-      topic: data.topic,
-      type: data.type,
+      // topic: data.topic,
+      // type: data.type,
       meeting_title: data.meeting_title,
       start_time: date,
       duration: data.duration?.value || "0",
       description: data.description,
-      google_calendar_link: data.google_calendar_link,
+      // google_calendar_link: data.google_calendar_link,
       // staff: data.staff,
       facility: data.facility?.value,
       program: data.program?.value,
       activity: data.activity?.value,
-      clients: selectedClients.map((itm) => itm.value),
+      clients:
+        selectedClients.length > 0
+          ? selectedClients.map((itm) => itm.value)
+          : [],
       linked_encounter_notes:
         data.linkedEncounterNotes?.map((itm) => itm.value) || [],
     };
+
+    console.log({ postData, data });
 
     // let start_datetime = new Date(data.date);
     // start_datetime.setHours(data.start_time.getHours());
@@ -592,11 +579,14 @@ const AddAppointment = ({
   // }, [show, isUpdate, appointmentDetail]);
 
   useEffect(() => {
-    fetchPrograms();
-    fetchUsername();
-    fetchClients();
-    fetchFacilities();
-  }, []);
+    if (show) {
+      fetchPrograms();
+      fetchUsername();
+      fetchClients();
+      fetchFacilities();
+      fetchActivity();
+    }
+  }, [show]);
 
   useEffect(() => {
     if ((isView || isUpdate) && appointmentId) {
@@ -674,6 +664,24 @@ const AddAppointment = ({
     }
   };
 
+  const fetchActivity = async () => {
+    try {
+      const response = await axiosInstance.get("/activities/");
+      setActivityOptions(
+        response.data.map((itm) => {
+          return {
+            ...itm,
+            label: itm.name,
+            value: itm.id,
+          };
+        })
+      );
+    } catch (error) {
+      // Handle errors here
+      console.error("Error fetching activities :", error);
+    }
+  };
+
   const fetchFacilities = async () => {
     try {
       const response = await axiosInstance.get("/api/resources/facilities");
@@ -697,9 +705,15 @@ const AddAppointment = ({
       const response = await axiosInstance.get("/clientinfo-api");
       setClientsOption(
         response.data.map((itm) => {
+          const label = `${itm?.first_name || ""} ${itm?.last_name || ""} ${
+            itm?.date_of_birth ? "(" + itm?.date_of_birth + ")" : ""
+          }`;
+
+          console.log({ label });
+
           return {
             ...itm,
-            label: itm?.first_name || "" + itm?.last_name || "",
+            label,
             value: itm?.id,
           };
         })
@@ -802,6 +816,17 @@ const AddAppointment = ({
     }
   }, [encounterNotesOptions, isView, isUpdate, appointmentData]);
 
+  // const isTopicWatch = watch("topic");
+
+  // useEffect(() => {
+  //   if (isTopicWatch) {
+  //     console.log("setting client to []");
+  //     resetField("client", { defaultValue: [] });
+  //     resetField("clients", { defaultValue: [] });
+  //     setSelectedClients([]);
+  //   }
+  // }, [isTopicWatch]);
+
   const [errFields, setErrFields] = useState({});
 
   let disableEdit = isView;
@@ -840,17 +865,17 @@ const AddAppointment = ({
       <Modal.Body>
         <div className="flex relative items-center justify-centerx">
           <form onSubmit={handleSubmit(onSubmit)} className="p-4 w-100">
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <div className="flex items-center gap-2">
                 <input
                   type="checkbox"
                   {...register("topic")}
                   disabled={disableEdit}
-                  onChange={(e) => setIsTopicChecked(e.target.checked)} // Update state on change
+                  // onChange={(e) => setIsTopicChecked(e.target.checked)} // Update state on change
                 />
                 <label className="block mb-2">Topic</label>
               </div>
-            </div>
+            </div> */}
 
             <div className="mb-4 grid grid-cols-2 gap-4">
               <div>
@@ -864,7 +889,7 @@ const AddAppointment = ({
                       name="clients"
                       options={clientsOption}
                       isMulti
-                      isDisabled={isTopicChecked || disableEdit}
+                      isDisabled={disableEdit}
                       onChange={(sel) => {
                         setSelectedClients(sel);
                         setValue("client", sel);
@@ -1016,11 +1041,14 @@ const AddAppointment = ({
               <div>
                 <label className="block mb-2">Type</label>
                 <input
-                  disabled={disableEdit}
+                  // disabled={disableEdit}
+                  disabled={true}
                   type="text"
                   defaultValue="Group Visit"
                   className="form-control text-xs p-2.5 border-teal-500"
-                  {...register("type", { required: "Type is required" })}
+                  {...register("type", {
+                    // required: "Type is required"
+                  })}
                 />
                 {errors.type && (
                   <p className="text-red-500">{errors.type.message}</p>
@@ -1033,7 +1061,7 @@ const AddAppointment = ({
                   type="text"
                   className="form-control text-xs p-2.5 border-teal-500"
                   {...register("meeting_title", {
-                    required: "Meeting Title is required",
+                    // required: "Meeting Title is required",
                   })}
                 />
                 {errors.meeting_title && (
@@ -1058,9 +1086,13 @@ const AddAppointment = ({
                     const currentDate = dayjs();
                     const isBefore = givenDate.isBefore(currentDate);
                     if (isBefore) {
-                      notify("The choosen date is in past", "warning", {
-                        position: "top-center",
-                      });
+                      notify(
+                        "You are trying to book an appointment in the past",
+                        "warning",
+                        {
+                          position: "top-center",
+                        }
+                      );
                     }
                     handleDateTimeChange("dateTime", date);
                   }}
@@ -1105,24 +1137,37 @@ const AddAppointment = ({
               </div>
             </div>
 
-            <div>
-              <div className="mb-4">
-                <label className="block mb-2">Google Calendar Link</label>
-                <input
-                  type="text"
-                  className="form-control text-xs p-2.5 border-teal-500"
-                  disabled={disableEdit}
-                  {...register("google_calendar_link", {
-                    // required: "google_calendar_link is required"
-                  })}
-                />
-                {errors.google_calendar_link && (
-                  <p className="text-red-500">
-                    {errors.google_calendar_link.message}
-                  </p>
-                )}
+            {isView && (
+              <div>
+                <div className="mb-4">
+                  <label className="block mb-2">Google Calendar Link</label>
+                  {!isView || isUpdate ? (
+                    <input
+                      type="text"
+                      className="form-control text-xs p-2.5 border-teal-500"
+                      disabled={disableEdit}
+                      {...register("google_calendar_link", {
+                        // required: "google_calendar_link is required"
+                      })}
+                    />
+                  ) : (
+                    <a
+                      href={getValues("google_calendar_link")}
+                      target="_blank"
+                      className="hover:text-teal-700 text-teal-400"
+                    >
+                      {getValues("google_calendar_link") ||
+                        "No Google Calendar Link Exist"}
+                    </a>
+                  )}
+                  {errors.google_calendar_link && (
+                    <p className="text-red-500">
+                      {errors.google_calendar_link.message}
+                    </p>
+                  )}
+                </div>
               </div>
-            </div>
+            )}
 
             <div className="mb-4">
               <label className="block mb-2">Description</label>
@@ -1177,7 +1222,7 @@ const AddAppointment = ({
                   }}
                   className="text-gray-400 text-xs border-[1px] border-[#43B09C] p-2 px-4"
                 >
-                  Cancel Changes
+                  Cancel
                 </a>
               </div>
               {!disableEdit && (
@@ -1186,7 +1231,7 @@ const AddAppointment = ({
                     type="submit"
                     className="w-54 h-10 bg-[#43B09C] text-xs text-white p-2 px-4"
                   >
-                    {isUpdate ? "Update Change" : "Save Changes"}
+                    {isUpdate ? "Update" : "Save"}
                   </button>
                 </div>
               )}

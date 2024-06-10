@@ -17,6 +17,7 @@ const DateInput = ({
   className,
   isEdittable,
   dateFormat = "MM/dd/yyyy",
+  required,
   value,
   handleChange = () => {},
   handleDateTimeChange = () => {},
@@ -64,7 +65,7 @@ const DateInput = ({
   }
   return (
     <div className="relative customDatePickerWidth">
-      {label && <FormLabel>{label}</FormLabel>}
+      {label && <FormLabel required={required}>{label}</FormLabel>}
       <DatePicker
         name={name}
         id={id || name}
