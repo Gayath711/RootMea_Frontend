@@ -64,6 +64,7 @@ import ClientReferral from "./components/ClientReferral";
 import ClientProfile from "./components/ClientProfileForm";
 import Master from "./pages/Master";
 import CreateGroup from "./pages/Master/CreateGroup";
+import { fetchPermissionList } from "./store/slices/userInfoSlice";
 
 function App() {
   // Retrieve isLoggedIn state from localStorage on initial render
@@ -114,6 +115,10 @@ function App() {
       : ["admin"],
     // permissions: ["admin"],
   });
+
+  useEffect(() => {
+    dispatch(fetchPermissionList());
+  }, []);
 
   const isSidebarExpanded = useSelector(selectIsSidebarExpanded);
 
