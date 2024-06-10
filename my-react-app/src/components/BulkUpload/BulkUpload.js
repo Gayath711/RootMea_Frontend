@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import apiURL from "../../apiConfig";
+import { FiUpload, FiDownload } from "react-icons/fi";
+import { ProgressBar, Tooltip, Spinner } from "react-bootstrap";
 
 function BulkUploadComponent() {
   const [file, setFile] = useState(null);
@@ -127,6 +129,33 @@ function BulkUploadComponent() {
     }
   };
 
+  const handleInstructionsDownload = async () => {
+    try {
+      const response = await fetch(
+        `${apiURL}/download_instructions/${selectedTableName}/`
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to download instructions");
+      }
+      const blob = await response.blob();
+
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${selectedTableName}_instructions.xlsx`;
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading instructions:", error);
+      alert("Failed to download instructions. Please try again later.");
+    }
+  };
+
   const cleanedTableName = selectedTableName.replace("roots", "");
   const cleanedTableName1 =
     cleanedTableName.charAt(0).toUpperCase() + cleanedTableName.slice(1);
@@ -213,12 +242,20 @@ function BulkUploadComponent() {
                 Upload
               </button>
             </div>
-            <div className="flex justify-center">
+            <div className="flex justify-center space-x-4">
+              {" "}
+              {/* Added space-x-4 for spacing */}
               <button
                 onClick={handleformdownload}
                 className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 focus:outline-none focus:bg-green-600"
               >
                 Download Form Structure
+              </button>
+              <button
+                onClick={handleInstructionsDownload}
+                className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+              >
+                Download Instructions
               </button>
             </div>
             {message && (
