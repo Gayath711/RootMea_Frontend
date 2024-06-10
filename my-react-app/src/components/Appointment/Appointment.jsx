@@ -64,18 +64,39 @@ const AppointmentItem = ({ id, event, fetchEvents, clientList }) => {
             id={`appointment-${event.id ? event.id : id}`}
             className="space-y-0.5"
           >
-            <Link
-              to="#"
-              target="_blank"
-              className="text-[13px] sm:text-sm font-medium"
-            >
-              {event.topic
+            <div className="flex justify-between items-center">
+              <Link
+                to="#"
+                target="_blank"
+                className="text-[13px] sm:text-sm font-medium truncate"
+                style={{
+                  display: "block",
+                  maxWidth: "50%",
+                  wordBreak: "break-word",
+                }}
+              >
+                {/* {event.topic
                 ? event.meeting_title
                 : clients.length > 0
-                ? clients[0].label
-                : "No Clients"}
-              {/* {event.summary || "Untitled Appointment"} */}
-            </Link>
+                ? `${clients[0].first_name} ${
+                    clients.length > 1 ? "& " + clients.length : ""
+                  }`
+                : "No Clients"} */}
+
+                {clients.length > 0
+                  ? `${clients[0].first_name} ${
+                      clients.length > 1 ? "& " + clients.length : ""
+                    }`
+                  : event.meeting_title || "No Title"}
+                {/* {event.summary || "Untitled Appointment"} */}
+              </Link>
+              <button
+                onClick={() => setShowModal(true)}
+                className="px-2.5 sm:px-4 py-1.5 rounded-sm text-white h-fit w-fit bg-[#43B09C] text-[10px] sm:text-xs font-medium"
+              >
+                Details
+              </button>
+            </div>
             <div className="text-[11px] sm:text-xs py-1 flex flex-wrap gap-1">
               <span>Created by:</span>
               <span className="sm:w-100 w-[125px] text-xs md:truncate">
@@ -89,12 +110,6 @@ const AppointmentItem = ({ id, event, fetchEvents, clientList }) => {
             </div>
           </div>
         </div>
-        <button
-          onClick={() => setShowModal(true)}
-          className="px-2.5 sm:px-4 py-1.5 rounded-sm text-white h-fit w-fit bg-[#43B09C] text-[10px] sm:text-xs font-medium"
-        >
-          Details
-        </button>
       </div>
 
       {showModal && (
