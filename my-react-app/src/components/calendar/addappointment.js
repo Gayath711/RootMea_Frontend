@@ -467,13 +467,13 @@ const AddAppointment = ({
     setIsSubmitting(true);
 
     let postData = {
-      topic: data.topic,
-      type: data.type,
+      // topic: data.topic,
+      // type: data.type,
       meeting_title: data.meeting_title,
       start_time: date,
       duration: data.duration?.value || "0",
       description: data.description,
-      google_calendar_link: data.google_calendar_link,
+      // google_calendar_link: data.google_calendar_link,
       // staff: data.staff,
       facility: data.facility?.value,
       program: data.program?.value,
@@ -485,6 +485,8 @@ const AddAppointment = ({
       linked_encounter_notes:
         data.linkedEncounterNotes?.map((itm) => itm.value) || [],
     };
+
+    console.log({ postData, data });
 
     // let start_datetime = new Date(data.date);
     // start_datetime.setHours(data.start_time.getHours());
@@ -528,6 +530,9 @@ const AddAppointment = ({
           timer: 2000,
         });
         setShowAlert && setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert && setShowAlert(!true);
+        }, [2500]);
         fetchEvents && fetchEvents();
         window.scrollTo({ top: 0, behavior: "smooth" });
       })
@@ -814,16 +819,16 @@ const AddAppointment = ({
     }
   }, [encounterNotesOptions, isView, isUpdate, appointmentData]);
 
-  const isTopicWatch = watch("topic");
+  // const isTopicWatch = watch("topic");
 
-  useEffect(() => {
-    if (isTopicWatch) {
-      console.log("setting client to []");
-      resetField("client", { defaultValue: [] });
-      resetField("clients", { defaultValue: [] });
-      setSelectedClients([]);
-    }
-  }, [isTopicWatch]);
+  // useEffect(() => {
+  //   if (isTopicWatch) {
+  //     console.log("setting client to []");
+  //     resetField("client", { defaultValue: [] });
+  //     resetField("clients", { defaultValue: [] });
+  //     setSelectedClients([]);
+  //   }
+  // }, [isTopicWatch]);
 
   const [errFields, setErrFields] = useState({});
 
@@ -863,7 +868,7 @@ const AddAppointment = ({
       <Modal.Body>
         <div className="flex relative items-center justify-centerx">
           <form onSubmit={handleSubmit(onSubmit)} className="p-4 w-100">
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <div className="flex items-center gap-2">
                 <input
                   type="checkbox"
@@ -873,7 +878,7 @@ const AddAppointment = ({
                 />
                 <label className="block mb-2">Topic</label>
               </div>
-            </div>
+            </div> */}
 
             <div className="mb-4 grid grid-cols-2 gap-4">
               <div>
@@ -887,7 +892,7 @@ const AddAppointment = ({
                       name="clients"
                       options={clientsOption}
                       isMulti
-                      isDisabled={isTopicWatch || disableEdit}
+                      isDisabled={disableEdit}
                       onChange={(sel) => {
                         setSelectedClients(sel);
                         setValue("client", sel);
@@ -1039,11 +1044,14 @@ const AddAppointment = ({
               <div>
                 <label className="block mb-2">Type</label>
                 <input
-                  disabled={disableEdit}
+                  // disabled={disableEdit}
+                  disabled={true}
                   type="text"
                   defaultValue="Group Visit"
                   className="form-control text-xs p-2.5 border-teal-500"
-                  {...register("type", { required: "Type is required" })}
+                  {...register("type", {
+                    // required: "Type is required"
+                  })}
                 />
                 {errors.type && (
                   <p className="text-red-500">{errors.type.message}</p>
@@ -1056,7 +1064,7 @@ const AddAppointment = ({
                   type="text"
                   className="form-control text-xs p-2.5 border-teal-500"
                   {...register("meeting_title", {
-                    required: "Meeting Title is required",
+                    // required: "Meeting Title is required",
                   })}
                 />
                 {errors.meeting_title && (
@@ -1132,35 +1140,38 @@ const AddAppointment = ({
               </div>
             </div>
 
-            <div>
-              <div className="mb-4">
-                <label className="block mb-2">Google Calendar Link</label>
-                {!isView || isUpdate ? (
-                  <input
-                    type="text"
-                    className="form-control text-xs p-2.5 border-teal-500"
-                    disabled={disableEdit}
-                    {...register("google_calendar_link", {
-                      // required: "google_calendar_link is required"
-                    })}
-                  />
-                ) : (
-                  <a
-                    href={getValues("google_calendar_link")}
-                    target="_blank"
-                    className="hover:text-teal-700 text-teal-400"
-                  >
-                    {getValues("google_calendar_link") ||
-                      "No Google Calendar Link Exist"}
-                  </a>
-                )}
-                {errors.google_calendar_link && (
-                  <p className="text-red-500">
-                    {errors.google_calendar_link.message}
-                  </p>
-                )}
+            {/* ---------- Commented for future ---------- */}
+            {/* {isView && (
+              <div>
+                <div className="mb-4">
+                  <label className="block mb-2">Google Calendar Link</label>
+                  {!isView || isUpdate ? (
+                    <input
+                      type="text"
+                      className="form-control text-xs p-2.5 border-teal-500"
+                      disabled={disableEdit}
+                      {...register("google_calendar_link", {
+                        // required: "google_calendar_link is required"
+                      })}
+                    />
+                  ) : (
+                    <a
+                      href={getValues("google_calendar_link")}
+                      target="_blank"
+                      className="hover:text-teal-700 text-teal-400"
+                    >
+                      {getValues("google_calendar_link") ||
+                        "No Google Calendar Link Exist"}
+                    </a>
+                  )}
+                  {errors.google_calendar_link && (
+                    <p className="text-red-500">
+                      {errors.google_calendar_link.message}
+                    </p>
+                  )}
+                </div>
               </div>
-            </div>
+            )} */}
 
             <div className="mb-4">
               <label className="block mb-2">Description</label>

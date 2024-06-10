@@ -1032,8 +1032,8 @@ const TheNewCarePlan = () => {
                     className="border-keppel rounded-[3px]"
                     placeholder="Problem"
                     disabled={mode === "view"}
-                    handleChange={(value) =>
-                      handleGoalDataUpdate(goalIndex, "problem", value)
+                    onChange={(e) =>
+                      handleGoalDataUpdate(goalIndex, "problem", e.target.value)
                     }
                   />
                 </div>

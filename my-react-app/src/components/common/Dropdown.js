@@ -9,6 +9,7 @@ const DropDown = ({
   height = "7vh",
   borderColor = "#E5E7EA",
   fontSize = "1.125rem",
+  rounded = true,
   isEdittable,
   required=false,
   value,
@@ -53,7 +54,7 @@ const DropDown = ({
             border: `1px solid ${borderColor}`,
             background: `${bgDisabled}`,
             fontSize: fontSize,
-            borderRadius: "0.375rem",
+            borderRadius: rounded ? "0.375rem" : "0",
           }),
           menu: (styles) => ({
             ...styles,

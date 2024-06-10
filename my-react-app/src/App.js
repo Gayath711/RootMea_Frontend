@@ -62,6 +62,9 @@ import ClientReferral from "./components/ClientReferral";
 
 // New Client Profile - Create/View/Edit
 import ClientProfile from "./components/ClientProfileForm";
+ 
+import AddDocument from "./pages/AddDocument/AddDocument";
+
 import Master from "./pages/Master";
 import CreateGroup from "./pages/Master/CreateGroup";
 import { fetchPermissionList } from "./store/slices/userInfoSlice";
@@ -316,12 +319,17 @@ function App() {
                     element={<TheNewCarePlan />}
                   />
                   <Route path="/client-referral" element={<ClientReferral />} />
+ 
                   <Route path="/master" element={<Master />} />
                   <Route path="/create-new-group" element={<CreateGroup />} />
                   <Route
                     path="/update-permission-group/:paramid"
                     element={<CreateGroup />}
                   />
+ 
+                  <Route path="/document/add/:clientId" element={<AddDocument />} />
+                  <Route path="/document/add" element={<AddDocument />} />
+ 
                 </Routes>
               </div>
             </div>
