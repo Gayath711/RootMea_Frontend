@@ -9,7 +9,7 @@ const InputElement = ({
   value,
   placeholder,
   disabled = false,
-  handleChange,
+  onChange,
   width,
   ...rest
 }) => {
@@ -27,7 +27,7 @@ const InputElement = ({
         type={type}
         {...rest}
         disabled={disabled}
-        onChange={(e) => handleChange(e.target.value)}
+        onChange={onChange}
         placeholder={placeholder || ""}
         {...valueProps}
         className={`appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${className}`}
