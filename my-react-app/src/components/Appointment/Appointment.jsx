@@ -85,7 +85,7 @@ const AppointmentItem = ({ id, event, fetchEvents, clientList }) => {
 
                 {clients.length > 0
                   ? `${clients[0].first_name} ${
-                      clients.length > 1 ? "& " + clients.length : ""
+                      clients.length > 1 ? "+ " + clients.length : ""
                     }`
                   : event.meeting_title || "No Title"}
                 {/* {event.summary || "Untitled Appointment"} */}
@@ -208,7 +208,7 @@ function Appointment() {
       </div>
       <hr id="appointment-HR" className="w-11/12 mx-auto my-2" />
       <div className="flex flex-col justify-between space-y-6 mx-3 my-8">
-        {upcomingEvents.slice(0, 5).map((event, idx) => (
+        {upcomingEvents?.slice(0, 5).map((event, idx) => (
           <AppointmentItem
             key={event.id}
             event={event}

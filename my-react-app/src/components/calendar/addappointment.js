@@ -1044,7 +1044,7 @@ const AddAppointment = ({
                   // disabled={disableEdit}
                   disabled={true}
                   type="text"
-                  defaultValue="Group Visit"
+                  defaultValue=""
                   className="form-control text-xs p-2.5 border-teal-500"
                   {...register("type", {
                     // required: "Type is required"
@@ -1137,7 +1137,7 @@ const AddAppointment = ({
               </div>
             </div>
 
-            {isView && (
+            {/* {isView && (
               <div>
                 <div className="mb-4">
                   <label className="block mb-2">Google Calendar Link</label>
@@ -1167,7 +1167,7 @@ const AddAppointment = ({
                   )}
                 </div>
               </div>
-            )}
+            )} */}
 
             <div className="mb-4">
               <label className="block mb-2">Description</label>

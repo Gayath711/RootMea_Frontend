@@ -8,7 +8,7 @@ import EyeIcon from "../images/eye.svg";
 import "./AppointmentCalendarStyles.css";
 
 import useAppointments from "../../hooks/useAppointments";
-import { getUpcomingEvents } from "../utils";
+import { getTodayUpcomingEvents } from "../utils";
 import { Link } from "react-router-dom";
 
 function AppointmentCalendar({ from }) {
@@ -91,7 +91,7 @@ function AppointmentCalendar({ from }) {
   const [upcomingEvents, setUpcomingEvents] = useState([]);
 
   useEffect(() => {
-    const upcomingEvents = getUpcomingEvents(eventList);
+    const upcomingEvents = getTodayUpcomingEvents(eventList);
     setUpcomingEvents(upcomingEvents);
   }, [eventList]);
 
