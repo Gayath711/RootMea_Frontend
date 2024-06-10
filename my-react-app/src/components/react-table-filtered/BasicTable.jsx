@@ -233,6 +233,13 @@ function ReactTable({ columns, data, striped, type, top, defaultPageSize }) {
     console.log("Header", header);
       
 }
+const handleDoubleClick = (rowId, columnId, value) => {
+  console.log("RowId", rowId);
+  console.log("ColumnId", columnId);
+  console.log("Value", value);
+  // setEditingCell({ rowId, columnId });
+  // setCellValue(value);
+};
   const { width } = useWindowSize();
   const requestSort = (key) => {
     const foundConfigIndex = sortConfigs.findIndex(config => config.key === key);
@@ -370,8 +377,8 @@ function ReactTable({ columns, data, striped, type, top, defaultPageSize }) {
                       ])}
 
                       
-                      onClick={() => handleEdit(cell.row, cell.column)}
-                    >
+                      onDoubleClick={() => handleDoubleClick(cell.row.id, cell.column.id, cell.value)}
+                      >
                     
                       {cell.render("Cell")}
                       
