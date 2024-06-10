@@ -205,13 +205,9 @@ const styles = {
 
 function ReactTable({ columns, data, striped, type, top, defaultPageSize }) {
   const token = localStorage.getItem("access_token");
-  console.log("columns", columns);
-  console.log("data", data);
+
   const [sortConfigs, setSortConfigs] = useState([]);
-  // const [state, setState] = useState({
-  //   columns: [],
-  //   data: []
-  // });
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -231,7 +227,12 @@ function ReactTable({ columns, data, striped, type, top, defaultPageSize }) {
     useFilters,
     usePagination
   );
-
+  const handleEdit = (row, header) => {
+    console.log("HANDLE EDIT");
+   console.log("Row", row);
+    console.log("Header", header);
+      
+}
   const { width } = useWindowSize();
   const requestSort = (key) => {
     const foundConfigIndex = sortConfigs.findIndex(config => config.key === key);
@@ -259,9 +260,9 @@ function ReactTable({ columns, data, striped, type, top, defaultPageSize }) {
           },
         })
         .then((response) => {
-          console.log("/priority_list/mapping/");
-          console.log(",response.data['columns']",response.data['columns'])
-          console.log("Data",response.data['data'])
+          // console.log("/priority_list/mapping/");
+          // console.log(",response.data['columns']",response.data['columns'])
+          // console.log("Data",response.data['data'])
           columns = response.data['columns'];
           data = response.data['data'];
             
@@ -350,7 +351,11 @@ function ReactTable({ columns, data, striped, type, top, defaultPageSize }) {
                   style={{ borderColor: "#EAECEB" }}
                   {...row.getRowProps()}
                 >
+                  
                   {row.cells.map((cell) => (
+                     
+                    //  console.log("Column", cell.column),
+                    //  console.log("Row", cell.row),
                     <TableCell
                       style={{
                         paddingTop: "8px",
@@ -363,10 +368,21 @@ function ReactTable({ columns, data, striped, type, top, defaultPageSize }) {
                       {...cell.getCellProps([
                         { className: cell.column.className },
                       ])}
+
+                      
+                      onClick={() => handleEdit(cell.row, cell.column)}
                     >
+                    
                       {cell.render("Cell")}
+                      
                     </TableCell>
-                  ))}
+                    
+                  )
+                  
+                  )
+                 
+                  }
+                   
                 </TableRow>
               );
             })}
@@ -403,4 +419,5 @@ const BasicTable = React.memo(
     );
   }
 );
+
 export default BasicTable;
