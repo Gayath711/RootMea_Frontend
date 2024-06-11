@@ -13,6 +13,6 @@ let baseURL;
 
 // baseURL = "http://52.34.62.96";
 
-baseURL = "https://backend.dataterrain-dev.net/";
+baseURL = "https://backend.dataterrain-dev.net";
 
 export default baseURL;
