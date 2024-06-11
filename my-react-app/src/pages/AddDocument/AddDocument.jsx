@@ -6,17 +6,36 @@ import InputElement from "../../components/dynamicform/FormElements/InputElement
 import DateInput from "../../components/common/DateInput";
 import FileInput from "../../components/dynamicform/FormElements/FileInput";
 import { protectedApi } from "../../services/api";
+import { notifyError } from "../../helper/toastNotication";
 
 async function fetchProgramOptions() {
-    try {
-      const response = await protectedApi.get("/api/resources/program");
-      return response.data;
-    } catch (error) {
-      console.error(error.message);
-    }
+  try {
+    const response = await protectedApi.get("/api/resources/program");
+    return response.data;
+  } catch (error) {
+    console.error(error.message);
   }
+}
+
+async function fetchClientDetails({ clientId }) {
+  try {
+    if (clientId === undefined) {
+      notifyError("Client ID is required");
+    }
+    const respone = await protectedApi.get(
+      `/encounter-note-client-details/?id=${clientId}`
+    );
+
+    if (respone.status === 200) {
+      return respone.data;
+    }
+  } catch (error) {
+    console.error(error.message);
+  }
+}
 
 function AddDocument() {
+  const [formData, setFormData] = useState();
   const { clientId } = useParams();
   const navigate = useNavigate();
   const [programOptions, setProgramOptions] = useState([]);
@@ -32,6 +51,21 @@ function AddDocument() {
           (program) => ({ label: program.name, value: program.id })
         );
         setProgramOptions(convertedProgramOptions);
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetchClientDetails({ clientId })
+      .then((clientDetails) => {
+        setFormData((prev) => ({
+          ...prev,
+          client_name: `${clientDetails.first_name || ""} ${
+            clientDetails.last_name || ""
+          }`,
+        }));
       })
       .catch((error) => {
         console.error(error.message);
@@ -54,7 +88,8 @@ function AddDocument() {
               borderColor="#5BC4BF"
               rounded={false}
               fontSize="14px"
-              selectedOption={"Option 1"}
+              isEdittable={clientId !== undefined}
+              selectedOption={formData?.client_name || ""}
               options={[
                 { value: "Option 1", label: "Option 1" },
                 { value: "Option 2", label: "Option 2" },
