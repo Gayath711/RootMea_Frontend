@@ -17,28 +17,28 @@ import Medications from "../../components/Medications/Medications";
 import LabResults from "../../components/LabResults/LabResults";
 import PrivatePage from "../PrivatePage";
 import PrivateComponent from "../../components/PrivateComponent";
-import usePermission from "../../hooks/usePermission";
+// import usePermission from "../../hooks/usePermission";
 
 function ClientChart() {
   const { clientId } = useParams();
   const [showDiagnosesModal, setShowDiagnosesModal] = useState(false);
   const [showMedicationsModal, setShowMedicationsModal] = useState(false);
-  const { isAllowed, isPermissionsLoading } = usePermission();
+  // const { isAllowed, isPermissionsLoading } = usePermission();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  if (!isAllowed("view_client_chart")) {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen">
-        <h1 className="text-2xl font-bold mb-4">Access Denied</h1>
-        <p className="text-xl">
-          You do not have permission to access the client chart.
-        </p>
-      </div>
-    );
-  }
+  // if (!isAllowed("view_client_chart")) {
+  //   return (
+  //     <div className="flex flex-col items-center justify-center h-screen">
+  //       <h1 className="text-2xl font-bold mb-4">Access Denied</h1>
+  //       <p className="text-xl">
+  //         You do not have permission to access the client chart.
+  //       </p>
+  //     </div>
+  //   );
+  // }
 
   return (
     <PrivateComponent permission="view_client_chart">
