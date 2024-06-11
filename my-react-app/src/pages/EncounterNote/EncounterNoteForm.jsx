@@ -14,10 +14,10 @@ import { notifyError, notifySuccess } from "../../helper/toastNotication";
 import DropDown from "../../components/common/Dropdown";
 import BasicTable from "../../components/react-table/BasicTable";
 import DnDCustomFields from "../../components/DnDCustomFields";
-
+import axios from "axios";
 import CollapseOpenSvg from "../../components/images/collpase-open.svg";
 import CollapseCloseSvg from "../../components/images/collapse-close.svg";
-
+import apiURL from "../../apiConfig";
 import { format } from "date-fns";
 import "./EncounterNoteFormStyles.css";
 
@@ -363,6 +363,7 @@ function EncounterNoteForm() {
   const [carePlanOptions, setCarePlanOptions] = useState([]);
   const [facilityOptions, setFacilityOptions] = useState([]);
   const [programOptions, setProgramOptions] = useState([]);
+  const [Client_Type, setClient_Type] = useState([]);
   const [userOptions, setUserOptions] = useState([]);
   const [userInfo, setUserInfo] = useState({});
   const [startTime, setStartTime] = useState(null);
@@ -537,10 +538,42 @@ function EncounterNoteForm() {
     }
   }, []);
 
+  const fetchTableHeaders = async (value) => {
+    const access_token = localStorage.getItem("access_token");
+    try {
+      // Create an array of promises for the API calls
+      const promises = [
+        axios.get(`${apiURL}/insert_header_get/${value}/`),
+        axios.get(`${apiURL}/get_table_structure/${value}/`),
+        fetch(`${apiURL}/profile-type/`, {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        }).then((response) => response.json()),
+      ];
+
+      // Use Promise.all to fetch all data simultaneously
+      const [header_response, table_structure_response, profile_type_Response] =
+        await Promise.all(promises);
+
+      // Log the responses
+      console.log(
+        table_structure_response,
+        header_response,
+        profile_type_Response
+      );
+    } catch (error) {
+      console.error("Error fetching table headers:", error);
+    }
+  };
+
   const handleFormDataChange = useCallback(
     (fieldName, value) => {
+      fieldName === "Client_Type" && fetchTableHeaders(value);
+      console.log("callback called", fieldName, value);
       setFormData((prevData) => ({ ...prevData, [fieldName]: value }));
     },
+
     [formData]
   );
 
@@ -595,7 +628,16 @@ function EncounterNoteForm() {
   useEffect(() => {
     fetchClientOptions()
       .then((fetchClientOptions) => {
-        console.log("from_client", fetchClientOptions);
+        console.log("from_client", fetchClientOptions?.matching_tables);
+
+        const convertedFormOptions = fetchClientOptions.matching_tables.map(
+          (formName) => ({
+            label: formName,
+            value: formName,
+          })
+        );
+
+        setClient_Type(convertedFormOptions);
       })
       .catch((error) => {
         console.error(error.message);
@@ -631,7 +673,7 @@ function EncounterNoteForm() {
   useEffect(() => {
     fetchProgramOptions()
       .then((programOptionsResponse) => {
-        const convertedProgramOptions = programOptionsResponse.map(
+        const convertedProgramOptions = programOptionsResponse?.map(
           (program) => ({ label: program.name, value: program.id })
         );
         setProgramOptions(convertedProgramOptions);
@@ -846,6 +888,10 @@ function EncounterNoteForm() {
     console.log("--- Payload End ----");
 
     formDataPayload.append("tags", JSON.stringify(customFieldsTags || []));
+    formDataPayload.append(
+      "customFields",
+      JSON.stringify(customFieldsTags || [])
+    );
     formDataPayload.append(
       "tags_deleted",
       JSON.stringify(deletedcustomFieldsID || [])
@@ -1177,25 +1223,15 @@ function EncounterNoteForm() {
                 name="Client_Type"
                 placeholder="Client_Type *"
                 handleChange={(data) =>
-                  handleFormDataChange("note_template", data.value)
+                  handleFormDataChange("Client_Type", data.value)
                 }
                 isEdittable={mode === "view"}
                 className="border-keppel m-1 h-[37.6px]"
                 height="37.6px"
                 fontSize="14px"
                 borderColor="#5bc4bf"
-                options={[
-                  {
-                    label: "ECM Enabling Service",
-                    value: "ECM Enabling Service",
-                  },
-                  { label: "Program Intake", value: "Program Intake" },
-                  { label: "Progress Note", value: "Progress Note" },
-                  { label: "Reassessment", value: "Reassessment" },
-                  { label: "A1c Outreach", value: "A1c Outreach" },
-                  { label: "STRIVE Encounter", value: "STRIVE Encounter" },
-                ]}
-                selectedOption={formData?.note_template || ""}
+                options={Client_Type}
+                selectedOption={formData?.Client_Type || ""}
               />
             </div>
           </FormWrapper>
@@ -1394,7 +1430,7 @@ function EncounterNoteForm() {
             Cancel
           </button>
           <button
-            disabled={disableSubmit || mode === "view"}
+            // disabled={disableSubmit || mode === "view"}
             onClick={mode === "edit" ? handleUpdate : handleCreate}
             className="border border-keppel rounded-[3px] disabled:cursor-not-allowed disabled:bg-[#6cd8d3] bg-[#5BC4BF] text-white w-32 py-2"
           >
