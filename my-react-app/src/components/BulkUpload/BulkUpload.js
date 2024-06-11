@@ -206,7 +206,7 @@ function BulkUploadComponent() {
                 htmlFor="file"
                 className="block mb-2 text-lg text-gray-700 font-semibold"
               >
-                Select CSV File:
+                Select XLS File:
               </label>
               <div className="relative border border-gray-300 rounded-lg px-4 py-2 w-full flex items-center justify-between focus-within:border-blue-500">
                 <input
