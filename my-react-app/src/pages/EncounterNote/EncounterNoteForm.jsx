@@ -98,6 +98,15 @@ async function fetchFormOptions() {
   }
 }
 
+async function fetchClientOptions() {
+  try {
+    const response = await protectedApi.get("/get_matching_tables/  ");
+    return response.data;
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
 async function fetchCarePlanOptions() {
   try {
     const response = await protectedApi.get(
@@ -577,6 +586,16 @@ function EncounterNoteForm() {
           value: form.id,
         }));
         setFormOptions(convertedFormOptions);
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetchClientOptions()
+      .then((fetchClientOptions) => {
+        console.log("from_client", fetchClientOptions);
       })
       .catch((error) => {
         console.error(error.message);
@@ -1131,6 +1150,32 @@ function EncounterNoteForm() {
               <DropDown
                 name="note_template"
                 placeholder="Note Template *"
+                handleChange={(data) =>
+                  handleFormDataChange("note_template", data.value)
+                }
+                isEdittable={mode === "view"}
+                className="border-keppel m-1 h-[37.6px]"
+                height="37.6px"
+                fontSize="14px"
+                borderColor="#5bc4bf"
+                options={[
+                  {
+                    label: "ECM Enabling Service",
+                    value: "ECM Enabling Service",
+                  },
+                  { label: "Program Intake", value: "Program Intake" },
+                  { label: "Progress Note", value: "Progress Note" },
+                  { label: "Reassessment", value: "Reassessment" },
+                  { label: "A1c Outreach", value: "A1c Outreach" },
+                  { label: "STRIVE Encounter", value: "STRIVE Encounter" },
+                ]}
+                selectedOption={formData?.note_template || ""}
+              />
+            </div>
+            <div className="col-span-6">
+              <DropDown
+                name="Client_Type"
+                placeholder="Client_Type *"
                 handleChange={(data) =>
                   handleFormDataChange("note_template", data.value)
                 }
