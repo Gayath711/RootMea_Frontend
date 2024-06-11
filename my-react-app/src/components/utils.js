@@ -93,3 +93,36 @@ export function getUpcomingEvents(eventList) {
   // return the upcomingEvents array
   return upcomingEvents;
 }
+
+
+export function getTodayUpcomingEvents(eventList) {
+  
+  // Get the current date
+  const currentDate = new Date();
+  
+  // Get the start and end of the current day
+  const startOfDay = new Date(currentDate);
+  startOfDay.setHours(0, 0, 0, 0);
+  
+  const endOfDay = new Date(currentDate);
+  endOfDay.setHours(23, 59, 59, 999);
+
+  // Filter the eventList to keep only events happening today
+  const todaysEvents = eventList.filter((event) => {
+    // Get the start date and time of the event
+    const eventStartDate = new Date(event.start.dateTime);
+
+    // Check if the event is today
+    return eventStartDate >= startOfDay && eventStartDate <= endOfDay;
+  });
+
+  // Sort the todaysEvents array in ascending order based on the start date and time
+  todaysEvents.sort((a, b) => {
+    const dateTimeA = new Date(a.start.dateTime).getTime();
+    const dateTimeB = new Date(b.start.dateTime).getTime();
+    return dateTimeA - dateTimeB;
+  });
+
+  // return the todaysEvents array (it will be empty if there are no events today)
+  return todaysEvents;
+}
