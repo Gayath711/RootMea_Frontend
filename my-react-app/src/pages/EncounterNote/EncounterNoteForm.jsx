@@ -889,7 +889,7 @@ function EncounterNoteForm() {
 
     // formDataPayload.append("tags", JSON.stringify(customFieldsTags || []));
     formDataPayload.append(
-      "customFields",
+      "custom_fields",
       JSON.stringify(customFieldsTags || [])
     );
     // formDataPayload.append(
