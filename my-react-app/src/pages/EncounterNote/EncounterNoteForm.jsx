@@ -887,7 +887,7 @@ function EncounterNoteForm() {
     console.log({ customFieldsTags, deletedcustomFieldsID });
     console.log("--- Payload End ----");
 
-    formDataPayload.append("tags", JSON.stringify(customFieldsTags || []));
+    // formDataPayload.append("tags", JSON.stringify(customFieldsTags || []));
     formDataPayload.append(
       "customFields",
       JSON.stringify(customFieldsTags || [])
