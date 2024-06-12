@@ -14,14 +14,16 @@ import SelectElement from "./FormElements/SelectElement";
 import MultiSelectElement from "./FormElements/MultiSelectElement";
 
 function NewPage() {
-  const { tableName } = useParams();
 
+
+  const { tableName } = useParams();
+  console.log(tableName, "Table Name")
   const [tableColumns, setTableColumns] = useState([]);
   const [formData, setFormData] = useState({});
   const [tableHeaders, setTableHeaders] = useState([]);
   const [tableStructure, setTableStructure] = useState([]);
   const [columnInfo, setColumnInfo] = useState([]);
-
+  console.log(tableName, tableColumns)
   const [droplist, setDroplist] = useState({});
 
   useEffect(() => {
@@ -112,7 +114,7 @@ function NewPage() {
       );
       if (response.headers["content-type"].includes("application/json")) {
         console.log("response.data.columns", response.data.columns);
-        console.log("response.data", response.data);
+        console.log("response.data", response.data.columns);
         setTableColumns(response.data.columns);
 
         // Fetch column info after fetching table structure
@@ -445,17 +447,17 @@ function NewPage() {
                 options={
                   droplist[key]
                     ? droplist[key].map((option) => ({
-                        value: option,
-                        label: option,
-                      }))
+                      value: option,
+                      label: option,
+                    }))
                     : []
                 }
                 value={
                   formData[column.name]
                     ? formData[column.name].map((option) => ({
-                        value: option,
-                        label: option,
-                      }))
+                      value: option,
+                      label: option,
+                    }))
                     : []
                 }
                 onChange={(selectedOptions) => {
@@ -573,8 +575,8 @@ function NewPage() {
                               [column.name]: prevState[column.name]
                                 ? prevState[column.name].includes(value)
                                   ? prevState[column.name].filter(
-                                      (val) => val !== value
-                                    )
+                                    (val) => val !== value
+                                  )
                                   : [...prevState[column.name], value]
                                 : [value],
                             }));
@@ -613,8 +615,8 @@ function NewPage() {
                 options={
                   droplist[key]
                     ? droplist[key].map((option) => {
-                        return option;
-                      })
+                      return option;
+                    })
                     : []
                 }
                 value={formData[column.name] || ""}

@@ -20,6 +20,7 @@ import CollapseCloseSvg from "../../components/images/collapse-close.svg";
 import apiURL from "../../apiConfig";
 import { format } from "date-fns";
 import "./EncounterNoteFormStyles.css";
+import CustomFieldEncounter from "../../components/dynamicform/CustomFieldEncounter";
 
 function FormWrapper({
   children,
@@ -538,6 +539,44 @@ function EncounterNoteForm() {
     }
   }, []);
 
+  const [tableNames, setTableName] = useState(null);
+  const [tableColumns, setTableColumn] = useState(null);
+  const fetchDropdownOptions = async (tableName, tableColumns) => {
+    console.log(tableName, tableColumns);
+    setTableName(tableName);
+    const newDroplist = {};
+    for (const column of tableColumns) {
+      console.log(column.type);
+      console.log("column.name", column.name);
+
+      if (
+        column.type === "USER-DEFINED" ||
+        ((column.type === "USER-DEFINED" || column.type === "ARRAY") &&
+          (column.name.endsWith("_multiple") ||
+            column.name.endsWith("_checkbox")))
+      ) {
+        const enumType = `enum_type_${tableName}_${column.name}_enum_type`;
+
+        try {
+          const response = await axios.get(`${apiURL}/get_enum_labels/`, {
+            params: {
+              enum_type: enumType,
+            },
+          });
+          const dropdownOptions = response.data.enum_labels;
+          newDroplist[enumType] = dropdownOptions;
+          console.log("Dropdown options for", enumType, ":", dropdownOptions);
+        } catch (error) {
+          console.error(
+            "Error fetching dropdown options for",
+            enumType,
+            ":",
+            error
+          );
+        }
+      }
+    }
+  };
   const fetchTableHeaders = async (value) => {
     const access_token = localStorage.getItem("access_token");
     try {
@@ -562,6 +601,11 @@ function EncounterNoteForm() {
         header_response,
         profile_type_Response
       );
+      fetchDropdownOptions(
+        table_structure_response?.data?.table_name,
+        table_structure_response?.data?.columns
+      );
+      setTableColumn(table_structure_response?.data?.columns);
     } catch (error) {
       console.error("Error fetching table headers:", error);
     }
@@ -887,15 +931,12 @@ function EncounterNoteForm() {
     console.log({ customFieldsTags, deletedcustomFieldsID });
     console.log("--- Payload End ----");
 
-    formDataPayload.append("tags", JSON.stringify(customFieldsTags || []));
+    formDataPayload.append("tags", []);
     formDataPayload.append(
       "customFields",
       JSON.stringify(customFieldsTags || [])
     );
-    formDataPayload.append(
-      "tags_deleted",
-      JSON.stringify(deletedcustomFieldsID || [])
-    );
+    formDataPayload.append("tags_deleted", []);
     return formDataPayload;
   };
 
@@ -1235,27 +1276,34 @@ function EncounterNoteForm() {
               />
             </div>
           </FormWrapper>
-
-          <FormWrapper
-            label="Custom Fields"
-            isCollapsable={true}
-            initialState={customFields.length > 0}
-          >
-            <div className="col-span-12">
-              <DnDCustomFields
-                onChange={(dndItms) => {
-                  setCustomFields(dndItms);
-                }}
-                onDelete={(dndItms) => {
-                  console.log({ onDelItm: dndItms });
-                  setDeletedCustomFields(dndItms);
-                }}
-                deletedItems={deletedCustomFields}
-                dndItems={customFields}
-                viewMode={mode === "view"}
-              />
-            </div>
-          </FormWrapper>
+          {tableColumns ? (
+            <CustomFieldEncounter
+              tableName={tableNames}
+              tableColumns={tableColumns}
+              setTableColumns={setTableColumn}
+            />
+          ) : (
+            <FormWrapper
+              label="Custom Fields"
+              isCollapsable={true}
+              initialState={customFields.length > 0}
+            >
+              <div className="col-span-12">
+                <DnDCustomFields
+                  onChange={(dndItms) => {
+                    setCustomFields(dndItms);
+                  }}
+                  onDelete={(dndItms) => {
+                    console.log({ onDelItm: dndItms });
+                    setDeletedCustomFields(dndItms);
+                  }}
+                  deletedItems={deletedCustomFields}
+                  dndItems={customFields}
+                  viewMode={mode === "view"}
+                />
+              </div>
+            </FormWrapper>
+          )}
 
           <FormWrapper label="Encounter Summary">
             <div className="col-span-12">
