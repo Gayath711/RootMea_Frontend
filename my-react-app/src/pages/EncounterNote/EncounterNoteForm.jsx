@@ -538,30 +538,74 @@ function EncounterNoteForm() {
     }
   }, []);
 
+  
+
+  const fetchDropdownOptions = async (tableName,tableColumns) => {
+    const newDroplist = {};
+    for (const column of tableColumns) {
+      console.log(column.type);
+      console.log("column.name", column.name);
+
+      if (
+        column.type === "USER-DEFINED" ||
+        ((column.type === "USER-DEFINED" || column.type === "ARRAY") &&
+          (column.name.endsWith("_multiple") ||
+            column.name.endsWith("_checkbox")))
+      ) {
+        const enumType = `enum_type_${tableName}_${column.name}_enum_type`;
+
+        try {
+          const response = await axios.get(`${apiURL}/get_enum_labels/`, {
+            params: {
+              enum_type: enumType,
+            },
+          });
+          const dropdownOptions = response.data.enum_labels;
+          newDroplist[enumType] = dropdownOptions;
+          console.log("Dropdown options for", enumType, ":", dropdownOptions);
+        } catch (error) {
+          console.error(
+            "Error fetching dropdown options for",
+            enumType,
+            ":",
+            error
+          );
+        }
+      }
+    }
+   
+  };
+
+
   const fetchTableHeaders = async (value) => {
     const access_token = localStorage.getItem("access_token");
     try {
       // Create an array of promises for the API calls
       const promises = [
-        axios.get(`${apiURL}/insert_header_get/${value}/`),
+        
         axios.get(`${apiURL}/get_table_structure/${value}/`),
+        
         fetch(`${apiURL}/profile-type/`, {
           headers: {
             Authorization: `Bearer ${access_token}`,
           },
-        }).then((response) => response.json()),
+        }).then((response) => response.json()), 
       ];
 
       // Use Promise.all to fetch all data simultaneously
-      const [header_response, table_structure_response, profile_type_Response] =
+      const [header_response, profile_type_Response] =
         await Promise.all(promises);
 
       // Log the responses
-      console.log(
-        table_structure_response,
+      console.log("from promise all",
+        
         header_response,
         profile_type_Response
       );
+      console.log("data.columns",  header_response,)
+      fetchDropdownOptions(header_response?.data.table_name, header_response?.data.columns)
+     
+      
     } catch (error) {
       console.error("Error fetching table headers:", error);
     }
@@ -576,6 +620,9 @@ function EncounterNoteForm() {
 
     [formData]
   );
+  
+
+  console.log(formData, "from formdata")
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -747,6 +794,7 @@ function EncounterNoteForm() {
       billing_comments,
     } = formData;
     const formDataPayload = new FormData();
+    console.log(formData, "inside payloaded")
     clientId && formDataPayload.append("client_id", Number(clientId));
     formDataPayload.append("system_id", 12345);
     staff_name && formDataPayload.append("staff_name", staff_name);
@@ -761,11 +809,11 @@ function EncounterNoteForm() {
     encounter_type && formDataPayload.append("encounter_type", encounter_type);
     program && formDataPayload.append("program", program);
     note_template && formDataPayload.append("note_template", note_template);
-    custom_fields !== undefined &&
-      formDataPayload.append(
-        "custom_fields",
-        JSON.stringify(custom_fields || [])
-      );
+    // custom_fields !== undefined &&
+    //   formDataPayload.append(
+    //     "custom_fields",
+    //     JSON.stringify(custom_fields || [])
+    //   );
     encounter_summary_text_template &&
       formDataPayload.append(
         "encounter_summary_text_template",
@@ -887,15 +935,15 @@ function EncounterNoteForm() {
     console.log({ customFieldsTags, deletedcustomFieldsID });
     console.log("--- Payload End ----");
 
-    // formDataPayload.append("tags", JSON.stringify(customFieldsTags || []));
+    formDataPayload.append("tags", JSON.stringify([]));
     formDataPayload.append(
       "custom_fields",
-      JSON.stringify(customFieldsTags || [])
+      JSON.stringify( custom_fields || [])
     );
-    // formDataPayload.append(
-    //   "tags_deleted",
-    //   JSON.stringify(deletedcustomFieldsID || [])
-    // );
+    formDataPayload.append(
+      "tags_deleted",
+      JSON.stringify([])
+    );
     return formDataPayload;
   };
 
@@ -921,6 +969,7 @@ function EncounterNoteForm() {
   };
 
   const handleUpdate = async () => {
+    console.log("updated called");
     try {
       const formDataPayload = handleCreatePayload();
       console.log({ formDataPayload });
@@ -1441,5 +1490,6 @@ function EncounterNoteForm() {
     </div>
   );
 }
+  
 
 export default EncounterNoteForm;
