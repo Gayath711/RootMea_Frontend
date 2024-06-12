@@ -20,6 +20,8 @@ import CollapseCloseSvg from "../../components/images/collapse-close.svg";
 import apiURL from "../../apiConfig";
 import { format } from "date-fns";
 import "./EncounterNoteFormStyles.css";
+import NewPage from "../../components/dynamicform/nepage";
+import EncounterFormVisual from "../../components/dynamicform/encounterFormVisual";
 
 function FormWrapper({
   children,
@@ -378,7 +380,7 @@ function EncounterNoteForm() {
     staff_name: 2,
   });
 
-  const [customFields, setCustomFields] = useState([]);
+  const [ customFields, setCustomFields] = useState([]);
   const [deletedCustomFields, setDeletedCustomFields] = useState([]);
 
   let customFieldsTags = useMemo(() => {
@@ -526,6 +528,7 @@ function EncounterNoteForm() {
           if (!data?.billing_comments) {
             data.billing_comments = [];
           }
+          console.log(data, "from data inside a afunction")
           setFormData(data);
 
           // CustomFields
@@ -538,7 +541,7 @@ function EncounterNoteForm() {
     }
   }, []);
 
-  
+  const [table_name, setTable_name] = useState(null)
 
   const fetchDropdownOptions = async (tableName,tableColumns) => {
     const newDroplist = {};
@@ -576,6 +579,9 @@ function EncounterNoteForm() {
    
   };
 
+  const [tableColumns,  setTableColumns] = useState([]);
+  const [tableHeaders, setTableHeaders] = useState([]);
+
 
   const fetchTableHeaders = async (value) => {
     const access_token = localStorage.getItem("access_token");
@@ -603,14 +609,16 @@ function EncounterNoteForm() {
         profile_type_Response
       );
       console.log("data.columns",  header_response,)
+      setFormData((prevData) => ({ ...prevData, "custom_fields": header_response }));
+      setTable_name(header_response?.data.table_name)
       fetchDropdownOptions(header_response?.data.table_name, header_response?.data.columns)
-     
+      setTableColumns(header_response)
       
     } catch (error) {
       console.error("Error fetching table headers:", error);
     }
   };
-
+console.log(formData, "formdata")
   const handleFormDataChange = useCallback(
     (fieldName, value) => {
       fieldName === "Client_Type" && fetchTableHeaders(value);
@@ -794,7 +802,6 @@ function EncounterNoteForm() {
       billing_comments,
     } = formData;
     const formDataPayload = new FormData();
-    console.log(formData, "inside payloaded")
     clientId && formDataPayload.append("client_id", Number(clientId));
     formDataPayload.append("system_id", 12345);
     staff_name && formDataPayload.append("staff_name", staff_name);
@@ -938,12 +945,13 @@ function EncounterNoteForm() {
     formDataPayload.append("tags", JSON.stringify([]));
     formDataPayload.append(
       "custom_fields",
-      JSON.stringify( custom_fields || [])
+      JSON.stringify(custom_fields || [])
     );
     formDataPayload.append(
       "tags_deleted",
       JSON.stringify([])
     );
+    console.log(custom_fields, "inside payload")
     return formDataPayload;
   };
 
@@ -969,10 +977,10 @@ function EncounterNoteForm() {
   };
 
   const handleUpdate = async () => {
-    console.log("updated called");
+    
     try {
       const formDataPayload = handleCreatePayload();
-      console.log({ formDataPayload });
+      console.log("formDataPayload", formDataPayload );
       const response = await protectedApi.put(
         `/encounter-notes-update/${encounterId}/`,
         formDataPayload
@@ -1284,8 +1292,8 @@ function EncounterNoteForm() {
               />
             </div>
           </FormWrapper>
-
-          <FormWrapper
+                <EncounterFormVisual tableName={table_name} />
+          {/* <FormWrapper
             label="Custom Fields"
             isCollapsable={true}
             initialState={customFields.length > 0}
@@ -1304,8 +1312,8 @@ function EncounterNoteForm() {
                 viewMode={mode === "view"}
               />
             </div>
-          </FormWrapper>
-
+          </FormWrapper> */}
+ 
           <FormWrapper label="Encounter Summary">
             <div className="col-span-12">
               <DropDown
