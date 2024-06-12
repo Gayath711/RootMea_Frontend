@@ -646,7 +646,7 @@ function CustomFieldEncounter({ tableName, tableColumns, setTableColumns }) {
                         <div className="text-center mt-6">
                             <button
                                 type="submit"
-                                className="bg-[#5BC4BF] text-white hover:bg-teal-700 font-bold mt-2.5 p-2 px-4 rounded transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500  text-xs"
+                                className="bg-[#5BC4BF] hidden text-white hover:bg-teal-700 font-bold mt-2.5 p-2 px-4 rounded transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500  text-xs"
                             >
                                 Submit
                             </button>

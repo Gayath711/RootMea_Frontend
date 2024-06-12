@@ -21,6 +21,7 @@ import apiURL from "../../apiConfig";
 import { format } from "date-fns";
 import "./EncounterNoteFormStyles.css";
 import CustomFieldEncounter from "../../components/dynamicform/CustomFieldEncounter";
+import CustomFieldsForEncounter from "../../components/ClientProfileForm/CustomFieldsForEncounter";
 
 function FormWrapper({
   children,
@@ -380,21 +381,23 @@ function EncounterNoteForm() {
   });
 
   const [customFields, setCustomFields] = useState([]);
+  const [dndItems, setDndItems] = useState([]);
   const [deletedCustomFields, setDeletedCustomFields] = useState([]);
 
   let customFieldsTags = useMemo(() => {
     return customFields.map((field) => {
+      console.log(field);
       let cf = {
-        datatype: field.type,
-        question: field.props.label,
-        answer: "",
+        datatype: field?.type,
+        question: field?.props?.label,
+        answer: field?.props?.value,
       };
 
-      if (field.type === "imageupload" || field.type === "fileupload") {
-        cf.answer = field.props.base64;
-      } else {
-        cf.answer = field.props.value;
-      }
+      // if (field.type === "imageupload" || field.type === "fileupload") {
+      //   cf.answer = field.props.base64;
+      // } else {
+      //   cf.answer = field.props.value;
+      // }
 
       if (mode === "edit") {
         if (field.id) {
@@ -476,6 +479,7 @@ function EncounterNoteForm() {
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
+  console.log(queryParams);
   const encounterId = queryParams.get("encounterId");
   useEffect(() => {
     const mode = queryParams.get("mode");
@@ -608,6 +612,8 @@ function EncounterNoteForm() {
         header_response?.data?.table_name,
         header_response?.data?.columns
       );
+      setDndItems(header_response?.data?.columns);
+
       setTableColumn(header_response?.data?.columns);
     } catch (error) {
       console.error("Error fetching table headers:", error);
@@ -939,7 +945,7 @@ function EncounterNoteForm() {
     formDataPayload.append("tags", []);
     formDataPayload.append(
       "custom_fields",
-      JSON.stringify(custom_fields || [])
+      JSON.stringify(customFieldsTags || custom_fields || [])
     );
     formDataPayload.append("tags_deleted", []);
     return formDataPayload;
@@ -950,7 +956,7 @@ function EncounterNoteForm() {
       const formDataPayload = await handleCreatePayload();
       const response = await protectedApi.post(
         "/encounter-notes/",
-        formDataPayload
+        formDataPayload 
       );
       if (response.status === 201) {
         setFormData({ client_id: clientId, staff_name: "Temporary User" });
@@ -967,6 +973,7 @@ function EncounterNoteForm() {
   };
 
   const handleUpdate = async () => {
+    console.log("update calleddad")
     try {
       const formDataPayload = handleCreatePayload();
       console.log("formDataPayload", formDataPayload);
@@ -982,6 +989,9 @@ function EncounterNoteForm() {
       console.error(error);
     }
   };
+
+  const [viewMode, setViewMode] = useState(true)
+  const [editMode, setEditMode] = useState(true)
 
   return (
     <div className="mx-1" style={{ fontFamily: "poppins" }}>
@@ -1282,11 +1292,24 @@ function EncounterNoteForm() {
             </div>
           </FormWrapper>
           {tableColumns ? (
-            <CustomFieldEncounter
-              tableName={tableNames}
-              tableColumns={tableColumns}
-              setTableColumns={setTableColumn}
-            />
+            <>
+              <CustomFieldEncounter
+                tableName={tableNames}
+                tableColumns={tableColumns}
+                setTableColumns={setTableColumn}
+              />
+              <CustomFieldsForEncounter
+                id={10}
+                onChange={(dndItms) => {
+                  console.log(dndItms, "inside change")
+                  setCustomFields(dndItms);
+                }}
+                dndItems={dndItems}
+                viewMode={mode === "view"}
+                mode={"edit"}
+                setMode={setMode}
+              />
+            </>
           ) : (
             <FormWrapper
               label="Custom Fields"
