@@ -892,10 +892,10 @@ function EncounterNoteForm() {
       "customFields",
       JSON.stringify(customFieldsTags || [])
     );
-    formDataPayload.append(
-      "tags_deleted",
-      JSON.stringify(deletedcustomFieldsID || [])
-    );
+    // formDataPayload.append(
+    //   "tags_deleted",
+    //   JSON.stringify(deletedcustomFieldsID || [])
+    // );
     return formDataPayload;
   };
 
