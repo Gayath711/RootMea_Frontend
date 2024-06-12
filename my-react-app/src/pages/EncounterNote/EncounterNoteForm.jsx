@@ -527,6 +527,7 @@ function EncounterNoteForm() {
           if (!data?.billing_comments) {
             data.billing_comments = [];
           }
+          console.log(data, "from data inside a afunction");
           setFormData(data);
 
           // CustomFields
@@ -582,8 +583,8 @@ function EncounterNoteForm() {
     try {
       // Create an array of promises for the API calls
       const promises = [
-        axios.get(`${apiURL}/insert_header_get/${value}/`),
         axios.get(`${apiURL}/get_table_structure/${value}/`),
+
         fetch(`${apiURL}/profile-type/`, {
           headers: {
             Authorization: `Bearer ${access_token}`,
@@ -592,25 +593,27 @@ function EncounterNoteForm() {
       ];
 
       // Use Promise.all to fetch all data simultaneously
-      const [header_response, table_structure_response, profile_type_Response] =
-        await Promise.all(promises);
+      const [header_response, profile_type_Response] = await Promise.all(
+        promises
+      );
 
       // Log the responses
       console.log(
-        table_structure_response,
+        "from promise all",
+
         header_response,
         profile_type_Response
       );
       fetchDropdownOptions(
-        table_structure_response?.data?.table_name,
-        table_structure_response?.data?.columns
+        header_response?.data?.table_name,
+        header_response?.data?.columns
       );
-      setTableColumn(table_structure_response?.data?.columns);
+      setTableColumn(header_response?.data?.columns);
     } catch (error) {
       console.error("Error fetching table headers:", error);
     }
   };
-
+  console.log(formData, "formdata");
   const handleFormDataChange = useCallback(
     (fieldName, value) => {
       fieldName === "Client_Type" && fetchTableHeaders(value);
@@ -620,6 +623,8 @@ function EncounterNoteForm() {
 
     [formData]
   );
+
+  console.log(formData, "from formdata");
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -805,11 +810,11 @@ function EncounterNoteForm() {
     encounter_type && formDataPayload.append("encounter_type", encounter_type);
     program && formDataPayload.append("program", program);
     note_template && formDataPayload.append("note_template", note_template);
-    custom_fields !== undefined &&
-      formDataPayload.append(
-        "custom_fields",
-        JSON.stringify(custom_fields || [])
-      );
+    // custom_fields !== undefined &&
+    //   formDataPayload.append(
+    //     "custom_fields",
+    //     JSON.stringify(custom_fields || [])
+    //   );
     encounter_summary_text_template &&
       formDataPayload.append(
         "encounter_summary_text_template",
@@ -933,8 +938,8 @@ function EncounterNoteForm() {
 
     formDataPayload.append("tags", []);
     formDataPayload.append(
-      "customFields",
-      JSON.stringify(customFieldsTags || [])
+      "custom_fields",
+      JSON.stringify(custom_fields || [])
     );
     formDataPayload.append("tags_deleted", []);
     return formDataPayload;
@@ -964,7 +969,7 @@ function EncounterNoteForm() {
   const handleUpdate = async () => {
     try {
       const formDataPayload = handleCreatePayload();
-      console.log({ formDataPayload });
+      console.log("formDataPayload", formDataPayload);
       const response = await protectedApi.put(
         `/encounter-notes-update/${encounterId}/`,
         formDataPayload
