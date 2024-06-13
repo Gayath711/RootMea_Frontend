@@ -914,6 +914,8 @@ function EncounterNoteForm() {
 
     // DND Custom Fields
 
+    
+
     // let tags = customFields.map((field) => {
     //   console.log({ xx_field: field });
     //   let answer = "";
@@ -972,7 +974,7 @@ function EncounterNoteForm() {
   };
 
   const handleUpdate = async () => {
-    console.log("update calleddad")
+    
     try {
       const formDataPayload = handleCreatePayload();
       console.log("formDataPayload", formDataPayload);
@@ -1308,6 +1310,7 @@ function EncounterNoteForm() {
                 mode={"edit"}
                 setMode={setMode}
                 tableColumns={tableColumns}
+                
               />
               
             </>
@@ -1508,7 +1511,7 @@ function EncounterNoteForm() {
           </button>
           <button
             // disabled={disableSubmit || mode === "view"}
-            onClick={mode === "edit" ? handleUpdate : handleCreate}
+            onClick={mode === "encounterMode" ? handleCreate :handleUpdate}
             className="border border-keppel rounded-[3px] disabled:cursor-not-allowed disabled:bg-[#6cd8d3] bg-[#5BC4BF] text-white w-32 py-2"
           >
             Save
