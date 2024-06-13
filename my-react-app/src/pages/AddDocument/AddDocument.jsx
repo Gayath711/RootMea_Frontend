@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import PageTitle from "../../components/PageTitle/PageTitle";
 import { useNavigate, useParams } from "react-router-dom";
 import DropDown from "../../components/common/Dropdown";
@@ -6,7 +6,8 @@ import InputElement from "../../components/dynamicform/FormElements/InputElement
 import DateInput from "../../components/common/DateInput";
 import FileInput from "../../components/dynamicform/FormElements/FileInput";
 import { protectedApi } from "../../services/api";
-import { notifyError } from "../../helper/toastNotication";
+import { format } from "date-fns";
+import { notifyError, notifySuccess } from "../../helper/toastNotication";
 
 async function fetchProgramOptions() {
   try {
@@ -62,15 +63,66 @@ function AddDocument() {
       .then((clientDetails) => {
         setFormData((prev) => ({
           ...prev,
-          client_name: `${clientDetails.first_name || ""} ${
-            clientDetails.last_name || ""
-          }`,
+          client: {
+            id: clientId,
+            name: `${clientDetails.first_name || ""} ${
+              clientDetails.last_name || ""
+            }`,
+          },
         }));
       })
       .catch((error) => {
         console.error(error.message);
       });
   }, []);
+
+  const handleFormDataChange = useCallback(
+    (fieldName, value) => {
+      setFormData((prevData) => ({ ...prevData, [fieldName]: value }));
+    },
+    [formData]
+  );
+
+  const preparePayload = useCallback(() => {
+    const {
+      client,
+      document_name,
+      document_type,
+      document_upload,
+      program,
+      form_completion_date,
+    } = formData;
+
+    const formDataPayload = new FormData();
+    client && formDataPayload.append("client", client.id);
+    document_name && formDataPayload.append("document_name", document_name);
+    document_type && formDataPayload.append("document_type", document_type);
+    program !== undefined && formDataPayload.append("program", program);
+    form_completion_date &&
+      formDataPayload.append("form_completion_date", form_completion_date);
+    document_upload &&
+      formDataPayload.append("document_upload", document_upload);
+
+    return formDataPayload;
+  }, [formData]);
+
+  const handleCreate = useCallback(async () => {
+    try {
+      const payload = preparePayload();
+      const response = await protectedApi.post("/documents/", payload);
+
+      if (response.status === 201) {
+        notifySuccess("Document created successfully");
+        navigate(`/clientchart/${clientId}`);
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+  }, [formData]);
+
+  useEffect(() => {
+    console.log({ formData });
+  }, [formData]);
 
   return (
     <div className="mx-1" style={{ fontFamily: "poppins" }}>
@@ -89,7 +141,8 @@ function AddDocument() {
               rounded={false}
               fontSize="14px"
               isEdittable={clientId !== undefined}
-              selectedOption={formData?.client_name || ""}
+              selectedOption={formData?.client?.name || ""}
+              handleChange={(value) => handleFormDataChange("client", value)}
               options={[
                 { value: "Option 1", label: "Option 1" },
                 { value: "Option 2", label: "Option 2" },
@@ -105,60 +158,48 @@ function AddDocument() {
               borderColor="#5BC4BF"
               rounded={false}
               fontSize="14px"
-              selectedOption={"Type 1"}
+              selectedOption={formData?.document_type || ""}
+              handleChange={(option) =>
+                handleFormDataChange("document_type", option.value)
+              }
               options={[
-                { value: "Type 1", label: "Type 1" },
-                { value: "Type 2", label: "Type 2" },
-                { value: "Type 3", label: "Type 3" },
-                { value: "Type 4", label: "Type 4" },
+                { value: "encounter type", label: "encounter type" },
               ]}
               height="16px"
             />
           </div>
           <div className="col-span-1">
-            <InputElement
-              type="text"
-              addMargin={false}
-              label={"Document Name"}
-              rounded={false}
-              // value={formData?.goals?.[goalIndex]?.problem || ""}
-              width={"w-full"}
-              className="border-keppel"
-              // placeholder="Problem"
-              // disabled={mode === "view"}
-              // handleChange={(value) =>
-              //   handleGoalDataUpdate(goalIndex, "problem", value)
-              // }
-            />
-          </div>
-          <div className="col-span-1">
             <DateInput
-              label={"Document Date"}
+              label="Form Completion Date"
               rounded={false}
               dateFormat="MM-dd-yyyy"
               className="h-[38px] border-keppel"
               height="38px"
               // isEdittable={mode === "view"}
-              // value={
-              // formData?.goals?.[goalIndex]?.goal_date
-              //     ? format(
-              //         formData?.goals?.[goalIndex]?.goal_date,
-              //         "MM-dd-yyyy"
-              //     )
-              //     : ""
-              // }
-              // handleChange={(date) =>
-              // handleGoalDataUpdate(goalIndex, "goal_date", date)
-              // }
+              value={
+                formData?.form_completion_date
+                  ? format(formData?.form_completion_date, "MM-dd-yyyy")
+                  : ""
+              }
+              handleChange={(date) =>
+                handleFormDataChange("form_completion_date", date)
+              }
             />
           </div>
-          <div className="col-span-2">
+          <div className="col-span-1">
             <DropDown
               label="Program"
               borderColor="#5BC4BF"
               rounded={false}
               fontSize="14px"
-              selectedOption={"Program 1"}
+              selectedOption={
+                programOptions?.find(
+                  (program) => program.value === formData?.program
+                )?.label || ""
+              }
+              handleChange={(program) =>
+                handleFormDataChange("program", program.value)
+              }
               options={programOptions}
               height="16px"
             />
@@ -170,18 +211,18 @@ function AddDocument() {
               rounded={false}
               multiple={false}
               className="border-keppel w-full"
-              // formData={formData}
-              // setFormData={setFormData}
+              formData={formData}
+              setFormData={setFormData}
               // disabled={mode === "view"}
               // mode={mode}
               deletedFilesKey="uploaded_documents_deleted"
-              // files={formData?.uploaded_documents || []}
-              // setFiles={useCallback(
-              // (files) => {
-              //     setFormData({ ...formData, uploaded_documents: files });
-              // },
-              // [formData]
-              // )}
+              files={formData?.document_upload || []}
+              setFiles={useCallback(
+                (files) => {
+                  setFormData({ ...formData, document_upload: files });
+                },
+                [formData]
+              )}
             />
           </div>
         </div>
@@ -196,6 +237,7 @@ function AddDocument() {
           <button
             // disabled={disableSubmit || mode === "view"}
             // onClick={mode === "edit" ? handleUpdate : handleCreate}
+            onClick={handleCreate}
             className="border border-keppel rounded-[3px] disabled:cursor-not-allowed disabled:bg-[#6cd8d3] bg-[#5BC4BF] text-white w-32 py-2"
           >
             Save
