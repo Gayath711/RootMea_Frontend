@@ -25,7 +25,9 @@ function FileInput({
   const handleRemove = useCallback(
     (filePath, file_id) => {
       setFiles(
-        files.filter((file) => file.path !== filePath || file?.file_id !== file_id)
+        files.filter(
+          (file) => file.path !== filePath || file?.file_id !== file_id
+        )
       );
       if (formData && mode === "edit") {
         setFormData((prev) => {
@@ -83,7 +85,9 @@ function FileInput({
 
   return (
     <div
-      className={`border flex rounded-[6px] justify-between items-center pl-2 pr-2 ${className}`}
+      className={`border flex rounded-[6px] justify-between items-center pl-2 pr-2 ${
+        disabled ? "bg-[#FAFAFA]" : ""
+      } ${className}`}
       {...getRootProps()}
     >
       <input {...getInputProps({ disabled })} />

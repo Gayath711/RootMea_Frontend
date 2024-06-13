@@ -684,6 +684,7 @@ function EncounterNoteForm() {
       uploaded_documents,
       billing_status,
       billing_comments,
+      form_completion_date,
     } = formData;
     const formDataPayload = new FormData();
     clientId && formDataPayload.append("client_id", Number(clientId));
@@ -700,6 +701,8 @@ function EncounterNoteForm() {
     encounter_type && formDataPayload.append("encounter_type", encounter_type);
     program && formDataPayload.append("program", program);
     note_template && formDataPayload.append("note_template", note_template);
+    form_completion_date &&
+      formDataPayload.append("form_completion_date", form_completion_date);
     custom_fields !== undefined &&
       formDataPayload.append(
         "custom_fields",
@@ -1291,6 +1294,23 @@ function EncounterNoteForm() {
                   }
                 }}
                 options={carePlanOptions}
+              />
+            </div>
+            <div className="col-span-12">
+              <DateInput
+                placeholder="Form Completion Date"
+                className="m-1 border-keppel"
+                dateFormat="MM-dd-yyyy"
+                isEdittable={mode === "view"}
+                value={
+                  formData?.form_completion_date
+                    ? format(formData?.form_completion_date, "MM-dd-yyyy")
+                    : ""
+                }
+                handleChange={(date) =>
+                  handleFormDataChange("form_completion_date", date)
+                }
+                height="37.6px"
               />
             </div>
             <div className="col-span-12">
