@@ -14,7 +14,9 @@ function BulkUploadComponent() {
   useEffect(() => {
     const fetchTableNames = async () => {
       try {
-        const response = await axios.get(`${apiURL}/get_matching_tables/`);
+        const response = await axios.get(
+          `${apiURL}/get_upload_matching_tables/`
+        );
         setTableNames(response.data.matching_tables);
       } catch (error) {
         console.error("Error fetching table names:", error);
@@ -165,7 +167,7 @@ function BulkUploadComponent() {
       {/* Header */}
       <header className="bg-94cfcf text-white py-4">
         <div className="container mx-auto text-center">
-          <h1 className="text-3xl font-semibold">CSV Bulk Upload</h1>
+          <h1 className="text-3xl font-semibold">XLS Bulk Upload</h1>
         </div>
       </header>
 
