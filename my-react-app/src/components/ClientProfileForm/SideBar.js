@@ -27,25 +27,27 @@ const Sidebar = ({ handleClick, isNew, isEditable }) => {
     <div>
       <div className="flex flex-row justify-center items-center">
         <div
-          className={`flex pb-4 shadow-lg ${
-            showSidebar ? "h-full" : "h-screen"
-          }`}
+          className={`flex pb-4 shadow-lg ${showSidebar ? "h-full" : "h-screen"
+            }`}
           style={{ width: sidebarWidth }}
         >
           <div className="bg-white">
             <div className="px-0">
               {showSidebar && (
                 <ul className="ml-5 text-md">
-                  <button onClick={() => handleClick(1)}>
-                    <li className=" flex items-center mt-10">
-                      <img
-                        src={GeneralInformationPNG}
-                        className="h-[25px] w-[25px] mr-4"
-                        alt="general information"
-                      />
-                      <p className="">General Information</p>
-                    </li>
-                  </button>
+                  {
+                    /*<button onClick={() => handleClick(1)}>
+                                        <li className=" flex items-center mt-10">
+                                          <img
+                                            src={GeneralInformationPNG}
+                                            className="h-[25px] w-[25px] mr-4"
+                                            alt="general information"
+                                          />
+                                          <p className="">General Information</p>
+                                        </li>
+                                      </button>*/
+                  }
+
                   <button onClick={() => handleClick(2)}>
                     <li className=" flex items-center mt-10">
                       <img

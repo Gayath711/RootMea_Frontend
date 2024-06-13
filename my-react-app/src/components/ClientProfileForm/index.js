@@ -619,7 +619,9 @@ const ClientProfile = ({ isNew }) => {
             isEditable={isEditable}
           />
           <div className="w-full px-2 space-y-4">
-            <div>
+            {
+              /*
+              <div>
               <GeneralInformation
                 id={1}
                 badge={badge}
@@ -627,7 +629,8 @@ const ClientProfile = ({ isNew }) => {
                 clientData={clientData}
                 handleFieldChange={handleFieldChange}
               />
-            </div>
+            </div>*/
+            }
             <div>
               <ContactInformation
                 id={2}
