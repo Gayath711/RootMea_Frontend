@@ -64,7 +64,7 @@ function FormWrapper({
 }
 
 function convertToTimeString(date) {
-  console.log(date);
+  
   return (
     date?.getHours() +
     ":" +
@@ -365,7 +365,7 @@ function EncounterNoteForm() {
   const [carePlanOptions, setCarePlanOptions] = useState([]);
   const [facilityOptions, setFacilityOptions] = useState([]);
   const [programOptions, setProgramOptions] = useState([]);
-  const [Client_Type, setClient_Type] = useState([]);
+  const [ Client_Type, setClient_Type] = useState([]);
   const [userOptions, setUserOptions] = useState([]);
   const [userInfo, setUserInfo] = useState({});
   const [startTime, setStartTime] = useState(null);
@@ -386,7 +386,7 @@ function EncounterNoteForm() {
 
   let customFieldsTags = useMemo(() => {
     return customFields.map((field) => {
-      console.log(field);
+      
       let cf = {
         datatype: field?.type,
         question: field?.props?.label,
@@ -420,7 +420,7 @@ function EncounterNoteForm() {
       .filter(Boolean);
   }, [deletedCustomFields]);
 
-  console.log({ customFieldsTags, deletedCustomFields, deletedcustomFieldsID });
+  
 
   const parseToDnDCustomFields = (items) => {
     return items.map((itm) => {
@@ -479,7 +479,7 @@ function EncounterNoteForm() {
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  console.log(queryParams);
+  
   const encounterId = queryParams.get("encounterId");
   useEffect(() => {
     const mode = queryParams.get("mode");
@@ -531,7 +531,7 @@ function EncounterNoteForm() {
           if (!data?.billing_comments) {
             data.billing_comments = [];
           }
-          console.log(data, "from data inside a afunction");
+          
           setFormData(data);
 
           // CustomFields
@@ -547,12 +547,11 @@ function EncounterNoteForm() {
   const [tableNames, setTableName] = useState(null);
   const [tableColumns, setTableColumn] = useState(null);
   const fetchDropdownOptions = async (tableName, tableColumns) => {
-    console.log(tableName, tableColumns);
+    
     setTableName(tableName);
     const newDroplist = {};
     for (const column of tableColumns) {
-      console.log(column.type);
-      console.log("column.name", column.name);
+      
 
       if (
         column.type === "USER-DEFINED" ||
@@ -570,7 +569,7 @@ function EncounterNoteForm() {
           });
           const dropdownOptions = response.data.enum_labels;
           newDroplist[enumType] = dropdownOptions;
-          console.log("Dropdown options for", enumType, ":", dropdownOptions);
+          
         } catch (error) {
           console.error(
             "Error fetching dropdown options for",
@@ -619,7 +618,7 @@ function EncounterNoteForm() {
       console.error("Error fetching table headers:", error);
     }
   };
-  console.log(formData, "formdata");
+  
   const handleFormDataChange = useCallback(
     (fieldName, value) => {
       fieldName === "Client_Type" && fetchTableHeaders(value);
@@ -1292,11 +1291,7 @@ function EncounterNoteForm() {
             </div>
           </FormWrapper>
           {tableColumns ? (
-          // <CustomFieldEncounter
-            //     tableName={tableNames}
-            //     tableColumns={tableColumns}
-            //     setTableColumns={setTableColumn}
-            //   /> 
+          
             <>
               
             
@@ -1309,10 +1304,12 @@ function EncounterNoteForm() {
                   setCustomFields(dndItms);
                 }}
                 dndItems={dndItems}
-                viewMode={mode === "view"}
+                viewMode={mode === "encounterView"}
                 mode={"edit"}
                 setMode={setMode}
+                tableColumns={tableColumns}
               />
+              
             </>
           ) : (
             <FormWrapper

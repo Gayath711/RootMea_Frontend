@@ -1,108 +1,5 @@
 
 
-
-// import { useEffect, useMemo, useState } from "react";
-
-// import DnDCustomFields from "../DnDCustomFields";
-
-// import TextBox from "../common/TextBox";
-// import OpenAccordianPNG from "../images/open-accordion.png";
-// import ClosedAccordianPNG from "../images/closed-accordion.png";
-// import axios from "../../helper/axiosInstance";
-// import { notifySuccess } from "../../helper/toastNotication";
-
-// const  = ({
-//     id,
-//     onChange,
-//     dndItems,
-//     viewMode,
-//     mode,
-//     editMode,
-// }) => {
-//     console.log(dndItems, "dndItems")
-
-//     const convertToSample = (input) => {
-        
-//         return input.map(item => {
-//             return {
-//                 "type": "text",
-//                 "props": {
-//                     "label": item?.column_fullname,
-//                     "value": "",
-//                     "width": item.width,
-//                     "type": "text",
-//                     "disabled": true
-//                 },
-//                 "answer": "",
-//                 "datatype": "text",
-//                 "question": item?.column_fullname
-//             };
-//         });
-//     };
-
-//     dndItems = convertToSample(dndItems);
-
-
-
-//     console.log(dndItems, "after conversion");
-//     const [isOpen, setIsOpen] = useState(false);
-
-//     const toggleAccordion = () => {
-//         setIsOpen(!isOpen);
-//     };
-
-//     useEffect(() => {
-//         if (dndItems.length > 0) {
-//             if (!isOpen) {
-//                 setIsOpen(true);
-//             }
-//         }
-//     }, [dndItems]);
-
-    
-
-//     const convertedDndItems = dndItems;
-//     return (
-//         <div
-//             className="border border-gray-300  bg-gray-50 rounded-md"
-//             id={`accordian-${id}`}
-//         >
-//             <div
-//                 className="flex items-center justify-between p-4 cursor-pointer"
-//                 onClick={toggleAccordion}
-//             >
-//                 <div>
-//                     <h2 className="text-lg font-medium">Custom Fields</h2>
-
-//                     <p>Custom fields for the client profiles.</p>
-//                 </div>
-//                 <img
-//                     src={isOpen ? OpenAccordianPNG : ClosedAccordianPNG}
-//                     alt={isOpen ? "Open accordian" : "Close accordion"}
-//                     className="ml-2 w-6 h-6"
-//                 />
-//             </div>
-//             {isOpen && (
-//                 <>
-//                     <div className="p-4 border-t border-gray-300">
-//                         <div className="flex flex-col justify-between space-y-6">
-//                             <DnDCustomFields
-//                                 onChange={onChange}
-//                                 dndItems={convertedDndItems}
-//                                 viewMode={viewMode}
-//                                 editMode={editMode}
-//                             />
-//                         </div>
-//                     </div>
-//                 </>
-//             )}
-//         </div>
-//     );
-// };
-
-// export default CustomFieldsForEncounter;
-
-
 import { useEffect, useMemo, useState } from "react";
 
 import DnDCustomFields from "../DnDCustomFields";
@@ -121,6 +18,7 @@ const CustomFieldsForEncounter = ({
   mode,
   refresh,
   setMode,
+  tableColumns
 }) => {
     console.log(dndItems, "dndItems");
     
@@ -220,17 +118,18 @@ const CustomFieldsForEncounter = ({
       const convertToSample = (input) => {
         
         return input.map(item => {
+          console.log(item)
             return {
-                "type": "text",
+                "type": item?.type,
                 "props": {
                     "label": item?.column_fullname,
                     "value": "",
                     "width": item.width,
-                    "type": "text",
+                    "type": item?.type,
                     "disabled": true
                 },
                 "answer": "",
-                "datatype": "text",
+                "datatype": item?.type,
                 "question": item?.column_fullname
             };
         });
@@ -240,6 +139,85 @@ const CustomFieldsForEncounter = ({
 
     let convertedDndItems = dndItems;
 console.log(convertedDndItems);
+
+    
+
+    function convertData(array) {
+    // Mapping through the array and applying transformations
+    return array.map(item => {
+        switch (item.type) {
+            case "character":
+                return {
+                    ...item,
+                    type: "header",
+                    datatype: "character"
+                };
+            case "line":
+                return {
+                    ...item,
+                    type: "divider",
+                    datatype: "line"
+                };
+            case "character varying":
+                return {
+                    ...item,
+                    type: "text",
+                    datatype: "character varying"
+                };
+            case "timestamp without time zone":
+                return {
+                    ...item,
+                    type: "datetime",
+                    datatype: "timestamp without time zone",
+                    props: {
+                        ...item.props,
+                        width: "1/3" // Update width to "1/2" only for dateandtime type
+                    }
+                };
+                case "json":
+                return {
+                    ...item,
+                    type: "subheader",
+                    datatype: "json"
+                };
+            case "bytea":
+                return {
+                    ...item,
+                    type: "fileupload",
+                    datatype: "bytea"
+                };
+            default:
+                // If type doesn't need conversion, return the item as-is
+                return item;
+        }
+    });
+}
+
+convertedDndItems = convertData(dndItems) 
+console.log("convertedDndItems", convertedDndItems);
+// Example array based on your JSON structure
+const originalArray = [
+    {
+        "type": "character",
+        "props": {
+            "label": "My Heading",
+            "value": "",
+            "width": "w-full",
+            "type": "character",
+            "disabled": true
+        },
+        "answer": "",
+        "datatype": "character",
+        "question": "My Heading"
+    },
+    // Add other objects as per your original array here
+];
+
+// Applying the conversion function
+const transformedArray = convertData(originalArray);
+
+console.log(transformedArray);
+
 
   return (
     <div
@@ -251,10 +229,12 @@ console.log(convertedDndItems);
         <>
           <div className="p-4 border-t border-gray-300">
             <div className="flex flex-col justify-between space-y-6">
+            
               <DnDCustomFields
                 onChange={onChange}
                 dndItems={convertedDndItems}
                 viewMode={viewMode}
+                
               />
             </div>
             <div className="flex justify-end items-center">
@@ -267,6 +247,7 @@ console.log(convertedDndItems);
               </button>
             </div>
           </div>
+          
         </>
       )}
     </div>
