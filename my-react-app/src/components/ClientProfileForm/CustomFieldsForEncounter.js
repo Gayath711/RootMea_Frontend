@@ -246,21 +246,7 @@ console.log(convertedDndItems);
       className="border border-gray-300  bg-gray-50 rounded-md"
       id={`accordian-${id}`}
     >
-      <div
-        className="flex items-center justify-between p-4 cursor-pointer"
-        onClick={toggleAccordion}
-      >
-        <div>
-          <h2 className="text-lg font-medium">Custom Fields For All</h2>
-
-          <p>Add custom fields for all the client profiles.</p>
-        </div>
-        <img
-          src={isOpen ? OpenAccordianPNG : ClosedAccordianPNG}
-          alt={isOpen ? "Open accordian" : "Close accordion"}
-          className="ml-2 w-6 h-6"
-        />
-      </div>
+      
       {isOpen && (
         <>
           <div className="p-4 border-t border-gray-300">

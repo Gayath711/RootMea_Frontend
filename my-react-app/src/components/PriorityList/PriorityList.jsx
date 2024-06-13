@@ -5,6 +5,8 @@ import BasicTable from "../react-table/BasicTable";
 import axios from "axios";
 import "./PriorityListStyles.css";
 import apiURL from "../../apiConfig";
+import PriorityListTable from "../react-table/PriorityListTable";
+import EditableCell from "../react-table/EditableCell";
 
 function PriorityList() {
   const [data, setData] = useState([]);
@@ -39,21 +41,47 @@ function PriorityList() {
     }
   };
 
+  const updateMyData = (rowIndex, columnId, value) => {
+    // We use a functional update to ensure we don't overwrite other object properties
+    // that React isn't tracking for the data state.
+    setData((old) =>
+      old.map((row, index) => {
+        if (index === rowIndex) {
+          // Create a new object with the updated value
+          return {
+            ...old[rowIndex],
+            [columnId]: value,
+          };
+        }
+        return row;
+      })
+    );
+  };
+
   const columns = useMemo(
     () => [
       {
         Header: "Program",
         accessor: "program_name",
         align: "left",
+        Cell: (props) => (
+          <EditableCell {...props} updateMyData={updateMyData} />
+        ),
       },
       {
         Header: "List Name",
         accessor: "priority_list_name",
         align: "left",
+        Cell: (props) => (
+          <EditableCell {...props} updateMyData={updateMyData} />
+        ),
       },
       {
         Header: "Total Clients",
         accessor: "total_clients",
+        Cell: (props) => (
+          <EditableCell {...props} updateMyData={updateMyData} />
+        ),
       },
       {
         Header: "Latest Edit",
@@ -76,6 +104,9 @@ function PriorityList() {
         Header: "Assigned Staff",
         accessor: "other_assigned_staff",
         align: "left",
+        Cell: (props) => (
+          <EditableCell {...props} updateMyData={updateMyData} />
+        ),
       },
     ],
     []
@@ -109,7 +140,7 @@ function PriorityList() {
       </div>
       <hr id="priority-list-6" className="w-[98%] mx-auto my-2" />
       <div className="w-full flex-grow flex flex-col">
-        <BasicTable type={"priorityList"} columns={columns} data={data} />
+        <PriorityListTable type={"priorityList"} columns={columns} data={data} />
       </div>
     </div>
   );

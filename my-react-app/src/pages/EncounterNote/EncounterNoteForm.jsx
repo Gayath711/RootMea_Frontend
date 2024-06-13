@@ -492,7 +492,7 @@ function EncounterNoteForm() {
       const fetchClientEncounterDetails = async () => {
         try {
           const response = await protectedApi.get(
-            `/encounter-notes/${encounterId}`
+            `/encounter-notes/`
           );
           const data = response.data;
           data.custom_fields = JSON.stringify(data.custom_fields);
@@ -942,12 +942,12 @@ function EncounterNoteForm() {
     console.log({ customFieldsTags, deletedcustomFieldsID });
     console.log("--- Payload End ----");
 
-    formDataPayload.append("tags", []);
+    formDataPayload.append("tags", JSON.stringify([]));
     formDataPayload.append(
       "custom_fields",
       JSON.stringify(customFieldsTags || custom_fields || [])
     );
-    formDataPayload.append("tags_deleted", []);
+    formDataPayload.append("tags_deleted", JSON.stringify([]));
     return formDataPayload;
   };
 
@@ -1277,7 +1277,7 @@ function EncounterNoteForm() {
             <div className="col-span-6">
               <DropDown
                 name="Client_Type"
-                placeholder="Client_Type *"
+                placeholder="Form Template *"
                 handleChange={(data) =>
                   handleFormDataChange("Client_Type", data.value)
                 }
@@ -1292,12 +1292,16 @@ function EncounterNoteForm() {
             </div>
           </FormWrapper>
           {tableColumns ? (
+          // <CustomFieldEncounter
+            //     tableName={tableNames}
+            //     tableColumns={tableColumns}
+            //     setTableColumns={setTableColumn}
+            //   /> 
             <>
-              <CustomFieldEncounter
-                tableName={tableNames}
-                tableColumns={tableColumns}
-                setTableColumns={setTableColumn}
-              />
+              
+            
+
+
               <CustomFieldsForEncounter
                 id={10}
                 onChange={(dndItms) => {
