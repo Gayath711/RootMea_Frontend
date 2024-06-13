@@ -14,12 +14,14 @@ import { notifyError, notifySuccess } from "../../helper/toastNotication";
 import DropDown from "../../components/common/Dropdown";
 import BasicTable from "../../components/react-table/BasicTable";
 import DnDCustomFields from "../../components/DnDCustomFields";
-
+import axios from "axios";
 import CollapseOpenSvg from "../../components/images/collpase-open.svg";
 import CollapseCloseSvg from "../../components/images/collapse-close.svg";
-
+import apiURL from "../../apiConfig";
 import { format } from "date-fns";
 import "./EncounterNoteFormStyles.css";
+import CustomFieldEncounter from "../../components/dynamicform/CustomFieldEncounter";
+import CustomFieldsForEncounter from "../../components/ClientProfileForm/CustomFieldsForEncounter";
 
 function FormWrapper({
   children,
@@ -62,7 +64,7 @@ function FormWrapper({
 }
 
 function convertToTimeString(date) {
-  console.log(date);
+  
   return (
     date?.getHours() +
     ":" +
@@ -92,6 +94,15 @@ async function fetchClientDetails({ clientId }) {
 async function fetchFormOptions() {
   try {
     const response = await protectedApi.get("/encounter-note-form-options/");
+    return response.data;
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
+async function fetchClientOptions() {
+  try {
+    const response = await protectedApi.get("/get_matching_tables/  ");
     return response.data;
   } catch (error) {
     console.error(error.message);
@@ -354,6 +365,7 @@ function EncounterNoteForm() {
   const [carePlanOptions, setCarePlanOptions] = useState([]);
   const [facilityOptions, setFacilityOptions] = useState([]);
   const [programOptions, setProgramOptions] = useState([]);
+  const [ Client_Type, setClient_Type] = useState([]);
   const [userOptions, setUserOptions] = useState([]);
   const [userInfo, setUserInfo] = useState({});
   const [startTime, setStartTime] = useState(null);
@@ -369,21 +381,23 @@ function EncounterNoteForm() {
   });
 
   const [customFields, setCustomFields] = useState([]);
+  const [dndItems, setDndItems] = useState([]);
   const [deletedCustomFields, setDeletedCustomFields] = useState([]);
 
   let customFieldsTags = useMemo(() => {
     return customFields.map((field) => {
+      
       let cf = {
-        datatype: field.type,
-        question: field.props.label,
-        answer: "",
+        datatype: field?.type,
+        question: field?.props?.label,
+        answer: field?.props?.value,
       };
 
-      if (field.type === "imageupload" || field.type === "fileupload") {
-        cf.answer = field.props.base64;
-      } else {
-        cf.answer = field.props.value;
-      }
+      // if (field.type === "imageupload" || field.type === "fileupload") {
+      //   cf.answer = field.props.base64;
+      // } else {
+      //   cf.answer = field.props.value;
+      // }
 
       if (mode === "edit") {
         if (field.id) {
@@ -406,7 +420,7 @@ function EncounterNoteForm() {
       .filter(Boolean);
   }, [deletedCustomFields]);
 
-  console.log({ customFieldsTags, deletedCustomFields, deletedcustomFieldsID });
+  
 
   const parseToDnDCustomFields = (items) => {
     return items.map((itm) => {
@@ -465,6 +479,7 @@ function EncounterNoteForm() {
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
+  
   const encounterId = queryParams.get("encounterId");
   useEffect(() => {
     const mode = queryParams.get("mode");
@@ -477,7 +492,7 @@ function EncounterNoteForm() {
       const fetchClientEncounterDetails = async () => {
         try {
           const response = await protectedApi.get(
-            `/encounter-notes/${encounterId}`
+            `/encounter-notes/`
           );
           const data = response.data;
           data.custom_fields = JSON.stringify(data.custom_fields);
@@ -516,6 +531,7 @@ function EncounterNoteForm() {
           if (!data?.billing_comments) {
             data.billing_comments = [];
           }
+          
           setFormData(data);
 
           // CustomFields
@@ -528,12 +544,92 @@ function EncounterNoteForm() {
     }
   }, []);
 
+  const [tableNames, setTableName] = useState(null);
+  const [tableColumns, setTableColumn] = useState(null);
+  const fetchDropdownOptions = async (tableName, tableColumns) => {
+    
+    setTableName(tableName);
+    const newDroplist = {};
+    for (const column of tableColumns) {
+      
+
+      if (
+        column.type === "USER-DEFINED" ||
+        ((column.type === "USER-DEFINED" || column.type === "ARRAY") &&
+          (column.name.endsWith("_multiple") ||
+            column.name.endsWith("_checkbox")))
+      ) {
+        const enumType = `enum_type_${tableName}_${column.name}_enum_type`;
+
+        try {
+          const response = await axios.get(`${apiURL}/get_enum_labels/`, {
+            params: {
+              enum_type: enumType,
+            },
+          });
+          const dropdownOptions = response.data.enum_labels;
+          newDroplist[enumType] = dropdownOptions;
+          
+        } catch (error) {
+          console.error(
+            "Error fetching dropdown options for",
+            enumType,
+            ":",
+            error
+          );
+        }
+      }
+    }
+  };
+  const fetchTableHeaders = async (value) => {
+    const access_token = localStorage.getItem("access_token");
+    try {
+      // Create an array of promises for the API calls
+      const promises = [
+        axios.get(`${apiURL}/get_table_structure/${value}/`),
+
+        fetch(`${apiURL}/profile-type/`, {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        }).then((response) => response.json()),
+      ];
+
+      // Use Promise.all to fetch all data simultaneously
+      const [header_response, profile_type_Response] = await Promise.all(
+        promises
+      );
+
+      // Log the responses
+      console.log(
+        "from promise all",
+
+        header_response,
+        profile_type_Response
+      );
+      fetchDropdownOptions(
+        header_response?.data?.table_name,
+        header_response?.data?.columns
+      );
+      setDndItems(header_response?.data?.columns);
+
+      setTableColumn(header_response?.data?.columns);
+    } catch (error) {
+      console.error("Error fetching table headers:", error);
+    }
+  };
+  
   const handleFormDataChange = useCallback(
     (fieldName, value) => {
+      fieldName === "Client_Type" && fetchTableHeaders(value);
+      console.log("callback called", fieldName, value);
       setFormData((prevData) => ({ ...prevData, [fieldName]: value }));
     },
+
     [formData]
   );
+
+  console.log(formData, "from formdata");
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -584,6 +680,25 @@ function EncounterNoteForm() {
   }, []);
 
   useEffect(() => {
+    fetchClientOptions()
+      .then((fetchClientOptions) => {
+        console.log("from_client", fetchClientOptions?.matching_tables);
+
+        const convertedFormOptions = fetchClientOptions.matching_tables.map(
+          (formName) => ({
+            label: formName,
+            value: formName,
+          })
+        );
+
+        setClient_Type(convertedFormOptions);
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  }, []);
+
+  useEffect(() => {
     fetchCarePlanOptions()
       .then((carePlanOptionsResponse) => {
         const convertedCarePlanOptions = carePlanOptionsResponse.map(
@@ -612,7 +727,7 @@ function EncounterNoteForm() {
   useEffect(() => {
     fetchProgramOptions()
       .then((programOptionsResponse) => {
-        const convertedProgramOptions = programOptionsResponse.map(
+        const convertedProgramOptions = programOptionsResponse?.map(
           (program) => ({ label: program.name, value: program.id })
         );
         setProgramOptions(convertedProgramOptions);
@@ -700,11 +815,11 @@ function EncounterNoteForm() {
     encounter_type && formDataPayload.append("encounter_type", encounter_type);
     program && formDataPayload.append("program", program);
     note_template && formDataPayload.append("note_template", note_template);
-    custom_fields !== undefined &&
-      formDataPayload.append(
-        "custom_fields",
-        JSON.stringify(custom_fields || [])
-      );
+    // custom_fields !== undefined &&
+    //   formDataPayload.append(
+    //     "custom_fields",
+    //     JSON.stringify(custom_fields || [])
+    //   );
     encounter_summary_text_template &&
       formDataPayload.append(
         "encounter_summary_text_template",
@@ -799,6 +914,8 @@ function EncounterNoteForm() {
 
     // DND Custom Fields
 
+    
+
     // let tags = customFields.map((field) => {
     //   console.log({ xx_field: field });
     //   let answer = "";
@@ -826,11 +943,12 @@ function EncounterNoteForm() {
     console.log({ customFieldsTags, deletedcustomFieldsID });
     console.log("--- Payload End ----");
 
-    formDataPayload.append("tags", JSON.stringify(customFieldsTags || []));
+    formDataPayload.append("tags", JSON.stringify([]));
     formDataPayload.append(
-      "tags_deleted",
-      JSON.stringify(deletedcustomFieldsID || [])
+      "custom_fields",
+      JSON.stringify(customFieldsTags || custom_fields || [])
     );
+    formDataPayload.append("tags_deleted", JSON.stringify([]));
     return formDataPayload;
   };
 
@@ -839,7 +957,7 @@ function EncounterNoteForm() {
       const formDataPayload = await handleCreatePayload();
       const response = await protectedApi.post(
         "/encounter-notes/",
-        formDataPayload
+        formDataPayload 
       );
       if (response.status === 201) {
         setFormData({ client_id: clientId, staff_name: "Temporary User" });
@@ -856,9 +974,10 @@ function EncounterNoteForm() {
   };
 
   const handleUpdate = async () => {
+    
     try {
       const formDataPayload = handleCreatePayload();
-      console.log({ formDataPayload });
+      console.log("formDataPayload", formDataPayload);
       const response = await protectedApi.put(
         `/encounter-notes-update/${encounterId}/`,
         formDataPayload
@@ -871,6 +990,9 @@ function EncounterNoteForm() {
       console.error(error);
     }
   };
+
+  const [viewMode, setViewMode] = useState(true)
+  const [editMode, setEditMode] = useState(true)
 
   return (
     <div className="mx-1" style={{ fontFamily: "poppins" }}>
@@ -1153,28 +1275,67 @@ function EncounterNoteForm() {
                 selectedOption={formData?.note_template || ""}
               />
             </div>
-          </FormWrapper>
-
-          <FormWrapper
-            label="Custom Fields"
-            isCollapsable={true}
-            initialState={customFields.length > 0}
-          >
-            <div className="col-span-12">
-              <DnDCustomFields
-                onChange={(dndItms) => {
-                  setCustomFields(dndItms);
-                }}
-                onDelete={(dndItms) => {
-                  console.log({ onDelItm: dndItms });
-                  setDeletedCustomFields(dndItms);
-                }}
-                deletedItems={deletedCustomFields}
-                dndItems={customFields}
-                viewMode={mode === "view"}
+            <div className="col-span-6">
+              <DropDown
+                name="Client_Type"
+                placeholder="Form Template *"
+                handleChange={(data) =>
+                  handleFormDataChange("Client_Type", data.value)
+                }
+                isEdittable={mode === "view"}
+                className="border-keppel m-1 h-[37.6px]"
+                height="37.6px"
+                fontSize="14px"
+                borderColor="#5bc4bf"
+                options={Client_Type}
+                selectedOption={formData?.Client_Type || ""}
               />
             </div>
           </FormWrapper>
+          {tableColumns ? (
+          
+            <>
+              
+            
+
+
+              <CustomFieldsForEncounter
+                id={10}
+                onChange={(dndItms) => {
+                  console.log(dndItms, "inside change")
+                  setCustomFields(dndItms);
+                }}
+                dndItems={dndItems}
+                viewMode={mode === "encounterView"}
+                mode={"edit"}
+                setMode={setMode}
+                tableColumns={tableColumns}
+                
+              />
+              
+            </>
+          ) : (
+            <FormWrapper
+              label="Custom Fields"
+              isCollapsable={true}
+              initialState={customFields.length > 0}
+            >
+              <div className="col-span-12">
+                <DnDCustomFields
+                  onChange={(dndItms) => {
+                    setCustomFields(dndItms);
+                  }}
+                  onDelete={(dndItms) => {
+                    console.log({ onDelItm: dndItms });
+                    setDeletedCustomFields(dndItms);
+                  }}
+                  deletedItems={deletedCustomFields}
+                  dndItems={customFields}
+                  viewMode={mode === "view"}
+                />
+              </div>
+            </FormWrapper>
+          )}
 
           <FormWrapper label="Encounter Summary">
             <div className="col-span-12">
@@ -1349,8 +1510,8 @@ function EncounterNoteForm() {
             Cancel
           </button>
           <button
-            disabled={disableSubmit || mode === "view"}
-            onClick={mode === "edit" ? handleUpdate : handleCreate}
+            // disabled={disableSubmit || mode === "view"}
+            onClick={mode === "encounterMode" ? handleCreate :handleUpdate}
             className="border border-keppel rounded-[3px] disabled:cursor-not-allowed disabled:bg-[#6cd8d3] bg-[#5BC4BF] text-white w-32 py-2"
           >
             Save
