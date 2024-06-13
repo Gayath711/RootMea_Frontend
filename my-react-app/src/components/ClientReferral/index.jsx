@@ -12,6 +12,7 @@ import DnDCustomFields from "../DnDCustomFields";
 
 import CollapseOpenSvg from "../../components/images/collpase-open.svg";
 import CollapseCloseSvg from "../../components/images/collapse-close.svg";
+import PrivatePage from "../../pages/PrivatePage";
 
 export default function ClientReferral() {
   const navigate = useNavigate();
@@ -547,7 +548,7 @@ export default function ClientReferral() {
 
   return (
     <>
-      <button
+      {/* <button
         onClick={() => {
           setCustomFields([
             {
@@ -583,7 +584,7 @@ export default function ClientReferral() {
       >
         jj
       </button>
-      <button onClick={() => setCustomFields([])}>kk</button>
+      <button onClick={() => setCustomFields([])}>kk</button> */}
       <div className="flex flex-column gap-2 items-center">
         <PageHeader title={`Client Referral`} />
         <div className="flex flex-column gap-2 w-100 shadow-md rounded-md relative">
