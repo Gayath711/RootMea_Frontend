@@ -12,6 +12,7 @@ import DeactivatePNG from "../images/deactivate.png";
 
 import ActivateIcon from "../images/activate_icon.svg";
 import DeactivateIcon from "../images/deactivate_icon.svg";
+import PrivateComponent from "../PrivateComponent";
 
 import MUIDataGridWrapper from "../HOC/MUIDataGridWrapper";
 
@@ -109,34 +110,38 @@ export default function StaffRecord() {
   return (
     <>
       <div className="w-100 flex flex-row gap-2 justify-end items-center my-1">
-        <button
-          className="p-1 px-2 hover:bg-teal-400 hover:text-white bg-opacity-50 hover:rounded flex justify-center items-center gap-2"
-          onClick={() => {
-            navigate(`/update-staff-directory/${recordid}`);
-          }}
-        >
-          <span>Edit</span>
-          <img
-            src={EditPNG}
-            className="w-4 h-4"
-            style={{ display: "block", margin: "0 auto" }}
-          />
-        </button>
-        <button
-          className={`p-1 px-2 hover:bg-${
-            usersData.is_active ? "red" : "teal"
-          }-400 hover:text-white bg-opacity-50 hover:rounded flex justify-center items-center gap-2`}
-          onClick={() => {
-            deactivateRecord();
-          }}
-        >
-          <span>{usersData?.is_active ? "Deactivate" : "Activate"}</span>
-          <img
-            src={usersData?.is_active ? DeactivateIcon : ActivateIcon}
-            className="w-6 h-6"
-            style={{ display: "block", margin: "0 auto" }}
-          />
-        </button>
+        <PrivateComponent permission="change_customuser">
+          <button
+            className="p-1 px-2 hover:bg-teal-400 hover:text-white bg-opacity-50 hover:rounded flex justify-center items-center gap-2"
+            onClick={() => {
+              navigate(`/update-staff-directory/${recordid}`);
+            }}
+          >
+            <span>Edit</span>
+            <img
+              src={EditPNG}
+              className="w-4 h-4"
+              style={{ display: "block", margin: "0 auto" }}
+            />
+          </button>
+        </PrivateComponent>
+        <PrivateComponent permission="delete_customuser">
+          <button
+            className={`p-1 px-2 hover:bg-${
+              usersData.is_active ? "red" : "teal"
+            }-400 hover:text-white bg-opacity-50 hover:rounded flex justify-center items-center gap-2`}
+            onClick={() => {
+              deactivateRecord();
+            }}
+          >
+            <span>{usersData?.is_active ? "Deactivate" : "Activate"}</span>
+            <img
+              src={usersData?.is_active ? DeactivateIcon : ActivateIcon}
+              className="w-6 h-6"
+              style={{ display: "block", margin: "0 auto" }}
+            />
+          </button>
+        </PrivateComponent>
       </div>
       <div class="container mx-auto sm:grid-cols-12 md:grid-cols-7 shadow p-0">
         <div className="w-100 bg-[#5BC4BF] text-white p-2.5 px-4">

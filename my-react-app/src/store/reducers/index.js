@@ -6,6 +6,7 @@ import socialVitalSigns from "../slices/socialVitalSignsSlice";
 import medication from "../slices/medicationSlice";
 import diagnoses from "../slices/diagnosesSlice";
 import utils from "../slices/utilsSlice";
+import userInfo from "../slices/userInfoSlice";
 
 const reducers = combineReducers({
   auth,
@@ -15,6 +16,7 @@ const reducers = combineReducers({
   medication,
   diagnoses,
   utils,
+  userInfo,
 });
 
 export default reducers;
