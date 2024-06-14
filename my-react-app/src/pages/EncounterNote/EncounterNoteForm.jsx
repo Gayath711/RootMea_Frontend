@@ -1,4 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import PageTitle from "../../components/PageTitle/PageTitle";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import InputElement from "../../components/dynamicform/FormElements/InputElement";
@@ -150,6 +155,15 @@ async function fetchUsers() {
 async function fetchUserInfo() {
   try {
     const response = await protectedApi.get("/user-details/");
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function fetchTemplateOptions() {
+  try {
+    const response = await protectedApi.get("/encounter-summary/");
     return response.data;
   } catch (error) {
     console.error(error);
@@ -367,6 +381,8 @@ function EncounterNoteForm() {
   const [programOptions, setProgramOptions] = useState([]);
   const [ Client_Type, setClient_Type] = useState([]);
   const [userOptions, setUserOptions] = useState([]);
+  const [templateOptions, setTemplateOptions] = useState([]);
+  const [selectedTemplates, setSelectedTemplates] = useState([]);
   const [userInfo, setUserInfo] = useState({});
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
@@ -522,6 +538,15 @@ function EncounterNoteForm() {
           data.care_plans_deleted = [];
           data.uploaded_documents_deleted = [];
           data.signed_by_deleted = [];
+
+          let formattedEncounterSummary = "";
+
+          Object.keys(data.encounter_summary).forEach((key) => {
+            formattedEncounterSummary += `${key}: ${data.encounter_summary[key]}`;
+          });
+
+          data.encounter_summary = formattedEncounterSummary;
+
           data.care_plans = data.care_plans.map(
             (carePlan) => carePlan.care_plan_id
           );
@@ -629,7 +654,58 @@ function EncounterNoteForm() {
     [formData]
   );
 
-  console.log(formData, "from formdata");
+  const handleUpdateTemplate = useCallback(
+    ({ newTemplates, deletedTemplates }) => {
+      setFormData((prevData) => {
+        let encounterSummary;
+        try {
+          encounterSummary = JSON.parse(prevData.encounter_summary || "{}");
+        } catch (e) {
+          encounterSummary = {};
+          prevData.encounter_summary.split("\n").forEach((line) => {
+            const [key, value] = line.split(":");
+            if (
+              key !== undefined &&
+              typeof key === "string" &&
+              key.trim() !== ""
+            ) {
+              encounterSummary[key.trim()] = (value || "").trim() + "\n";
+            }
+          });
+        }
+        deletedTemplates?.forEach((t) => {
+          for (const q of t.value.questions) {
+            if (
+              encounterSummary[q] === undefined ||
+              encounterSummary[q] === "\n"
+            ) {
+              delete encounterSummary[q];
+            }
+          }
+        });
+
+        newTemplates?.forEach((t) => {
+          t.value.questions.forEach((q) => {
+            if (encounterSummary[q] === undefined) {
+              encounterSummary[q] = "\n";
+            }
+          });
+        });
+
+        let formattedTemplates = "";
+
+        Object.keys(encounterSummary).forEach((key) => {
+          formattedTemplates += `${key}: ${encounterSummary[key]}`;
+        });
+
+        return {
+          ...prevData,
+          encounter_summary: formattedTemplates,
+        };
+      });
+    },
+    []
+  );
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -738,6 +814,18 @@ function EncounterNoteForm() {
   }, []);
 
   useEffect(() => {
+    fetchTemplateOptions()
+      .then((response) => {
+        const convertedResponse = response?.map((data) => ({
+          label: data.text_template,
+          value: data,
+        }));
+        setTemplateOptions(convertedResponse);
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
+  useEffect(() => {
     fetchUsers()
       .then((fetchUsersResponse) => {
         const convertedUserOptions = fetchUsersResponse.map((user) => ({
@@ -799,6 +887,7 @@ function EncounterNoteForm() {
       uploaded_documents,
       billing_status,
       billing_comments,
+      form_completion_date,
     } = formData;
     const formDataPayload = new FormData();
     clientId && formDataPayload.append("client_id", Number(clientId));
@@ -815,6 +904,8 @@ function EncounterNoteForm() {
     encounter_type && formDataPayload.append("encounter_type", encounter_type);
     program && formDataPayload.append("program", program);
     note_template && formDataPayload.append("note_template", note_template);
+    form_completion_date &&
+      formDataPayload.append("form_completion_date", form_completion_date);
     // custom_fields !== undefined &&
     //   formDataPayload.append(
     //     "custom_fields",
@@ -825,8 +916,29 @@ function EncounterNoteForm() {
         "encounter_summary_text_template",
         encounter_summary_text_template
       );
-    encounter_summary &&
-      formDataPayload.append("encounter_summary", encounter_summary);
+
+    if (encounter_summary) {
+      const newEncounterSummary = {};
+      encounter_summary.split("\n").forEach((line) => {
+        const [key, value] = line.split(":");
+        if (
+          key !== undefined &&
+          typeof key === "string" &&
+          key.trim() !== "" &&
+          typeof value === "string" &&
+          value.trim() !== ""
+        ) {
+          newEncounterSummary[key.trim()] = (value || "").trim() + "\n";
+        }
+      });
+      formDataPayload.append(
+        "encounter_summary",
+        JSON.stringify(newEncounterSummary)
+      );
+    } else {
+      formDataPayload.append("encounter_summary", JSON.stringify({}));
+    }
+
     forms &&
       formDataPayload.append(
         "forms",
@@ -1339,26 +1451,31 @@ function EncounterNoteForm() {
 
           <FormWrapper label="Encounter Summary">
             <div className="col-span-12">
-              <DropDown
-                name="encounter_summary_text_template"
-                placeholder="Select note text Template *"
-                handleChange={(data) =>
-                  handleFormDataChange(
-                    "encounter_summary_text_template",
-                    data.value
-                  )
-                }
-                isEdittable={mode === "view"}
-                className="border-keppel m-1 h-[37.6px]"
-                height="37.6px"
-                fontSize="14px"
-                borderColor="#5bc4bf"
-                options={[
-                  { label: "Template 1", value: "Template 1" },
-                  { label: "Template 2", value: "Template 2" },
-                  { label: "Template 3", value: "Template 3" },
-                ]}
-                selectedOption={formData?.encounter_summary_text_template || ""}
+              <MultiSelectElement
+                name={"encounter_summary_text_template"}
+                className="border-keppel"
+                placeholder="encounter_summary_text_template"
+                value={selectedTemplates || []}
+                disabled={mode === "view"}
+                onChange={useCallback((data) => {
+                  setSelectedTemplates((template) => {
+                    const deletedTemplates = template?.filter(
+                      (t) =>
+                        data?.find((d) => d.value.id === t.value.id) ===
+                        undefined
+                    );
+                    const newTemplates = data?.filter(
+                      (d) =>
+                        template?.find((t) => t.value.id === d.value.id) ===
+                        undefined
+                    );
+
+                    handleUpdateTemplate({ newTemplates, deletedTemplates });
+
+                    return data;
+                  });
+                }, [])}
+                options={templateOptions}
               />
             </div>
             <div className="col-span-12">
@@ -1452,6 +1569,23 @@ function EncounterNoteForm() {
                   }
                 }}
                 options={carePlanOptions}
+              />
+            </div>
+            <div className="col-span-12">
+              <DateInput
+                placeholder="Form Completion Date"
+                className="m-1 border-keppel"
+                dateFormat="MM-dd-yyyy"
+                isEdittable={mode === "view"}
+                value={
+                  formData?.form_completion_date
+                    ? format(formData?.form_completion_date, "MM-dd-yyyy")
+                    : ""
+                }
+                handleChange={(date) =>
+                  handleFormDataChange("form_completion_date", date)
+                }
+                height="37.6px"
               />
             </div>
             <div className="col-span-12">
