@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 
 const EditableCell = ({
+  data, // Pass the entire data object
   value: initialValue,
   row: { index },
   column: { id },
-  updateMyData,
+  updateMyData, // This is the function to update the data
 }) => {
   const [value, setValue] = useState(initialValue);
   const [isEditing, setIsEditing] = useState(false);
@@ -17,25 +18,25 @@ const EditableCell = ({
     setValue(e.target.value);
   };
 
-  
-
   const onBlur = () => {
     setIsEditing(false);
-    updateMyData(index, id, value);
+    // Send the necessary information to updateMyData
+    console.log(data, "data")
+    updateMyData(data, value, initialValue, id);
   };
 
   return (
     <div
       onClick={toggleEditing}
       onBlur={onBlur}
-      style={{  padding: "4px", width:"120px" }}
+      style={{ padding: "4px", width: "120px" }}
     >
       {isEditing ? (
         <input
           value={value}
           onChange={onChange}
           autoFocus
-          style={{ outline:"none", border: "1px solid gray" }}
+          style={{ outline: "none", border: "1px solid gray" }}
         />
       ) : (
         value
