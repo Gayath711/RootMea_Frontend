@@ -11,7 +11,7 @@ const DropDown = ({
   fontSize = "1.125rem",
   rounded = true,
   isEdittable,
-  required=false,
+  required = false,
   value,
   handleChange,
   options,
@@ -33,7 +33,7 @@ const DropDown = ({
 
   return (
     <div className="relative">
-       {label && <FormLabel required={required}>{label}</FormLabel>}
+      {label && <FormLabel required={required}>{label}</FormLabel>}
       <Select
         name={name}
         id={id}
@@ -68,11 +68,10 @@ const DropDown = ({
       />
       <label
         htmlFor={id}
-        className={`absolute px-2 text-sm text-gray-500 duration-300 transform ${
-          isFocused || selectedOption
+        className={`absolute px-2 text-sm text-gray-500 duration-300 transform ${isFocused || selectedOption
             ? "-translate-y-6 scale-75 top-4"
             : "translate-y-1/2 scale-100 top-1.5"
-        } z-0 origin-[0] start-2.5 peer-focus:text-gray-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto`}
+          } z-0 origin-[0] start-2.5 peer-focus:text-gray-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto`}
         style={{ background: bgLabelDisabled }}
       >
         {placeholder}
