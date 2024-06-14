@@ -57,50 +57,51 @@ function CreateTableForm() {
   const handleShare = async (tableName) => {
     const url = `${staticurl}/${tableName}`;
     try {
-        if (navigator.share) {
-            await navigator.share({
-                title: 'Share Table Form',
-                text: 'Check out this table form',
-                url: url
-            });
-            console.log('Shared successfully');
-        } else {
-            throw new Error('Web Share API is not supported in this browser');
-        }
-    } catch (error) {
-        console.error('Error sharing:', error);
-      
-        Swal.fire({
-            title: "Copy to Clipboard",
-            text: "Click below to copy the URL to clipboard:",
-            input: 'text',
-            inputValue: url,
-            showCancelButton: true,
-            confirmButtonClass: "btn-danger",
-            confirmButtonText: "Copy",
-            cancelButtonText: "Cancel",
-            inputReadOnly: true,
-            allowOutsideClick: false
-        }).then((result) => {
-            if (result.isConfirmed) {
-                navigator.clipboard.writeText(url)
-                    .then(() => {
-                        Swal.fire("Copied!", "URL copied to clipboard.", "success");
-                    })
-                    .catch(err => {
-                        console.error('Unable to copy URL to clipboard: ', err);
-                        Swal.fire("Error", "Failed to copy URL to clipboard.", "error");
-                    });
-            }
+      if (navigator.share) {
+        await navigator.share({
+          title: 'Share Table Form',
+          text: 'Check out this table form',
+          url: url
         });
+        console.log('Shared successfully');
+      } else {
+        throw new Error('Web Share API is not supported in this browser');
+      }
+    } catch (error) {
+      console.error('Error sharing:', error);
+
+      Swal.fire({
+        title: "Copy to Clipboard",
+        text: "Click below to copy the URL to clipboard:",
+        input: 'text',
+        inputValue: url,
+        showCancelButton: true,
+        confirmButtonClass: "btn-danger",
+        confirmButtonText: "Copy",
+        cancelButtonText: "Cancel",
+        inputReadOnly: true,
+        allowOutsideClick: false
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigator.clipboard.writeText(url)
+            .then(() => {
+              Swal.fire("Copied!", "URL copied to clipboard.", "success");
+            })
+            .catch(err => {
+              console.error('Unable to copy URL to clipboard: ', err);
+              Swal.fire("Error", "Failed to copy URL to clipboard.", "error");
+            });
+        }
+      });
     }
-};
+  };
 
 
-  
+
 
   const handledownload = async (tableName) => {
     try {
+
       const response = await axios.get(`${apiURL}/download_table_data/${tableName}`, {
         responseType: 'blob'
       });
@@ -152,65 +153,66 @@ function CreateTableForm() {
             const cleanedTableName = matchedTableName.replace("roots", "");
             return (
               <div key={index} className="card border-success row col-2" style={{ maxWidth: '18rem', margin: '20px' }}>
+
                 <div className="card-header bg-transparent border-success">
                   <div className='row justify-content-center'>
 
-                    
-                  <OverlayTrigger
-      placement="top"
-      overlay={<Tooltip id="disabled-tooltip">view</Tooltip>}
-    >
-                     <div className='col-4 text-center'>
-                      <a href={`/createtableform/${matchedTableName}`}>
-                        <img src={edit} alt="Edit" className="img-fluid" style={{ width: '40px', height: '40px' }} />
-                      </a>
-                    </div>
-    </OverlayTrigger>
+
+                    <OverlayTrigger
+                      placement="top"
+                      overlay={<Tooltip id="disabled-tooltip">view</Tooltip>}
+                    >
+                      <div className='col-4 text-center'>
+                        <a href={`/createtableform/${matchedTableName}`}>
+                          <img src={edit} alt="Edit" className="img-fluid" style={{ width: '40px', height: '40px' }} />
+                        </a>
+                      </div>
+                    </OverlayTrigger>
 
 
 
 
-  
+
 
 
 
 
                     <OverlayTrigger
-      placement="top"
-      overlay={<Tooltip id="disabled-tooltip">Share</Tooltip>}
-    >
-      <div className='col-4 text-center'>
-                      <button type="button" onClick={() => handleShare(matchedTableName)}>
-                        <img src={share} alt="Share" className="img-fluid" style={{ width: '40px', height: '40px' }} />
-                      </button>
-                    </div>
-    </OverlayTrigger>
+                      placement="top"
+                      overlay={<Tooltip id="disabled-tooltip">Share</Tooltip>}
+                    >
+                      <div className='col-4 text-center'>
+                        <button type="button" onClick={() => handleShare(matchedTableName)}>
+                          <img src={share} alt="Share" className="img-fluid" style={{ width: '40px', height: '40px' }} />
+                        </button>
+                      </div>
+                    </OverlayTrigger>
 
 
 
 
                     <OverlayTrigger
-      placement="top"
-      overlay={<Tooltip id="disabled-tooltip">Bulk Upload</Tooltip>}
-    >
-       <div className='col-4 text-center'>
-                      <a href={`/BulkUploadComponent/${matchedTableName}`}>
-                        <img src={bulk} alt="Bulk" className="img-fluid" style={{ width: '40px', height: '40px' }} />
-                      </a>
-                    </div>
-    </OverlayTrigger>
+                      placement="top"
+                      overlay={<Tooltip id="disabled-tooltip">Bulk Upload</Tooltip>}
+                    >
+                      <div className='col-4 text-center'>
+                        <a href={`/BulkUploadComponent/${matchedTableName}`}>
+                          <img src={bulk} alt="Bulk" className="img-fluid" style={{ width: '40px', height: '40px' }} />
+                        </a>
+                      </div>
+                    </OverlayTrigger>
 
 
-               
+
                   </div>
                 </div>
 
 
                 <div className="card-body text-success">
                   <div style={{ textAlign: 'center' }}>
-                  <h5 className="card-title" style={{fontWeight: 'bold'}}>{cleanedTableName.charAt(0).toUpperCase() + cleanedTableName.slice(1)}</h5>
+                    <h5 className="card-title" style={{ fontWeight: 'bold' }}>{cleanedTableName.charAt(0).toUpperCase() + cleanedTableName.slice(1)}</h5>
 
-                    
+
                     <a href={`/createtableform/${matchedTableName}`}>
                       <img src={file1} alt="File1" className="img-fluid" style={{ width: '60px', height: '60px', flexShrink: 0, margin: 'auto' }} />
                     </a>
@@ -222,32 +224,32 @@ function CreateTableForm() {
 
 
                   <div className='row justify-content-center'>
-            
+
 
                     <OverlayTrigger
-      placement="top"
-      overlay={<Tooltip id="disabled-tooltip">Form created date 25-04-2024</Tooltip>}
-    >
-          <div className='col-6 text-center'>
-                      <img src={date} alt="Date" style={{ width: '40px', height: '40px' }} />
-                    </div>
+                      placement="top"
+                      overlay={<Tooltip id="disabled-tooltip">Form created date 25-04-2024</Tooltip>}
+                    >
+                      <div className='col-6 text-center'>
+                        <img src={date} alt="Date" style={{ width: '40px', height: '40px' }} />
+                      </div>
 
-    </OverlayTrigger>
+                    </OverlayTrigger>
 
 
 
-                 
+
 
                     <OverlayTrigger
-      placement="top"
-      overlay={<Tooltip id="disabled-tooltip">Form Data Download</Tooltip>}
-    >
-        <div className='col-6 text-center'>
-                      <button type="button" onClick={() => handledownload(matchedTableName)}>
-                        <img src={down} alt="Download" style={{ width: '40px', height: '40px' }} />
-                      </button>
-                    </div>
-    </OverlayTrigger>
+                      placement="top"
+                      overlay={<Tooltip id="disabled-tooltip">Form Data Download</Tooltip>}
+                    >
+                      <div className='col-6 text-center'>
+                        <button type="button" onClick={() => handledownload(matchedTableName)}>
+                          <img src={down} alt="Download" style={{ width: '40px', height: '40px' }} />
+                        </button>
+                      </div>
+                    </OverlayTrigger>
 
 
                   </div>
@@ -257,7 +259,7 @@ function CreateTableForm() {
               </div>
             );
 
-            
+
           })}
         </div>
       </div>

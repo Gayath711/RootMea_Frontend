@@ -4,9 +4,9 @@ import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import BasicTable from "../react-table/BasicTable";
 import EyeIcon from "../images/eye.svg";
 import EditIcon from "../images/edit.svg";
+import { useNavigate } from "react-router-dom";
 
 const Content = ({ data, columns }) => {
-  console.log(data, columns);
   return (
     <>
       <hr className="w-[99%] mx-auto text-[#bababa]" />
@@ -17,6 +17,7 @@ const Content = ({ data, columns }) => {
 
 function Documents({ clientId }) {
   const [open, setOpen] = useState(true);
+  const navigate = useNavigate();
   const [data, setData] = useState([
     {
       type: "Note",
@@ -118,7 +119,7 @@ function Documents({ clientId }) {
           <img src={ExternalLinkIcon} className="size-4" alt="link" />
         </div>
         <div className="flex items-center gap-x-10">
-          <button className="px-3 py-2 text-sm bg-[#8AD0F5] text-[#1A1F25] rounded-sm font-medium">
+          <button onClick={() => navigate(`/document/add/${clientId}`)} className="px-3 py-2 text-sm bg-[#8AD0F5] text-[#1A1F25] rounded-sm font-medium">
             Add New
           </button>
           <RemoveCircleIcon
