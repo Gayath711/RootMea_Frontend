@@ -508,7 +508,7 @@ function EncounterNoteForm() {
       const fetchClientEncounterDetails = async () => {
         try {
           const response = await protectedApi.get(
-            `/encounter-notes/`
+            `/encounter-notes/${encounterId}`
           );
           const data = response.data;
           data.custom_fields = JSON.stringify(data.custom_fields);
