@@ -140,7 +140,7 @@ export default function ProgramRecord() {
           />
         </button>
       </div>
-      <div class="container mx-auto sm:grid-cols-12 md:grid-cols-7 shadow p-0">
+      <div className="container mx-auto sm:grid-cols-12 md:grid-cols-7 shadow p-0">
         {isDeactivating && (
           <div className="flex flex-column absolute top-0 left-0 items-center justify-center gap-2 w-100 h-100 bg-gray-100/80">
             <svg

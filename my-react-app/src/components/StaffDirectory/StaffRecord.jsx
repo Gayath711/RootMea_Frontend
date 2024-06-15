@@ -137,7 +137,7 @@ export default function StaffRecord() {
           />
         </button>
       </div>
-      <div class="container mx-auto sm:grid-cols-12 md:grid-cols-7 shadow p-0">
+      <div className="container mx-auto sm:grid-cols-12 md:grid-cols-7 shadow p-0">
         <div className="w-100 bg-[#5BC4BF] text-white p-2.5 px-4">
           {staffName}
         </div>
