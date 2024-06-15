@@ -11,6 +11,7 @@ import FileInputProperty from "./Property/FileInputProperty";
 import SelectProperty from "./Property/SelectProperty";
 import BooleanProperty from "./Property/BooleanProperty";
 import HeaderProperty from "./Property/HeaderProperty";
+import DividerProperty from "./Property/DividerProperty";
 
 function FieldProperty(props) {
   const { selectedElement, elements, updateElement } = useFormBuilderContext();
@@ -98,6 +99,11 @@ function FieldProperty(props) {
       case "JSON":
         {
           return <HeaderProperty />;
+        }
+        break;
+      case "LINE":
+        {
+          return <DividerProperty />;
         }
         break;
       default:

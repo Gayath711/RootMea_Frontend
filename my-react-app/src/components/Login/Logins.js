@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios"; // Don't forget to import axios if it's not already imported
 import { useDispatch } from "react-redux";
 import { loginAsync } from "../../store/slices/authSlice";
+import { fetchPermissionList } from "../../store/slices/userInfoSlice";
 import { useForm } from "react-hook-form";
 import { TailSpin } from "react-loader-spinner";
 import { BeatLoader } from "react-spinners";
@@ -76,6 +77,8 @@ const LoginForm = () => {
         }
         setErrorShowAlert(true);
         setIsLoading(false);
+
+        dispatch(fetchPermissionList());
         // }
       });
     } catch (error) {
@@ -227,17 +230,21 @@ const LoginForm = () => {
               <div className="">
                 <div className="flex flex-col items-start px-4">
                   <div className="text-gray-800 text-opacity-50 text-xs font-normal">
-                    Enter Roots Email Address
+                    Enter Roots Email Address X
                   </div>
                   <input
                     data-testid="login-email-address"
                     id="login-email-address"
+                    placeholder="rootsclinic email"
                     className="border-b border-gray-800 focus:outline-none px-2 py-1 w-full mb-2"
                     {...registerLogin("userEmail", {
                       required: "Email Address is required",
                       pattern: {
-                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                        message: "Invalid email address",
+                        // value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        // message: "Invalid email address",
+                        value: /^[A-Z0-9._%+-]+@rootsclinic\.org$/i,
+                        message:
+                          "Email must be from the rootsclinic.org domain",
                       },
                     })}
                   />

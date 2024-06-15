@@ -5,7 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 import Navbar from "./components/NavBar/NavBar";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Dashboard from "./pages/Dashboard/Dashboard"; // Import Dashboard component
-import ClientProfile from "./components/clientprofile"; // Import ClientProfile component
+// import ClientProfile from "./components/clientprofile"; // Import ClientProfile component
 import LoginForm from "./components/Login/Logins";
 import SignupPage from "./components/Signup";
 import UserProfile from "./components/UserProfile";
@@ -53,6 +53,21 @@ import StaffDirectory from "./components/StaffDirectory";
 import StaffRecord from "./components/StaffDirectory/StaffRecord";
 import ProgramRecord from "./components/ProgramDirectory/ProgramRecord";
 import { selectIsSidebarExpanded } from "./store/slices/utilsSlice";
+import EncounterNoteForm from "./pages/EncounterNote/EncounterNoteForm";
+import TheNewCarePlan from "./pages/NewCarePlan/NewCarePlan";
+import AddNewProgram from "./components/ProgramDirectory/AddNewProgram";
+import AddNewStaff from "./components/StaffDirectory/AddNewStaff";
+
+import ClientReferral from "./components/ClientReferral";
+
+// New Client Profile - Create/View/Edit
+import ClientProfile from "./components/ClientProfileForm";
+ 
+import AddDocument from "./pages/AddDocument/AddDocument";
+
+import Master from "./pages/Master";
+import CreateGroup from "./pages/Master/CreateGroup";
+import { fetchPermissionList } from "./store/slices/userInfoSlice";
 
 import TableListView from "./components/TableListView";
 import DataView from "./components/TableListView/DataView";
@@ -68,7 +83,6 @@ function App() {
   // };
 
   const { width } = useWindowSize();
-  console.log(width);
 
   // window.addEventListener('beforeunload', () => {
   //   // Dispatch the logout action
@@ -79,7 +93,6 @@ function App() {
   // });
 
   const isLoggedIn = useSelector((state) => {
-    console.log(state);
     return state.auth.isLoggedIn;
   });
   const dispatch = useDispatch();
@@ -108,7 +121,10 @@ function App() {
       : ["admin"],
     // permissions: ["admin"],
   });
-  console.log("user", user);
+
+  useEffect(() => {
+    dispatch(fetchPermissionList());
+  }, []);
 
   const isSidebarExpanded = useSelector(selectIsSidebarExpanded);
 
@@ -236,7 +252,7 @@ function App() {
                   <Route path="/directory" element={<UserDirectory />} />
                   <Route
                     path="/clientprofilenew"
-                    element={<ClientProfileNew />}
+                    element={<ClientProfile isNew />}
                   />
 
                   <Route
@@ -268,6 +284,16 @@ function App() {
                     path="/program-directory/:recordid"
                     element={<ProgramRecord />}
                   />
+                  <Route
+                    path="/add-new-program-directory/"
+                    element={<AddNewProgram />}
+                  />
+
+                  <Route
+                    path="/update-program-directory/:paramid"
+                    element={<AddNewProgram />}
+                  />
+
                   <Route path="/staff-directory" element={<StaffDirectory />} />
                   <Route
                     path="/staff-directory/:recordid"
@@ -275,6 +301,40 @@ function App() {
                   />
                   <Route path="/table-list-view" element={<TableListView />} />
                   <Route path="/dataview/:dataviewid" element={<DataView />} />
+                  <Route
+                    path="/add-new-staff-directory/"
+                    element={<AddNewStaff />}
+                  />
+                  <Route
+                    path="/update-staff-directory/:paramid"
+                    element={<AddNewStaff />}
+                  />
+
+                  {/* Encounter notes */}
+                  <Route
+                    path="/encounter-note/add/:clientId"
+                    element={<EncounterNoteForm />}
+                  />
+                  <Route
+                    path="/encounter-note/add/:clientId"
+                    element={<EncounterNoteForm />}
+                  />
+                  <Route
+                    path="/care-plan/add/:clientId"
+                    element={<TheNewCarePlan />}
+                  />
+                  <Route path="/client-referral" element={<ClientReferral />} />
+ 
+                  <Route path="/master" element={<Master />} />
+                  <Route path="/create-new-group" element={<CreateGroup />} />
+                  <Route
+                    path="/update-permission-group/:paramid"
+                    element={<CreateGroup />}
+                  />
+ 
+                  <Route path="/document/add/:clientId" element={<AddDocument />} />
+                  <Route path="/document/add" element={<AddDocument />} />
+ 
                 </Routes>
               </div>
             </div>

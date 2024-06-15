@@ -79,45 +79,50 @@ const CalendarMain = () => {
   };
 
   const {
+    appointmentsLoading,
     internalEventsLoading,
     externalEventsLoading,
     internalEvents,
     externalEvents,
     eventList: savedEvents,
+    appointmentsList,
     fetchEvents,
+    fetchAppointments,
   } = useAppointments();
 
-  console.log("savedEvents - calendar", savedEvents);
-  console.log({ internalEvents, externalEvents });
+  console.log({ appointmentsList });
 
   const renderCalendar = () => {
     switch (currentCalendarView) {
       case "Today":
         return (
-          <TodayView savedEvents={savedEvents} fetchEvents={fetchEvents} />
+          <TodayView
+            savedEvents={appointmentsList}
+            fetchEvents={fetchAppointments}
+          />
         );
       case "Week":
         return (
           <Week
             currentDate={currentDate}
-            savedEvents={savedEvents}
-            fetchEvents={fetchEvents}
+            savedEvents={appointmentsList}
+            fetchEvents={fetchAppointments}
           />
         );
       case "Month":
         return (
           <Month
             currentDate={currentDate}
-            savedEvents={savedEvents}
-            fetchEvents={fetchEvents}
+            savedEvents={appointmentsList}
+            fetchEvents={fetchAppointments}
           />
         );
       case "Year":
         return (
           <YearView
             currentDate={currentDate}
-            savedEvents={savedEvents}
-            fetchEvents={fetchEvents}
+            savedEvents={appointmentsList}
+            fetchEvents={fetchAppointments}
           />
         );
       default:
@@ -168,7 +173,7 @@ const CalendarMain = () => {
         toggleModal={toggleModal}
         handleSubmit={submitAppointment}
         setShowAlert={setShowAlert}
-        fetchEvents={fetchEvents}
+        fetchEvents={fetchAppointments}
       />
     </div>
   );

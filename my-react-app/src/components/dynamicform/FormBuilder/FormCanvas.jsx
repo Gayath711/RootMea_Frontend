@@ -13,6 +13,7 @@ import axios from "axios";
 import apiURL from "../../../apiConfig";
 
 import Swal from "sweetalert2";
+import { notifyError, notifyWarn } from "../../../helper/toastNotication";
 
 function FormCanvas() {
   const { setNodeRef } = useDroppable({
@@ -27,9 +28,14 @@ function FormCanvas() {
     togglePreview,
     showPreview,
     formDetail,
+    formDetailErrors,
+    handleFormDetailErrors,
+    resetFormDetailErrors,
     handleFormName,
     resetElements,
   } = useFormBuilderContext();
+
+  const [errosDetail, setErrorDetail] = useState({});
 
   const navigate = useNavigate();
 
@@ -66,60 +72,45 @@ function FormCanvas() {
         return false;
       }
     }
-    toast(
-      {
-        title: "oops !",
-        text: "Add any valid fields to create a form",
-      },
-      "warning"
-    );
+    notifyWarn("Add any valid fields to create a form");
     return true;
   }
 
   function checkHasMetaData(formDetail) {
-    let arrayOfMissingFields = [];
-
+    resetFormDetailErrors();
     if (
       formDetail.title === "" &&
       formDetail.description === "" &&
       formDetail.formName === ""
     ) {
-      toast(
-        {
-          title: "Incomplete !",
-          text: "Please fill valid Form Title, Description and Name",
-        },
-        "error"
-      );
-
-      return false;
+      handleFormDetailErrors("title", true);
+      handleFormDetailErrors("description", true);
+      handleFormDetailErrors("formName", true);
     }
 
     if (formDetail.title === "") {
-      arrayOfMissingFields.push("Title");
+      handleFormDetailErrors("title", true);
     }
 
     if (formDetail.description === "") {
-      arrayOfMissingFields.push("Description");
+      handleFormDetailErrors("description", true);
     }
 
     if (formDetail.formName === "") {
-      arrayOfMissingFields.push("Name");
+      handleFormDetailErrors("formName", true);
     }
 
-    if (arrayOfMissingFields.length === 0) {
-      return true;
-    } else {
-      let alertText = transformArrayToString(arrayOfMissingFields);
-      toast(
-        {
-          title: "Incomplete !",
-          text: `Please fill valid Form ${alertText}`,
-        },
-        "error"
-      );
+    let isError =
+      formDetailErrors.formName === false ||
+      formDetailErrors.title === false ||
+      formDetailErrors.description === false;
 
+    // {"message":"relation \"rootstest1\" already exists\n"} 400 stats
+
+    if (isError) {
       return false;
+    } else {
+      return true;
     }
   }
 
@@ -142,6 +133,7 @@ function FormCanvas() {
   const validation = () => {
     let hasOnlyNonFields = checkHasOnlyNonFields(items);
     let hasValidMetaData = checkHasMetaData(formDetail);
+    console.log({ hasOnlyNonFields, hasValidMetaData });
     if (hasOnlyNonFields) {
       return false;
     }
@@ -168,9 +160,11 @@ function FormCanvas() {
   };
 
   const handleSubmit = async () => {
+    console.log("handleSub");
     try {
       if (validation()) {
         const undefinedLabels = [];
+        console.log("handleSub valid");
 
         items.map((item, index) => {
           if (item.props.label === "") {
@@ -222,13 +216,15 @@ function FormCanvas() {
     } catch (error) {
       console.error("Error:", { error });
       // console.error("Error:", error.response.data.message);
-      toast(
-        {
-          title: "Error !",
-          text: `An error occurred. Please try again later.`,
-        },
-        "error"
-      );
+
+      if (error.response.status === 400) {
+        notifyError(
+          error.response.data.message ||
+            "Network Error ! Please try again later"
+        );
+      } else {
+        notifyError("An error occurred. Please try again later.");
+      }
     }
   };
 
@@ -250,8 +246,17 @@ function FormCanvas() {
               value={formDetail.formName}
               placeholder="Enter Form name..."
               onChange={handleFormNameValidation}
-              className="border border-gray-300 rounded px-4 mt-2 py-2 w-100 focus:outline-none focus:border-green-500 transition-colors duration-300"
+              className={`${
+                formDetailErrors.formName
+                  ? "border-[1px] border-red-500"
+                  : "border border-gray-300"
+              } rounded px-4 mt-2 py-2 w-100 focus:outline-none focus:border-green-500 transition-colors duration-300`}
             />
+            {formDetailErrors.formName && (
+              <label className="ms-1 text-xs text-red-500">
+                Please fill the form name
+              </label>
+            )}
           </div>
           <div className="hidden col-sm-5 p-2">
             <label

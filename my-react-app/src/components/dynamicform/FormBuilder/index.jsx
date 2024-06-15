@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef } from "react";
+import React, { useState, useMemo, useRef, useEffect } from "react";
 
 import { v4 as uuidv4 } from "uuid";
 
@@ -34,6 +34,7 @@ import FieldProperty from "./FieldProperty";
 import FormHeader from "./FormHeader";
 import FormPreview from "./FormPreview";
 import DragOverlayWrapper from "./DragOverlayWrapper";
+import { notify } from "../../../helper/toastNotication";
 
 function RenderFormBuilder() {
   const {
@@ -144,6 +145,7 @@ function RenderFormBuilder() {
           props: {
             type: "header",
             label: "New Header",
+            width: "w-full",
           },
         },
         {
@@ -153,6 +155,7 @@ function RenderFormBuilder() {
           props: {
             type: "subheader",
             label: "New SubHeader",
+            width: "w-full",
           },
         },
         {
@@ -162,6 +165,7 @@ function RenderFormBuilder() {
           props: {
             type: "break_line",
             label: "Divider",
+            width: "w-full",
           },
         },
       ],
@@ -179,6 +183,7 @@ function RenderFormBuilder() {
             placeholder: "Enter new text",
             required: false,
             disabled: false,
+            width: "w-full",
           },
         },
         {
@@ -191,6 +196,7 @@ function RenderFormBuilder() {
             placeholder: "Enter new text",
             required: false,
             disabled: false,
+            width: "w-full",
           },
         },
         {
@@ -203,6 +209,7 @@ function RenderFormBuilder() {
             placeholder: "Enter a number",
             required: false,
             disabled: false,
+            width: "w-full",
           },
         },
         {
@@ -216,6 +223,7 @@ function RenderFormBuilder() {
             step: "0.01",
             required: false,
             disabled: false,
+            width: "w-full",
           },
         },
       ],
@@ -232,6 +240,7 @@ function RenderFormBuilder() {
             label: "New Date",
             required: false,
             disabled: false,
+            width: "w-full",
           },
         },
       ],
@@ -248,6 +257,7 @@ function RenderFormBuilder() {
             required: false,
             disabled: false,
             options: ["option-1", "option-2", "option-3"],
+            width: "w-full",
           },
         },
         {
@@ -259,6 +269,7 @@ function RenderFormBuilder() {
             required: false,
             disabled: false,
             options: ["Yes", "No"],
+            width: "w-full",
           },
         },
 
@@ -271,6 +282,7 @@ function RenderFormBuilder() {
             required: false,
             disabled: false,
             options: ["option-1", "option-2", "option-3"],
+            width: "w-full",
           },
         },
         {
@@ -283,6 +295,7 @@ function RenderFormBuilder() {
             required: false,
             disabled: false,
             options: ["option-1", "option-2", "option-3"],
+            width: "w-full",
           },
         },
       ],
@@ -301,6 +314,7 @@ function RenderFormBuilder() {
             label: "Image Upload",
             required: false,
             disabled: false,
+            width: "w-full",
           },
         },
         {
@@ -313,6 +327,7 @@ function RenderFormBuilder() {
             label: "File Upload",
             required: false,
             disabled: false,
+            width: "w-full",
           },
         },
       ],

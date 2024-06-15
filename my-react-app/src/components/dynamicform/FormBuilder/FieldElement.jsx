@@ -68,7 +68,7 @@ function FieldElement({ field, index, id, preview }) {
       break;
     case "LINE":
       {
-        inputElement = <DividerElement />;
+        inputElement = <DividerElement {...field.props} />;
       }
       break;
 
@@ -146,7 +146,7 @@ function FieldElementWrapper({ index, field, children }) {
       // ref={draggable.setNodeRef}
       // {...draggable.listeners}
       // {...draggable.attributes}
-      className={`relative h-[120px] flex flex-col text-foreground hover:cursor-pointer rounded-md ${
+      className={`relative h-auto flex flex-col text-foreground hover:cursor-pointer rounded-md ${
         topHalf.isOver || bottomHalf.isOver
           ? "ring-1 ring-accent ring-inset"
           : ""
@@ -180,7 +180,7 @@ function FieldElementWrapper({ index, field, children }) {
       {topHalf.isOver && (
         <div className="absolute top-0 w-full rounded-md h-[7px] bg-primary rounded-b-none" />
       )}
-      <div className="flex w-full h-[120px] items-center rounded-md bg-accent/40 px-4 py-2 pointer-events-none opacity-100">
+      <div className="flex w-full h-auto items-center rounded-md bg-accent/40 px-4 py-2 pointer-events-none opacity-100">
         {children}
       </div>
 

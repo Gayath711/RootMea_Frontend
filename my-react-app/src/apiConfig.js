@@ -5,7 +5,7 @@ let baseURL;
 //   // If it matches, use the development backend URL
 //   baseURL = "http://52.34.62.96";
 // } else {
-//   // If it doesn't match, use the default backend URL or the one from environment variable
+//   // If it doesn't match, use the default backend URL or the one from environment variable1
 //   baseURL = "http://192.168.3.24:8000";
 // }
 
@@ -14,7 +14,10 @@ let baseURL;
 // baseURL = "http://52.34.62.96";
 
 // baseURL = "http://192.168.3.24:8000";
-baseURL = "http://127.0.0.1:8000";
+// baseURL = "http://127.0.0.1:8000";
+
+// baseURL = "http://192.168.3.24:8000";
+baseURL = "https://backend.dataterrain-dev.net";
 
 export default baseURL;
 

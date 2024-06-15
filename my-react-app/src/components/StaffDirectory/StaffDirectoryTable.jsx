@@ -4,15 +4,17 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Select from "react-select";
 import SearchIcon from "../images/search.svg";
-import { Link, useParams } from "react-router-dom";
-import axios from "axios";
-import apiURL from "../../apiConfig";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import axios from "../../helper/axiosInstance";
 import { styled } from "@mui/material/styles";
 
 import MUIDataGridWrapper from "../HOC/MUIDataGridWrapper";
 
 import EditPNG from "../images/edit.png";
-import DeletePNG from "../images/delete.png";
+import DeactivatePNG from "../images/deactivate.png";
+import PrivateComponent from "../PrivateComponent";
+
+import { notifySuccess, notifyError } from "../../helper/toastNotication";
 
 const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
   "& .MuiDataGrid-sortIcon": {
@@ -25,84 +27,8 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
   },
 }));
 
-// function createData(
-//   Link,
-//   LastName,
-//   FirstName,
-//   PhoneNumber,
-//   RootsEmailAddress,
-//   LastActivityDate,
-//   SystemStatus,
-//   PositionTitle
-// ) {
-//   return {
-//     id: Link,
-//     Link,
-//     LastName,
-//     FirstName,
-//     PhoneNumber,
-//     RootsEmailAddress,
-//     LastActivityDate,
-//     SystemStatus,
-//     PositionTitle,
-//   };
-// }
-
-// const rows = [
-//   createData(
-//     "Record 1",
-//     "William 1",
-//     "Richard",
-//     "123-4650-78",
-//     "root@gmail.com",
-//     "08/22/2024 8:00pm",
-//     "Active",
-//     "Doctor"
-//   ),
-//   createData(
-//     "Record 2",
-//     "William 2",
-//     "Richard",
-//     "123-4150-78",
-//     "root@gmail.com",
-//     "08/22/2024 8:00pm",
-//     "Deactivated",
-//     "Doctor"
-//   ),
-//   createData(
-//     "Record 3",
-//     "William 3",
-//     "Richard",
-//     "123-4150-78",
-//     "root@gmail.com",
-//     "08/22/2024 8:00pm",
-//     "Deactivated",
-//     "Doctor"
-//   ),
-//   createData(
-//     "Record 4",
-//     "William 4",
-//     "Richard",
-//     "123-4150-78",
-//     "root@gmail.com",
-//     "08/22/2024 8:00pm",
-//     "Active",
-//     "Doctor"
-//   ),
-//   createData(
-//     "Record 5",
-//     "William 5",
-//     "Richard",
-//     "123-4150-78",
-//     "root@gmail.com",
-//     "08/22/2024 8:00pm",
-//     "Active",
-//     "Doctor"
-//   ),
-// ];
-
 export default function StaffDirectoryTable() {
-  const token = localStorage.getItem("access_token");
+  const navigate = useNavigate();
   const [loadingData, setLoadingData] = useState(true);
   const [recordData, setRecordData] = useState([]);
   const [searchText, setSearchText] = useState("");
@@ -114,11 +40,7 @@ export default function StaffDirectoryTable() {
 
   const fetchData = () => {
     axios
-      .get(`${apiURL}/api/users`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      .get(`/api/users`)
       .then((response) => {
         setLoadingData(true);
         setRecordData(response.data);
@@ -129,6 +51,20 @@ export default function StaffDirectoryTable() {
       .finally(() => {
         setLoadingData(false);
       });
+  };
+
+  const deactivateRecord = (id) => {
+    axios
+      .delete(`/api/users/${id}`)
+      .then((response) => {
+        fetchData();
+        notifySuccess("Deactivated Successfully");
+      })
+      .catch((error) => {
+        notifyError("Could not deactivate, please try again later");
+        console.error("Error deactivating:", error);
+      })
+      .finally(() => {});
   };
 
   const handleSearchText = (e) => {
@@ -392,53 +328,56 @@ export default function StaffDirectoryTable() {
                   minWidth: 250,
                 },
 
-                // {
-                //   field: "Action",
-                //   headerName: "Action",
-                //   align: "left",
-                //   headerAlign: "center",
-                //   flex: 1,
-                //   headerClassName:
-                //     "bg-[#5BC4BF] text-white font-medium text-center w-100",
-                //   minWidth: 150,
-                //   renderCell: (params) => {
-                //     return (
-                //       <>
-                //         <div
-                //           className="text-[#5BC4BF] flex items-center justify-evenly"
-                //           style={{ height: "100%" }}
-                //         >
-                //           <img src={EditPNG} className="w-5 h-5" />
-                //           <img src={DeletePNG} className="w-5 h-5" />
-                //         </div>
-                //       </>
-                //     );
-                //   },
-                // renderCell: (params) => {
-                //   return (
-                //     <>
-                //       <Link
-                //         to={`/staff-directory/${params.row.id}`}
-                //         className="text-[#2F9384]"
-                //       >
-                //         {/* {params.row.linkToProgram} */}
-                //         <div className="flex flex-row items-center">
-                //           <img
-                //             src={EditPNG}
-                //             className="w-5 h-5"
-                //             style={{ display: "block", margin: "0 auto" }}
-                //           />
-                //           <img
-                //             src={DeletePNG}
-                //             className="w-5 h-5"
-                //             style={{ display: "block", margin: "0 auto" }}
-                //           />
-                //         </div>
-                //       </Link>
-                //     </>
-                //   );
-                // },
-                // },
+                {
+                  field: "Action",
+                  headerName: "Action",
+                  align: "left",
+                  headerAlign: "center",
+                  flex: 1,
+                  headerClassName:
+                    "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                  minWidth: 150,
+                  renderCell: (params) => {
+                    return (
+                      <>
+                        <div className="h-100 w-100 flex flex-row gap-2 justify-center items-center">
+                          <PrivateComponent permission="change_customuser">
+                            <button
+                              className="p-1 hover:bg-teal-400 bg-opacity-50 hover:rounded"
+                              title="Edit"
+                              onClick={() => {
+                                navigate(
+                                  `/update-staff-directory/${params.row.id}`
+                                );
+                              }}
+                            >
+                              <img
+                                src={EditPNG}
+                                className="w-4 h-4"
+                                style={{ display: "block", margin: "0 auto" }}
+                              />
+                            </button>
+                          </PrivateComponent>
+                          <PrivateComponent permission="delete_customuser">
+                            <button
+                              className="p-1 hover:bg-red-400 bg-opacity-50 hover:rounded"
+                              title="Deactivate"
+                              onClick={() => {
+                                deactivateRecord(params.row.id);
+                              }}
+                            >
+                              <img
+                                src={DeactivatePNG}
+                                className="w-4 h-4"
+                                style={{ display: "block", margin: "0 auto" }}
+                              />
+                            </button>
+                          </PrivateComponent>
+                        </div>
+                      </>
+                    );
+                  },
+                },
               ]}
               initialState={{
                 pagination: {
@@ -464,6 +403,8 @@ function TableActions({
   searchText,
   handleSearchText,
 }) {
+  const navigate = useNavigate();
+
   return (
     <div className="grid grid-cols-4 justify-between gap-2 w-100 mt-1 mb-4">
       {/* <div className="col-start-1 col-span-1">
@@ -492,21 +433,35 @@ function TableActions({
             IndicatorSeparator: () => null,
           }}
           isClearable
-          onChange={(item) => {
+          onChange={(item) => { 
             handleSelectorValue(item);
           }}
           menuPortalTarget={document.body}
         />
       </div> */}
-      <div className="col-end-5 col-span-1 flex gap-1 items-center border-b-2 border-[#5BC4BF]">
-        <img src={SearchIcon} className="w-[20px] h-100" />
-        <input
-          type={"text"}
-          value={searchText}
-          onChange={handleSearchText}
-          placeholder="Search here"
-          className={`appearance-none w-full p-2.5 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
-        />
+      <div className="col-end-5 col-span-2 flex gap-2 items-center justify-end">
+        <div className="flex gap-1 items-center border-b-2 border-[#5BC4BF]">
+          <img src={SearchIcon} className="w-[20px] h-100" />
+          <input
+            type={"text"}
+            value={searchText}
+            onChange={handleSearchText}
+            placeholder="Search here"
+            className={`appearance-none w-full p-2.5 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+          />
+        </div>
+        <div className="ms-3">
+          <PrivateComponent permission="add_customuser">
+            <button
+              className="px-3 py-2 text-[13px] font-medium leading-5 bg-[#5BC4BF] border-1 border-[#5BC4BF] text-white rounded-sm font-medium hover:bg-[#429e97] focus:outline-none focus:ring-2 focus:ring-[#429e97] focus:ring-opacity-50 transition-colors duration-300"
+              onClick={() => {
+                navigate("/add-new-staff-directory/");
+              }}
+            >
+              Add New
+            </button>
+          </PrivateComponent>
+        </div>
       </div>
     </div>
   );

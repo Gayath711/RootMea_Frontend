@@ -2,42 +2,65 @@ import React, { useState, useMemo, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
-import { Link, useParams } from "react-router-dom";
-import axios from "axios";
-import apiURL from "../../apiConfig";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import axios from "../../helper/axiosInstance";
+
+import { notifyError, notifySuccess } from "../../helper/toastNotication";
 
 import EditPNG from "../images/edit.png";
+import DeactivatePNG from "../images/deactivate.png";
+
+import ActivateIcon from "../images/activate_icon.svg";
+import DeactivateIcon from "../images/deactivate_icon.svg";
+import PrivateComponent from "../PrivateComponent";
+
 import MUIDataGridWrapper from "../HOC/MUIDataGridWrapper";
 
 export default function StaffRecord() {
   const { recordid } = useParams();
-  const token = localStorage.getItem("access_token");
-
+  const navigate = useNavigate();
   const [recordData, setRecordData] = useState({});
+  const [usersData, setUsersData] = useState({});
   const [loadingData, setLoadingData] = useState(true);
+  const [isDeactivating, setIsDeactivating] = useState(false);
 
   useEffect(() => {
     fetchData();
+    fetchUser();
   }, [recordid]);
 
   const fetchData = () => {
     axios
-      .get(`${apiURL}/api/users/${recordid}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      .get(`/api/users/${recordid}`)
       .then((response) => {
         setLoadingData(true);
         setRecordData(response.data);
       })
       .catch((error) => {
-        console.error("Error fetching SVS Questions:", error);
+        console.error("Error fetching staff record:", error);
       })
       .finally(() => {
         setLoadingData(false);
       });
   };
+
+  console.log({ usersData });
+
+  const fetchUser = async () => {
+    try {
+      const { data } = await axios.get("/api/users");
+      const foundUser = data.find((user) => +user.id === +recordid);
+      if (foundUser) {
+        setUsersData(foundUser);
+      } else {
+        throw new Error("User not found");
+      }
+    } catch (error) {
+      // Handle errors here
+      console.error("Error fetching users list:", error);
+    }
+  };
+
   const assignedProgramTableRows = useMemo(() => {
     if (JSON.stringify(recordData) === "{}" || loadingData) {
       return [];
@@ -57,32 +80,88 @@ export default function StaffRecord() {
   let staffName = `${recordData.first_name || ""} ${
     recordData.last_name || ""
   }`;
-  let StaffTitle = recordData.profile?.position || "";
+  let StaffTitle = usersData?.profile?.position || "";
   let phoneNumber = recordData.profile?.phone_no || "";
   let email = recordData?.email || "";
-  let supervisorName = `${recordData.profile?.supervisor_first_name || ""} ${
-    recordData.profile?.supervisor_last_name || ""
+
+  let supervisorName = `${usersData?.profile?.supervisor_first_name || ""} ${
+    usersData?.profile?.supervisor_last_name || ""
   }`;
 
+  const deactivateRecord = () => {
+    setIsDeactivating(true);
+    axios
+      .delete(`/api/users/${recordid}`)
+      .then((response) => {
+        // navigate(-1);
+        fetchData();
+        fetchUser();
+        notifySuccess("Deactivated Successfully");
+      })
+      .catch((error) => {
+        notifyError("Could not deactivate, please try again later");
+        console.error("Error deactivating:", error);
+      })
+      .finally(() => {
+        setIsDeactivating(false);
+      });
+  };
+
   return (
-    <div class="container mx-auto sm:grid-cols-12 md:grid-cols-7 shadow p-0">
-      <div className="w-100 bg-[#5BC4BF] text-white p-2.5 px-4">
-        {staffName}
+    <>
+      <div className="w-100 flex flex-row gap-2 justify-end items-center my-1">
+        <PrivateComponent permission="change_customuser">
+          <button
+            className="p-1 px-2 hover:bg-teal-400 hover:text-white bg-opacity-50 hover:rounded flex justify-center items-center gap-2"
+            onClick={() => {
+              navigate(`/update-staff-directory/${recordid}`);
+            }}
+          >
+            <span>Edit</span>
+            <img
+              src={EditPNG}
+              className="w-4 h-4"
+              style={{ display: "block", margin: "0 auto" }}
+            />
+          </button>
+        </PrivateComponent>
+        <PrivateComponent permission="delete_customuser">
+          <button
+            className={`p-1 px-2 hover:bg-${
+              usersData.is_active ? "red" : "teal"
+            }-400 hover:text-white bg-opacity-50 hover:rounded flex justify-center items-center gap-2`}
+            onClick={() => {
+              deactivateRecord();
+            }}
+          >
+            <span>{usersData?.is_active ? "Deactivate" : "Activate"}</span>
+            <img
+              src={usersData?.is_active ? DeactivateIcon : ActivateIcon}
+              className="w-6 h-6"
+              style={{ display: "block", margin: "0 auto" }}
+            />
+          </button>
+        </PrivateComponent>
       </div>
-      <div className="flex flex-column gap-4 p-4">
-        <StaffDetail
-          staffTitle={StaffTitle}
-          phoneNumber={phoneNumber}
-          email={email}
-          supervisorName={supervisorName}
-        />
-        <AssignedProgramTable
-          loadingData={loadingData}
-          rows={assignedProgramTableRows}
-        />
-        <AssignedPriorityListsTable />
+      <div class="container mx-auto sm:grid-cols-12 md:grid-cols-7 shadow p-0">
+        <div className="w-100 bg-[#5BC4BF] text-white p-2.5 px-4">
+          {staffName}
+        </div>
+        <div className="flex flex-column gap-4 p-4">
+          <StaffDetail
+            staffTitle={StaffTitle}
+            phoneNumber={phoneNumber}
+            email={email}
+            supervisorName={supervisorName}
+          />
+          <AssignedProgramTable
+            loadingData={loadingData}
+            rows={assignedProgramTableRows}
+          />
+          <AssignedPriorityListsTable />
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
@@ -101,29 +180,34 @@ const StaffDetail = ({
         </p>
       </div>
       <div className="col-span-1">
-        <input
-          type="text"
-          value={phoneNumber}
-          placeholder="Phone Number"
-          className={`placeholder:text-sm appearance-none border-1 border-[#5BC4BF] rounded w-full p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
-        />
+        <FormField label="Phone Number">
+          <input
+            type="text"
+            value={phoneNumber}
+            placeholder="Phone Number"
+            className={`placeholder:text-sm appearance-none border-1 border-[#5BC4BF] rounded w-full p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+          />
+        </FormField>
       </div>
       <div className="col-span-1">
-        <input
-          type="text"
-          value={email}
-          placeholder="Email"
-          className={`placeholder:text-sm appearance-none border-1 border-[#5BC4BF] rounded w-full p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
-        />
+        <FormField label="Email">
+          <input
+            type="text"
+            value={email}
+            placeholder="Email"
+            className={`placeholder:text-sm appearance-none border-1 border-[#5BC4BF] rounded w-full p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+          />
+        </FormField>
       </div>
       <div className="col-span-1">
-        {" "}
-        <input
-          type="text"
-          value={supervisorName}
-          placeholder="Supervisor"
-          className={`placeholder:text-sm appearance-none border-1 border-[#5BC4BF] rounded w-full p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
-        />
+        <FormField label="Supervisor">
+          <input
+            type="text"
+            value={supervisorName}
+            placeholder="Supervisor"
+            className={`placeholder:text-sm appearance-none border-1 border-[#5BC4BF] rounded w-full p-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+          />
+        </FormField>
       </div>
     </div>
   );
@@ -315,3 +399,20 @@ const AssignedPriorityListsTable = () => {
     </Box>
   );
 };
+
+function FormField({ required = false, label = "", error, children }) {
+  return (
+    <>
+      <div className="flex flex-column gap-1 w-100">
+        {label && (
+          <p className="mb-1 ms-1 text-base flex gap-2 items-center font-medium">
+            <span>{label}</span>
+            {required && <span className="text-red-400">*</span>}
+          </p>
+        )}
+        {children}
+        {error && <p className="mt-1 ms-1 text-xs text-red-400">{error}</p>}
+      </div>
+    </>
+  );
+}

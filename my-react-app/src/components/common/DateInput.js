@@ -4,18 +4,37 @@ import DatePicker from "react-datepicker";
 import "./DateInput.css";
 
 import { format } from "date-fns"; // Import the format function from date-fns
+import FormLabel from "../dynamicform/FormElements/FormLabel";
 
 const DateInput = ({
+  label,
   name,
   id,
   placeholder,
   width = 340,
   height = "7vh",
+  rounded=true,
+  className,
   isEdittable,
+  dateFormat = "MM/dd/yyyy",
+  required,
   value,
-  handleChange,
+  handleChange = () => {},
+  handleDateTimeChange = () => {},
   register,
+  showTime = false,
 }) => {
+  let extraProps = {};
+
+  if (showTime) {
+    extraProps = {
+      ...extraProps,
+      timeInputLabel: "Start Time:",
+      dateFormat: "MM/dd/yyyy h:mm aa",
+      showTimeInput: true,
+    };
+  }
+
   const [startDate, setStartDate] = useState(value || null);
   const bgDisabled = isEdittable ? "#F6F7F7" : "";
   const bgLabelDisabled = isEdittable ? "#F6F7F7" : "white";
@@ -46,32 +65,38 @@ const DateInput = ({
   }
   return (
     <div className="relative customDatePickerWidth">
+      {label && <FormLabel required={required}>{label}</FormLabel>}
       <DatePicker
         name={name}
         id={id || name}
         // selected={startDate}
         disabled={isEdittable}
         value={value}
-        onChange={handleDateChange}
+        onChange={(e) => {
+          handleDateChange(e);
+          showTime && handleDateTimeChange && handleDateTimeChange(e);
+        }}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        dateFormat="MM/dd/yyyy"
-        minDate={new Date()} // Disable past dates
+        dateFormat={dateFormat}
+        // minDate={new Date()} // Disable past dates
         // dateFormatCalendar=""
-        className="
+        className={`
                 custom-datepicker
                 px-2 border-1
                 border-gray-300/50
                 placeholder-gray-500 
                 placeholder-opacity-50 
-                rounded-md
+                ${rounded ? "rounded-md" : ""}
                 text-md
-                h-[7vh]
+                h-[${height}]
                 z-50
                 w-full
-                "
+                ${className}
+                `}
         placeholderText=" "
         selected={value}
+        {...extraProps}
         // onChange={date => setSelectedDate(date)}
         // {...register(name)}
         // style={styles["react-datepicker__month-container"]}

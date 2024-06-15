@@ -8,11 +8,11 @@ import EyeIcon from "../images/eye.svg";
 import "./AppointmentCalendarStyles.css";
 
 import useAppointments from "../../hooks/useAppointments";
-import { getUpcomingEvents } from "../utils";
+import { getTodayUpcomingEvents } from "../utils";
 import { Link } from "react-router-dom";
 
 function AppointmentCalendar({ from }) {
-  const { eventList, fetchEvents } = useAppointments(from);
+  const { eventList, fetchEvents, appointmentsList } = useAppointments(from);
 
   // let upcomingEvents = useMemo(() => {
   //   console.count("upcomingEvents");
@@ -91,7 +91,8 @@ function AppointmentCalendar({ from }) {
   const [upcomingEvents, setUpcomingEvents] = useState([]);
 
   useEffect(() => {
-    const upcomingEvents = getUpcomingEvents(eventList);
+    const upcomingEvents = getTodayUpcomingEvents(appointmentsList);
+    
     setUpcomingEvents(upcomingEvents);
   }, [eventList]);
 

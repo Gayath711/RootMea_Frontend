@@ -8,14 +8,22 @@ import Select from "react-select";
 import DateInput from "./FormElements/DateInput";
 import HeaderElement from "./FormElements/HeaderElement";
 import DividerElement from "./FormElements/DividerElement";
+import InputElement from "./FormElements/InputElement";
+import TextAreaElement from "./FormElements/TextAreaElement";
+import SelectElement from "./FormElements/SelectElement";
+import MultiSelectElement from "./FormElements/MultiSelectElement";
 
 function NewPage() {
-  const { tableName } = useParams();
 
+
+  const { tableName } = useParams();
+  console.log(tableName, "Table Name")
   const [tableColumns, setTableColumns] = useState([]);
   const [formData, setFormData] = useState({});
   const [tableHeaders, setTableHeaders] = useState([]);
-
+  const [tableStructure, setTableStructure] = useState([]);
+  const [columnInfo, setColumnInfo] = useState([]);
+  console.log(tableName, tableColumns)
   const [droplist, setDroplist] = useState({});
 
   useEffect(() => {
@@ -106,13 +114,41 @@ function NewPage() {
       );
       if (response.headers["content-type"].includes("application/json")) {
         console.log("response.data.columns", response.data.columns);
-        console.log("response.data", response.data);
+        console.log("response.data", response.data.columns);
         setTableColumns(response.data.columns);
+
+        // Fetch column info after fetching table structure
+        fetchColumnInfo();
       } else {
         console.error("Unexpected response format:", response);
       }
     } catch (error) {
       console.error("Error fetching table structure:", error);
+    }
+  };
+
+  const fetchColumnInfo = async () => {
+    try {
+      const response = await axios.get(
+        `${apiURL}/get_column_info/${tableName}`
+      );
+      if (response.headers["content-type"].includes("application/json")) {
+        console.log("response.data.columns_info", response.data.columns_info);
+
+        // Update existing columns with additional info
+        setTableColumns((prevColumns) =>
+          prevColumns.map((column) => ({
+            ...column,
+            ...response.data.columns_info.find(
+              (info) => info.name === column.name
+            ),
+          }))
+        );
+      } else {
+        console.error("Unexpected response format:", response);
+      }
+    } catch (error) {
+      console.error("Error fetching column info:", error);
     }
   };
 
@@ -127,6 +163,22 @@ function NewPage() {
 
   const handleSubmitPost = async (event) => {
     event.preventDefault();
+
+    // Filter out hidden columns before checking required fields
+    const visibleColumns = tableColumns.filter((column) => !column.hidden);
+    const requiredFieldsEmpty = visibleColumns.some(
+      (column) => column.required && !formData[column.name]
+    );
+
+    if (requiredFieldsEmpty) {
+      Swal.fire({
+        icon: "error",
+        title: "Error!",
+        text: "Please fill all required fields.",
+      });
+      return;
+    }
+
     try {
       console.log(formData);
       const response = await axios.post(
@@ -158,69 +210,99 @@ function NewPage() {
         title: "Error!",
         text: "An unexpected error occurred. Please try again later.",
       });
-    } // remove error here
+    }
   };
 
   const renderInputField = (column) => {
+    if (column.hidden) return null;
+
     let label = column.column_fullname;
-    if (column.is_nullable === "NO") {
+    if (column.required) {
       label += " *";
     }
 
     switch (column.type) {
       case "character varying":
         return (
-          <div key={column.name} className="mb-4">
-            <label className="block mb-1">{label}</label>
+          <div key={column.name} className={`mb-3 ${column.width}`}>
+            {/* <label className="block mb-1">{label}</label>
             <input
               type="text"
               value={formData[column.name] || ""}
               onChange={(event) => handleInputChange(event, column.name)}
               className={`${column.width} border border-gray-300 rounded px-4 py-2`}
+            /> */}
+            <InputElement
+              label={label}
+              onChange={(event) => handleInputChange(event, column.name)}
+              type="text"
+              value={formData[column.name] || ""}
+              required={column.is_nullable === "NO"}
             />
           </div>
         );
       case "integer":
         return (
-          <div key={column.name} className="mb-4">
-            <label className="block mb-1">{label}</label>
+          <div key={column.name} className={`mb-3 ${column.width}`}>
+            {/* <label className="block mb-1">{label}</label>
             <input
               type="number"
               value={formData[column.name] || ""}
               onChange={(event) => handleInputChange(event, column.name)}
               className={`${column.width} border border-gray-300 rounded px-4 py-2`}
+            /> */}
+            <InputElement
+              label={label}
+              type="number"
+              value={formData[column.name] || ""}
+              onChange={(event) => handleInputChange(event, column.name)}
+              required={column.is_nullable === "NO"}
             />
           </div>
         );
-
       case "text":
         return (
-          <div key={column.name} className="mb-4">
-            <label className="block mb-1">{label}</label>
+          <div key={column.name} className={`mb-3 ${column.width}`}>
+            {/* <label className="block mb-1">{label}</label>
             <textarea
               value={formData[column.name] || ""}
               onChange={(event) => handleInputChange(event, column.name)}
               className={`${column.width} border border-gray-300 rounded px-4 py-2`}
+            /> */}
+            <TextAreaElement
+              label={label}
+              value={formData[column.name] || ""}
+              onChange={(event) => handleInputChange(event, column.name)}
+              required={column.is_nullable === "NO"}
             />
           </div>
         );
       case "double precision":
         return (
-          <div key={column.name} className="mb-4">
-            <label className="block mb-1">{label}</label>
+          <div key={column.name} className={`mb-3 ${column.width}`}>
+            {/* <label className="block mb-1">{label}</label>
             <input
               type="number" // Use type "number" for input validation
               step="0.01" // Allow floating-point numbers
               value={formData[column.name] || ""}
               onChange={(event) => handleInputChange(event, column.name)}
               className={`${column.width} border border-gray-300 rounded px-4 py-2`}
+            /> */}
+
+            <InputElement
+              label={label}
+              type="number" // Use type "number" for input validation
+              step="0.01" // Allow floating-point numbers
+              value={formData[column.name] || ""}
+              onChange={(event) => handleInputChange(event, column.name)}
+              required={column.is_nullable === "NO"}
             />
           </div>
         );
       case "boolean":
         return (
-          <div key={column.name} className="mb-4">
-            <label className="block mb-1">{label}</label>
+          <div key={column.name} className={`mb-3 ${column.width}`}>
+            {/* <label className="block mb-1">{label}</label>
             <select
               value={formData[column.name] || ""}
               onChange={(event) => handleInputChange(event, column.name)}
@@ -229,49 +311,75 @@ function NewPage() {
               <option value="">Select</option>
               <option value="true">Yes</option>
               <option value="false">No</option>
-            </select>
+            </select> */}
+
+            <SelectElement
+              label={label}
+              required={column.is_nullable === "NO"}
+              options={[
+                {
+                  label: "Yes",
+                  value: "true",
+                },
+                {
+                  label: "No",
+                  value: "false",
+                },
+              ]}
+              value={formData[column.name] || ""}
+              onChange={(event) => handleInputChange(event, column.name)}
+            />
           </div>
         );
       case "bytea":
         return (
-          <div key={column.name} className="mb-4">
-            <label className="block mb-1">{label}</label>
+          <div key={column.name} className={`mb-3 ${column.width}`}>
+            {/* <label className="block mb-1">{label}</label>
             <input
               type="file"
               accept=".png, .jpg, .jpeg, .pdf"
               onChange={(event) => handleInputChange(event, column.name)}
               className={`${column.width} border border-gray-300 rounded px-4 py-2`}
+            /> */}
+            <InputElement
+              label={label}
+              required={column.is_nullable === "NO"}
+              type="file"
+              accept=".png, .jpg, .jpeg, .pdf"
+              onChange={(event) => handleInputChange(event, column.name)}
             />
           </div>
         );
       case "character":
         return (
-          <div key={column.name} className="mb-4">
+          <div key={column.name} className={`mb-0 ${column.width}`}>
             <HeaderElement type="header" label={label} />
           </div>
         );
       case "json":
         return (
-          <div key={column.name} className="mb-4">
+          <div key={column.name} className={`mb-1 ${column.width}`}>
             <HeaderElement label={label} />
           </div>
         );
       case "line":
         return (
-          <div key={column.name} className="mb-4">
+          <div key={column.name} className={`mb-4 ${column.width}`}>
             <DividerElement />
           </div>
         );
 
       case "timestamp without time zone":
         return (
-          <div key={column.name} className="mb-4">
-            <label className="block mb-1">{label}</label>
+          <div key={column.name} className={`mb-2 ${column.width}`}>
             <DateInput
+              label={label}
+              required={column.is_nullable === "NO"}
               type="date"
               value={formData[column.name] || ""}
               onChange={(event) => handleInputChange(event, column.name)}
-              className={`${column.width} border border-gray-300 rounded px-4 py-2`}
+              className={`border border-gray-300 rounded px-4 py-2`}
+              width={column.width}
             />
           </div>
         );
@@ -291,8 +399,8 @@ function NewPage() {
         if (key.endsWith("multiple_enum_type")) {
           console.log("qdwewwwwwwwwwwwwwww", droplist, droplist[key]);
           return (
-            <div key={column.name} className="mb-4">
-              <label className="block mb-1">{label}</label>
+            <div key={column.name} className={`mb-3 ${column.width}`}>
+              {/* <label className="block mb-1">{label} xxx</label>
               <Select
                 options={
                   droplist[key] &&
@@ -331,6 +439,47 @@ function NewPage() {
                 }}
                 className={`${column.width} border border-gray-300 rounded px-4 py-2`}
                 placeholder="Select"
+              /> */}
+
+              <MultiSelectElement
+                label={label}
+                required={column.is_nullable === "NO"}
+                options={
+                  droplist[key]
+                    ? droplist[key].map((option) => ({
+                      value: option,
+                      label: option,
+                    }))
+                    : []
+                }
+                value={
+                  formData[column.name]
+                    ? formData[column.name].map((option) => ({
+                      value: option,
+                      label: option,
+                    }))
+                    : []
+                }
+                onChange={(selectedOptions) => {
+                  const selectedValues = selectedOptions
+                    ? selectedOptions.map((option) => option.value.toString())
+                    : [];
+                  console.log(
+                    column.name,
+                    selectedValues,
+                    "ssssssssssssssssssssssssssss"
+                  );
+                  setFormData((prevState) => ({
+                    ...prevState,
+                    [column.name]: selectedValues,
+                  }));
+                  console.log(
+                    column.name,
+                    selectedValues,
+                    "ssssssssssssssssssssssssssss"
+                  );
+                }}
+                placeholder="Select"
               />
             </div>
           );
@@ -340,7 +489,7 @@ function NewPage() {
         //     console.log('checkbox_enum_type okkk')
         //     // console.log(droplist[key])
         //     return (
-        //         <div key={column.name} className="mb-4">
+        //         <div key={column.name} className="mb-1">
         //             <label className="block mb-1">{label}</label>
         //             <Select
 
@@ -368,8 +517,8 @@ function NewPage() {
           console.log("checkbox_enum_type okkk");
           // console.log(droplist[key])
           return (
-            <div key={column.name} className="mb-4">
-              <label className="block mb-1">{label}</label>
+            <div key={column.name} className={`mb-3 ${column.width}`}>
+              {/* <label className="block mb-1">{label}</label>
               {droplist[key] &&
                 droplist[key].map((option) => (
                   <div key={option}>
@@ -397,7 +546,47 @@ function NewPage() {
                     />
                     <label htmlFor={option}>{option}</label>
                   </div>
-                ))}
+                ))} */}
+              <div className="m-1">
+                <label
+                  className={`block flex gap-2 text-gray-500 text-xs font-bold my-2`}
+                >
+                  <span>{label}</span>
+                  {column.is_nullable === "NO" && (
+                    <span className="text-red-500">*</span>
+                  )}
+                </label>
+                <div className={`flex flex-column gap-2`}>
+                  {droplist[key] &&
+                    droplist[key].map((option) => (
+                      <div key={option} className={`flex gap-1 items-center`}>
+                        <input
+                          type="checkbox"
+                          id={option}
+                          value={option}
+                          checked={
+                            formData[column.name] &&
+                            formData[column.name].includes(option)
+                          }
+                          onChange={(event) => {
+                            const value = event.target.value;
+                            setFormData((prevState) => ({
+                              ...prevState,
+                              [column.name]: prevState[column.name]
+                                ? prevState[column.name].includes(value)
+                                  ? prevState[column.name].filter(
+                                    (val) => val !== value
+                                  )
+                                  : [...prevState[column.name], value]
+                                : [value],
+                            }));
+                          }}
+                        />
+                        <label htmlFor={option}>{option}</label>
+                      </div>
+                    ))}
+                </div>
+              </div>
             </div>
           );
         } else {
@@ -405,8 +594,8 @@ function NewPage() {
           console.log("droplist", droplist);
 
           return (
-            <div key={column.name} className="mb-4">
-              <label className="block mb-1">{label}</label>
+            <div key={column.name} className={`mb-3 ${column.width}`}>
+              {/* <label className="block mb-1">{label}</label>
               <select
                 value={formData[column.name] || ""}
                 onChange={(event) => handleInputChange(event, column.name)}
@@ -419,7 +608,20 @@ function NewPage() {
                       {option}
                     </option>
                   ))}
-              </select>
+              </select> */}
+              <SelectElement
+                label={label}
+                required={column.is_nullable === "NO"}
+                options={
+                  droplist[key]
+                    ? droplist[key].map((option) => {
+                      return option;
+                    })
+                    : []
+                }
+                value={formData[column.name] || ""}
+                onChange={(event) => handleInputChange(event, column.name)}
+              />
             </div>
           );
         }
@@ -438,18 +640,22 @@ function NewPage() {
           <div>
             <ul className="grid grid-cols-1 gap-4">
               {tableHeaders.map((header, index) => (
-                <motion.li
+                <>
+                  {/* <motion.li
                   key={index}
                   className="p-4 bg-white rounded-lg shadow-md"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   transition={{ duration: 0.2 }}
-                >
-                  <h1 className="text-xl font-semibold mb-2">{header[2]}</h1>
-                  <h3 className="text-base font-medium text-gray-700">
-                    {header[3]}
-                  </h3>
-                </motion.li>
+                > */}
+                  <div className="p-4 bg-white rounded-lg shadow-md">
+                    <h1 className="text-xl font-semibold mb-2">{header[2]}</h1>
+                    <h3 className="text-base font-medium text-gray-700">
+                      {header[3]}
+                    </h3>
+                  </div>
+                  {/* </motion.li> */}
+                </>
               ))}
             </ul>
           </div>
@@ -463,8 +669,7 @@ function NewPage() {
             <div className="text-center mt-6">
               <button
                 type="submit"
-                className="bg-Teal-500 hover:bg-Teal-700 text-block font-bold py-2 px-4 rounded mb-4 mr-2 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-Teal-500"
-                style={{ borderRadius: "3px", background: "#9CDADA" }}
+                className="bg-[#5BC4BF] text-white hover:bg-teal-700 font-bold mt-2.5 p-2 px-4 rounded transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500  text-xs"
               >
                 Submit
               </button>

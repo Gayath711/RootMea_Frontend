@@ -1,31 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-import '../css/Sidebar.css';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "../css/Sidebar.css";
 
-
-import Sidebar from './SideBar';
-import GeneralInformation from './General_Information';
-import ContactInformation from './ContactInformation';
-import Demographics from './Demographics';
-import AddressInformation from './Address';
-import CustomFields from './CustomFields';
-import PreferredPharmacy from './PreferredPharmacy';
-import InsuranceInformation from './InsuranceInformation';
-import SystemInformation from './SystemInformation';
-import AlertSuccess from '../common/AlertSuccess';
-import AlertError from '../common/AlertError'
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
-import EditPNG from '../images/edit.png';
-import SavePNG from '../images/save.png';
-import EditGreenPNG from '../images/edit-green.png';
-import SaveGreenPNG from '../images/save-green.png';
+import Sidebar from "./SideBar";
+import GeneralInformation from "./General_Information";
+import ContactInformation from "./ContactInformation";
+import Demographics from "./Demographics";
+import AddressInformation from "./Address";
+import CustomFields from "./CustomFields";
+import PreferredPharmacy from "./PreferredPharmacy";
+import InsuranceInformation from "./InsuranceInformation";
+import SystemInformation from "./SystemInformation";
+import AlertSuccess from "../common/AlertSuccess";
+import AlertError from "../common/AlertError";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import EditPNG from "../images/edit.png";
+import SavePNG from "../images/save.png";
+import EditGreenPNG from "../images/edit-green.png";
+import SaveGreenPNG from "../images/save-green.png";
 // import DynamicFieldForm from './clientprofile/dynamicfield'
 
-import MyComponent from '../clientprofilefull';
-import apiURL from '../../apiConfig';
+import MyComponent from "../clientprofilefull";
+import apiURL from "../../apiConfig";
 
 const initialValues = {
   first_name: null,
@@ -110,48 +109,50 @@ const initialValues = {
   system_information_import_date: null,
   system_information_prn: null,
   system_information_chart_number: null,
-  system_information_system_id: null
+  system_information_system_id: null,
 };
 
 const errorInitialValues = {
-  first_name: '',
-  last_name: '',
-  email_address: '',
-  mobile_number: '',
-  emergency_contact_1_email_address: '',
-  emergency_contact_1_zip: '',
-  emergency_contact_2_email_address: '',
-  emergency_contact_2_zip: '',
-  age: '',
-  zip_address_n_usual_location: '',
+  first_name: "",
+  last_name: "",
+  email_address: "",
+  mobile_number: "",
+  emergency_contact_1_email_address: "",
+  emergency_contact_1_zip: "",
+  emergency_contact_2_email_address: "",
+  emergency_contact_2_zip: "",
+  age: "",
+  zip_address_n_usual_location: "",
 };
 
 const ClientProfile = () => {
   const { clientId } = useParams();
 
-  const [isEdittable, setIsEdittable] = useState(false)
+  const [isEdittable, setIsEdittable] = useState(false);
 
-  const token = localStorage.getItem('access_token');
+  const token = localStorage.getItem("access_token");
 
   const [clientData, setClientData] = useState(initialValues);
   const [isHovered, setIsHovered] = useState(false);
   const [errors, setErrors] = useState(errorInitialValues);
 
   const handleClick = (accordionId) => {
-    console.log("Inside handleClick")
-    console.log("accordian id", `accordion-${accordionId}`)
-    const accordionElement = document.getElementById(`accordian-${accordionId}`);
-    console.log("accordionElement", accordionElement)
+    console.log("Inside handleClick");
+    console.log("accordian id", `accordion-${accordionId}`);
+    const accordionElement = document.getElementById(
+      `accordian-${accordionId}`
+    );
+    console.log("accordionElement", accordionElement);
     if (accordionElement) {
-      console.log("Inside accordionElement")
-      accordionElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      console.log("Inside accordionElement");
+      accordionElement.scrollIntoView({ behavior: "smooth", block: "start" });
     }
-  }
+  };
 
   const handleEdit = () => {
-    setIsEdittable(false)
-    setIsHovered(false)
-  }
+    setIsEdittable(false);
+    setIsHovered(false);
+  };
 
   const handleFieldChange = (field, value) => {
     setClientData((prevInfo) => ({
@@ -165,100 +166,110 @@ const ClientProfile = () => {
   const [errorMsg, setErrorMsg] = useState("");
   const closeSuccessAlert = () => {
     setShowSuccessAlert(false);
-  }
+  };
 
   const closeErrorAlert = () => {
     setShowErrorAlert(false);
-  }
-
+  };
 
   const handleSave = (event) => {
     event.preventDefault();
-    console.log('Submitting clientData:', clientData);
+    console.log("Submitting clientData:", clientData);
 
-    setErrors(errorInitialValues)
+    setErrors(errorInitialValues);
     setShowErrorAlert(false);
     setShowSuccessAlert(false);
 
     function validation() {
-      let errors = {}
+      let errors = {};
       let isValid = true;
 
-      console.log({ clientData })
+      console.log({ clientData });
       if (!clientData.first_name) {
-        console.log({ clientData })
-        errors.first_name = "Mandatory field"
+        console.log({ clientData });
+        errors.first_name = "Mandatory field";
         isValid = false;
       }
       if (!clientData.last_name) {
-        errors.last_name = "Mandatory field"
+        errors.last_name = "Mandatory field";
         isValid = false;
       }
-      if (clientData.email_address &&
-        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(clientData.email_address)
+      if (
+        clientData.email_address &&
+        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
+          clientData.email_address
+        )
       ) {
-        errors.email = "Invalid Email"
+        errors.email = "Invalid Email";
         isValid = false;
       }
       if (clientData.mobile_number && isNaN(clientData.mobile_number)) {
-        errors.mobile_number = "Mobile must be a number"
+        errors.mobile_number = "Mobile must be a number";
         isValid = false;
       }
 
       //Emergency contact 1
-      if (clientData.emergency_contact_1_email_address &&
-        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(clientData.emergency_contact_1_email_address)
+      if (
+        clientData.emergency_contact_1_email_address &&
+        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
+          clientData.emergency_contact_1_email_address
+        )
       ) {
-        errors.emergency_contact_1_email_address = "Invalid Email"
+        errors.emergency_contact_1_email_address = "Invalid Email";
         isValid = false;
       }
       if (clientData.emergency_contact_1_zip) {
         if (isNaN(clientData.emergency_contact_1_zip)) {
-          errors.emergency_contact_1_zip = "Zip code must be a number"
+          errors.emergency_contact_1_zip = "Zip code must be a number";
           isValid = false;
         } else if (clientData.emergency_contact_1_zip.length > 5) {
-          errors.emergency_contact_1_zip = "Zip code cannot be more than 5 characters";
+          errors.emergency_contact_1_zip =
+            "Zip code cannot be more than 5 characters";
           isValid = false;
         }
       }
 
       //Emergency contact 2
-      if (clientData.emergency_contact_2_email_address &&
-        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(clientData.emergency_contact_2_email_address)
+      if (
+        clientData.emergency_contact_2_email_address &&
+        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
+          clientData.emergency_contact_2_email_address
+        )
       ) {
-        errors.emergency_contact_2_email_address = "Invalid Email"
+        errors.emergency_contact_2_email_address = "Invalid Email";
         isValid = false;
       }
       if (clientData.emergency_contact_2_zip) {
         if (isNaN(clientData.emergency_contact_2_zip)) {
-          errors.emergency_contact_2_zip = "Zip code must be a number"
+          errors.emergency_contact_2_zip = "Zip code must be a number";
           isValid = false;
         } else if (clientData.emergency_contact_2_zip.length > 5) {
-          errors.emergency_contact_2_zip = "Zip code cannot be more than 5 characters";
+          errors.emergency_contact_2_zip =
+            "Zip code cannot be more than 5 characters";
           isValid = false;
         }
       }
 
       //Demographics
       if (clientData.age && isNaN(clientData.age)) {
-        errors.age = "Age must be a number"
+        errors.age = "Age must be a number";
         isValid = false;
       }
 
       //Address usual address
       if (clientData.zip_address_n_usual_location) {
         if (isNaN(clientData.zip_address_n_usual_location)) {
-          errors.zip_address_n_usual_location = "Zip code must be a number"
+          errors.zip_address_n_usual_location = "Zip code must be a number";
           isValid = false;
         } else if (clientData.zip_address_n_usual_location.length > 5) {
-          errors.zip_address_n_usual_location = "Zip code cannot be more than 5 characters";
+          errors.zip_address_n_usual_location =
+            "Zip code cannot be more than 5 characters";
           isValid = false;
         }
       }
 
       setErrors(errors);
       return isValid;
-
     }
 
     // Validate
@@ -269,22 +280,23 @@ const ClientProfile = () => {
       return;
     }
 
-    axios.post(`${apiURL}/clientinfo-api/`, clientData, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-      .then(response => {
-        console.log('Data submitted successfully:', response.data);
+    axios
+      .post(`${apiURL}/clientinfo-api/`, clientData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log("Data submitted successfully:", response.data);
         setClientData(initialValues);
         setShowErrorAlert(false);
         setShowSuccessAlert(true);
         console.log({ initialValues });
-        console.log('After Submit:', clientData);
+        console.log("After Submit:", clientData);
       })
-      .catch(error => {
-        console.error('Error submitting Client Data:', error);
-        setErrorMsg(error?.message)
+      .catch((error) => {
+        console.error("Error submitting Client Data:", error);
+        setErrorMsg(error?.message);
         setShowErrorAlert(true);
         setShowSuccessAlert(false);
       });
@@ -298,55 +310,107 @@ const ClientProfile = () => {
 
   return (
     <div className="h-full bg-gray-50">
-      {showSuccessAlert && <AlertSuccess message="Saved successfully" handleClose={closeSuccessAlert} />}
-      {showErrorAlert && <AlertError message={errorMsg || "Invalid form values"} handleClose={closeErrorAlert} />}
+      {showSuccessAlert && (
+        <AlertSuccess
+          message="Saved successfully"
+          handleClose={closeSuccessAlert}
+        />
+      )}
+      {showErrorAlert && (
+        <AlertError
+          message={errorMsg || "Invalid form values"}
+          handleClose={closeErrorAlert}
+        />
+      )}
       <div className="bg-white p-4 shadow">
         <div className="flex justify-between mb-0 mt-4 pl-4">
-          <div className='flex space-x-12'>
-            <button onClick={handleSave} className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full' id="saveClientProfile">
+          <div className="flex space-x-12">
+            <button
+              onClick={handleSave}
+              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full"
+              id="saveClientProfile"
+            >
               Save
             </button>
           </div>
-          <div className='flex space-x-8'>
-            <Link to={'/'}>
-              <p className='text-green-700 font-medium'>Dashboard</p>
+          <div className="flex space-x-8">
+            <Link to={"/"}>
+              <p className="text-green-700 font-medium">Dashboard</p>
             </Link>
             {/* <Link to={`/clientchart/${clientId}`}>
               <p className='text-green-700 font-medium'>Client Chart</p>
             </Link> */}
-            <p className='text-green-700 font-medium'>AMD Profile</p>
-            <p className='text-green-700 font-medium pr-8'>Manage Program</p>
+            <p className="text-green-700 font-medium">AMD Profile</p>
+            <p className="text-green-700 font-medium pr-8">Manage Program</p>
           </div>
         </div>
         <div class="border-b border-green-800 mt-2 mb-4"></div>
-        <div className='flex'>
-          <div className=''>
+        <div className="flex">
+          <div className="">
             <Sidebar handleClick={handleClick} />
           </div>
-          <div class="w-full px-2 space-y-6" >
+          <div class="w-full px-2 space-y-6">
             <div>
-              <GeneralInformation id={1} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
+              <GeneralInformation
+                id={1}
+                isEdittable={isEdittable}
+                clientData={clientData}
+                handleFieldChange={handleFieldChange}
+              />
             </div>
             <div>
-              <ContactInformation id={2} errors={errors} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
+              <ContactInformation
+                id={2}
+                errors={errors}
+                isEdittable={isEdittable}
+                clientData={clientData}
+                handleFieldChange={handleFieldChange}
+              />
             </div>
             <div>
-              <Demographics id={3} errors={errors} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
+              <Demographics
+                id={3}
+                errors={errors}
+                isEdittable={isEdittable}
+                clientData={clientData}
+                handleFieldChange={handleFieldChange}
+              />
             </div>
             <div>
-              <AddressInformation id={4} errors={errors} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
+              <AddressInformation
+                id={4}
+                errors={errors}
+                isEdittable={isEdittable}
+                clientData={clientData}
+                handleFieldChange={handleFieldChange}
+              />
             </div>
             {/* <div>
               <CustomFields id={5} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
             </div> */}
             <div>
-              <PreferredPharmacy id={6} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
+              <PreferredPharmacy
+                id={6}
+                isEdittable={isEdittable}
+                clientData={clientData}
+                handleFieldChange={handleFieldChange}
+              />
             </div>
             <div>
-              <InsuranceInformation id={7} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
+              <InsuranceInformation
+                id={7}
+                isEdittable={isEdittable}
+                clientData={clientData}
+                handleFieldChange={handleFieldChange}
+              />
             </div>
             <div>
-              <SystemInformation id={8} isEdittable={isEdittable} clientData={clientData} handleFieldChange={handleFieldChange} />
+              <SystemInformation
+                id={8}
+                isEdittable={isEdittable}
+                clientData={clientData}
+                handleFieldChange={handleFieldChange}
+              />
             </div>
 
             {/* <div>
@@ -358,11 +422,10 @@ const ClientProfile = () => {
               <PrimaryButton text="Save" handleClick={handleSave} isDisabled={isEdittable} />
             </div> */}
           </div>
-
         </div>
       </div>
-    </div >
+    </div>
   );
-}
+};
 
 export default ClientProfile;

@@ -1,9 +1,13 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback, useEffect } from "react";
 import ExternalLinkIcon from "../images/externalLink.svg";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import BasicTable from "../react-table/BasicTable";
 import EyeIcon from "../images/eye.svg";
 import EditIcon from "../images/edit.svg";
+import { Link } from "react-router-dom";
+import { format } from "date-fns";
+import { protectedApi } from "../../services/api";
+import { notifyError } from "../../helper/toastNotication";
 
 const options = {
   Pending: "bg-[#FFE5E5] text-[#E0382D]",
@@ -16,7 +20,7 @@ const Tag = ({ text }) => {
     <div
       className={`${options[text]} text-center text-xs w-[70px] mx-auto py-1 rounded-[2px]`}
     >
-      {text?.charAt(0)?.toUpperCase() + text?.slice(1)}
+      {text?.charAt(0)?.toUpperCase() + text?.slice(1) || ""}
     </div>
   );
 };
@@ -38,88 +42,23 @@ const Content = ({ data, columns }) => {
 
 function EncounterNotes({ clientId }) {
   const [open, setOpen] = useState(true);
-  const [data, setData] = useState([
-    {
-      staff_name: "John Doe",
-      facility: "...",
-      note_type: "...",
-      encounter_type: "Home Visit",
-      encounter_date: "1-1-2000",
-      status: "Done",
-    },
-    {
-      staff_name: "John Doe",
-      facility: "...",
-      note_type: "...",
-      encounter_type: "Home Visit",
-      encounter_date: "1-1-2000",
-      status: "Active",
-    },
-    {
-      staff_name: "John Doe",
-      facility: "...",
-      note_type: "...",
-      encounter_type: "Home Visit",
-      encounter_date: "1-1-2000",
-      status: "Pending",
-    },
-    {
-      staff_name: "John Doe",
-      facility: "...",
-      note_type: "...",
-      encounter_type: "Home Visit",
-      encounter_date: "1-1-2000",
-      status: "Done",
-    },
-    {
-      staff_name: "John Doe",
-      facility: "...",
-      note_type: "...",
-      encounter_type: "Home Visit",
-      encounter_date: "1-1-2000",
-      status: "Done",
-    },
-    {
-      staff_name: "John Doe",
-      facility: "...",
-      note_type: "...",
-      encounter_type: "Home Visit",
-      encounter_date: "1-1-2000",
-      status: "Pending",
-    },
-    {
-      staff_name: "John Doe",
-      facility: "...",
-      note_type: "...",
-      encounter_type: "Home Visit",
-      encounter_date: "1-1-2000",
-      status: "Pending",
-    },
-    {
-      staff_name: "John Doe",
-      facility: "...",
-      note_type: "...",
-      encounter_type: "Home Visit",
-      encounter_date: "1-1-2000",
-      status: "Active",
-    },
-    {
-      staff_name: "John Doe",
-      facility: "...",
-      note_type: "...",
-      encounter_type: "Home Visit",
-      encounter_date: "1-1-2000",
-      status: "Active",
-    },
-    {
-      staff_name: "John Doe",
-      facility: "...",
-      note_type: "...",
-      encounter_type: "Home Visit",
-      encounter_date: "1-1-2000",
-      status: "Done",
-    },
-  ]);
+  const [data, setData] = useState([]);
+
+  const fetchEncounters = useCallback(async () => {
+    try {
+      const response = await protectedApi.get(
+        `/encounters-notes-client/${clientId}`
+      );
+      setData(response.data);
+    } catch (error) {
+      notifyError("Failed to fetch encounter notes");
+      console.error(error);
+    }
+  }, [clientId]);
+
+  useEffect(() => {
+    fetchEncounters();
+  }, []);
 
   const columns = useMemo(
     () => [
@@ -145,17 +84,28 @@ function EncounterNotes({ clientId }) {
         Header: "Encounter Date",
         accessor: "encounter_date",
         align: "left",
+        Cell: ({ row }) =>
+          format(new Date(row.original.encounter_date), "MM-dd-yyyy"),
       },
       {
         Header: "Status",
-        Cell: ({ row }) => <Tag text={row.original.status} />,
+        accessor: "encounter_status",
+        // Cell: ({ row }) => <Tag text={row.original.encounter_status} />,
       },
       {
         Header: "Actions",
         Cell: ({ row }) => (
           <div className="flex gap-x-3 items-center mx-auto justify-center">
-            <img src={EditIcon} className="size-4" alt="edit" />
-            <img src={EyeIcon} className="size-4" alt="view" />
+            <Link
+              to={`/encounter-note/add/${clientId}/?encounterId=${row.original.id}&mode=edit`}
+            >
+              <img src={EditIcon} className="size-4" alt="edit" />
+            </Link>
+            <Link
+              to={`/encounter-note/add/${clientId}/?encounterId=${row.original.id}&mode=view`}
+            >
+              <img src={EyeIcon} className="size-4" alt="view" />
+            </Link>
           </div>
         ),
       },
@@ -176,9 +126,12 @@ function EncounterNotes({ clientId }) {
           <img src={ExternalLinkIcon} className="size-4" alt="link" />
         </div>
         <div className="flex items-center gap-x-10">
-          <button className="px-3 py-2 text-sm bg-[#5BC4BF] text-white rounded-sm font-medium">
+          <Link
+            to={`/encounter-note/add/${clientId}`}
+            className="px-3 py-2 text-sm bg-[#5BC4BF] text-white rounded-sm font-medium"
+          >
             Add New
-          </button>
+          </Link>
           <RemoveCircleIcon
             onClick={() => setOpen(!open)}
             className="text-[#585A60] hover:cursor-pointer"
