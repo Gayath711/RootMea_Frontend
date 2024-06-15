@@ -8,6 +8,7 @@ import Modal from 'react-bootstrap/Modal'
 // import DataContext from './DataContext';
 // import AddColumnModal from "../AddColumnModal/AddColumnModal";
 import apiURL from "../.././apiConfig";
+import EditableCell from "../react-table/EditableCell";
 
 function PriorityListNew() {
         const token = localStorage.getItem("access_token");
@@ -33,7 +34,6 @@ function PriorityListNew() {
             })
             .then((response) => {
               setState(response.data);
-              console.log("/priority_list/mapping/",response.data);
             })
             .catch((error) => {
               console.error("Error fetching Client Medication Data:", error);
@@ -42,8 +42,51 @@ function PriorityListNew() {
         
         const { columns, data } = state;
 
+        console.log(data, "data");
+
         // const token = localStorage.getItem("access_token");
-  console.log("token", token);
+
+        const updatedDataApi = async (payload) => {
+          console.log(payload)
+          try {
+            const response = await axios.patch(
+              `${apiURL}/priority_list/mapping/`,
+              payload, // Send updateData as the request payload
+      
+            );
+            console.log(response);
+          } catch (error) {
+            console.error('Error updating data:', error);
+          }
+        };
+
+        const updateMyData = (data, newValue, oldValue, columnId) => {
+      
+            console.log( newValue, oldValue, columnId);
+            let payloadData = {
+            dataview: "Admin",
+            client_id: columnId, // Replace with the appropriate client ID
+            column_id: columnId,
+            old_value: oldValue,
+            new_value: newValue,
+          }
+            updatedDataApi(payloadData);
+        };
+        const createColumns = (columns) => {
+          return columns.map((column) => ({
+            ...column,
+            Cell: (props) => (
+              <EditableCell {...props} data={data} updateMyData={updateMyData} />
+            )
+          }));
+        };
+
+        
+
+  const columnsWithEditableCells = createColumns(columns);
+
+  console.log(columnsWithEditableCells)
+
     
         const handleSaveChanges = () => {
             console.log("Clicked button");
@@ -301,7 +344,7 @@ function PriorityListNew() {
               </div>
               <hr id="priority-list-6" className="w-[98%] mx-auto my-2" />
               <div className="w-full flex-grow flex flex-col">
-                <BasicTable type={"priorityList"} columns={columns} data={data} />
+                <BasicTable type={"priorityList"} columns={columnsWithEditableCells} data={data} />
               </div>
             </div>
           );

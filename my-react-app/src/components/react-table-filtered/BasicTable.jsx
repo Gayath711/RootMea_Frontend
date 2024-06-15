@@ -413,7 +413,7 @@ const handleDoubleClick = (rowId, columnId, value) => {
 
 const BasicTable = React.memo(
   ({ data, striped, title, columns, type, defaultPageSize }) => {
-    
+    console.log(columns)
     return (
       <ReactTable
         className=""

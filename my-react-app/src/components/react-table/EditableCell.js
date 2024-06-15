@@ -7,6 +7,7 @@ const EditableCell = ({
   column: { id },
   updateMyData, // This is the function to update the data
 }) => {
+  console.log(data);
   const [value, setValue] = useState(initialValue);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -36,7 +37,7 @@ const EditableCell = ({
           value={value}
           onChange={onChange}
           autoFocus
-          style={{ outline: "none", border: "1px solid gray" }}
+          style={{ outline: "none", border: "1px solid gray", width:"130px", padding:"2px" }}
         />
       ) : (
         value
