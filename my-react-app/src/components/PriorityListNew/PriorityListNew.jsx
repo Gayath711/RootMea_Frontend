@@ -12,7 +12,7 @@ import EditableCell from "../react-table/EditableCell";
 
 function PriorityListNew() {
         const token = localStorage.getItem("access_token");
-        console.log("TOKEN",token);
+        
         const [show, setShow] = useState(false);
         const [state, setState] = useState({
                             columns: [],
@@ -151,6 +151,7 @@ function PriorityListNew() {
           }
           return groups;
         }, {});
+        console.log(initialExpandedGroups)
         setExpandedGroups(initialExpandedGroups);
       })
       .catch((error) => console.error('Error fetching items:', error));
@@ -264,81 +265,108 @@ function PriorityListNew() {
                 </button>
                 
 
-                <Modal show={show} onHide={handleClose}>
-                  <Modal.Body>
-                          <div className="container">
-                            <div className="list-container">
-                              <h3>Available Items</h3>
-                              {Object.keys(groupedItems).map((group) => (
-                                <div class="list" key={group}>
-                                  <h4 onClick={() => toggleGroup(group)} style={{ cursor: 'pointer' }}>
-                                    {group} {expandedGroups[group] ? '▲' : '▼'}
-                                  </h4>
-                                  {expandedGroups[group] && (
-                                    <ul>
-                                      {groupedItems[group].map((item) => (
-                                      
-                                        <li
-                                          key={item.name}
-                                          onClick={() => !item.disabled && handleSelectAvailable(item.name)}
-                                      
-                                          onDoubleClick={() => !item.disabled && handleDoubleClickAvailable(item.name)}
-                                          style={{
-                                            cursor: item.disabled ? 'not-allowed' : 'pointer',
-                                            backgroundColor: selectedAvailableItems.includes(item.name) ? 'lightgrey' : 'white',
-                                            textDecoration: item.disabled ? 'line-through' : 'none',
-                                          }}
-                                        >
-                                          {/* {item.name} */}
-                                          {item.name.split('.')[1]}
-                                        </li>
-                                      ))}
-                                    </ul>
-                                  )}
-                                </div>
-                              ))}
-                            </div>
-                            <div className="buttons">
-                              <button onClick={moveToSelected} disabled={selectedAvailableItems.length === 0}>
-                                {'>>'}
-                              </button>
-                              <button onClick={moveToAvailable} disabled={selectedSelectedItems.length === 0}>
-                                {'<<'}
-                              </button>
-                            </div>
-                            <div className="list-container">
-                              <h3>Selected Items</h3>
-                              <ul class="list" id="selected-list">
-                                {selectedItems.length === 0 ? (
-                                  <li style={{ listStyle: 'none' }}>No items selected</li>
-                                ) : (
-                                  selectedItems.map((item) => (
-                                    <li
-                                      key={item}
-                                      onClick={() => handleSelectSelected(item)}
-                                      onDoubleClick={() => handleDoubleClickSelected(item)}
-                                      style={{
-                                        cursor: 'pointer',
-                                        backgroundColor: selectedSelectedItems.includes(item) ? 'lightgrey' : 'white',
-                                      }}
-                                    >
-                                      {item}
-                                    </li>
-                                  ))
-                                )}
-                              </ul>
-                            </div>
+                <Modal show={show} onHide={handleClose} className="custom-modal">
+                <Modal.Header closeButton className="custom-modal-header">
+                  <Modal.Title>Available and Selected Items</Modal.Title>
+                </Modal.Header>
+                <Modal.Body className="custom-modal-body">
+                  <div className="flex justify-center items-start gap-4">
+                    <div className="h-[60vh] w-[35%] px-2 overflow-auto border-1 border-teal-900">
+                      <div className="border-b-2">
+                        <div className="flex justify-between items-center w-100 bg-[#ffffff] text-black p-2.5 px-4 font-bold">
+                          Available Items
+                        </div>
+                      </div>
+                      {Object.keys(groupedItems).map((group) => (
+                        <div key={group} className="mb-4">
+                          <div
+                            onClick={() => toggleGroup(group)}
+                            className="bg-[#5BC4BF] text-white flex justify-between font-medium p-2 cursor-pointer "
+                          >
+                            {group} {expandedGroups[group] ? '▲' : '▼'}
                           </div>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <button onClick={handleClose}>
-                            Close
-                        </button>
-                        <button onClick={handleSaveChanges}>
-                            Save Changes
-                        </button>
-                    </Modal.Footer>
-                </Modal>
+                          {expandedGroups[group] && (
+                            <ul>
+                              {groupedItems[group].map((item) => (
+                                <li
+                                  key={item.name}
+                                  onClick={() => !item.disabled && handleSelectAvailable(item.name)}
+                                  onDoubleClick={() => !item.disabled && handleDoubleClickAvailable(item.name)}
+                                  className={`${
+                                    selectedAvailableItems.includes(item.name)
+                                      ? 'bg-teal-100 border-1 border-b-[2px] border-teal-400'
+                                      : 'bg-white border-b-[1px] border-teal-700'
+                                  } hover:bg-teal-100 text-xs p-2 cursor-pointer ${
+                                    item.disabled ? 'text-gray-400 cursor-not-allowed' : ''
+                                  }`}
+                                >
+                                  {item.name.split('.')[1]}
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex flex-column gap-2 h-100 justify-center items-center">
+                      <button
+                        onClick={moveToSelected}
+                        disabled={selectedAvailableItems.length === 0}
+                        className="px-3 py-1 border-1 sm:border-2 rounded-sm border-[#2F9384] text-[#2F9384] text-[13px] font-medium leading-5 hover:bg-[#5BC4BF] hover:text-white disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed"
+                      >
+                        {'>>'}
+                      </button>
+                      <button
+                        onClick={moveToAvailable}
+                        disabled={selectedSelectedItems.length === 0}
+                        className="px-3 py-1 border-1 sm:border-2 rounded-sm border-[#2F9384] text-[#2F9384] text-[13px] font-medium leading-5 hover:bg-[#5BC4BF] hover:text-white disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed"
+                      >
+                        {'<<'}
+                      </button>
+                    </div>
+                    <div className="h-[60vh] w-[35%] overflow-auto border-1 border-teal-900">
+                      <div className="border-b-2">
+                        <div className="flex justify-between items-center w-100 bg-[#ffffff] text-black p-2.5 px-4 font-bold">
+                          Selected Items
+                        </div>
+                      </div>
+                      <ul className="list" id="selected-list">
+                        {selectedItems.length === 0 ? (
+                          <li className="flex items-center justify-center h-100 text-center text-xs">
+                            No items selected
+                          </li>
+                        ) : (
+                          selectedItems.map((item) => (
+                            <li
+                              key={item}
+                              onClick={() => handleSelectSelected(item)}
+                              onDoubleClick={() => handleDoubleClickSelected(item)}
+                              className="bg-white border-b-[1px] border-teal-700 hover:bg-teal-100 text-xs p-2 cursor-pointer"
+                            >
+                              {item}
+                            </li>
+                          ))
+                        )}
+                      </ul>
+                    </div>
+                  </div>
+                </Modal.Body>
+                <Modal.Footer className="custom-modal-footer">
+                  <button
+                    onClick={handleClose}
+                    className="px-3 py-1 border-1 sm:border-2 rounded-sm border-[#2F9384] text-[#2F9384] text-[13px] font-medium leading-5 hover:bg-[#5BC4BF] hover:text-white"
+                  >
+                    Close
+                  </button>
+                  <button
+                    onClick={handleSaveChanges}
+                    className="px-3 py-1 border-1 sm:border-2 rounded-sm border-[#2F9384] text-[#2F9384] text-[13px] font-medium leading-5 hover:bg-[#5BC4BF] hover:text-white"
+                  >
+                    Save Changes
+                  </button>
+                </Modal.Footer>
+              </Modal>
+              
             
                 </div>
               </div>
