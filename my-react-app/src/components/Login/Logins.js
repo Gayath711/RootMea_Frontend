@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios"; // Don't forget to import axios if it's not already imported
 import { useDispatch } from "react-redux";
 import { loginAsync } from "../../store/slices/authSlice";
+import { fetchPermissionList } from "../../store/slices/userInfoSlice";
 import { useForm } from "react-hook-form";
 import { TailSpin } from "react-loader-spinner";
 import { BeatLoader } from "react-spinners";
@@ -76,6 +77,8 @@ const LoginForm = () => {
         }
         setErrorShowAlert(true);
         setIsLoading(false);
+
+        dispatch(fetchPermissionList());
         // }
       });
     } catch (error) {

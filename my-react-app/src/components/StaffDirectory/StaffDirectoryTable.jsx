@@ -14,6 +14,8 @@ import EditPNG from "../images/edit.png";
 import DeactivatePNG from "../images/deactivate.png";
 import ActivateIcon from "../images/activate_icon.svg";
 import DeactivateIcon from "../images/deactivate_icon.svg";
+import PrivateComponent from "../PrivateComponent";
+
 import { notifySuccess, notifyError } from "../../helper/toastNotication";
 
 const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
@@ -342,6 +344,38 @@ export default function StaffDirectoryTable() {
                     return (
                       <>
                         <div className="h-100 w-100 flex flex-row gap-2 justify-center items-center">
+                          <PrivateComponent permission="change_customuser">
+                            <button
+                              className="p-1 hover:bg-teal-400 bg-opacity-50 hover:rounded"
+                              title="Edit"
+                              onClick={() => {
+                                navigate(
+                                  `/update-staff-directory/${params.row.id}`
+                                );
+                              }}
+                            >
+                              <img
+                                src={EditPNG}
+                                className="w-4 h-4"
+                                style={{ display: "block", margin: "0 auto" }}
+                              />
+                            </button>
+                          </PrivateComponent>
+                          <PrivateComponent permission="delete_customuser">
+                            <button
+                              className="p-1 hover:bg-red-400 bg-opacity-50 hover:rounded"
+                              title="Deactivate"
+                              onClick={() => {
+                                deactivateRecord(params.row.id);
+                              }}
+                            >
+                              <img
+                                src={DeactivatePNG}
+                                className="w-4 h-4"
+                                style={{ display: "block", margin: "0 auto" }}
+                              />
+                            </button>
+                          </PrivateComponent>
                           <button
                             className="p-1 hover:bg-teal-400 bg-opacity-50 hover:rounded"
                             title="Edit"
@@ -461,14 +495,16 @@ function TableActions({
           />
         </div>
         <div className="ms-3">
-          <button
-            className="px-3 py-2 text-[13px] font-medium leading-5 bg-[#5BC4BF] border-1 border-[#5BC4BF] text-white rounded-sm font-medium hover:bg-[#429e97] focus:outline-none focus:ring-2 focus:ring-[#429e97] focus:ring-opacity-50 transition-colors duration-300"
-            onClick={() => {
-              navigate("/add-new-staff-directory/");
-            }}
-          >
-            Add New
-          </button>
+          <PrivateComponent permission="add_customuser">
+            <button
+              className="px-3 py-2 text-[13px] font-medium leading-5 bg-[#5BC4BF] border-1 border-[#5BC4BF] text-white rounded-sm font-medium hover:bg-[#429e97] focus:outline-none focus:ring-2 focus:ring-[#429e97] focus:ring-opacity-50 transition-colors duration-300"
+              onClick={() => {
+                navigate("/add-new-staff-directory/");
+              }}
+            >
+              Add New
+            </button>
+          </PrivateComponent>
         </div>
       </div>
     </div>

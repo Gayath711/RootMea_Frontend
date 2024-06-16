@@ -13,6 +13,7 @@ const DateInput = ({
   placeholder,
   width = 340,
   height = "7vh",
+  rounded=true,
   className,
   isEdittable,
   dateFormat = "MM/dd/yyyy",
@@ -86,7 +87,7 @@ const DateInput = ({
                 border-gray-300/50
                 placeholder-gray-500 
                 placeholder-opacity-50 
-                rounded-md
+                ${rounded ? "rounded-md" : ""}
                 text-md
                 h-[${height}]
                 z-50

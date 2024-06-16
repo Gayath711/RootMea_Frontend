@@ -9,7 +9,9 @@ const InputElement = ({
   value,
   placeholder,
   disabled = false,
-  handleChange,
+  rounded = true,
+  addMargin = true,
+  onChange,
   width,
   ...rest
 }) => {
@@ -21,16 +23,16 @@ const InputElement = ({
         };
 
   return (
-    <div className={`m-1 ${width}`}>
+    <div className={`${addMargin ? "m-1" : ""} ${width}`}>
       {label && <FormLabel required={required}>{label}</FormLabel>}
       <input
         type={type}
         {...rest}
         disabled={disabled}
-        onChange={(e) => handleChange(e.target.value)}
+        onChange={onChange}
         placeholder={placeholder || ""}
         {...valueProps}
-        className={`appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${className}`}
+        className={`appearance-none border ${rounded ? "rounded" : ""} w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${className}`}
       />
     </div>
   );

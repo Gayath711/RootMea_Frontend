@@ -63,6 +63,16 @@ import ClientReferral from "./components/ClientReferral";
 // New Client Profile - Create/View/Edit
 import ClientProfile from "./components/ClientProfileForm";
 
+import BulkUpload from "./components/BulkUpload/BulkUpload";
+
+ 
+import AddDocument from "./pages/AddDocument/AddDocument";
+
+import Master from "./pages/Master";
+import CreateGroup from "./pages/Master/CreateGroup";
+import { fetchPermissionList } from "./store/slices/userInfoSlice";
+
+
 function App() {
   // Retrieve isLoggedIn state from localStorage on initial render
   // const [isLoggedIn, setIsLoggedIn] = useState(
@@ -112,6 +122,10 @@ function App() {
       : ["admin"],
     // permissions: ["admin"],
   });
+
+  useEffect(() => {
+    dispatch(fetchPermissionList());
+  }, []);
 
   const isSidebarExpanded = useSelector(selectIsSidebarExpanded);
 
@@ -191,6 +205,7 @@ function App() {
                     path="/clientprofileform"
                     element={<ClientProfileInputForm />}
                   />
+                  <Route path="/bulk-upload" element={<BulkUpload />} />
 
                   <Route
                     path="/create_form"
@@ -300,9 +315,26 @@ function App() {
                     path="/encounter-note/add/:clientId"
                     element={<EncounterNoteForm />}
                   />
-                  <Route path="/encounter-note/add/:clientId" element={<EncounterNoteForm />} />
-                  <Route path="/care-plan/add/:clientId" element={<TheNewCarePlan />} />
+                  <Route
+                    path="/encounter-note/add/:clientId"
+                    element={<EncounterNoteForm />}
+                  />
+                  <Route
+                    path="/care-plan/add/:clientId"
+                    element={<TheNewCarePlan />}
+                  />
                   <Route path="/client-referral" element={<ClientReferral />} />
+ 
+                  <Route path="/master" element={<Master />} />
+                  <Route path="/create-new-group" element={<CreateGroup />} />
+                  <Route
+                    path="/update-permission-group/:paramid"
+                    element={<CreateGroup />}
+                  />
+ 
+                  <Route path="/document/add/:clientId" element={<AddDocument />} />
+                  <Route path="/document/add" element={<AddDocument />} />
+ 
                 </Routes>
               </div>
             </div>

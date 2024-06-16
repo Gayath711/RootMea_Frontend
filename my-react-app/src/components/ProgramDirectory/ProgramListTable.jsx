@@ -16,6 +16,7 @@ import DeactivateIcon from "../images/deactivate_icon.svg";
 
 import DeactivatePNG from "../images/deactivate.png";
 import MUIDataGridWrapper from "../HOC/MUIDataGridWrapper";
+import PrivateComponent from "../PrivateComponent";
 
 import { notifySuccess, notifyError } from "../../helper/toastNotication";
 
@@ -261,47 +262,38 @@ export default function ProgramListTable() {
                     return (
                       <>
                         <div className="h-100 w-100 flex flex-row gap-2 justify-center items-center">
-                          <button
-                            className="p-1 hover:bg-teal-400 bg-opacity-50 hover:rounded"
-                            title="Edit"
-                            onClick={() => {
-                              navigate(
-                                `/update-program-directory/${params.row.id}`
-                              );
-                            }}
-                          >
-                            <img
-                              src={EditPNG}
-                              className="w-4 h-4"
-                              style={{ display: "block", margin: "0 auto" }}
-                            />
-                          </button>
-                          <button
-                            className={`p-1 hover:bg-${
-                              params.row.SystemStatus ? "red-400" : "teal-400"
-                            } bg-opacity-50 hover:rounded`}
-                            title={
-                              params.row.SystemStatus
-                                ? "Deactivate"
-                                : "Activate"
-                            }
-                            onClick={() => {
-                              deactivateRecord(
-                                params.row.id,
-                                params.row.SystemStatus
-                              );
-                            }}
-                          >
-                            <img
-                              src={
-                                params.row.SystemStatus
-                                  ? DeactivateIcon
-                                  : ActivateIcon
-                              }
-                              className="w-4 h-4"
-                              style={{ display: "block", margin: "0 auto" }}
-                            />
-                          </button>
+                          <PrivateComponent permission="change_programs">
+                            <button
+                              className="p-1 hover:bg-teal-400 bg-opacity-50 hover:rounded"
+                              title="Edit"
+                              onClick={() => {
+                                navigate(
+                                  `/update-program-directory/${params.row.id}`
+                                );
+                              }}
+                            >
+                              <img
+                                src={EditPNG}
+                                className="w-4 h-4"
+                                style={{ display: "block", margin: "0 auto" }}
+                              />
+                            </button>
+                          </PrivateComponent>
+                          <PrivateComponent permission="delete_programs">
+                            <button
+                              className="p-1 hover:bg-red-400 bg-opacity-50 hover:rounded"
+                              title="Deactivate"
+                              onClick={() => {
+                                deactivateRecord(params.row.id);
+                              }}
+                            >
+                              <img
+                                src={DeactivatePNG}
+                                className="w-4 h-4"
+                                style={{ display: "block", margin: "0 auto" }}
+                              />
+                            </button>
+                          </PrivateComponent>
                         </div>
                       </>
                     );
@@ -400,14 +392,16 @@ function TableActions({
           />
         </div>
         <div className="ms-3">
-          <button
-            className="px-3 py-2 text-[13px] font-medium leading-5 bg-[#5BC4BF] border-1 border-[#5BC4BF] text-white rounded-sm font-medium hover:bg-[#429e97] focus:outline-none focus:ring-2 focus:ring-[#429e97] focus:ring-opacity-50 transition-colors duration-300"
-            onClick={() => {
-              navigate("/add-new-program-directory/");
-            }}
-          >
-            Add New
-          </button>
+          <PrivateComponent permission="add_programs">
+            <button
+              className="px-3 py-2 text-[13px] font-medium leading-5 bg-[#5BC4BF] border-1 border-[#5BC4BF] text-white rounded-sm font-medium hover:bg-[#429e97] focus:outline-none focus:ring-2 focus:ring-[#429e97] focus:ring-opacity-50 transition-colors duration-300"
+              onClick={() => {
+                navigate("/add-new-program-directory/");
+              }}
+            >
+              Add New
+            </button>
+          </PrivateComponent>
         </div>
       </div>
     </div>

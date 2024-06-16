@@ -32,6 +32,8 @@ function FieldElement({
 }) {
   const { setSelectedElement, selectedElement } = useDnDCustomFieldsContext();
 
+  console.log(field?.props?.width)
+
   if (viewMode && !editMode) {
     field.props = { ...field.props, disabled: true };
   }
@@ -77,6 +79,18 @@ function FieldElement({
         inputElement = <DividerElement {...field.props} />;
       }
       break;
+    case "header":
+      {
+        inputElement = <h1>{field.props.label}</h1>;
+      }
+      break;
+    case "subheader":
+      {
+        inputElement = <h5 style={{fontSize:"12px",fontWeight:"bold", color:"gray"}}>{field.props.label}</h5>;
+      }
+      break;
+      
+      
 
     default:
       inputElement = null;

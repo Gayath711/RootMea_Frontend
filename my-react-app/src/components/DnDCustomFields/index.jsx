@@ -53,7 +53,7 @@ function RenderDnDCustomFields({
     deletedElements,
     setDeletedElements,
   } = useDnDCustomFieldsContext();
-
+  console.log(dndItems, "useDnDCustomFieldsContext")
   //   {
   //     type: "VARCHAR(250)",
   //     label: "Text",
@@ -646,7 +646,7 @@ function RenderDnDCustomFields({
     // }
   };
 
-  console.log({ items });
+  console.log(items);
 
   if (viewMode) {
     return (
@@ -674,9 +674,15 @@ function RenderDnDCustomFields({
 
       <div className="row">
         {/* Draggable Elements */}
-        <div className="col-12 p-2">
+        {
+          !viewMode === "encounterView" ?
+          <div className="col-12 p-2">
           <ElementsBar elements={elements} />
         </div>
+        :
+        null
+        }
+        
 
         {/* Form Drop Zone */}
         <div className="col-12 p-2">
