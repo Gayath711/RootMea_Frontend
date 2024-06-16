@@ -25,7 +25,7 @@ export default function AddNewProgram() {
     DepartmentName: null,
     ProgramName: "",
     ProgramDescription: "",
-    Activity: null,
+    Activity: [],
     Eligibility: "",
     ManagementAdminContacts: [],
     ClientMattersContacts: [],
@@ -96,6 +96,15 @@ export default function AddNewProgram() {
           ProgramName: data.name || "",
           ProgramDescription: data.description || "",
           Eligibility: data.eligibility || "",
+          Activity: data.activities
+            ? data.activities.map((item) => {
+                return {
+                  ...item,
+                  label: item.name,
+                  value: item.id,
+                };
+              })
+            : [],
           ManagementAdminContacts: data.primary_contact
             ? data.primary_contact.map((item) => {
                 return {
@@ -229,6 +238,7 @@ export default function AddNewProgram() {
           department_name: formDetail.DepartmentName?.value || "",
           description: formDetail.ProgramDescription,
           eligibility: formDetail.Eligibility,
+          activities: formDetail.Activity.map((each) => each.id),
           primary_contact: formDetail.ManagementAdminContacts.map(
             (each) => each.id
           ),
@@ -298,6 +308,7 @@ export default function AddNewProgram() {
 
   const toggleActivity = () => {
     setShowActivity((prev) => !prev);
+    fetchActivity();
   };
 
   return (
@@ -383,6 +394,7 @@ export default function AddNewProgram() {
                     onChange={(item) => {
                       handleInputChange("Activity", item);
                     }}
+                    isMulti
                     styles={{
                       control: (styles) => ({
                         ...styles,
@@ -720,29 +732,148 @@ const AddNewActivity = ({
     formState: { errors },
   } = useForm();
 
+  const subActivityValue = watch("sub_activity");
+
   const [mainActivityOptions, setMainActivityOptions] = useState([]);
   const [subActivityOptions, setSubActivityOptions] = useState([]);
+  const [postingSubAct, setPostingSubAct] = useState(false);
+  const [createConfirmSubAct, setCreateConfirmSubAct] = useState(false);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const disableEdit = false;
 
+  useEffect(() => {
+    // fetchActivity();
+    fetchSubActivity();
+  }, []);
+
+  const [inputValue, setInputValue] = useState("");
+
+  const handleInputChange = (value) => {
+    setInputValue(value);
+  };
+
+  const handleKeyDown = (event) => {
+    const isNoOptionFound = () => {
+      let isAnyFound = subActivityOptions.filter((itm) =>
+        itm.label.includes(inputValue)
+      );
+
+      return isAnyFound.length > 0 ? false : true;
+    };
+
+    if (!inputValue) return;
+
+    switch (event.key) {
+      case "Enter":
+      case "Tab":
+        {
+          if (isNoOptionFound()) {
+            Swal.fire({
+              title: "Are you sure?",
+              text: `Do you want to Create New Sub Activity "${inputValue}" ?`,
+              icon: "info",
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: "Create",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                postSubActivity();
+              }
+            });
+            event.preventDefault();
+          }
+        }
+        break;
+      default:
+        break;
+    }
+  };
+
+  const fetchActivity = async () => {
+    try {
+      const response = await axios.get("/activities/");
+      setMainActivityOptions(
+        response.data.map((itm) => {
+          return {
+            ...itm,
+            label: itm.name,
+            value: itm.id,
+          };
+        })
+      );
+    } catch (error) {
+      // Handle errors here
+      console.error("Error fetching activities :", error);
+    }
+  };
+
+  const fetchSubActivity = async () => {
+    try {
+      const response = await axios.get("/sub-activity/");
+      setSubActivityOptions(
+        response.data.map((itm) => {
+          return {
+            ...itm,
+            label: itm.name,
+            value: itm.id,
+          };
+        })
+      );
+    } catch (error) {
+      // Handle errors here
+      console.error("Error fetching activities :", error);
+    }
+  };
+
+  console.log({ subActivityValue, inputValue });
+
+  const postSubActivity = async () => {
+    try {
+      setPostingSubAct(true);
+      const response = await axios.post("/sub-activity/", {
+        name: inputValue,
+      });
+      if (response.status === 201) {
+        let newSetOpt = [
+          {
+            ...response.data,
+            value: response.data?.id,
+            label: response.data?.name,
+          },
+        ];
+        newSetOpt = subActivityValue
+          ? [...subActivityValue, ...newSetOpt]
+          : newSetOpt;
+
+        setValue("sub_activity", [...newSetOpt]);
+        setInputValue("");
+        fetchSubActivity();
+      }
+    } catch (error) {
+      // Handle errors here
+      console.error("Error posting new sub_activity :", error);
+    } finally {
+      setPostingSubAct(false);
+    }
+  };
+
   const onSubmit = (data) => {
     setIsSubmitting(true);
 
     let postData = {
-      description: data.description,
-      activity: data.main_activity?.value,
-      activity: data.sub_activity?.value,
+      // description: data.description,
+      name: data.main_activity,
+      sub_activities: data.sub_activity?.map((each) => each.id) || [],
     };
 
-    let endpoint = "/appointments/";
+    let endpoint = "/activities/";
     let axiosCall = axios.post;
 
-    console.log({ data });
-
     if (isUpdate) {
-      endpoint = `/appointments/${activityID}/`;
+      endpoint = `/activities/${activityID}/`;
       axiosCall = isUpdate ? axios.put : axios.post;
     }
 
@@ -805,7 +936,22 @@ const AddNewActivity = ({
           <form onSubmit={handleSubmit(onSubmit)} className="p-4 w-100">
             <div className="mb-4">
               <label className="block mb-2">Main Activity *</label>
-              <Controller
+              <input
+                className="w-100 p-[0.725rem] rounded-[2px]"
+                name={"ActivityName"}
+                placeholder="Enter Activity Name"
+                style={{
+                  border: `1px solid ${
+                    !errors.main_activity ? "#5BC4BF" : "red"
+                  }`,
+                  fontSize: "14px",
+                }}
+                {...register("main_activity", {
+                  required: "Main Activity Name is required",
+                })}
+              />
+
+              {/* <Controller
                 name="main_activity"
                 control={control}
                 render={({ field }) => (
@@ -833,7 +979,7 @@ const AddNewActivity = ({
                   />
                 )}
                 rules={{ required: "Main Activity is required" }}
-              />
+              /> */}
               {errors.main_activity && (
                 <p className="text-red-500">{errors.main_activity.message}</p>
               )}
@@ -855,15 +1001,19 @@ const AddNewActivity = ({
             <div className="mb-4">
               <label className="block mb-2">Sub Activity</label>
               <Controller
-                name="main_activity"
+                name="sub_activity"
                 control={control}
                 render={({ field }) => (
                   <Select
                     {...field}
+                    isLoading={postingSubAct}
                     options={subActivityOptions}
                     isDisabled={disableEdit}
-                    placeholder="Seelct Sub Activity"
+                    placeholder="Select Sub Activity"
                     className="w-100"
+                    isMulti
+                    onInputChange={handleInputChange}
+                    onKeyDown={handleKeyDown}
                     styles={{
                       control: (styles) => ({
                         ...styles,
@@ -887,7 +1037,7 @@ const AddNewActivity = ({
                   }
                 }
               />
-              {errors.main_activity && (
+              {errors.sub_activity && (
                 <p className="text-red-500">{errors.sub_activity.message}</p>
               )}
             </div>
