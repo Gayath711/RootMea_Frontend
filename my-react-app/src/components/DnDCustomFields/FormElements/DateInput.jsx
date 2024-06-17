@@ -62,7 +62,7 @@ function DateInput({
   }
 
   return (
-    <div className={`m-1 ${width}`}>
+    <div className={`w-auto`}>
       <FormLabel required={required}>{label}</FormLabel>
       <DatePicker
         wrapperClassName="border rounded focus:outline-none focus:shadow-outline border-keppel"

@@ -398,6 +398,7 @@ function EncounterNoteForm() {
 
   const [customFields, setCustomFields] = useState([]);
   const [dndItems, setDndItems] = useState([]);
+  const [encounterViewItems, setEncounterViewItems] = useState(false);
   const [deletedCustomFields, setDeletedCustomFields] = useState([]);
 
   let customFieldsTags = useMemo(() => {
@@ -508,9 +509,12 @@ function EncounterNoteForm() {
       const fetchClientEncounterDetails = async () => {
         try {
           const response = await protectedApi.get(
-            `/encounter-notes/`
+            `/encounter-notes/${encounterId}`
           );
-          const data = response.data;
+          const data = await response.data;
+          console.log(data?.custom_fields)
+          setEncounterViewItems(true)
+          setDndItems(data?.custom_fields)
           data.custom_fields = JSON.stringify(data.custom_fields);
           setStartTime(
             convertTimeToISOString(data.encounter_date, data.start_time)
@@ -637,7 +641,7 @@ function EncounterNoteForm() {
         header_response?.data?.columns
       );
       setDndItems(header_response?.data?.columns);
-
+  console.log(header_response?.data?.columns)
       setTableColumn(header_response?.data?.columns);
     } catch (error) {
       console.error("Error fetching table headers:", error);
@@ -1390,7 +1394,7 @@ function EncounterNoteForm() {
             <div className="col-span-6">
               <DropDown
                 name="Client_Type"
-                placeholder="Form Template *"
+                placeholder="Form Template"
                 handleChange={(data) =>
                   handleFormDataChange("Client_Type", data.value)
                 }
@@ -1404,7 +1408,7 @@ function EncounterNoteForm() {
               />
             </div>
           </FormWrapper>
-          {tableColumns ? (
+          {tableColumns || encounterId ? (
           
             <>
               
@@ -1418,6 +1422,7 @@ function EncounterNoteForm() {
                   setCustomFields(dndItms);
                 }}
                 dndItems={dndItems}
+                encounterViewItems={encounterViewItems}
                 viewMode={mode === "encounterView"}
                 mode={"edit"}
                 setMode={setMode}
@@ -1427,6 +1432,9 @@ function EncounterNoteForm() {
               
             </>
           ) : (
+            <>
+              {
+            /*
             <FormWrapper
               label="Custom Fields"
               isCollapsable={true}
@@ -1446,7 +1454,9 @@ function EncounterNoteForm() {
                   viewMode={mode === "view"}
                 />
               </div>
-            </FormWrapper>
+            </FormWrapper>*/
+              }
+            </>
           )}
 
           <FormWrapper label="Encounter Summary">
@@ -1643,13 +1653,15 @@ function EncounterNoteForm() {
           >
             Cancel
           </button>
-          <button
-            // disabled={disableSubmit || mode === "view"}
+          {
+          !encounterViewItems && <button
+            disabled={disableSubmit || mode === "view"}
             onClick={mode === "encounterMode" ? handleCreate :handleUpdate}
             className="border border-keppel rounded-[3px] disabled:cursor-not-allowed disabled:bg-[#6cd8d3] bg-[#5BC4BF] text-white w-32 py-2"
           >
             Save
           </button>
+          }
         </div>
       </div>
     </div>

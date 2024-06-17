@@ -210,7 +210,7 @@ function FieldElementWrapper({ index, field, children }) {
         </div>
 
         {bottomHalf.isOver && (
-          <div className="absolute bottom-0 w-full rounded-md h-[7px] bg-primary rounded-t-none" />
+          <div className="absolute bottom-0 w-full rounded-md h-[7px] bg-black rounded-t-none" />
         )}
         {isSelectedElement && (
           <span className="absolute right-[-0.5%] top-[103%] z-40">
