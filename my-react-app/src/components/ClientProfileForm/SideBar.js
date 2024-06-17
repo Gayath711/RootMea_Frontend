@@ -36,16 +36,18 @@ const Sidebar = ({ handleClick, isNew, isEditable }) => {
             <div className="px-0">
               {showSidebar && (
                 <ul className="ml-5 text-md">
-                  <button onClick={() => handleClick(1)}>
-                    <li className=" flex items-center mt-10">
-                      <img
-                        src={GeneralInformationPNG}
-                        className="h-[25px] w-[25px] mr-4"
-                        alt="general information"
-                      />
-                      <p className="">General Information</p>
-                    </li>
-                  </button>
+                  {!isNew && (
+                    <button onClick={() => handleClick(1)}>
+                      <li className=" flex items-center mt-10">
+                        <img
+                          src={GeneralInformationPNG}
+                          className="h-[25px] w-[25px] mr-4"
+                          alt="general information"
+                        />
+                        <p className="">General Information</p>
+                      </li>
+                    </button>
+                  )}
                   <button onClick={() => handleClick(2)}>
                     <li className=" flex items-center mt-10">
                       <img

@@ -1,13 +1,19 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { Link, useNavigate, useParams, useLocation } from "react-router-dom";
 import BackArrowIcon from "../images/back-arrow.svg";
-import Select from "react-select";
+import Select, { components } from "react-select";
+
+import CloseIcon from "../images/form_builder/close_x.svg";
+import { Modal } from "react-bootstrap";
+
 import axios from "../../helper/axiosInstance";
 import {
   notify,
   notifyError,
   notifySuccess,
 } from "../../helper/toastNotication";
+import { useForm, Controller } from "react-hook-form";
+import Swal from "sweetalert2";
 
 export default function AddNewProgram() {
   const navigate = useNavigate();
@@ -19,6 +25,7 @@ export default function AddNewProgram() {
     DepartmentName: null,
     ProgramName: "",
     ProgramDescription: "",
+    Activity: [],
     Eligibility: "",
     ManagementAdminContacts: [],
     ClientMattersContacts: [],
@@ -27,13 +34,16 @@ export default function AddNewProgram() {
   const [errFields, setErrFields] = useState({});
   const [departmentNameOptions, setDepartmentNameOptions] = useState([]);
   const [usersList, setUsersList] = useState([]);
+  const [activityOptions, setActivityOptions] = useState([]);
 
   const [loadingData, setLoadingData] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showActivity, setShowActivity] = useState(false);
 
   useEffect(() => {
     fetchUsers();
     fetchDepartment();
+    fetchActivity();
     // Clean up effect
     return () => {
       // Optionally do any cleanup here
@@ -86,6 +96,15 @@ export default function AddNewProgram() {
           ProgramName: data.name || "",
           ProgramDescription: data.description || "",
           Eligibility: data.eligibility || "",
+          Activity: data.activities
+            ? data.activities.map((item) => {
+                return {
+                  ...item,
+                  label: item.name,
+                  value: item.id,
+                };
+              })
+            : [],
           ManagementAdminContacts: data.primary_contact
             ? data.primary_contact.map((item) => {
                 return {
@@ -150,6 +169,24 @@ export default function AddNewProgram() {
     }
   };
 
+  const fetchActivity = async () => {
+    try {
+      const response = await axios.get("/activities/");
+      setActivityOptions(
+        response.data.map((itm) => {
+          return {
+            ...itm,
+            label: itm.name,
+            value: itm.id,
+          };
+        })
+      );
+    } catch (error) {
+      // Handle errors here
+      console.error("Error fetching activities :", error);
+    }
+  };
+
   const fieldValidation = () => {
     let errorFields = {};
 
@@ -201,6 +238,7 @@ export default function AddNewProgram() {
           department_name: formDetail.DepartmentName?.value || "",
           description: formDetail.ProgramDescription,
           eligibility: formDetail.Eligibility,
+          activities: formDetail.Activity.map((each) => each.id),
           primary_contact: formDetail.ManagementAdminContacts.map(
             (each) => each.id
           ),
@@ -268,6 +306,11 @@ export default function AddNewProgram() {
     }));
   };
 
+  const toggleActivity = () => {
+    setShowActivity((prev) => !prev);
+    fetchActivity();
+  };
+
   return (
     <>
       <div className="flex flex-column gap-2 items-center">
@@ -314,7 +357,7 @@ export default function AddNewProgram() {
                   />
                 </FormField>
               </div>
-              <div className="w-full md:w-2/3 p-4">
+              <div className="w-full md:w-1/3 p-4">
                 <FormField
                   label="Program Name"
                   error={errFields.ProgramName}
@@ -334,6 +377,47 @@ export default function AddNewProgram() {
                     onChange={(item) => {
                       handleInputChange("ProgramName", item.target.value);
                     }}
+                  />
+                </FormField>
+              </div>
+              <div className="w-full md:w-1/3 p-4">
+                <FormField label="Activity" error={errFields.Activity} required>
+                  <Select
+                    isClearable={false}
+                    name={"Activity"}
+                    options={activityOptions}
+                    changeOptionsData={() => {
+                      setShowActivity(true);
+                    }}
+                    placeholder="Select Activity"
+                    value={formDetail.Activity}
+                    onChange={(item) => {
+                      handleInputChange("Activity", item);
+                    }}
+                    isMulti
+                    styles={{
+                      control: (styles) => ({
+                        ...styles,
+                        padding: "5px",
+
+                        border: `1px solid ${
+                          !errFields.Activity ? "#5BC4BF" : "red"
+                        }`,
+
+                        fontSize: "14px",
+                      }),
+                      menu: (styles) => ({
+                        ...styles,
+                        background: "white",
+                        zIndex: 9999,
+                      }),
+                    }}
+                    components={{
+                      IndicatorSeparator: () => null,
+                      Menu,
+                      Option,
+                    }}
+                    menuPortalTarget={document.body}
                   />
                 </FormField>
               </div>
@@ -554,6 +638,7 @@ export default function AddNewProgram() {
             </div>
           )}
         </div>
+        <AddNewActivity show={showActivity} toggleModal={toggleActivity} />
       </div>
     </>
   );
@@ -597,3 +682,420 @@ function FormField({ required = false, label = "", error, children }) {
     </>
   );
 }
+
+const Menu = (props) => {
+  return (
+    <>
+      <components.Menu {...props}>
+        <div>
+          <div>{props.children}</div>
+          <div className="flex justify-center items-center p-1">
+            <button
+              className={""}
+              onClick={props.selectProps.changeOptionsData}
+            >
+              <span className="text-base text-teal-400 hover:text-teal-700">
+                + Add New Activity
+              </span>
+            </button>
+          </div>
+        </div>
+      </components.Menu>
+    </>
+  );
+};
+
+const Option = (props) => {
+  return (
+    <>
+      <components.Option {...props}>{props.children}</components.Option>
+    </>
+  );
+};
+
+const AddNewActivity = ({
+  show,
+  toggleModal,
+  isUpdate,
+  refresh,
+  activityID,
+}) => {
+  const {
+    register,
+    handleSubmit,
+    control,
+    setValue,
+    reset,
+    getValues,
+    watch,
+    resetField,
+    formState: { errors },
+  } = useForm();
+
+  const subActivityValue = watch("sub_activity");
+
+  const [mainActivityOptions, setMainActivityOptions] = useState([]);
+  const [subActivityOptions, setSubActivityOptions] = useState([]);
+  const [postingSubAct, setPostingSubAct] = useState(false);
+  const [createConfirmSubAct, setCreateConfirmSubAct] = useState(false);
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const disableEdit = false;
+
+  useEffect(() => {
+    // fetchActivity();
+    fetchSubActivity();
+  }, []);
+
+  const [inputValue, setInputValue] = useState("");
+
+  const handleInputChange = (value) => {
+    setInputValue(value);
+  };
+
+  const handleKeyDown = (event) => {
+    const isNoOptionFound = () => {
+      let isAnyFound = subActivityOptions.filter((itm) =>
+        itm.label.includes(inputValue)
+      );
+
+      return isAnyFound.length > 0 ? false : true;
+    };
+
+    if (!inputValue) return;
+
+    switch (event.key) {
+      case "Enter":
+      case "Tab":
+        {
+          if (isNoOptionFound()) {
+            Swal.fire({
+              title: "Are you sure?",
+              text: `Do you want to Create New Sub Activity "${inputValue}" ?`,
+              icon: "info",
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: "Create",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                postSubActivity();
+              }
+            });
+            event.preventDefault();
+          }
+        }
+        break;
+      default:
+        break;
+    }
+  };
+
+  const fetchActivity = async () => {
+    try {
+      const response = await axios.get("/activities/");
+      setMainActivityOptions(
+        response.data.map((itm) => {
+          return {
+            ...itm,
+            label: itm.name,
+            value: itm.id,
+          };
+        })
+      );
+    } catch (error) {
+      // Handle errors here
+      console.error("Error fetching activities :", error);
+    }
+  };
+
+  const fetchSubActivity = async () => {
+    try {
+      const response = await axios.get("/sub-activity/");
+      setSubActivityOptions(
+        response.data.map((itm) => {
+          return {
+            ...itm,
+            label: itm.name,
+            value: itm.id,
+          };
+        })
+      );
+    } catch (error) {
+      // Handle errors here
+      console.error("Error fetching activities :", error);
+    }
+  };
+
+  console.log({ subActivityValue, inputValue });
+
+  const postSubActivity = async () => {
+    try {
+      setPostingSubAct(true);
+      const response = await axios.post("/sub-activity/", {
+        name: inputValue,
+      });
+      if (response.status === 201) {
+        let newSetOpt = [
+          {
+            ...response.data,
+            value: response.data?.id,
+            label: response.data?.name,
+          },
+        ];
+        newSetOpt = subActivityValue
+          ? [...subActivityValue, ...newSetOpt]
+          : newSetOpt;
+
+        setValue("sub_activity", [...newSetOpt]);
+        setInputValue("");
+        fetchSubActivity();
+      }
+    } catch (error) {
+      // Handle errors here
+      console.error("Error posting new sub_activity :", error);
+    } finally {
+      setPostingSubAct(false);
+    }
+  };
+
+  const onSubmit = (data) => {
+    setIsSubmitting(true);
+
+    let postData = {
+      // description: data.description,
+      name: data.main_activity,
+      sub_activities: data.sub_activity?.map((each) => each.id) || [],
+    };
+
+    let endpoint = "/activities/";
+    let axiosCall = axios.post;
+
+    if (isUpdate) {
+      endpoint = `/activities/${activityID}/`;
+      axiosCall = isUpdate ? axios.put : axios.post;
+    }
+
+    axiosCall(`${endpoint}`, postData)
+      .then((response) => {
+        Swal.fire({
+          title: "Success!",
+          text: `Activtiy ${isUpdate ? "Updated" : "Created"}`,
+          icon: "success",
+          timer: 2000,
+        });
+        refresh && refresh();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      })
+      .catch((error) => {
+        console.error("Error", error);
+        Swal.fire({
+          title: "Error!",
+          text: `Unable to ${isUpdate ? "Update" : "Create"} Activity`,
+          icon: "error",
+          timer: 2000,
+        });
+      })
+      .finally(() => {
+        reset();
+        setIsSubmitting(false);
+        toggleModal();
+      });
+  };
+
+  return (
+    <Modal
+      show={show}
+      onHide={() => toggleModal()}
+      backdrop="static"
+      keyboard={false}
+      centered
+      size="lg"
+    >
+      <Modal.Header className="m-0 p-2 w-100 text-white text-base bg-[#5BC4BF] font-medium">
+        <Modal.Title className="m-0 p-0 w-100">
+          <div className="flex justify-between items-center w-100">
+            <span className="text-white text-base">
+              {`${isUpdate ? "Update" : "Add New"} Activity`}
+            </span>
+            <button onClick={() => toggleModal()}>
+              <img
+                src={CloseIcon}
+                style={{
+                  height: "20px",
+                  width: "100%",
+                }}
+              />
+            </button>
+          </div>
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <div className="flex relative items-center justify-centerx">
+          <form onSubmit={handleSubmit(onSubmit)} className="p-4 w-100">
+            <div className="mb-4">
+              <label className="block mb-2">Main Activity *</label>
+              <input
+                className="w-100 p-[0.725rem] rounded-[2px]"
+                name={"ActivityName"}
+                placeholder="Enter Activity Name"
+                style={{
+                  border: `1px solid ${
+                    !errors.main_activity ? "#5BC4BF" : "red"
+                  }`,
+                  fontSize: "14px",
+                }}
+                {...register("main_activity", {
+                  required: "Main Activity Name is required",
+                })}
+              />
+
+              {/* <Controller
+                name="main_activity"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    options={mainActivityOptions}
+                    isDisabled={disableEdit}
+                    placeholder="Seelct Main Activity"
+                    className="w-100"
+                    styles={{
+                      control: (styles) => ({
+                        ...styles,
+                        padding: "3px",
+                        border: `1px solid ${
+                          !errors.main_activity ? "#5BC4BF" : "red"
+                        }`,
+                        fontSize: "14px",
+                      }),
+                      menu: (styles) => ({
+                        ...styles,
+                        background: "white",
+                        zIndex: 9999,
+                      }),
+                    }}
+                  />
+                )}
+                rules={{ required: "Main Activity is required" }}
+              /> */}
+              {errors.main_activity && (
+                <p className="text-red-500">{errors.main_activity.message}</p>
+              )}
+            </div>
+
+            <div className="mb-4">
+              <label className="block mb-2">Description</label>
+              <textarea
+                disabled={disableEdit}
+                rows={5}
+                {...register("description")}
+                className="form-control text-xs p-2.5 border-teal-500"
+              />
+              {errors.description && (
+                <p className="text-red-500">{errors.description.message}</p>
+              )}
+            </div>
+
+            <div className="mb-4">
+              <label className="block mb-2">Sub Activity</label>
+              <Controller
+                name="sub_activity"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    isLoading={postingSubAct}
+                    options={subActivityOptions}
+                    isDisabled={disableEdit}
+                    placeholder="Select Sub Activity"
+                    className="w-100"
+                    isMulti
+                    onInputChange={handleInputChange}
+                    onKeyDown={handleKeyDown}
+                    styles={{
+                      control: (styles) => ({
+                        ...styles,
+                        padding: "3px",
+                        border: `1px solid ${
+                          !errors.sub_activity ? "#5BC4BF" : "red"
+                        }`,
+                        fontSize: "14px",
+                      }),
+                      menu: (styles) => ({
+                        ...styles,
+                        background: "white",
+                        zIndex: 9999,
+                      }),
+                    }}
+                  />
+                )}
+                rules={
+                  {
+                    //  required: "Sub Activity is required"
+                  }
+                }
+              />
+              {errors.sub_activity && (
+                <p className="text-red-500">{errors.sub_activity.message}</p>
+              )}
+            </div>
+
+            <div className="flex flex-row justify-between items-center mb-2">
+              <div className="p-3 ps-0">
+                <a
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleModal();
+                  }}
+                  className="text-gray-400 text-xs border-[1px] border-[#43B09C] p-2 px-4"
+                >
+                  Cancel
+                </a>
+              </div>
+              {!disableEdit && (
+                <div className="p-3 pe-0">
+                  <button
+                    type="submit"
+                    className="w-54 h-10 bg-[#43B09C] text-xs text-white p-2 px-4"
+                  >
+                    {isUpdate ? "Update" : "Save"}
+                  </button>
+                </div>
+              )}
+            </div>
+          </form>
+          {isSubmitting && (
+            <div className="flex flex-column absolute top-0 left-0 items-center justify-center gap-2 w-100 h-100 bg-gray-100/80">
+              <svg
+                className="animate-spin -ml-1 mr-3 h-8 w-8 text-teal-500"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              <p className="text-base">
+                {isUpdate ? "Updating..." : "Creating.."}
+              </p>
+            </div>
+          )}
+        </div>
+      </Modal.Body>
+    </Modal>
+  );
+};
