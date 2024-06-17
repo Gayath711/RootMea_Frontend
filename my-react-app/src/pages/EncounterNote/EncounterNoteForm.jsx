@@ -1394,7 +1394,7 @@ function EncounterNoteForm() {
             <div className="col-span-6">
               <DropDown
                 name="Client_Type"
-                placeholder="Form Template *"
+                placeholder="Form Template"
                 handleChange={(data) =>
                   handleFormDataChange("Client_Type", data.value)
                 }
@@ -1432,6 +1432,9 @@ function EncounterNoteForm() {
               
             </>
           ) : (
+            <>
+              {
+            /*
             <FormWrapper
               label="Custom Fields"
               isCollapsable={true}
@@ -1451,7 +1454,9 @@ function EncounterNoteForm() {
                   viewMode={mode === "view"}
                 />
               </div>
-            </FormWrapper>
+            </FormWrapper>*/
+              }
+            </>
           )}
 
           <FormWrapper label="Encounter Summary">
