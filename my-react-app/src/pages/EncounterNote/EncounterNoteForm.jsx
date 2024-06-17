@@ -372,6 +372,7 @@ function BillingComments({ mode, handleFormDataChange, formData, userInfo }) {
 
 function EncounterNoteForm() {
   const [mode, setMode] = useState("new");
+  const [buttonMode, setButtonMode] = useState("")
 
   const { clientId } = useParams();
   const [clientDetails, setClientDetails] = useState({});
@@ -500,8 +501,13 @@ function EncounterNoteForm() {
   const encounterId = queryParams.get("encounterId");
   useEffect(() => {
     const mode = queryParams.get("mode");
-    setMode(mode);
-
+    if(mode){
+      setMode(mode);
+      setButtonMode(mode)
+    }else{
+    setMode("add")
+    setButtonMode("add")
+    }
     if (
       (mode === "edit" || mode === "view") &&
       queryParams.get("encounterId")
@@ -1109,6 +1115,7 @@ function EncounterNoteForm() {
 
   const [viewMode, setViewMode] = useState(true)
   const [editMode, setEditMode] = useState(true)
+  console.log(mode)
 
   return (
     <div className="mx-1" style={{ fontFamily: "poppins" }}>
@@ -1654,13 +1661,15 @@ function EncounterNoteForm() {
             Cancel
           </button>
           {
-          !encounterViewItems && <button
+           buttonMode === "edit" || buttonMode === "add" ? <button
             disabled={disableSubmit || mode === "view"}
             onClick={mode === "encounterMode" ? handleCreate :handleUpdate}
             className="border border-keppel rounded-[3px] disabled:cursor-not-allowed disabled:bg-[#6cd8d3] bg-[#5BC4BF] text-white w-32 py-2"
           >
             Save
           </button>
+          :
+          <></>
           }
         </div>
       </div>
