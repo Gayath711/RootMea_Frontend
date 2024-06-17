@@ -147,7 +147,7 @@ function MyPanel() {
       {
         Header: "Client Profile",
         Cell: ({ row }) => (
-          <Link to={`/clientprofile/${row.original.id}`}>
+          <Link to={`/clientprofile/${row.original.id}`} target="_blank">
             <Avatar
               className="mx-auto"
               sx={{ bgcolor: "#77ceca", height: 25, width: 25, fontSize: 10 }}
@@ -161,7 +161,7 @@ function MyPanel() {
       {
         Header: "Client Chart",
         Cell: ({ row }) => (
-          <Link to={`/clientchart/${row.original.id}`}>
+          <Link to={`/clientchart/${row.original.id}`} target="_blank">
             <img src={ClientChartImg} className="size-6 mx-auto" alt="client" />
           </Link>
         ),

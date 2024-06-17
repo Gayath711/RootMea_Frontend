@@ -511,7 +511,7 @@ function EncounterNoteForm() {
           const response = await protectedApi.get(
             `/encounter-notes/${encounterId}`
           );
-          const data = response.data;
+          const data = await response.data;
           console.log(data?.custom_fields)
           setEncounterViewItems(true)
           setDndItems(data?.custom_fields)
@@ -1648,13 +1648,15 @@ function EncounterNoteForm() {
           >
             Cancel
           </button>
-          <button
+          {
+          !encounterViewItems && <button
             disabled={disableSubmit || mode === "view"}
             onClick={mode === "encounterMode" ? handleCreate :handleUpdate}
             className="border border-keppel rounded-[3px] disabled:cursor-not-allowed disabled:bg-[#6cd8d3] bg-[#5BC4BF] text-white w-32 py-2"
           >
             Save
           </button>
+          }
         </div>
       </div>
     </div>
