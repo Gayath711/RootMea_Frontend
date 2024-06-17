@@ -1,9 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import PageTitle from "../../components/PageTitle/PageTitle";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import InputElement from "../../components/dynamicform/FormElements/InputElement";
@@ -69,7 +64,6 @@ function FormWrapper({
 }
 
 function convertToTimeString(date) {
-  
   return (
     date?.getHours() +
     ":" +
@@ -372,7 +366,7 @@ function BillingComments({ mode, handleFormDataChange, formData, userInfo }) {
 
 function EncounterNoteForm() {
   const [mode, setMode] = useState("new");
-  const [buttonMode, setButtonMode] = useState("")
+  const [buttonMode, setButtonMode] = useState("");
 
   const { clientId } = useParams();
   const [clientDetails, setClientDetails] = useState({});
@@ -380,7 +374,7 @@ function EncounterNoteForm() {
   const [carePlanOptions, setCarePlanOptions] = useState([]);
   const [facilityOptions, setFacilityOptions] = useState([]);
   const [programOptions, setProgramOptions] = useState([]);
-  const [ Client_Type, setClient_Type] = useState([]);
+  const [Client_Type, setClient_Type] = useState([]);
   const [userOptions, setUserOptions] = useState([]);
   const [templateOptions, setTemplateOptions] = useState([]);
   const [selectedTemplates, setSelectedTemplates] = useState([]);
@@ -404,7 +398,6 @@ function EncounterNoteForm() {
 
   let customFieldsTags = useMemo(() => {
     return customFields.map((field) => {
-      
       let cf = {
         datatype: field?.type,
         question: field?.props?.label,
@@ -437,8 +430,6 @@ function EncounterNoteForm() {
       })
       .filter(Boolean);
   }, [deletedCustomFields]);
-
-  
 
   const parseToDnDCustomFields = (items) => {
     return items.map((itm) => {
@@ -497,16 +488,16 @@ function EncounterNoteForm() {
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  
+
   const encounterId = queryParams.get("encounterId");
   useEffect(() => {
     const mode = queryParams.get("mode");
-    if(mode){
+    if (mode) {
       setMode(mode);
-      setButtonMode(mode)
-    }else{
-    setMode("add")
-    setButtonMode("add")
+      setButtonMode(mode);
+    } else {
+      setMode("add");
+      setButtonMode("add");
     }
     if (
       (mode === "edit" || mode === "view") &&
@@ -518,9 +509,9 @@ function EncounterNoteForm() {
             `/encounter-notes/${encounterId}`
           );
           const data = await response.data;
-          console.log(data?.custom_fields)
-          setEncounterViewItems(true)
-          setDndItems(data?.custom_fields)
+          console.log(data?.custom_fields);
+          setEncounterViewItems(true);
+          setDndItems(data?.custom_fields);
           data.custom_fields = JSON.stringify(data.custom_fields);
           setStartTime(
             convertTimeToISOString(data.encounter_date, data.start_time)
@@ -566,7 +557,7 @@ function EncounterNoteForm() {
           if (!data?.billing_comments) {
             data.billing_comments = [];
           }
-          
+
           setFormData(data);
 
           // CustomFields
@@ -582,12 +573,9 @@ function EncounterNoteForm() {
   const [tableNames, setTableName] = useState(null);
   const [tableColumns, setTableColumn] = useState(null);
   const fetchDropdownOptions = async (tableName, tableColumns) => {
-    
     setTableName(tableName);
     const newDroplist = {};
     for (const column of tableColumns) {
-      
-
       if (
         column.type === "USER-DEFINED" ||
         ((column.type === "USER-DEFINED" || column.type === "ARRAY") &&
@@ -604,7 +592,6 @@ function EncounterNoteForm() {
           });
           const dropdownOptions = response.data.enum_labels;
           newDroplist[enumType] = dropdownOptions;
-          
         } catch (error) {
           console.error(
             "Error fetching dropdown options for",
@@ -647,17 +634,21 @@ function EncounterNoteForm() {
         header_response?.data?.columns
       );
       setDndItems(header_response?.data?.columns);
-  console.log(header_response?.data?.columns)
+      console.log(header_response?.data?.columns);
       setTableColumn(header_response?.data?.columns);
     } catch (error) {
       console.error("Error fetching table headers:", error);
     }
   };
-  
+
   const handleFormDataChange = useCallback(
     (fieldName, value) => {
+      if (fieldName === "Client_Type") {
+        setEncounterViewItems(false);
+      }
+
       fieldName === "Client_Type" && fetchTableHeaders(value);
-      console.log("callback called", fieldName, value);
+
       setFormData((prevData) => ({ ...prevData, [fieldName]: value }));
     },
 
@@ -768,8 +759,6 @@ function EncounterNoteForm() {
   useEffect(() => {
     fetchClientOptions()
       .then((fetchClientOptions) => {
-        console.log("from_client", fetchClientOptions?.matching_tables);
-
         const convertedFormOptions = fetchClientOptions.matching_tables.map(
           (formName) => ({
             label: formName,
@@ -999,7 +988,7 @@ function EncounterNoteForm() {
           ) || []
         )
       );
-    console.log(billing_status, billing_comments);
+
     billing_status?.length
       ? formDataPayload.append(
           "billing_status",
@@ -1035,8 +1024,6 @@ function EncounterNoteForm() {
     }
 
     // DND Custom Fields
-
-    
 
     // let tags = customFields.map((field) => {
     //   console.log({ xx_field: field });
@@ -1079,7 +1066,7 @@ function EncounterNoteForm() {
       const formDataPayload = await handleCreatePayload();
       const response = await protectedApi.post(
         "/encounter-notes/",
-        formDataPayload 
+        formDataPayload
       );
       if (response.status === 201) {
         setFormData({ client_id: clientId, staff_name: "Temporary User" });
@@ -1096,10 +1083,9 @@ function EncounterNoteForm() {
   };
 
   const handleUpdate = async () => {
-    
     try {
       const formDataPayload = handleCreatePayload();
-      console.log("formDataPayload", formDataPayload);
+      
       const response = await protectedApi.put(
         `/encounter-notes-update/${encounterId}/`,
         formDataPayload
@@ -1113,9 +1099,9 @@ function EncounterNoteForm() {
     }
   };
 
-  const [viewMode, setViewMode] = useState(true)
-  const [editMode, setEditMode] = useState(true)
-  console.log(mode)
+  const [viewMode, setViewMode] = useState(true);
+  const [editMode, setEditMode] = useState(true);
+  console.log(mode);
 
   return (
     <div className="mx-1" style={{ fontFamily: "poppins" }}>
@@ -1416,16 +1402,11 @@ function EncounterNoteForm() {
             </div>
           </FormWrapper>
           {tableColumns || encounterId ? (
-          
             <>
-              
-            
-
-
               <CustomFieldsForEncounter
                 id={10}
                 onChange={(dndItms) => {
-                  console.log(dndItms, "inside change")
+                  console.log(dndItms, "inside change");
                   setCustomFields(dndItms);
                 }}
                 dndItems={dndItems}
@@ -1434,14 +1415,11 @@ function EncounterNoteForm() {
                 mode={"edit"}
                 setMode={setMode}
                 tableColumns={tableColumns}
-                
               />
-              
             </>
           ) : (
             <>
-              {
-            /*
+              {/*
             <FormWrapper
               label="Custom Fields"
               isCollapsable={true}
@@ -1461,8 +1439,7 @@ function EncounterNoteForm() {
                   viewMode={mode === "view"}
                 />
               </div>
-            </FormWrapper>*/
-              }
+            </FormWrapper>*/}
             </>
           )}
 
@@ -1660,17 +1637,17 @@ function EncounterNoteForm() {
           >
             Cancel
           </button>
-          {
-           buttonMode === "edit" || buttonMode === "add" ? <button
-            disabled={disableSubmit || mode === "view"}
-            onClick={mode === "encounterMode" ? handleCreate :handleUpdate}
-            className="border border-keppel rounded-[3px] disabled:cursor-not-allowed disabled:bg-[#6cd8d3] bg-[#5BC4BF] text-white w-32 py-2"
-          >
-            Save
-          </button>
-          :
-          <></>
-          }
+          {buttonMode === "edit" || buttonMode === "add" ? (
+            <button
+              disabled={disableSubmit || mode === "view"}
+              onClick={mode === "edit" ? handleUpdate : handleCreate}
+              className="border border-keppel rounded-[3px] disabled:cursor-not-allowed disabled:bg-[#6cd8d3] bg-[#5BC4BF] text-white w-32 py-2"
+            >
+              Save
+            </button>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </div>
