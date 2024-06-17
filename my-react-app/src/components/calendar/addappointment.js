@@ -427,6 +427,8 @@ const AddAppointment = ({
     formState: { errors },
   } = useForm();
 
+  const encounterData = watch("linkedEncounterNotes");
+
   const [date, setDate] = useState(null);
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
@@ -436,6 +438,7 @@ const AddAppointment = ({
   const [activityOptions, setActivityOptions] = useState([]);
   const encounterOptionCache = useRef([]);
   const [encounterNotesOptions, setEncounterNotesOptions] = useState([]);
+  const [encounterNotesList, setEncounterNotesList] = useState([]);
   const [clientsOption, setClientsOption] = useState([]);
   const [selectedClients, setSelectedClients] = useState([]);
 
@@ -742,6 +745,17 @@ const AddAppointment = ({
           value: itm.id,
         };
       });
+      setEncounterNotesList((prev) => {
+        let filtered = prev.filter((item) => item.id !== id);
+        console.log({ prev, filtered });
+        return [
+          ...filtered,
+          {
+            id,
+            data,
+          },
+        ];
+      });
       setEncounterNotesOptions((prev) => {
         return [...prev, ...data];
       });
@@ -833,6 +847,12 @@ const AddAppointment = ({
   const [errFields, setErrFields] = useState({});
 
   let disableEdit = isView;
+
+  let emptyEncounterClient = encounterNotesList.find(
+    (item) => item?.data?.length === 0
+  );
+
+  console.log({ emptyEncounterClient, encounterNotesList });
 
   return (
     <Modal
@@ -1181,6 +1201,7 @@ const AddAppointment = ({
               />
             </div>
 
+            {/* {(isUpdate === false || isView === false) && (  
             <div className="mb-4">
               <div>
                 <label className="block mb-2">Linked Encounter Notes</label>
@@ -1213,7 +1234,101 @@ const AddAppointment = ({
                 />
               </div>
             </div>
+           )} */}
 
+            {!(isUpdate === false && isView === false) && (
+              <div className="mb-4">
+                <div className="flex flex-column gap-3">
+                  <label className="block mb-2">Linked Encounter Notes</label>
+                  <div className="flex flex-column gap-3 mt-2">
+                    {encounterData && encounterData.length > 0 ? (
+                      <div className="flex flex-wrap gap-2 items-center">
+                        {encounterData.map((item) => {
+                          return (
+                            <div className="text-xs my-1">
+                              <a
+                                target="_blank"
+                                href={`/encounter-note/add/${item.client_id}/?encounterId=${item.id}&mode=view`}
+                                className="p-1.5 px-2.5 text-black bg-gray-200 hover:text-slate-50 hover:bg-teal-400"
+                              >
+                                {item.label}
+                              </a>
+                              {isView !== true && (
+                                <span
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    let newValue = encounterData.filter(
+                                      (itm) => itm.id !== item.id
+                                    );
+                                    setValue("linkedEncounterNotes", newValue);
+                                  }}
+                                  className="p-1.5 pr-2 text-black bg-gray-200 hover:bg-red-400 cursor-pointer"
+                                >
+                                  x
+                                </span>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      "No Linked Encounter Notes"
+                    )}
+                    {isUpdate === true && isView === false && (
+                      <Select
+                        options={encounterNotesOptions}
+                        isMulti
+                        isDisabled={disableEdit}
+                        placeholder="Select Encounter"
+                        value={[]}
+                        onChange={(value) => {
+                          let selectedValue = [...value];
+                          if (encounterData) {
+                            let encounterDataIDs = encounterData.map(
+                              (item) => item.id
+                            );
+                            let filteredSelectedValues = selectedValue.filter(
+                              (item) => !encounterDataIDs.includes(item.id)
+                            );
+                            selectedValue = [
+                              ...encounterData,
+                              ...filteredSelectedValues,
+                            ];
+                          }
+                          setValue("linkedEncounterNotes", selectedValue);
+                        }}
+                        styles={{
+                          control: (styles) => ({
+                            ...styles,
+                            padding: "3px",
+                            border: `1px solid ${
+                              !errFields.linkedEncounterNotes
+                                ? "#5BC4BF"
+                                : "red"
+                            }`,
+                            fontSize: "14px",
+                          }),
+                          menu: (styles) => ({
+                            ...styles,
+                            background: "white",
+                            zIndex: 9999,
+                          }),
+                        }}
+                      />
+                    )}
+                  </div>
+                  {!isView && emptyEncounterClient && (
+                    <a
+                      href={`/encounter-note/add/${emptyEncounterClient.id}`}
+                      className="rounded-sm mr-auto border-[1px] border-teal-700 p-1.5 px-2 text-teal-700 text-xs hover:bg-teal-700 hover:text-white"
+                    >
+                      Add New Encounter Notes
+                    </a>
+                  )}
+                </div>
+              </div>
+            )}
             <div className="flex flex-row justify-between items-center mb-2">
               <div className="p-3 ps-0">
                 <a
