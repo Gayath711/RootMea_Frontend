@@ -858,7 +858,7 @@ function EncounterNoteForm() {
       !formData?.end_time ||
       !formData?.encounter_status ||
       !formData?.program ||
-      !formData?.note_template
+      !formData?.Client_Type
     );
   }, [formData]);
 
@@ -873,6 +873,7 @@ function EncounterNoteForm() {
       encounter_type,
       program,
       note_template,
+      Client_Type,
       custom_fields,
       encounter_summary_text_template,
       encounter_summary,
@@ -903,6 +904,7 @@ function EncounterNoteForm() {
     encounter_type && formDataPayload.append("encounter_type", encounter_type);
     program && formDataPayload.append("program", program);
     note_template && formDataPayload.append("note_template", note_template);
+    Client_Type && formDataPayload.append("Client_Type", Client_Type);
     form_completion_date &&
       formDataPayload.append("form_completion_date", form_completion_date);
     // custom_fields !== undefined &&
@@ -1358,6 +1360,8 @@ function EncounterNoteForm() {
                 }
               />
             </div>
+            {
+            /*
             <div className="col-span-6">
               <DropDown
                 name="note_template"
@@ -1384,10 +1388,12 @@ function EncounterNoteForm() {
                 selectedOption={formData?.note_template || ""}
               />
             </div>
+            */
+            }
             <div className="col-span-6">
               <DropDown
                 name="Client_Type"
-                placeholder="Form Template"
+                placeholder="Form Template *"
                 handleChange={(data) =>
                   handleFormDataChange("Client_Type", data.value)
                 }
