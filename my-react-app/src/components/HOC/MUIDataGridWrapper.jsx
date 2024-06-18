@@ -1,7 +1,7 @@
 import React from "react";
 import { LinearProgress } from "@mui/material";
 
-const CustomNoRowsOverlay = () => {
+const CustomNoRowsOverlay = ({ noDataLabel }) => {
   return (
     <div
       className="flex items-center justify-center h-[100%]"
@@ -13,13 +13,16 @@ const CustomNoRowsOverlay = () => {
           fontFamily: "Roboto Mono",
         }}
       >
-        No data available
+        {noDataLabel}
       </h3>
     </div>
   );
 };
 
-const MUIDataGridWrapper = ({ children }) => {
+const MUIDataGridWrapper = ({
+  children,
+  noDataLabel = "No data available",
+}) => {
   const { loading = false, rows = [] } = children.props;
   return (
     <div
@@ -37,7 +40,9 @@ const MUIDataGridWrapper = ({ children }) => {
               }}
             />
           ),
-          noRowsOverlay: CustomNoRowsOverlay,
+          noRowsOverlay: () => (
+            <CustomNoRowsOverlay noDataLabel={noDataLabel} />
+          ),
           ...children?.props?.slots,
         },
       })}
