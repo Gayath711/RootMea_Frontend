@@ -755,7 +755,7 @@ export default function ClientReferral() {
               </div>
             </div>
 
-            <div className="mx-[20px] my-[15px]">
+            {/* <div className="mx-[20px] my-[15px]">
               <div className="rounded-[6px] border border-keppel">
                 <div
                   onClick={() => {
@@ -781,7 +781,7 @@ export default function ClientReferral() {
                   </div>
                 )}
               </div>
-            </div>
+            </div> */}
 
             <div className="mx-[20px] my-[15px]">
               <FormField label="Comments" error={errFields.comments}>
