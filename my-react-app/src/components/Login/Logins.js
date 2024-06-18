@@ -161,8 +161,11 @@ const LoginForm = () => {
                     {...register("email", {
                       required: "Email Address is required",
                       pattern: {
-                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                        message: "Invalid email address",
+                        // value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        // message: "Invalid email address",
+                        value: /^[A-Z0-9._%+-]+@rootsclinic\.org$/i,
+                        message:
+                          "Email must be from the rootsclinic.org domain",
                       },
                     })}
                   />
@@ -230,7 +233,7 @@ const LoginForm = () => {
               <div className="">
                 <div className="flex flex-col items-start px-4">
                   <div className="text-gray-800 text-opacity-50 text-xs font-normal">
-                    Enter Roots Email Address X
+                    Enter Roots Email Address
                   </div>
                   <input
                     data-testid="login-email-address"
