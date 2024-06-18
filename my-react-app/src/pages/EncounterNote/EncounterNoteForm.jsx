@@ -849,18 +849,19 @@ function EncounterNoteForm() {
   }, []);
 
   const disableSubmit = useMemo(() => {
-    return (
-      !formData?.staff_name ||
-      !formData?.encounter_date ||
-      !formData?.facility ||
-      !formData?.start_time ||
-      !formData?.encounter_type ||
-      !formData?.end_time ||
-      !formData?.encounter_status ||
-      !formData?.program ||
-      !formData?.Client_Type
-    );
-  }, [formData]);
+  return (
+    !formData?.staff_name ||
+    !formData?.encounter_date ||
+    !formData?.facility ||
+    !formData?.start_time ||
+    !formData?.encounter_type ||
+    !formData?.end_time ||
+    !formData?.encounter_status ||
+    !formData?.program ||
+    (mode !== 'edit' && !formData?.Client_Type)
+  );
+}, [formData, mode]);
+
 
   const handleCreatePayload = () => {
     const {
