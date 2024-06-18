@@ -130,7 +130,7 @@ function Referrals({ clientId }) {
         </div>
         <div className="flex items-center gap-x-10">
           <SearchIcon className="text-[#585A60] hover:cursor-pointer" />
-          <button onClick={() => navigate(`/assignments-and-referrals?clientId=${clientId}`)} className="px-3 py-2 text-sm bg-[#FFD9EB] text-[#1A1F25] rounded-sm font-medium">
+          <button onClick={() => navigate(`/assignments-and-referrals/${clientId}?tab=referrals`)} className="px-3 py-2 text-sm bg-[#FFD9EB] text-[#1A1F25] rounded-sm font-medium">
             Add New
           </button>
           <RemoveCircleIcon

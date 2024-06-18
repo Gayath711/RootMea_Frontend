@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
@@ -8,6 +8,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { styled } from "@mui/system";
 import BasicTable from "../../components/react-table/BasicTable";
 import { format } from "date-fns";
+import { Link, useParams , useLocation} from "react-router-dom";
 
 const CustomTab = styled(Tab)(({ theme }) => ({
   "&.Mui-selected": {
@@ -23,11 +24,22 @@ const CustomTabList = styled(TabList)(({ theme }) => ({
   },
 }));
 
+const pageIndexMapping = {
+  "referrals": "1",
+  "programs": "2",
+  "navigations": "3"
+}
+
 function AssignmentAndReferrals() {
-  const [value, setValue] = React.useState("1");
+  const { clientId } = useParams();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const tabParam = queryParams.get('tab');
+  const [value, setValue] = React.useState(pageIndexMapping[tabParam]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+
   };
 
   const columns = useMemo(
@@ -179,18 +191,51 @@ function AssignmentAndReferrals() {
           </CustomTabList>
         </Box>
       </TabContext>
+      {value === "1" && (
+        <div className="bg-white border border-[#DBE0E5] rounded-[6px]">
+          <div className="flex justify-between items-center my-4 px-4">
+            <span className="font-medium text-xl">Referrals</span>
+            <Link to={`/referral/add/${clientId}`}>
+              <button className="bg-[#5BC4BF] px-3 py-2 flex justify-center items-center gap-x-2 text-white text-base">
+                <AddIcon />
+                <span>New Referral</span>
+              </button>
+            </Link>
+          </div>
 
-      <div className="bg-white border border-[#DBE0E5] rounded-[6px]">
-        <div className="flex justify-between items-center my-4 px-4">
-          <span className="font-medium text-xl">Referrals</span>
-          <button className="bg-[#5BC4BF] px-3 py-2 flex justify-center items-center gap-x-2 text-white text-base">
-            <AddIcon />
-            <span>New Referral</span>
-          </button>
+          <BasicTable type="referralsPage" columns={columns} data={data} />
         </div>
+      )}
+      {value === "2" && (
+        <div className="bg-white border border-[#DBE0E5] rounded-[6px]">
+          <div className="flex justify-between items-center my-4 px-4">
+            <span className="font-medium text-xl">Programs</span>
+            <Link to={`/program/add/${clientId}`}>
+              <button className="bg-[#5BC4BF] px-3 py-2 flex justify-center items-center gap-x-2 text-white text-base">
+                <AddIcon />
+                <span>New Program</span>
+              </button>
+            </Link>
+          </div>
 
-        <BasicTable type="referralsPage" columns={columns} data={data} />
-      </div>
+          <BasicTable type="referralsPage" columns={columns} data={data} />
+        </div>
+      )}
+      {value === "3" && (
+        <div className="bg-white border border-[#DBE0E5] rounded-[6px]">
+          <div className="flex justify-between items-center my-4 px-4">
+            <span className="font-medium text-xl">Navigation</span>
+            <Link to={`/navigation/add/${clientId}`}>
+              <button className="bg-[#5BC4BF] px-3 py-2 flex justify-center items-center gap-x-2 text-white text-base">
+                <AddIcon />
+                <span>New Navigator</span>
+              </button>
+            </Link>
+          </div>
+
+          <BasicTable type="referralsPage" columns={columns} data={data} />
+        </div>
+      )}
     </div>
   );
 }
