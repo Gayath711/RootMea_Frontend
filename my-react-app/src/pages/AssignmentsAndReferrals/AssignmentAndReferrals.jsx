@@ -213,7 +213,7 @@ function AssignmentAndReferrals() {
             <Link to={`/program/add/${clientId}`}>
               <button className="bg-[#5BC4BF] px-3 py-2 flex justify-center items-center gap-x-2 text-white text-base">
                 <AddIcon />
-                <span>Programs</span>
+                <span>New Program</span>
               </button>
             </Link>
           </div>
@@ -228,7 +228,7 @@ function AssignmentAndReferrals() {
             <Link to={`/navigation/add/${clientId}`}>
               <button className="bg-[#5BC4BF] px-3 py-2 flex justify-center items-center gap-x-2 text-white text-base">
                 <AddIcon />
-                <span>Navigation</span>
+                <span>New Navigator</span>
               </button>
             </Link>
           </div>
