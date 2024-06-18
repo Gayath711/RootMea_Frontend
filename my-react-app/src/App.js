@@ -71,6 +71,8 @@ import AddDocument from "./pages/AddDocument/AddDocument";
 import Master from "./pages/Master";
 import CreateGroup from "./pages/Master/CreateGroup";
 import { fetchPermissionList } from "./store/slices/userInfoSlice";
+import AssignmentAndReferrals from "./pages/AssignmentsAndReferrals/AssignmentAndReferrals";
+import ReferralForm from "./pages/ReferralForm/ReferralForm";
 
 
 function App() {
@@ -334,6 +336,9 @@ function App() {
  
                   <Route path="/document/add/:clientId" element={<AddDocument />} />
                   <Route path="/document/add" element={<AddDocument />} />
+
+                  <Route path="/assignments-and-referrals" element={<AssignmentAndReferrals />} />
+                  <Route path="/referral/add/:clientId" element={<ReferralForm />} />
  
                 </Routes>
               </div>
