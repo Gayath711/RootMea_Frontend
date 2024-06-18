@@ -130,9 +130,9 @@ export default function StaffRecord() {
               usersData.is_active ? "red" : "teal"
             }-400 hover:text-white bg-opacity-50 hover:rounded flex justify-center items-center gap-2`}
             onClick={() => {
-              deactivateRecord();
+              deactivateRecord(usersData?.is_active);
             }}
-          >
+          > 
             <span>{usersData?.is_active ? "Deactivate" : "Activate"}</span>
             <img
               src={usersData?.is_active ? DeactivateIcon : ActivateIcon}

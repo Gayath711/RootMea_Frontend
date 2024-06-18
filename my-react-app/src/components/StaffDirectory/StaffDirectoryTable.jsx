@@ -157,27 +157,30 @@ export default function StaffDirectoryTable() {
           <MUIDataGridWrapper>
             <StyledDataGrid
               loading={loadingData}
+              onRowClick={(e) => {
+                navigate(`/staff-directory/${e.id}`);
+              }}
               rows={rows}
               columns={[
-                {
-                  field: "Link",
-                  headerName: "Link",
-                  flex: 1,
-                  headerClassName: "bg-[#5BC4BF] text-white font-medium",
-                  minWidth: 100,
-                  renderCell: (params) => {
-                    return (
-                      <>
-                        <Link
-                          to={`/staff-directory/${params.row.id}`}
-                          className="text-[#5BC4BF]"
-                        >
-                          {params.row.Link}
-                        </Link>
-                      </>
-                    );
-                  },
-                },
+                // {
+                //   field: "Link",
+                //   headerName: "Link",
+                //   flex: 1,
+                //   headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                //   minWidth: 100,
+                //   renderCell: (params) => {
+                //     return (
+                //       <>
+                //         <Link
+                //           to={`/staff-directory/${params.row.id}`}
+                //           className="text-[#5BC4BF]"
+                //         >
+                //           {params.row.Link}
+                //         </Link>
+                //       </>
+                //     );
+                //   },
+                // },
                 {
                   field: "LastName",
                   headerName: "Last Name",
@@ -348,7 +351,8 @@ export default function StaffDirectoryTable() {
                             <button
                               className="p-1 hover:bg-teal-400 bg-opacity-50 hover:rounded"
                               title="Edit"
-                              onClick={() => {
+                              onClick={(e) => {
+                                e.stopPropagation();
                                 navigate(
                                   `/update-staff-directory/${params.row.id}`
                                 );
@@ -363,60 +367,33 @@ export default function StaffDirectoryTable() {
                           </PrivateComponent>
                           <PrivateComponent permission="delete_customuser">
                             <button
-                              className="p-1 hover:bg-red-400 bg-opacity-50 hover:rounded"
-                              title="Deactivate"
-                              onClick={() => {
-                                deactivateRecord(params.row.id);
+                              className={`p-1 hover:bg-${
+                                params.row.SystemStatus ? "red-400" : "teal-400"
+                              } bg-opacity-50 hover:rounded`}
+                              title={
+                                params.row.SystemStatus
+                                  ? "Deactivate"
+                                  : "Activate"
+                              }
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                deactivateRecord(
+                                  params.row.id,
+                                  params.row.SystemStatus
+                                );
                               }}
                             >
                               <img
-                                src={DeactivatePNG}
+                                src={
+                                  params.row.SystemStatus
+                                    ? DeactivateIcon
+                                    : ActivateIcon
+                                }
                                 className="w-4 h-4"
                                 style={{ display: "block", margin: "0 auto" }}
                               />
                             </button>
                           </PrivateComponent>
-                          <button
-                            className="p-1 hover:bg-teal-400 bg-opacity-50 hover:rounded"
-                            title="Edit"
-                            onClick={() => {
-                              navigate(
-                                `/update-staff-directory/${params.row.id}`
-                              );
-                            }}
-                          >
-                            <img
-                              src={EditPNG}
-                              className="w-4 h-4"
-                              style={{ display: "block", margin: "0 auto" }}
-                            />
-                          </button>
-                          <button
-                            className={`p-1 hover:bg-${
-                              params.row.SystemStatus ? "red-400" : "teal-400"
-                            } bg-opacity-50 hover:rounded`}
-                            title={
-                              params.row.SystemStatus
-                                ? "Deactivate"
-                                : "Activate"
-                            }
-                            onClick={() => {
-                              deactivateRecord(
-                                params.row.id,
-                                params.row.SystemStatus
-                              );
-                            }}
-                          >
-                            <img
-                              src={
-                                params.row.SystemStatus
-                                  ? DeactivateIcon
-                                  : ActivateIcon
-                              }
-                              className="w-4 h-4"
-                              style={{ display: "block", margin: "0 auto" }}
-                            />
-                          </button>
                         </div>
                       </>
                     );
