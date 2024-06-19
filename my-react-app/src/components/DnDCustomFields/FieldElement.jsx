@@ -32,7 +32,7 @@ function FieldElement({
 }) {
   const { setSelectedElement, selectedElement } = useDnDCustomFieldsContext();
 
-  console.log(field?.props?.width)
+  
 
   if (viewMode && !editMode) {
     field.props = { ...field.props, disabled: true };
@@ -60,6 +60,7 @@ function FieldElement({
             handleResetFile={handleResetFile}
             viewMode={viewMode}
             editMode={editMode}
+            uploadType={field.type}
           />
         );
       }
@@ -183,8 +184,7 @@ function FieldElementWrapper({ index, field, children }) {
         //   setMouseIsOver(false);
         // }}
         onClick={(e) => {
-          console.log("clickedd...");
-          console.log({ index });
+          
           e.stopPropagation();
           if (selectedElement === index) {
             setSelectedElement(null);
