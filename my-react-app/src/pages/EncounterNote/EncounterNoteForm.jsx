@@ -483,11 +483,12 @@ function EncounterNoteForm() {
     });
   };
 
-  const [showCutomFields, setShowCustomFields] = useState(false);
+  
 
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
+  const [prevFormData, setPrevFormData] = useState(null)
 
   const encounterId = queryParams.get("encounterId");
   useEffect(() => {
@@ -510,6 +511,8 @@ function EncounterNoteForm() {
           );
           const data = await response.data;
           console.log(data?.custom_fields);
+          setPrevFormData(data)
+          console.log(data)
           setEncounterViewItems(true);
           setDndItems(data?.custom_fields);
           data.custom_fields = JSON.stringify(data.custom_fields);
@@ -1067,6 +1070,8 @@ function EncounterNoteForm() {
   const handleCreate = async () => {
     try {
       const formDataPayload = await handleCreatePayload();
+          
+
       const response = await protectedApi.post(
         "/encounter-notes/",
         formDataPayload
@@ -1085,10 +1090,13 @@ function EncounterNoteForm() {
     }
   };
 
+  
+
   const handleUpdate = async () => {
     try {
       const formDataPayload = handleCreatePayload();
-      
+      console.log(formData)
+      console.log(prevFormData)
       const response = await protectedApi.put(
         `/encounter-notes-update/${encounterId}/`,
         formDataPayload
@@ -1102,9 +1110,18 @@ function EncounterNoteForm() {
     }
   };
 
-  const [viewMode, setViewMode] = useState(true);
-  const [editMode, setEditMode] = useState(true);
   console.log(mode);
+
+  // Combine conditions
+    const isDisabled = useMemo(() => {
+    if (mode === 'edit') {
+      // Additional check for formData === prevFormData when mode is edit
+      return disableSubmit || mode === 'view' || JSON.stringify(formData) === JSON.stringify(prevFormData);
+    } else {
+      // For other modes, use the default disableSubmit condition
+      return disableSubmit || mode === 'view';
+    }
+  }, [disableSubmit, mode, formData, prevFormData]);
 
   return (
     <div className="mx-1" style={{ fontFamily: "poppins" }}>
@@ -1646,7 +1663,7 @@ function EncounterNoteForm() {
           </button>
           {buttonMode === "edit" || buttonMode === "add" ? (
             <button
-              disabled={disableSubmit || mode === "view"}
+              disabled={isDisabled}
               onClick={mode === "edit" ? handleUpdate : handleCreate}
               className="border border-keppel rounded-[3px] disabled:cursor-not-allowed disabled:bg-[#6cd8d3] bg-[#5BC4BF] text-white w-32 py-2"
             >
