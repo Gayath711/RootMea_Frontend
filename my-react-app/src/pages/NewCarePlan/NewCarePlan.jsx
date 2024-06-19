@@ -1226,7 +1226,6 @@ const TheNewCarePlan = () => {
               </FormButtonWrapper>
 
               {/* This section is commented temporarily. DON'T REMOVE!!!! */}
-              
 
               {/* <div className="flex items-center space-x-2 pt-9 pb-6">
                 <input
@@ -1251,7 +1250,7 @@ const TheNewCarePlan = () => {
                   Is approval Needed?
                 </label>
               </div> */}
-              {formData?.approver_name && (
+              {/* {formData?.approver_name && (
                 <div
                   className={`w-full flex justify-between items-center border rounded-[6px]`}
                 >
@@ -1274,7 +1273,7 @@ const TheNewCarePlan = () => {
                     -
                   </button>
                 </div>
-              )}
+              )} */}
               <div className="text-center my-3">
                 {mode === "approve" ? (
                   formData?.approver_name?.id &&
