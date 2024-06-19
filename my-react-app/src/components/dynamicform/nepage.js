@@ -833,7 +833,8 @@ function NewPage() {
         </div>
         {/* <h2 className="text-2xl font-bold mb-4">Form Name - {tableName}</h2> */}
         {tableColumns.length > 0 && (
-          <form onSubmit={handleSubmitPost}>
+          // <form onSubmit={handleSubmitPost}>
+          <div>
             {tableColumns.map((column) => {
               return renderInputField(column);
             })}
@@ -851,7 +852,8 @@ function NewPage() {
                 Download
               </button>
             </div>
-          </form>
+            </div>
+          // </form>
         )}
       </div>
     </div>
