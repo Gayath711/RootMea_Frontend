@@ -1,4 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import PageTitle from "../../components/PageTitle/PageTitle";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import InputElement from "../../components/dynamicform/FormElements/InputElement";
@@ -12,13 +17,16 @@ import SignInput from "../../components/dynamicform/FormElements/SignInput";
 import { protectedApi } from "../../services/api";
 import { notifyError, notifySuccess } from "../../helper/toastNotication";
 import DropDown from "../../components/common/Dropdown";
+import BasicTable from "../../components/react-table/BasicTable";
 import DnDCustomFields from "../../components/DnDCustomFields";
-
+import axios from "axios";
 import CollapseOpenSvg from "../../components/images/collpase-open.svg";
 import CollapseCloseSvg from "../../components/images/collapse-close.svg";
-
+import apiURL from "../../apiConfig";
 import { format } from "date-fns";
 import "./EncounterNoteFormStyles.css";
+import CustomFieldEncounter from "../../components/dynamicform/CustomFieldEncounter";
+import CustomFieldsForEncounter from "../../components/ClientProfileForm/CustomFieldsForEncounter";
 
 function FormWrapper({
   children,
@@ -61,7 +69,7 @@ function FormWrapper({
 }
 
 function convertToTimeString(date) {
-  console.log(date);
+  
   return (
     date?.getHours() +
     ":" +
@@ -91,6 +99,15 @@ async function fetchClientDetails({ clientId }) {
 async function fetchFormOptions() {
   try {
     const response = await protectedApi.get("/encounter-note-form-options/");
+    return response.data;
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
+async function fetchClientOptions() {
+  try {
+    const response = await protectedApi.get("/get_matching_tables/  ");
     return response.data;
   } catch (error) {
     console.error(error.message);
@@ -144,6 +161,15 @@ async function fetchUserInfo() {
   }
 }
 
+async function fetchTemplateOptions() {
+  try {
+    const response = await protectedApi.get("/encounter-summary/");
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 function convertTimeToISOString(data, timeString) {
   // Get the current date in 'YYYY-MM-DD' format
   var timeParts = timeString.split(":");
@@ -160,8 +186,193 @@ function convertTimeToISOString(data, timeString) {
   return convertedDate;
 }
 
+function BillingStatus({ mode, handleFormDataChange, formData, userInfo }) {
+  const [billingStatus, setBillingStatus] = useState({});
+
+  const handleAddBillingStatus = useCallback(() => {
+    if (!userInfo?.user_id) {
+      notifyError("Can't find logged in user information");
+      return;
+    }
+    const data = {
+      status: billingStatus?.status,
+      user_name: { ...userInfo },
+      date_time: new Date().getTime(),
+    };
+    handleFormDataChange("billing_status", [...formData?.billing_status, data]);
+    setBillingStatus({});
+  }, [billingStatus, formData]);
+
+  const columnDefinition = useMemo(() => {
+    return [
+      {
+        Header: "Billing Status",
+        accessor: "status",
+        align: "left",
+      },
+      {
+        Header: "User name",
+        accessor: "user_name",
+        align: "left",
+        Cell: ({ value }) => value?.user_name || value || "NaN",
+      },
+      {
+        Header: "Date & Time",
+        accessor: "date_time",
+        align: "left",
+        Cell: ({ value }) =>
+          value ? format(new Date(Number(value)), "MM-dd-yyyy hh:mm a") : "NaN",
+      },
+    ];
+  }, []);
+
+  return (
+    <>
+      <div className="col-span-11">
+        <DropDown
+          name="status"
+          placeholder="Billing Status"
+          handleChange={(data) =>
+            setBillingStatus((prev) => ({
+              ...prev,
+              status: data.value,
+            }))
+          }
+          isEdittable={mode !== "edit"}
+          className="border-keppel m-1 h-[37.6px]"
+          height="37.6px"
+          fontSize="14px"
+          borderColor="#5bc4bf"
+          options={[
+            {
+              label: "ECM Enabling Service",
+              value: "ECM Enabling Service",
+            },
+            { label: "Submitted via AMD*", value: "Submitted via AMD*" },
+            {
+              label: "Submitted via invoice",
+              value: "Submitted via invoice",
+            },
+            { label: "Missing Insurance", value: "Missing Insurance" },
+            {
+              label: "Missing/Insufficient Notes",
+              value: "Missing/Insufficient Notes",
+            },
+          ]}
+          selectedOption={billingStatus?.status || ""}
+        />
+      </div>
+      <div className="col-span-1 m-1">
+        <button
+          onClick={handleAddBillingStatus}
+          disabled={!billingStatus?.status}
+          className="w-full h-100 bg-[#5BC4BF] rounded-md text-white font-semibold text-lg disabled:cursor-not-allowed"
+        >
+          +
+        </button>
+      </div>
+
+      <div className="col-span-12 mx-1">
+        <BasicTable
+          type={"billing"}
+          noMargin
+          defaultPageSize={5}
+          columns={columnDefinition}
+          data={formData?.billing_status || []}
+        />
+      </div>
+    </>
+  );
+}
+
+function BillingComments({ mode, handleFormDataChange, formData, userInfo }) {
+  const [billingComments, setBillingComments] = useState({});
+
+  const handleAddBillingComment = useCallback(() => {
+    if (!userInfo?.user_id) {
+      notifyError("Can't find logged in user information");
+      return;
+    }
+    const data = {
+      comment: billingComments?.comment,
+      user_name: { ...userInfo },
+      date_time: new Date().getTime(),
+    };
+    handleFormDataChange("billing_comments", [
+      ...formData?.billing_comments,
+      data,
+    ]);
+    setBillingComments({});
+  }, [billingComments, formData]);
+
+  const columnDefinition = useMemo(() => {
+    return [
+      {
+        Header: "Billing status Comments",
+        accessor: "comment",
+        align: "left",
+      },
+      {
+        Header: "User name",
+        accessor: "user_name",
+        align: "left",
+        Cell: ({ value }) => value?.user_name || value || "NaN",
+      },
+      {
+        Header: "Date & Time",
+        accessor: "date_time",
+        align: "left",
+        Cell: ({ value }) =>
+          value ? format(new Date(Number(value)), "MM-dd-yyyy hh:mm a") : "NaN",
+      },
+    ];
+  }, []);
+
+  return (
+    <>
+      <div className="col-span-11">
+        <InputElement
+          type="text"
+          name="comment"
+          disabled={mode !== "edit"}
+          placeholder="Billing Status Comment"
+          value={billingComments?.comment || ""}
+          onChange={(e) =>
+            setBillingComments((prev) => ({
+              ...prev,
+              comment: e.target.value,
+            }))
+          }
+          isEdittable={mode !== "edit"}
+          className="border-keppel"
+        />
+      </div>
+      <div className="col-span-1 m-1">
+        <button
+          onClick={handleAddBillingComment}
+          disabled={!billingComments?.comment}
+          className="w-full h-100 bg-[#5BC4BF] rounded-md text-white font-semibold text-lg disabled:cursor-not-allowed"
+        >
+          +
+        </button>
+      </div>
+
+      <div className="col-span-12 mx-1">
+        <BasicTable
+          type={"billing"}
+          noMargin
+          defaultPageSize={5}
+          columns={columnDefinition}
+          data={formData?.billing_comments || []}
+        />
+      </div>
+    </>
+  );
+}
+
 function EncounterNoteForm() {
   const [mode, setMode] = useState("new");
+  const [buttonMode, setButtonMode] = useState("")
 
   const { clientId } = useParams();
   const [clientDetails, setClientDetails] = useState({});
@@ -169,7 +380,10 @@ function EncounterNoteForm() {
   const [carePlanOptions, setCarePlanOptions] = useState([]);
   const [facilityOptions, setFacilityOptions] = useState([]);
   const [programOptions, setProgramOptions] = useState([]);
+  const [ Client_Type, setClient_Type] = useState([]);
   const [userOptions, setUserOptions] = useState([]);
+  const [templateOptions, setTemplateOptions] = useState([]);
+  const [selectedTemplates, setSelectedTemplates] = useState([]);
   const [userInfo, setUserInfo] = useState({});
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
@@ -184,21 +398,24 @@ function EncounterNoteForm() {
   });
 
   const [customFields, setCustomFields] = useState([]);
+  const [dndItems, setDndItems] = useState([]);
+  const [encounterViewItems, setEncounterViewItems] = useState(false);
   const [deletedCustomFields, setDeletedCustomFields] = useState([]);
 
   let customFieldsTags = useMemo(() => {
     return customFields.map((field) => {
+      
       let cf = {
-        datatype: field.type,
-        question: field.props.label,
-        answer: "",
+        datatype: field?.type,
+        question: field?.props?.label,
+        answer: field?.props?.value,
       };
 
-      if (field.type === "imageupload" || field.type === "fileupload") {
-        cf.answer = field.props.base64;
-      } else {
-        cf.answer = field.props.value;
-      }
+      // if (field.type === "imageupload" || field.type === "fileupload") {
+      //   cf.answer = field.props.base64;
+      // } else {
+      //   cf.answer = field.props.value;
+      // }
 
       if (mode === "edit") {
         if (field.id) {
@@ -221,7 +438,7 @@ function EncounterNoteForm() {
       .filter(Boolean);
   }, [deletedCustomFields]);
 
-  console.log({ customFieldsTags, deletedCustomFields, deletedcustomFieldsID });
+  
 
   const parseToDnDCustomFields = (items) => {
     return items.map((itm) => {
@@ -280,11 +497,17 @@ function EncounterNoteForm() {
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
+  
   const encounterId = queryParams.get("encounterId");
   useEffect(() => {
     const mode = queryParams.get("mode");
-    setMode(mode);
-
+    if(mode){
+      setMode(mode);
+      setButtonMode(mode)
+    }else{
+    setMode("add")
+    setButtonMode("add")
+    }
     if (
       (mode === "edit" || mode === "view") &&
       queryParams.get("encounterId")
@@ -294,7 +517,10 @@ function EncounterNoteForm() {
           const response = await protectedApi.get(
             `/encounter-notes/${encounterId}`
           );
-          const data = response.data;
+          const data = await response.data;
+          console.log(data?.custom_fields)
+          setEncounterViewItems(true)
+          setDndItems(data?.custom_fields)
           data.custom_fields = JSON.stringify(data.custom_fields);
           setStartTime(
             convertTimeToISOString(data.encounter_date, data.start_time)
@@ -322,9 +548,25 @@ function EncounterNoteForm() {
           data.care_plans_deleted = [];
           data.uploaded_documents_deleted = [];
           data.signed_by_deleted = [];
+
+          let formattedEncounterSummary = "";
+
+          Object.keys(data.encounter_summary).forEach((key) => {
+            formattedEncounterSummary += `${key}: ${data.encounter_summary[key]}`;
+          });
+
+          data.encounter_summary = formattedEncounterSummary;
+
           data.care_plans = data.care_plans.map(
             (carePlan) => carePlan.care_plan_id
           );
+          if (!data?.billing_status) {
+            data.billing_status = [];
+          }
+          if (!data?.billing_comments) {
+            data.billing_comments = [];
+          }
+          
           setFormData(data);
 
           // CustomFields
@@ -337,11 +579,142 @@ function EncounterNoteForm() {
     }
   }, []);
 
+  const [tableNames, setTableName] = useState(null);
+  const [tableColumns, setTableColumn] = useState(null);
+  const fetchDropdownOptions = async (tableName, tableColumns) => {
+    
+    setTableName(tableName);
+    const newDroplist = {};
+    for (const column of tableColumns) {
+      
+
+      if (
+        column.type === "USER-DEFINED" ||
+        ((column.type === "USER-DEFINED" || column.type === "ARRAY") &&
+          (column.name.endsWith("_multiple") ||
+            column.name.endsWith("_checkbox")))
+      ) {
+        const enumType = `enum_type_${tableName}_${column.name}_enum_type`;
+
+        try {
+          const response = await axios.get(`${apiURL}/get_enum_labels/`, {
+            params: {
+              enum_type: enumType,
+            },
+          });
+          const dropdownOptions = response.data.enum_labels;
+          newDroplist[enumType] = dropdownOptions;
+          
+        } catch (error) {
+          console.error(
+            "Error fetching dropdown options for",
+            enumType,
+            ":",
+            error
+          );
+        }
+      }
+    }
+  };
+  const fetchTableHeaders = async (value) => {
+    const access_token = localStorage.getItem("access_token");
+    try {
+      // Create an array of promises for the API calls
+      const promises = [
+        axios.get(`${apiURL}/get_table_structure/${value}/`),
+
+        fetch(`${apiURL}/profile-type/`, {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        }).then((response) => response.json()),
+      ];
+
+      // Use Promise.all to fetch all data simultaneously
+      const [header_response, profile_type_Response] = await Promise.all(
+        promises
+      );
+
+      // Log the responses
+      console.log(
+        "from promise all",
+
+        header_response,
+        profile_type_Response
+      );
+      fetchDropdownOptions(
+        header_response?.data?.table_name,
+        header_response?.data?.columns
+      );
+      setDndItems(header_response?.data?.columns);
+  console.log(header_response?.data?.columns)
+      setTableColumn(header_response?.data?.columns);
+    } catch (error) {
+      console.error("Error fetching table headers:", error);
+    }
+  };
+  
   const handleFormDataChange = useCallback(
     (fieldName, value) => {
+      fieldName === "Client_Type" && fetchTableHeaders(value);
+      console.log("callback called", fieldName, value);
       setFormData((prevData) => ({ ...prevData, [fieldName]: value }));
     },
+
     [formData]
+  );
+
+  const handleUpdateTemplate = useCallback(
+    ({ newTemplates, deletedTemplates }) => {
+      setFormData((prevData) => {
+        let encounterSummary;
+        try {
+          encounterSummary = JSON.parse(prevData.encounter_summary || "{}");
+        } catch (e) {
+          encounterSummary = {};
+          prevData.encounter_summary.split("\n").forEach((line) => {
+            const [key, value] = line.split(":");
+            if (
+              key !== undefined &&
+              typeof key === "string" &&
+              key.trim() !== ""
+            ) {
+              encounterSummary[key.trim()] = (value || "").trim() + "\n";
+            }
+          });
+        }
+        deletedTemplates?.forEach((t) => {
+          for (const q of t.value.questions) {
+            if (
+              encounterSummary[q] === undefined ||
+              encounterSummary[q] === "\n"
+            ) {
+              delete encounterSummary[q];
+            }
+          }
+        });
+
+        newTemplates?.forEach((t) => {
+          t.value.questions.forEach((q) => {
+            if (encounterSummary[q] === undefined) {
+              encounterSummary[q] = "\n";
+            }
+          });
+        });
+
+        let formattedTemplates = "";
+
+        Object.keys(encounterSummary).forEach((key) => {
+          formattedTemplates += `${key}: ${encounterSummary[key]}`;
+        });
+
+        return {
+          ...prevData,
+          encounter_summary: formattedTemplates,
+        };
+      });
+    },
+    []
   );
 
   useEffect(() => {
@@ -393,6 +766,25 @@ function EncounterNoteForm() {
   }, []);
 
   useEffect(() => {
+    fetchClientOptions()
+      .then((fetchClientOptions) => {
+        console.log("from_client", fetchClientOptions?.matching_tables);
+
+        const convertedFormOptions = fetchClientOptions.matching_tables.map(
+          (formName) => ({
+            label: formName,
+            value: formName,
+          })
+        );
+
+        setClient_Type(convertedFormOptions);
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  }, []);
+
+  useEffect(() => {
     fetchCarePlanOptions()
       .then((carePlanOptionsResponse) => {
         const convertedCarePlanOptions = carePlanOptionsResponse.map(
@@ -421,7 +813,7 @@ function EncounterNoteForm() {
   useEffect(() => {
     fetchProgramOptions()
       .then((programOptionsResponse) => {
-        const convertedProgramOptions = programOptionsResponse.map(
+        const convertedProgramOptions = programOptionsResponse?.map(
           (program) => ({ label: program.name, value: program.id })
         );
         setProgramOptions(convertedProgramOptions);
@@ -429,6 +821,18 @@ function EncounterNoteForm() {
       .catch((error) => {
         console.error(error.message);
       });
+  }, []);
+
+  useEffect(() => {
+    fetchTemplateOptions()
+      .then((response) => {
+        const convertedResponse = response?.map((data) => ({
+          label: data.text_template,
+          value: data,
+        }));
+        setTemplateOptions(convertedResponse);
+      })
+      .catch((error) => console.error(error));
   }, []);
 
   useEffect(() => {
@@ -491,6 +895,9 @@ function EncounterNoteForm() {
       signed_by_deleted,
       signed_by,
       uploaded_documents,
+      billing_status,
+      billing_comments,
+      form_completion_date,
     } = formData;
     const formDataPayload = new FormData();
     clientId && formDataPayload.append("client_id", Number(clientId));
@@ -507,18 +914,41 @@ function EncounterNoteForm() {
     encounter_type && formDataPayload.append("encounter_type", encounter_type);
     program && formDataPayload.append("program", program);
     note_template && formDataPayload.append("note_template", note_template);
-    custom_fields !== undefined &&
-      formDataPayload.append(
-        "custom_fields",
-        JSON.stringify(custom_fields || [])
-      );
+    form_completion_date &&
+      formDataPayload.append("form_completion_date", form_completion_date);
+    // custom_fields !== undefined &&
+    //   formDataPayload.append(
+    //     "custom_fields",
+    //     JSON.stringify(custom_fields || [])
+    //   );
     encounter_summary_text_template &&
       formDataPayload.append(
         "encounter_summary_text_template",
         encounter_summary_text_template
       );
-    encounter_summary &&
-      formDataPayload.append("encounter_summary", encounter_summary);
+
+    if (encounter_summary) {
+      const newEncounterSummary = {};
+      encounter_summary.split("\n").forEach((line) => {
+        const [key, value] = line.split(":");
+        if (
+          key !== undefined &&
+          typeof key === "string" &&
+          key.trim() !== "" &&
+          typeof value === "string" &&
+          value.trim() !== ""
+        ) {
+          newEncounterSummary[key.trim()] = (value || "").trim() + "\n";
+        }
+      });
+      formDataPayload.append(
+        "encounter_summary",
+        JSON.stringify(newEncounterSummary)
+      );
+    } else {
+      formDataPayload.append("encounter_summary", JSON.stringify({}));
+    }
+
     forms &&
       formDataPayload.append(
         "forms",
@@ -569,6 +999,35 @@ function EncounterNoteForm() {
           ) || []
         )
       );
+    console.log(billing_status, billing_comments);
+    billing_status?.length
+      ? formDataPayload.append(
+          "billing_status",
+          JSON.stringify(
+            billing_status?.map((bs) => ({
+              ...bs,
+              user_name:
+                bs?.user_id !== undefined
+                  ? bs?.user_id
+                  : bs?.user_name?.user_id || bs?.user_name,
+            }))
+          )
+        )
+      : formDataPayload.append("billing_status", JSON.stringify([]));
+    billing_comments?.length
+      ? formDataPayload.append(
+          "billing_comments",
+          JSON.stringify(
+            billing_comments?.map((bc) => ({
+              ...bc,
+              user_name:
+                bc?.user_id !== undefined
+                  ? bc?.user_id
+                  : bc?.user_name?.user_id || bc?.user_name,
+            }))
+          )
+        )
+      : formDataPayload.append("billing_comments", JSON.stringify([]));
     for (let i = 0; i < uploaded_documents?.length; i++) {
       if (uploaded_documents[i] instanceof File) {
         formDataPayload.append("uploaded_documents", uploaded_documents[i]);
@@ -576,6 +1035,8 @@ function EncounterNoteForm() {
     }
 
     // DND Custom Fields
+
+    
 
     // let tags = customFields.map((field) => {
     //   console.log({ xx_field: field });
@@ -604,11 +1065,12 @@ function EncounterNoteForm() {
     console.log({ customFieldsTags, deletedcustomFieldsID });
     console.log("--- Payload End ----");
 
-    formDataPayload.append("tags", JSON.stringify(customFieldsTags || []));
+    formDataPayload.append("tags", JSON.stringify([]));
     formDataPayload.append(
-      "tags_deleted",
-      JSON.stringify(deletedcustomFieldsID || [])
+      "custom_fields",
+      JSON.stringify(customFieldsTags || custom_fields || [])
     );
+    formDataPayload.append("tags_deleted", JSON.stringify([]));
     return formDataPayload;
   };
 
@@ -617,7 +1079,7 @@ function EncounterNoteForm() {
       const formDataPayload = await handleCreatePayload();
       const response = await protectedApi.post(
         "/encounter-notes/",
-        formDataPayload
+        formDataPayload 
       );
       if (response.status === 201) {
         setFormData({ client_id: clientId, staff_name: "Temporary User" });
@@ -634,9 +1096,10 @@ function EncounterNoteForm() {
   };
 
   const handleUpdate = async () => {
+    
     try {
       const formDataPayload = handleCreatePayload();
-      console.log({ formDataPayload });
+      console.log("formDataPayload", formDataPayload);
       const response = await protectedApi.put(
         `/encounter-notes-update/${encounterId}/`,
         formDataPayload
@@ -649,6 +1112,10 @@ function EncounterNoteForm() {
       console.error(error);
     }
   };
+
+  const [viewMode, setViewMode] = useState(true)
+  const [editMode, setEditMode] = useState(true)
+  console.log(mode)
 
   return (
     <div className="mx-1" style={{ fontFamily: "poppins" }}>
@@ -931,51 +1398,101 @@ function EncounterNoteForm() {
                 selectedOption={formData?.note_template || ""}
               />
             </div>
-          </FormWrapper>
-
-          <FormWrapper
-            label="Custom Fields"
-            isCollapsable={true}
-            initialState={customFields.length > 0}
-          >
-            <div className="col-span-12">
-              <DnDCustomFields
-                onChange={(dndItms) => {
-                  setCustomFields(dndItms);
-                }}
-                onDelete={(dndItms) => {
-                  console.log({ onDelItm: dndItms });
-                  setDeletedCustomFields(dndItms);
-                }}
-                deletedItems={deletedCustomFields}
-                dndItems={customFields}
-                viewMode={mode === "view"}
-              />
-            </div>
-          </FormWrapper>
-
-          <FormWrapper label="Encounter Summary">
-            <div className="col-span-12">
+            <div className="col-span-6">
               <DropDown
-                name="encounter_summary_text_template"
-                placeholder="Select note text Template *"
+                name="Client_Type"
+                placeholder="Form Template"
                 handleChange={(data) =>
-                  handleFormDataChange(
-                    "encounter_summary_text_template",
-                    data.value
-                  )
+                  handleFormDataChange("Client_Type", data.value)
                 }
                 isEdittable={mode === "view"}
                 className="border-keppel m-1 h-[37.6px]"
                 height="37.6px"
                 fontSize="14px"
                 borderColor="#5bc4bf"
-                options={[
-                  { label: "Template 1", value: "Template 1" },
-                  { label: "Template 2", value: "Template 2" },
-                  { label: "Template 3", value: "Template 3" },
-                ]}
-                selectedOption={formData?.encounter_summary_text_template || ""}
+                options={Client_Type}
+                selectedOption={formData?.Client_Type || ""}
+              />
+            </div>
+          </FormWrapper>
+          {tableColumns || encounterId ? (
+          
+            <>
+              
+            
+
+
+              <CustomFieldsForEncounter
+                id={10}
+                onChange={(dndItms) => {
+                  console.log(dndItms, "inside change")
+                  setCustomFields(dndItms);
+                }}
+                dndItems={dndItems}
+                encounterViewItems={encounterViewItems}
+                viewMode={mode === "encounterView"}
+                mode={"edit"}
+                setMode={setMode}
+                tableColumns={tableColumns}
+                
+              />
+              
+            </>
+          ) : (
+            <>
+              {
+            /*
+            <FormWrapper
+              label="Custom Fields"
+              isCollapsable={true}
+              initialState={customFields.length > 0}
+            >
+              <div className="col-span-12">
+                <DnDCustomFields
+                  onChange={(dndItms) => {
+                    setCustomFields(dndItms);
+                  }}
+                  onDelete={(dndItms) => {
+                    console.log({ onDelItm: dndItms });
+                    setDeletedCustomFields(dndItms);
+                  }}
+                  deletedItems={deletedCustomFields}
+                  dndItems={customFields}
+                  viewMode={mode === "view"}
+                />
+              </div>
+            </FormWrapper>*/
+              }
+            </>
+          )}
+
+          <FormWrapper label="Encounter Summary">
+            <div className="col-span-12">
+              <MultiSelectElement
+                name={"encounter_summary_text_template"}
+                className="border-keppel"
+                placeholder="encounter_summary_text_template"
+                value={selectedTemplates || []}
+                disabled={mode === "view"}
+                onChange={useCallback((data) => {
+                  setSelectedTemplates((template) => {
+                    const deletedTemplates = template?.filter(
+                      (t) =>
+                        data?.find((d) => d.value.id === t.value.id) ===
+                        undefined
+                    );
+                    const newTemplates = data?.filter(
+                      (d) =>
+                        template?.find((t) => t.value.id === d.value.id) ===
+                        undefined
+                    );
+
+                    handleUpdateTemplate({ newTemplates, deletedTemplates });
+
+                    return data;
+                  });
+                }, [])}
+                options={templateOptions}
               />
             </div>
             <div className="col-span-12">
@@ -1072,6 +1589,23 @@ function EncounterNoteForm() {
               />
             </div>
             <div className="col-span-12">
+              <DateInput
+                placeholder="Form Completion Date"
+                className="m-1 border-keppel"
+                dateFormat="MM-dd-yyyy"
+                isEdittable={mode === "view"}
+                value={
+                  formData?.form_completion_date
+                    ? format(formData?.form_completion_date, "MM-dd-yyyy")
+                    : ""
+                }
+                handleChange={(date) =>
+                  handleFormDataChange("form_completion_date", date)
+                }
+                height="37.6px"
+              />
+            </div>
+            <div className="col-span-12">
               <FileInput
                 title="Upload Documents"
                 className="border-keppel m-1 w-full"
@@ -1104,57 +1638,19 @@ function EncounterNoteForm() {
             </div>
           </FormWrapper>
 
-          <FormWrapper label="Billing Details" gridClass="grid-cols-13">
-            <div className="col-span-4">
-              <DropDown
-                name="billing_status"
-                placeholder="Billing Status"
-                // handleChange={(data) =>
-                //   handleFormDataChange("billiing_status", data.value)
-                // }
-                isEdittable={mode === "view"}
-                className="border-keppel m-1 h-[37.6px]"
-                height="37.6px"
-                fontSize="14px"
-                borderColor="#5bc4bf"
-                options={[
-                  {
-                    label: "ECM Enabling Service",
-                    value: "ECM Enabling Service",
-                  },
-                  { label: "Submitted via AMD*", value: "Submitted via AMD*" },
-                  {
-                    label: "Submitted via invoice",
-                    value: "Submitted via invoice",
-                  },
-                  { label: "Missing Insurance", value: "Missing Insurance" },
-                  {
-                    label: "Missing/Insufficient Notes",
-                    value: "Missing/Insufficient Notes",
-                  },
-                ]}
-                // selectedOption={formData?.note_template || ""}
-              />
-            </div>
-            <div className="col-span-4">
-              <InputElement
-                type="text"
-                className="border-keppel"
-                placeholder="Username"
-              />
-            </div>
-            <div className="col-span-4">
-              <InputElement
-                type="text"
-                className="border-keppel"
-                placeholder="date/time"
-              />
-            </div>
-            <div className="col-span-1 m-1">
-              <button className="w-full h-100 bg-[#5BC4BF] rounded-md text-white font-semibold text-lg">
-                +
-              </button>
-            </div>
+          <FormWrapper label="Billing Details">
+            <BillingStatus
+              mode={mode}
+              handleFormDataChange={handleFormDataChange}
+              formData={formData}
+              userInfo={userInfo}
+            />
+            <BillingComments
+              mode={mode}
+              handleFormDataChange={handleFormDataChange}
+              formData={formData}
+              userInfo={userInfo}
+            />
           </FormWrapper>
         </div>
         <div className="mx-auto flex justify-center items-center gap-x-4 my-8">
@@ -1164,13 +1660,17 @@ function EncounterNoteForm() {
           >
             Cancel
           </button>
-          <button
+          {
+           buttonMode === "edit" || buttonMode === "add" ? <button
             disabled={disableSubmit || mode === "view"}
-            onClick={mode === "edit" ? handleUpdate : handleCreate}
+            onClick={mode === "encounterMode" ? handleCreate :handleUpdate}
             className="border border-keppel rounded-[3px] disabled:cursor-not-allowed disabled:bg-[#6cd8d3] bg-[#5BC4BF] text-white w-32 py-2"
           >
             Save
           </button>
+          :
+          <></>
+          }
         </div>
       </div>
     </div>

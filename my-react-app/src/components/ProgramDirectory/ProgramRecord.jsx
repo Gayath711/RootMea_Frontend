@@ -12,6 +12,7 @@ import DeactivatePNG from "../images/deactivate.png";
 
 import ActivateIcon from "../images/activate_icon.svg";
 import DeactivateIcon from "../images/deactivate_icon.svg";
+import PrivateComponent from "../PrivateComponent";
 
 export default function ProgramRecord() {
   const { recordid } = useParams();
@@ -89,18 +90,19 @@ export default function ProgramRecord() {
     });
   }, [recordData, loadingData]);
 
-  const deactivateRecord = () => {
+  const deactivateRecord = (isActive) => {
+    let actionPerformed = isActive ? "Deactivate" : "Activate";
     setIsDeactivating(true);
     axios
       .delete(`/api/resources/program/${recordid}`)
       .then((response) => {
         // navigate(-1);
         fetchData();
-        notifySuccess("Deactivated Successfully");
+        notifySuccess(`${actionPerformed}d Successfully`);
       })
       .catch((error) => {
-        notifyError("Could not deactivate, please try again later");
-        console.error("Error Deactivating:", error);
+        notifyError(`Could not ${actionPerformed}, please try again later`);
+        console.error("Error" + actionPerformed + ":", error);
       })
       .finally(() => {
         setIsDeactivating(false);
@@ -110,36 +112,40 @@ export default function ProgramRecord() {
   return (
     <>
       <div className="w-100 flex flex-row gap-2 justify-end items-center my-1">
-        <button
-          className="p-1 px-2 hover:bg-teal-400 hover:text-white bg-opacity-50 hover:rounded flex justify-center items-center gap-2"
-          onClick={() => {
-            navigate(`/update-program-directory/${recordid}`);
-          }}
-        >
-          <span>Edit</span>
-          <img
-            src={EditPNG}
-            className="w-4 h-4"
-            style={{ display: "block", margin: "0 auto" }}
-          />
-        </button>
-        <button
-          className={`p-1 px-2 hover:bg-${
-            recordData.is_active ? "red" : "teal"
-          }-400 hover:text-white bg-opacity-50 hover:rounded flex justify-center items-center gap-2`}
-          onClick={() => {
-            deactivateRecord();
-          }}
-        >
-          <span>{recordData?.is_active ? "Deactivate" : "Activate"}</span>
-          <img
-            src={recordData?.is_active ? DeactivateIcon : ActivateIcon}
-            className="w-6 h-6"
-            style={{ display: "block", margin: "0 auto" }}
-          />
-        </button>
+        <PrivateComponent permission="change_programs">
+          <button
+            className="p-1 px-2 hover:bg-teal-400 hover:text-white bg-opacity-50 hover:rounded flex justify-center items-center gap-2"
+            onClick={() => {
+              navigate(`/update-program-directory/${recordid}`);
+            }}
+          >
+            <span>Edit</span>
+            <img
+              src={EditPNG}
+              className="w-4 h-4"
+              style={{ display: "block", margin: "0 auto" }}
+            />
+          </button>
+        </PrivateComponent>
+        <PrivateComponent permission="delete_programs">
+          <button
+            className={`p-1 px-2 hover:bg-${
+              recordData.is_active ? "red" : "teal"
+            }-400 hover:text-white bg-opacity-50 hover:rounded flex justify-center items-center gap-2`}
+            onClick={() => {
+              deactivateRecord();
+            }}
+          >
+            <span>{recordData?.is_active ? "Deactivate" : "Activate"}</span>
+            <img
+              src={recordData?.is_active ? DeactivateIcon : ActivateIcon}
+              className="w-6 h-6"
+              style={{ display: "block", margin: "0 auto" }}
+            />
+          </button>
+        </PrivateComponent>
       </div>
-      <div class="container mx-auto sm:grid-cols-12 md:grid-cols-7 shadow p-0">
+      <div className="container mx-auto sm:grid-cols-12 md:grid-cols-7 shadow p-0">
         {isDeactivating && (
           <div className="flex flex-column absolute top-0 left-0 items-center justify-center gap-2 w-100 h-100 bg-gray-100/80">
             <svg

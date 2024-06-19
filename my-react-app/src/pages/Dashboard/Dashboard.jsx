@@ -23,8 +23,7 @@ function Dashboard({ onLogout }) {
 
   return (
     <>
-      {
-        width > 600 && width < 1100 &&
+      {width > 600 && width < 1100 && (
         <div className="mx-2.5 sm:mx-0 grid gap-y-7 !mr-3">
           <div className="grid sm:grid-cols-11 grid-cols-1 sm:gap-7 gap-y-3">
             <div className="sm:col-span-11 col-span-full">
@@ -50,14 +49,13 @@ function Dashboard({ onLogout }) {
               <Encounters />
             </div>
             <div className="col-span-8 grid grid-cols-1 gap-y-7">
-              <Activities /> 
+              <Activities />
               <NotificationCard />
             </div>
           </div>
         </div>
-      }
-      {
-        (width < 600 || width > 1100) &&
+      )}
+      {(width < 600 || width > 1100) && (
         <div className="mx-2.5 sm:mx-0 grid gap-y-3">
           <div className="grid sm:grid-cols-11 grid-cols-1 sm:gap-4 gap-y-3">
             <GreetingCard />
@@ -90,12 +88,11 @@ function Dashboard({ onLogout }) {
                   <Activities />
                   <NotificationCard />
                 </>
-
               )}
             </div>
           </div>
         </div>
-      }
+      )}
     </>
   );
 }

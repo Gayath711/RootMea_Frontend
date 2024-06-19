@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios"; // Don't forget to import axios if it's not already imported
 import { useDispatch } from "react-redux";
 import { loginAsync } from "../../store/slices/authSlice";
+import { fetchPermissionList } from "../../store/slices/userInfoSlice";
 import { useForm } from "react-hook-form";
 import { TailSpin } from "react-loader-spinner";
 import { BeatLoader } from "react-spinners";
@@ -76,6 +77,8 @@ const LoginForm = () => {
         }
         setErrorShowAlert(true);
         setIsLoading(false);
+
+        dispatch(fetchPermissionList());
         // }
       });
     } catch (error) {
@@ -239,9 +242,10 @@ const LoginForm = () => {
                       pattern: {
                         // value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                         // message: "Invalid email address",
-                        value: /^[A-Z0-9._%+-]+@rootsclinic\.org$/i,
+
+                        value: /^[A-Z0-9._%+-]+@rootscommunityhealth\.org$/i,
                         message:
-                          "Email must be from the rootsclinic.org domain",
+                          "Email must be from the rootscommunityhealth.org domain",
                       },
                     })}
                   />

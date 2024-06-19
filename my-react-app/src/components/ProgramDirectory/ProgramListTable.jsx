@@ -10,8 +10,13 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 
 import ViewPNG from "../images/view.png";
 import EditPNG from "../images/edit.png";
+
+import ActivateIcon from "../images/activate_icon.svg";
+import DeactivateIcon from "../images/deactivate_icon.svg";
+
 import DeactivatePNG from "../images/deactivate.png";
 import MUIDataGridWrapper from "../HOC/MUIDataGridWrapper";
+import PrivateComponent from "../PrivateComponent";
 
 import { notifySuccess, notifyError } from "../../helper/toastNotication";
 
@@ -41,15 +46,17 @@ export default function ProgramListTable() {
       });
   };
 
-  const deactivateRecord = (id) => {
+  const deactivateRecord = (id, isActive) => {
+    let actionPerformed = isActive ? "Deactivate" : "Activate";
+
     axios
       .delete(`/api/resources/program/${id}`)
       .then((response) => {
         fetchData();
-        notifySuccess("Deactivated Successfully");
+        notifySuccess(`${actionPerformed}d Successfully`);
       })
       .catch((error) => {
-        notifyError("Could not deactivate, please try again later");
+        notifyError(`Could not ${actionPerformed}, please try again later`);
         console.error("Error Deactivating:", error);
       })
       .finally(() => {});
@@ -84,6 +91,7 @@ export default function ProgramListTable() {
           Department: item.department_name || "",
           Description: item.description || "",
           Eligibility: item.eligibility || "",
+          SystemStatus: item.is_active || null,
           ManagementAdminContacts:
             item.primary_contact.length > 0
               ? `${item.primary_contact[0].first_name} ${item.primary_contact[0].last_name}`
@@ -190,6 +198,43 @@ export default function ProgramListTable() {
                   minWidth: 200,
                 },
                 {
+                  field: "SystemStatus",
+                  headerName: "Status",
+                  flex: 1,
+                  align: "center",
+                  headerAlign: "center",
+
+                  headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                  minWidth: 150,
+                  renderCell: (params) => {
+                    const {
+                      row: { SystemStatus },
+                    } = params;
+
+                    let classToApply = SystemStatus
+                      ? "text-[#2F9384] bg-[#DAFCE7]"
+                      : "text-[#E0382D] bg-[#FFC7C7]";
+
+                    // if (SystemStatus === "Active") {
+                    //   classToApply = "text-[#2F9384] bg-[#DAFCE7]";
+                    // }
+                    // if (SystemStatus === "Deactivated") {
+                    //   classToApply = "text-[#E0382D] bg-[#FFC7C7]";
+                    // }
+
+                    return (
+                      <>
+                        <div className="h-100 w-100">
+                          <span className={`m-2 p-1 px-2 ${classToApply}`}>
+                            {SystemStatus ? "Active" : "Deactivated"}
+                          </span>
+                        </div>
+                      </>
+                    );
+                  },
+                },
+
+                {
                   field: "Action",
                   headerName: "Action",
                   align: "left",
@@ -217,34 +262,38 @@ export default function ProgramListTable() {
                     return (
                       <>
                         <div className="h-100 w-100 flex flex-row gap-2 justify-center items-center">
-                          <button
-                            className="p-1 hover:bg-teal-400 bg-opacity-50 hover:rounded"
-                            title="Edit"
-                            onClick={() => {
-                              navigate(
-                                `/update-program-directory/${params.row.id}`
-                              );
-                            }}
-                          >
-                            <img
-                              src={EditPNG}
-                              className="w-4 h-4"
-                              style={{ display: "block", margin: "0 auto" }}
-                            />
-                          </button>
-                          <button
-                            className="p-1 hover:bg-red-400 bg-opacity-50 hover:rounded"
-                            title="Deactivate"
-                            onClick={() => {
-                              deactivateRecord(params.row.id);
-                            }}
-                          >
-                            <img
-                              src={DeactivatePNG}
-                              className="w-4 h-4"
-                              style={{ display: "block", margin: "0 auto" }}
-                            />
-                          </button>
+                          <PrivateComponent permission="change_programs">
+                            <button
+                              className="p-1 hover:bg-teal-400 bg-opacity-50 hover:rounded"
+                              title="Edit"
+                              onClick={() => {
+                                navigate(
+                                  `/update-program-directory/${params.row.id}`
+                                );
+                              }}
+                            >
+                              <img
+                                src={EditPNG}
+                                className="w-4 h-4"
+                                style={{ display: "block", margin: "0 auto" }}
+                              />
+                            </button>
+                          </PrivateComponent>
+                          <PrivateComponent permission="delete_programs">
+                            <button
+                              className="p-1 hover:bg-red-400 bg-opacity-50 hover:rounded"
+                              title="Deactivate"
+                              onClick={() => {
+                                deactivateRecord(params.row.id);
+                              }}
+                            >
+                              <img
+                                src={DeactivatePNG}
+                                className="w-4 h-4"
+                                style={{ display: "block", margin: "0 auto" }}
+                              />
+                            </button>
+                          </PrivateComponent>
                         </div>
                       </>
                     );
@@ -343,14 +392,16 @@ function TableActions({
           />
         </div>
         <div className="ms-3">
-          <button
-            className="px-3 py-2 text-[13px] font-medium leading-5 bg-[#5BC4BF] border-1 border-[#5BC4BF] text-white rounded-sm font-medium hover:bg-[#429e97] focus:outline-none focus:ring-2 focus:ring-[#429e97] focus:ring-opacity-50 transition-colors duration-300"
-            onClick={() => {
-              navigate("/add-new-program-directory/");
-            }}
-          >
-            Add New
-          </button>
+          <PrivateComponent permission="add_programs">
+            <button
+              className="px-3 py-2 text-[13px] font-medium leading-5 bg-[#5BC4BF] border-1 border-[#5BC4BF] text-white rounded-sm font-medium hover:bg-[#429e97] focus:outline-none focus:ring-2 focus:ring-[#429e97] focus:ring-opacity-50 transition-colors duration-300"
+              onClick={() => {
+                navigate("/add-new-program-directory/");
+              }}
+            >
+              Add New
+            </button>
+          </PrivateComponent>
         </div>
       </div>
     </div>

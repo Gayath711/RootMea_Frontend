@@ -511,19 +511,23 @@ const TheNewCarePlan = () => {
   }, []);
 
   const createPayloadData = useCallback(() => {
+    {
+      /* This section is commented temporarily. DON'T REMOVE!!!! */
+    }
     const updatedFormData = {
       ...formData,
-      approver_name: formData?.approver_name?.id,
+      // approver_name: formData?.approver_name?.id,
       request_approval: true,
-      approval_status: formData?.approver_name?.approval_status
-        ? "Pending"
-        : "Pending",
+      // approval_status: formData?.approver_name?.approval_status
+      //   ? "Pending"
+      //   : "Pending",
     };
-    if (!formData?.approver_name) {
-      delete updatedFormData?.approver_name;
-      delete updatedFormData?.approval_status;
-      delete updatedFormData?.request_approval;
-    }
+
+    // if (!formData?.approver_name) {
+    //   delete updatedFormData?.approver_name;
+    //   delete updatedFormData?.approval_status;
+    //   delete updatedFormData?.request_approval;
+    // }
     return updatedFormData;
   }, [formData]);
 
@@ -1026,8 +1030,8 @@ const TheNewCarePlan = () => {
                     className="border-keppel rounded-[3px]"
                     placeholder="Problem"
                     disabled={mode === "view" || mode === "approve"}
-                    handleChange={(value) =>
-                      handleGoalDataUpdate(goalIndex, "problem", value)
+                    onChange={(e) =>
+                      handleGoalDataUpdate(goalIndex, "problem", e.target.value)
                     }
                   />
                 </div>
@@ -1220,7 +1224,11 @@ const TheNewCarePlan = () => {
                   />
                 </div>
               </FormButtonWrapper>
-              <div className="flex items-center space-x-2 pt-9 pb-6">
+
+              {/* This section is commented temporarily. DON'T REMOVE!!!! */}
+              
+
+              {/* <div className="flex items-center space-x-2 pt-9 pb-6">
                 <input
                   type="checkbox"
                   id="approval"
@@ -1242,7 +1250,7 @@ const TheNewCarePlan = () => {
                 <label htmlFor="approval" className="text-lg">
                   Is approval Needed?
                 </label>
-              </div>
+              </div> */}
               {formData?.approver_name && (
                 <div
                   className={`w-full flex justify-between items-center border rounded-[6px]`}

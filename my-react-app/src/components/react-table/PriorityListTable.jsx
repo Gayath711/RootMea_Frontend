@@ -356,7 +356,7 @@ function ReactTable({ columns, data, striped, type, top, defaultPageSize, noMarg
 
 // ==============================|| REACT TABLE - BASIC ||============================== //
 
-const BasicTable = React.memo(
+const PriorityListTable = React.memo(
   ({ data, striped, title, columns, type, defaultPageSize, noMargin }) => {
     // const columns = useMemo(
     //   () => [
@@ -422,4 +422,4 @@ const BasicTable = React.memo(
     );
   }
 );
-export default BasicTable;
+export default PriorityListTable;
