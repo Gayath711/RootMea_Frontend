@@ -20,9 +20,10 @@ const FileInputElement = (props) => {
     viewMode,
     editMode,
     handleResetFile,
+    uploadType,
     ...rest
   } = props;
-
+  
   let IconSrc = isFile ? Attachments_Icon : Image_upload_Icon;
 
   const renderInput = () => {
@@ -50,6 +51,7 @@ const FileInputElement = (props) => {
 
 const ViewMode = ({ IconSrc, label, base64, isFile }) => {
   if (!base64) {
+    
     return (
       <div className="rounded flex items-center gap-2 w-100 p-2 py-2.5 cursor-pointer">
         <img src={IconSrc} alt="Icon" className="h-[14.06px] w-[14.06px]" />
@@ -140,7 +142,21 @@ const DnDRenderMode = ({
   IconSrc,
   handleResetFile,
 }) => {
+  
+  let src = base64
+  let isFallback = false
+  const handleError = (e) => {
+    isFallback = true;
+    e.target.onerror = null; // Prevents looping in case fallback also fails
+    e.target.src = Attachments_Icon;
+    e.target.className = 'w-[50px] h-[50px]'
+    
+  };
+
+
+
   return base64 ? (
+
     <div className="flex gap-2 items-center">
       {isFile ? (
         <a
@@ -152,11 +168,10 @@ const DnDRenderMode = ({
         </a>
       ) : (
         <img
-          src={base64}
-          style={{
-            width: "100px",
-            height: "auto",
-          }}
+          src={src}
+          onError={handleError}
+          className={isFallback ? 'w-[50px] h-[50px]' : 'w-[100px] h-auto'}
+          alt="upload"
         />
       )}
     </div>

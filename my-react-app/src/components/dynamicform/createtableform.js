@@ -126,8 +126,8 @@ function CreateTableForm() {
       <div className="row">
         <div className="row justify-content-center align-items-center" style={{ minHeight: '200px', backgroundColor: '#f8f9fa', padding: '20px' }}>
           <div className="col text-center">
-            <h1 className="display-3" style={{ fontFamily: 'Arial, sans-serif', color: '#333' }}>Form Directories</h1>
-            <p className="lead" style={{ fontFamily: 'Arial, sans-serif', color: '#666' }}>Explore and manage all forms here</p>
+            <h1 className="display-3" style={{ fontFamily: 'verdana, sans-serif', color: 'red' }}>Form Directories</h1>
+            <p className="lead" style={{ fontFamily: 'Arial, sans-serif', color: 'red' }}>Explore and manage all forms here</p>
 
             <div className="input-group mb-3 justify-content-center" style={{ width: '50%', margin: 'auto' }}>
               <input
