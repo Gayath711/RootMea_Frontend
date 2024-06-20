@@ -833,7 +833,7 @@ function NewPage() {
         </div>
         {/* <h2 className="text-2xl font-bold mb-4">Form Name - {tableName}</h2> */}
         {tableColumns.length > 0 && (
-          // <form onSubmit={handleSubmitPost}>
+          <form>
           <div>
             {tableColumns.map((column) => {
               return renderInputField(column);
@@ -854,7 +854,7 @@ function NewPage() {
               </button>
             </div>
             </div>
-          // </form>
+          </form>
         )}
       </div>
     </div>
