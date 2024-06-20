@@ -29,7 +29,7 @@ const CustomFieldsForEncounter = ({
   };
 
   useEffect(() => {
-    setMode("encounterMode");
+    
     if (dndItems.length > 0) {
       if (!isOpen) {
         setIsOpen(true);

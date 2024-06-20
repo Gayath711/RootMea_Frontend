@@ -619,7 +619,9 @@ const ClientProfile = ({ isNew }) => {
             isEditable={isEditable}
           />
           <div className="w-full px-2 space-y-4">
-            {!isNew && (
+            {
+              /*
+              {!isNew && (
               <div>
                 <GeneralInformation
                   id={1}
@@ -630,6 +632,8 @@ const ClientProfile = ({ isNew }) => {
                 />
               </div>
             )}
+              */
+            }
             <div>
               <ContactInformation
                 id={2}

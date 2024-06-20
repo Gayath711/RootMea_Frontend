@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -12,6 +12,7 @@ import InputElement from "./FormElements/InputElement";
 import TextAreaElement from "./FormElements/TextAreaElement";
 import SelectElement from "./FormElements/SelectElement";
 import MultiSelectElement from "./FormElements/MultiSelectElement";
+import { saveAs } from "file-saver";
 
 function NewPage() {
 
@@ -25,6 +26,7 @@ function NewPage() {
   const [columnInfo, setColumnInfo] = useState([]);
   console.log(tableName, tableColumns)
   const [droplist, setDroplist] = useState({});
+  const formRef = useRef(null);
 
   useEffect(() => {
     const fetchDropdownOptions = async () => {
@@ -628,9 +630,187 @@ function NewPage() {
     }
   };
 
+
+  const getStylesheetContent = () => {
+    const sheets = document.styleSheets;
+    let cssText = "";
+
+    for (const sheet of sheets) {
+      try {
+        const rules = sheet.cssRules || sheet.rules;
+        for (const rule of rules) {
+          cssText += rule.cssText;
+        }
+      } catch (e) {
+        console.log("Error reading stylesheet:", e);
+      }
+    }
+    return cssText;
+  };
+
+  const downloadHTML = () => {
+    console.log("downloadHTML");
+    const formContainerHtml = formRef.current.outerHTML;
+    const styles = getStylesheetContent();
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Form Data</title>
+        <style>${styles}</style>
+      </head>
+      <body>${formContainerHtml}</body>
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+                    // Initialize flatpickr on all elements with id="dateInput"
+                    flatpickr("#dateInput", {
+                        dateFormat: "m/d/Y"
+                    });
+                });
+
+        var formData = [];
+        var columnData = []
+        const saveButton = document.createElement('button');
+        saveButton.textContent = 'Save';
+        saveButton.type = 'button';
+        saveButton.setAttribute('class','bg-[#5BC4BF] text-white hover:bg-teal-700 font-bold mt-2.5 p-2 px-4 rounded transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500  text-xs')
+        document.querySelector('form .text-center').insertAdjacentElement('afterbegin', saveButton);
+        button_div = document.querySelector('form .text-center')
+        button_div.style.display = 'flex'
+        button_div.style.justifyContent = 'space-around' 
+        document.querySelector('form [type="submit"]').style.display = 'none'
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        let randomIntegerInRange = getRandomInt(1, 1000);
+        console.log("randomIntegerInRange")
+        console.log(randomIntegerInRange)
+
+        // function isValidDateFormat(dateString) {
+        //     const regex = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/;
+        //     if (!regex.test(dateString)) {
+        //         return false;
+        //     }
+        //     const [month, day, year] = dateString.split('/').map(Number);
+        //     const date = new Date(year, month - 1, day);
+        //     return date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day;
+        // }
+        saveButton.onclick = function() {
+            let divs = document.querySelectorAll('form div div div');
+            let formdata1 = []
+            let columnData1 = []
+            divs.forEach(div => {
+                let label = div.querySelector('label span');
+                let input = div.querySelector('input');
+                let textarea = div.querySelector('textarea');
+                let select = div.querySelector('select');
+                let checkbox = div.querySelector('[type="checkbox"]');
+                let files = div.querySelector('[type="file"]');
+                if (label){
+                    let label_data = label.textContent.trim()
+                    columnData1.push(label_data)
+                    console.log('Label:',label_data );
+                }
+                
+                if (label && input) {
+                  if (input.getAttribute('id')=='dateInput'){
+                        console.log('inside date field')
+                        // if (!isValidDateFormat(input)){
+                        //     alert('Enter Valid Date')
+                        //     return 
+                        // }
+                    }
+                  let input_data = input.value.trim()
+                  formdata1.push(input_data)
+                  console.log('Input Value:',input_data );
+                }
+                else if (label && textarea){
+                  let textarea_data = textarea.value.trim()
+                  formdata1.push(textarea_data)
+                  console.log('Textarea Value:',textarea_data );
+                }
+                else if (label && select){
+                  let select_data = select.value.trim()
+                  formdata1.push(select_data)
+                  console.log('select Value:',select_data );
+                }
+                  else if (files){
+                    let files_data = files.files[0]
+                    formdata1.push(files_data)
+                    console.log('file Value:',files_data );
+                  }
+                else if(!input && label){
+                  formdata1.push('')
+                }
+            });
+            formData.push(formdata1)
+            columnData.push(columnData1)
+            localStorage.setItem('formdata'+randomIntegerInRange, JSON.stringify(formData));
+            localStorage.setItem('columnData'+randomIntegerInRange, JSON.stringify(columnData));
+
+
+
+            alert('Data saved!');
+        };
+        
+        document.querySelector('form').onsubmit = function(event) {
+            event.preventDefault(); 
+            let formData1 = JSON.parse(localStorage.getItem('formdata'+randomIntegerInRange));
+            let columnData1 = JSON.parse(localStorage.getItem('columnData'+randomIntegerInRange));
+            console.log("columnData")
+            console.log(columnData)
+            console.log("formData")
+            console.log(formData)
+            if (formData1.length === 0) {
+                alert('No data to save!');
+                return;
+            }
+            
+            const data = [
+                columnData1[0],
+                ...formData1
+            ];
+            
+            const worksheet = XLSX.utils.aoa_to_sheet(data);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Form Data');
+
+            const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+
+            const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'formData.xlsx';
+            a.click();
+            URL.revokeObjectURL(a.href);
+
+            // Reset the form and data array
+            formData = [];
+            document.getElementById('myForm').reset();
+        };
+      </script>
+      </html>
+
+    `;
+    const blob = new Blob([htmlContent], { type: "text/html" });
+    saveAs(blob, "form.html");
+  };
+
+
   return (
     <div className="container mt-3">
       <div
+        ref={formRef}
         className="card p-4 shadow "
         style={{ width: "70%", margin: "auto", backgroundColor: "#f6f6f6" }}
       >
@@ -662,17 +842,26 @@ function NewPage() {
         </div>
         {/* <h2 className="text-2xl font-bold mb-4">Form Name - {tableName}</h2> */}
         {tableColumns.length > 0 && (
-          <form onSubmit={handleSubmitPost}>
+          <form>
+          <div>
             {tableColumns.map((column) => {
               return renderInputField(column);
             })}
-            <div className="text-center mt-6">
+            <div className="text-center mt-6"  style={{display: 'flex',justifyContent: 'space-around'}}>
               <button
                 type="submit"
+                onClick={handleSubmitPost}
                 className="bg-[#5BC4BF] text-white hover:bg-teal-700 font-bold mt-2.5 p-2 px-4 rounded transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500  text-xs"
               >
                 Submit
               </button>
+              <button
+                onClick={downloadHTML} 
+                className="bg-[#5BC4BF] text-white hover:bg-teal-700 font-bold mt-2.5 p-2 px-4 rounded transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500  text-xs"
+              >
+                Download
+              </button>
+            </div>
             </div>
           </form>
         )}

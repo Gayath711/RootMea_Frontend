@@ -18,7 +18,7 @@ export default function MultiSelectElement({
       {label && <FormLabel required={required}>{label}</FormLabel>}
       <Select
         className={className}
-        options={options.map((option) => {
+        options={options?.map((option) => {
           return {
             label: option.label || option,
             value: option.value || option,
