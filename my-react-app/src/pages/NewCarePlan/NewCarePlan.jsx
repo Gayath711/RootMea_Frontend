@@ -84,7 +84,7 @@ export function FormButtonWrapper({
           ""
         )}
       </div>
-      <div className="px-4 py-3 grid grid-cols-12 gap-x-3">{children}</div>
+      <div className="px-4 py-3 grid grid-cols-12 gap-x-3 gap-y-2">{children}</div>
     </div>
   );
 }
@@ -1027,7 +1027,7 @@ const TheNewCarePlan = () => {
                     type="text"
                     value={formData?.goals?.[goalIndex]?.problem || ""}
                     width={"w-full"}
-                    className="border-keppel rounded-[3px]"
+                    className="border-keppel rounded-[3px] my-1"
                     placeholder="Problem"
                     disabled={mode === "view" || mode === "approve"}
                     onChange={(e) =>
