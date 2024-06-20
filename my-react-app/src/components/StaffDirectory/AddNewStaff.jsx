@@ -21,7 +21,7 @@ export default function AddNewStaff() {
     EmailId: "",
     AdditionalContactInformation: "",
     PositionTitle: null,
-    PrimaryFaculity: null,
+    PrimaryFacility: null,
     Supervisor: null,
     SupervisorEmail: "",
     Programs: [],
@@ -32,7 +32,7 @@ export default function AddNewStaff() {
 
   const [usersData, setUsersData] = useState({});
   const [positionTitleOptions, setPositionTitleOptions] = useState([]);
-  const [primaryFaculityOptions, setPrimaryFaculityOptions] = useState([]);
+  const [primaryFacilityOptions, setPrimaryFacilityOptions] = useState([]);
   const [supervisorOptions, setSupervisorOptions] = useState([]);
   const [programsOptions, setProgramsOptions] = useState([]);
   const [loadingData, setLoadingData] = useState(true);
@@ -41,7 +41,7 @@ export default function AddNewStaff() {
 
   useEffect(() => {
     fetchPositionTitles();
-    fetchPrimaryFaculity();
+    fetchPrimaryFacility();
     fetchSupervisor();
     fetchPrograms();
 
@@ -72,9 +72,9 @@ export default function AddNewStaff() {
             label: usersData.profile.position,
           }
         : {};
-      let PrimaryFaculityData = usersData?.profile?.facility
+      let PrimaryFacilityData = usersData?.profile?.facility
         ? {
-            ...formDetail.PrimaryFaculity,
+            ...formDetail.PrimaryFacility,
             label: usersData.profile.facility,
           }
         : {};
@@ -93,9 +93,9 @@ export default function AddNewStaff() {
             ...formDetail.PositionTitle,
             ...PositionTitleData,
           },
-          PrimaryFaculity: {
-            ...formDetail.PrimaryFaculity,
-            ...PrimaryFaculityData,
+          PrimaryFacility: {
+            ...formDetail.PrimaryFacility,
+            ...PrimaryFacilityData,
           },
           Supervisor: {
             ...formDetail.Supervisor,
@@ -160,7 +160,7 @@ export default function AddNewStaff() {
                   value: data.profile.position,
                 }
               : null,
-            PrimaryFaculity: data?.profile?.facility
+            PrimaryFacility: data?.profile?.facility
               ? {
                   id: data.profile.facility,
                   value: data.profile.facility,
@@ -222,10 +222,10 @@ export default function AddNewStaff() {
       console.error("Error fetching position titles:", error);
     }
   };
-  const fetchPrimaryFaculity = async () => {
+  const fetchPrimaryFacility = async () => {
     try {
       const response = await axios.get("/api/resources/facilities");
-      setPrimaryFaculityOptions(
+      setPrimaryFacilityOptions(
         response.data.map((itm) => {
           return { ...itm, label: itm.name, value: itm.id };
         })
@@ -302,8 +302,8 @@ export default function AddNewStaff() {
     //   errorFields.PositionTitle = "Please select the position";
     // }
 
-    // if (!formDetail.PrimaryFaculity) {
-    //   errorFields.PrimaryFaculity = "Please select the faculty";
+    // if (!formDetail.PrimaryFacility) {
+    //   errorFields.PrimaryFacility = "Please select the faculty";
     // }
     // if (!formDetail.Supervisor) {
     //   errorFields.Supervisor = "Please select the supervisor";
@@ -339,7 +339,7 @@ export default function AddNewStaff() {
 
         let phone_no = formDetail.PhoneNumber || "";
         let position = formDetail.PositionTitle?.id || "";
-        let facility = formDetail.PrimaryFaculity?.id || "";
+        let facility = formDetail.PrimaryFacility?.id || "";
         let supervisor = formDetail.Supervisor?.id || "";
         let program = formDetail.Programs.map((each) => {
           return isEdit ? { id: each.id, program: each.program } : each.id;
@@ -383,7 +383,7 @@ export default function AddNewStaff() {
         //   profile: {
         //     phone_no: formDetail.PhoneNumber || "",
         //     position: formDetail.PositionTitle?.id || "",
-        //     facility: formDetail.PrimaryFaculity?.id || "",
+        //     facility: formDetail.PrimaryFacility?.id || "",
         //     supervisor: formDetail.Supervisor?.id || "",
         //     program: formDetail.Programs.map((each) => {
         //       return isEdit ? { id: each.id, program: each.program } : each.id;
@@ -605,16 +605,16 @@ export default function AddNewStaff() {
               </div>
               <div className="w-full md:w-1/2 p-4">
                 <FormField
-                  label="Primary Faculity"
-                  error={errFields.PrimaryFaculity}
+                  label="Primary Facility"
+                  error={errFields.PrimaryFacility}
                 >
                   <Select
-                    name={"PrimaryFaculity"}
-                    options={primaryFaculityOptions}
-                    placeholder="Primary Faculity"
-                    value={formDetail.PrimaryFaculity}
+                    name={"PrimaryFacility"}
+                    options={primaryFacilityOptions}
+                    placeholder="Primary Facility"
+                    value={formDetail.PrimaryFacility}
                     onChange={(selectedOption) =>
-                      handleInputChange("PrimaryFaculity", selectedOption)
+                      handleInputChange("PrimaryFacility", selectedOption)
                     }
                     styles={{
                       control: (styles) => ({
@@ -622,7 +622,7 @@ export default function AddNewStaff() {
                         padding: "5px",
 
                         border: `1px solid ${
-                          !errFields.PrimaryFaculity ? "#5BC4BF" : "red"
+                          !errFields.PrimaryFacility ? "#5BC4BF" : "red"
                         }`,
 
                         fontSize: "14px",
