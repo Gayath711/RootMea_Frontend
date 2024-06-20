@@ -92,8 +92,7 @@ function AppointmentCalendar({ from }) {
 
   useEffect(() => {
     const upcomingEvents = getTodayUpcomingEvents(appointmentsList);
-    console.log(upcomingEvents, "from upcomingEvents")
-    setUpcomingEvents(upcomingEvents);
+      setUpcomingEvents(upcomingEvents);
   }, [eventList]);
 
   useEffect(() => {
