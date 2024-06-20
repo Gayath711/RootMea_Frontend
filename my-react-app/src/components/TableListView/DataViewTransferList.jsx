@@ -3,12 +3,11 @@ import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import apiURL from "../../apiConfig";
 
-const DataViewTransferList = () => {
+const DataViewTransferList = ({setSaveSuccess, saveSuccess}) => {
+
   const [selectedOption, setSelectedOption] = useState(null);
   const [leftItems, setLeftItems] = useState([]);
   const [rightItems, setRightItems] = useState([]);
-  const [databaseList, setDatabaseList] = useState([]);
-  const [selectedDatabase, setSelectedDatabase] = useState(null);
 
   const [loadingData, setLoadingData] = useState(true);
   
@@ -21,6 +20,47 @@ const DataViewTransferList = () => {
       [group]: !prev[group],
     }));
   };
+
+  const handleSaveChanges = () => {
+    console.log("Clicked button");
+    const token = localStorage.getItem("access_token");
+    // Extract the names of the selected items
+    const selectedItemsNames = selectedItems.map((item) => item.name);
+    fetch(`${apiURL}/priority_list/`, {
+        method: 'POST',
+        body: JSON.stringify(selectedItems),
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+    })
+    .then((response) => response.json())
+    .then((datas) => {
+        console.log(datas); // Print the response data
+
+        axios
+        .post(`${apiURL}/priority_list/mapping/`,requestBody, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          setState(response.data);
+          console.log("/priority_list/mapping/",response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching Client Medication Data:", error);
+        });
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+    setSelectedItems([])
+    setItems((prevItems) =>
+      prevItems.map((item) => ({ ...item, disabled: false }))
+    );
+    setSaveSuccess(!saveSuccess)
+}
 
   // Group items by their group property
   const groupedItems = items.reduce((groups, item) => {
@@ -202,27 +242,27 @@ const DataViewTransferList = () => {
       <div className="flex justify-center">
         <div className="w-[68%] flex justify-between items-center gap-4 mb-4">
           <div>
-            <Select
+            {/* <Select
               options={databaseList}
               
               value={selectedDatabase}
               placeholder="Select table"
               className="w-[270px] max-w-[70vw] placeholder:text-sm"
-            />
+            /> */}
           </div>
           <div className="flex justify-center items-center gap-2">
             <div>
-              <input
+              {/* <input
                 type="text"
                 value={dataViewName}
                 onChange={(e) => setDataViewName(e.target.value)}
                 placeholder="DataView Name"
                 className={`placeholder:text-sm appearance-none border-1 border-[#5BC4BF] rounded w-full p-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
-              />
+              /> */}
             </div>
             <div>
               <button
-                onClick={handleSubmit}
+                onClick={handleSaveChanges}
                 className="m-auto px-3 py-1 border-1 sm:border-2 rounded-sm border-[#2F9384] text-[#2F9384] text-[13px] font-medium leading-5 hover:bg-[#5BC4BF] hover:text-white"
               >
                 Create
@@ -287,7 +327,7 @@ const DataViewTransferList = () => {
         <div className="h-[60vh] w-[30%] overflow-auto border-1 border-teal-900">
           <ul className="list" id="selected-list">
             {selectedItems.length === 0 ? (
-              <li className="flex items-center justify-center h-100 text-center text-xs">
+              <li className="flex items-center justify-center h-100 text-center text-xs py-2">
                 No items selected
               </li>
             ) : (

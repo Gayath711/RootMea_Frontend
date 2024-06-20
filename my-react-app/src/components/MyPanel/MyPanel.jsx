@@ -1,13 +1,11 @@
-import React from "react";
+import React, { useMemo, useEffect } from "react";
 import axios from "axios";
-import { useState, useMemo, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Avatar from "@mui/material/Avatar";
 import ExternalLinkIcon from "../images/externalLink.svg";
-import BasicTable from "../react-table/BasicTable";
-// import ClientProfileImg from "../images/clientProfile.svg";
 import ClientChartImg from "../images/clientChart.svg";
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import BasicTable from "../react-table/BasicTable";
 import { fetchClientsInfoAsync } from "../../store/slices/clientsInfoSlice";
 import { useWindowSize } from "../Utils/windowResize";
 import "./MyPanelStyles.css";
@@ -22,7 +20,7 @@ function getRandomProgram(programs) {
   return programs[randomIndex];
 }
 
-function MyPanel() {
+const MyPanel = React.memo(() => {
   const { width } = useWindowSize();
 
   const programs = ["ECM", "Diabetes", "STOMP"];
@@ -40,52 +38,16 @@ function MyPanel() {
     "2024-03-24",
   ];
 
-  // const [data, setData] = useState([]);
   const data = useSelector((state) => state.clientsInfo.data);
   const dataLoading = useSelector((state) => state.clientsInfo.loading);
   const dispatch = useDispatch();
-  // const [searchQuery, setSearchQuery] = useState("");
-
-  // useEffect(() => {
-  //   fetchData();
-  // }, [searchQuery]);
 
   useEffect(() => {
-    if (!dataLoading) {
+    if (!data.length && !dataLoading) { // Check if data is empty and loading state is false
       dispatch(fetchClientsInfoAsync());
     }
   }, []);
-
-  // const fetchData = async () => {
-  //   const token = localStorage.getItem("access_token");
-
-  //   if (!token) {
-  //     return;
-  //   }
-
-  //   try {
-  //     const response = await axios.get(
-  //       `http://192.168.3.24:8000/clientinfo-api?search=${searchQuery}`,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-
-  //     const processedData = response.data.slice(0, 6).map((client) => ({
-  //       date_assigned: getRandomDate(dates),
-  //       program: getRandomProgram(programs),
-  //       ...client,
-  //     }));
-
-  //     setData(processedData);
-  //     console.log(data);
-  //   } catch (error) {
-  //     console.error("Error fetching Client Data:", error);
-  //   }
-  // };
-
+  
   const columns = useMemo(
     () => [
       {
@@ -102,13 +64,11 @@ function MyPanel() {
         Cell: ({ value }) => {
           if (!value) return "";
 
-          // Parse the date string
           const date = new Date(value);
-          // Extract day, month, and year
           const day = String(date.getDate()).padStart(2, "0");
           const month = String(date.getMonth() + 1).padStart(2, "0");
           const year = date.getFullYear();
-          // Format date as "dd-mm-yyyy"
+
           return `${month}-${day}-${year}`;
         },
       },
@@ -129,13 +89,11 @@ function MyPanel() {
         Cell: ({ value }) => {
           if (!value) return "";
 
-          // Parse the date string
           const date = new Date(value);
-          // Extract day, month, and year
           const day = String(date.getDate()).padStart(2, "0");
           const month = String(date.getMonth() + 1).padStart(2, "0");
           const year = date.getFullYear();
-          // Format date as "dd-mm-yyyy"
+
           return `${month}-${day}-${year}`;
         },
       },
@@ -162,7 +120,11 @@ function MyPanel() {
         Header: "Client Chart",
         Cell: ({ row }) => (
           <Link to={`/clientchart/${row.original.id}`} target="_blank">
-            <img src={ClientChartImg} className="size-6 mx-auto" alt="client" />
+            <img
+              src={ClientChartImg}
+              className="size-6 mx-auto"
+              alt="client"
+            />
           </Link>
         ),
       },
@@ -192,10 +154,7 @@ function MyPanel() {
         </div>
         <div className="space-x-2">
           <Link to={`/clientprofilenew`}>
-            <button
-              className="px-3 py-1 text-[13px] font-medium leading-5 bg-[#5BC4BF] text-white rounded-sm font-medium"
-              //onClick={toggleModal}
-            >
+            <button className="px-3 py-1 text-[13px] font-medium leading-5 bg-[#5BC4BF] text-white rounded-sm font-medium">
               Add New
             </button>
           </Link>
@@ -213,6 +172,6 @@ function MyPanel() {
       </div>
     </div>
   );
-}
+});
 
 export default MyPanel;

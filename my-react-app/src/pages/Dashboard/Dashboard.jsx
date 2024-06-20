@@ -1,28 +1,30 @@
-import React from "react";
+import React, { useMemo, Suspense } from "react";
 import { useWindowSize } from "../../components/Utils/windowResize";
-import GreetingCard from "../../components/GreetingCard/GreetingCard";
-import TopStats from "../../components/TopStatsCard/TopStatsCard";
-import SocialVital from "../../components/SocialVital/SocialVital";
-import MyPanel from "../../components/MyPanel/MyPanel";
-import CalendarCard from "../../components/Calendar1/Calendar";
-import Appointments from "../../components/Appointment/Appointment";
-import ClientGoal from "../../components/ClientGoal/ClientGoal";
-import NotificationCard from "../../components/NotificationCard/NotificationCard";
-import Activities from "../../components/Activities/Activities";
-import PriorityList from "../../components/PriorityList/PriorityList";
-import PriorityListMyPrograms from "../../components/PriorityListMyPrograms/PriorityListMyPrograms";
-import ReferralPrograms from "../../components/ReferralPrograms/ReferralPrograms";
-import AppointmentCalendar from "../../components/AppointmentCalendar/AppointmentCalendar";
-import Encounters from "../../components/Encounters/Encounters";
-import PriorityListNew from "../../components/PriorityListNew/PriorityListNew";
 
-function Dashboard({ onLogout }) {
+const GreetingCard = React.lazy(() => import("../../components/GreetingCard/GreetingCard"));
+const TopStats = React.lazy(() => import("../../components/TopStatsCard/TopStatsCard"));
+const SocialVital = React.lazy(() => import("../../components/SocialVital/SocialVital"));
+const MyPanel = React.lazy(() => import("../../components/MyPanel/MyPanel"));
+const CalendarCard = React.lazy(() => import("../../components/Calendar1/Calendar"));
+const Appointments = React.lazy(() => import("../../components/Appointment/Appointment"));
+const ClientGoal = React.lazy(() => import("../../components/ClientGoal/ClientGoal"));
+const NotificationCard = React.lazy(() => import("../../components/NotificationCard/NotificationCard"));
+const Activities = React.lazy(() => import("../../components/Activities/Activities"));
+const PriorityListNew = React.lazy(() => import("../../components/PriorityListNew/PriorityListNew"));
+const ReferralPrograms = React.lazy(() => import("../../components/ReferralPrograms/ReferralPrograms"));
+const AppointmentCalendar = React.lazy(() => import("../../components/AppointmentCalendar/AppointmentCalendar"));
+const Encounters = React.lazy(() => import("../../components/Encounters/Encounters"));
+
+const Dashboard = ({ onLogout }) => {
   const { width } = useWindowSize();
-  console.log(width);
+  
+
+  const isMidSizeScreen = useMemo(() => width > 600 && width < 1100, [width]);
+  const isSmallOrLargeScreen = useMemo(() => width < 600 || width > 1100, [width]);
 
   return (
-    <>
-      {width > 600 && width < 1100 && (
+    <Suspense fallback={<div>Loading...</div>}>
+      {isMidSizeScreen && (
         <div className="mx-2.5 sm:mx-0 grid gap-y-7 !mr-3">
           <div className="grid sm:grid-cols-11 grid-cols-1 sm:gap-7 gap-y-3">
             <div className="sm:col-span-11 col-span-full">
@@ -42,7 +44,6 @@ function Dashboard({ onLogout }) {
             <div className="col-span-8 grid grid-cols-1 gap-y-7">
               <ClientGoal />
               <PriorityListNew/>
-          
               <ReferralPrograms />
               <AppointmentCalendar />
               <Encounters />
@@ -54,7 +55,7 @@ function Dashboard({ onLogout }) {
           </div>
         </div>
       )}
-      {(width < 600 || width > 1100) && (
+      {isSmallOrLargeScreen && (
         <div className="mx-2.5 sm:mx-0 grid gap-y-3">
           <div className="grid sm:grid-cols-11 grid-cols-1 sm:gap-4 gap-y-3">
             <GreetingCard />
@@ -91,8 +92,8 @@ function Dashboard({ onLogout }) {
           </div>
         </div>
       )}
-    </>
+    </Suspense>
   );
-}
+};
 
-export default Dashboard;
+export default React.memo(Dashboard);

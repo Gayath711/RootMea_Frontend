@@ -6,82 +6,41 @@ import axios from "axios";
 import apiURL from "../../apiConfig";
 
 import MUIDataGridWrapper from "../HOC/MUIDataGridWrapper";
+import BasicTable from "../react-table/BasicTable";
 
-export default function DataViewTable() {
+export default function DataViewTable({saveSuccess, setSaveSuccess}) {
   const token = localStorage.getItem("access_token");
 
   const [recordData, setRecordData] = useState([]);
   const [loadingData, setLoadingData] = useState(true);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const [state, setState] = useState({
+    columns: [],
+    data: []
+});
 
-  const fetchData = () => {
+const requestBody = {
+  "dataview": "Admin",
+
+}
+
+  useEffect(() => {
     axios
-      .get(`${apiURL}/api/dataview/`, {
+      .post(`${apiURL}/priority_list/mapping/`,requestBody, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
-        setLoadingData(true);
-        setRecordData(response.data);
+        setState(response.data);
+        console.log("/priority_list/mapping/",response.data);
       })
       .catch((error) => {
-        console.error("Error fetching Records:", error);
-      })
-      .finally(() => {
-        setLoadingData(false);
+        console.error("Error fetching Client Medication Data:", error);
       });
-  };
-
-  const tableRows = useMemo(() => {
-    if (recordData.length === 0 || loadingData) {
-      return [];
-    }
-    return recordData.map((item) => {
-      return {
-        id: item.id,
-        Name: item.name || "",
-      };
-    });
-  }, [recordData, loadingData]);
-
-  const tableColumns = [
-    {
-      field: "id",
-      headerName: "ID",
-      flex: 1,
-      headerClassName: "bg-[#5BC4BF] text-white font-medium",
-      width: "15%",
-      headerAlign: "center",
-      align: "center",
-    },
-    {
-      field: "Name",
-      headerName: "Name",
-      flex: 1,
-      headerClassName: "bg-[#5BC4BF] text-white font-medium",
-    },
-    {
-      field: "View",
-      headerName: "Actions",
-      flex: 1,
-      headerAlign: "center",
-      align: "center",
-      headerClassName: "bg-[#5BC4BF] text-white font-medium",
-      renderCell: (params) => {
-        return (
-          <>
-            <Link to={`/dataview/${params.row.id}`} className="text-[#5BC4BF]">
-              View
-            </Link>
-          </>
-        );
-      },
-    },
-  ];
+  }, [saveSuccess]);
+  
+  const { columns, data } = state;
 
   return (
     <div class="container mx-auto sm:grid-cols-12 md:grid-cols-7 rounded shadow p-0">
@@ -90,7 +49,7 @@ export default function DataViewTable() {
           <div className="font-bold">Data View Table</div>
           <div>
             <button
-              onClick={fetchData}
+              onClick={()=>setSaveSuccess(prev => !prev)}
               className="m-auto px-3 py-1 border-1 sm:border-2 rounded-sm border-[#2F9384] text-[#2F9384] text-[13px] font-medium leading-5 hover:bg-[#5BC4BF] hover:text-white"
             >
               Refresh
@@ -98,28 +57,9 @@ export default function DataViewTable() {
           </div>
         </div>
       </div>
-      <div className="flex flex-column gap-4 p-4">
-        <Box sx={{ width: "100%", my: 1 }}>
-          <div className="flex flex-column gap-2 w-100 ">
-            <MUIDataGridWrapper>
-              <DataGrid
-                loading={loadingData}
-                rows={tableRows}
-                columns={tableColumns}
-                initialState={{
-                  pagination: {
-                    paginationModel: {
-                      pageSize: 10,
-                    },
-                  },
-                }}
-                pageSizeOptions={[3, 5, 10, 25]}
-                disableRowSelectionOnClick
-              />
-            </MUIDataGridWrapper>
-          </div>
-        </Box>
-      </div>
+      <div className="w-full flex-grow flex flex-col">
+                <BasicTable type={"priorityList"} columns={columns} data={data} />
+              </div>
     </div>
   );
 }
