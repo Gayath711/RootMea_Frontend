@@ -10,6 +10,7 @@ import "./AppointmentCalendarStyles.css";
 import useAppointments from "../../hooks/useAppointments";
 import { getTodayUpcomingEvents } from "../utils";
 import { Link } from "react-router-dom";
+import axiosInstance from "../../helper/axiosInstance";
 
 function AppointmentCalendar({ from }) {
   const { eventList, fetchEvents, appointmentsList } = useAppointments(from);
@@ -90,6 +91,36 @@ function AppointmentCalendar({ from }) {
   ]);
   const [upcomingEvents, setUpcomingEvents] = useState([]);
 
+  const [clientOption, setClientsOption] = useState([]);
+
+  useEffect(() => {
+    fetchClients();
+  }, []);
+
+  const fetchClients = async () => {
+    try {
+      const response = await axiosInstance.get("/clientinfo-api");
+      setClientsOption(
+        response.data.map((itm) => {
+          const label = `${itm?.first_name || ""} ${itm?.last_name || ""} ${
+            itm?.date_of_birth ? "(" + itm?.date_of_birth + ")" : ""
+          }`;
+
+          console.log({ label });
+
+          return {
+            ...itm,
+            label,
+            value: itm?.id,
+          };
+        })
+      );
+    } catch (error) {
+      // Handle errors here
+      console.error("Error fetching client:", error);
+    }
+  };
+
   useEffect(() => {
     const upcomingEvents = getTodayUpcomingEvents(appointmentsList);
     
@@ -98,6 +129,17 @@ function AppointmentCalendar({ from }) {
 
   useEffect(() => {
     const data = upcomingEvents.map((event) => {
+      const getClients = () => {
+        let foundList = clientOption.filter((itm) =>
+          event.clients.includes(itm.value)
+        );
+        return foundList;
+      };
+
+      const clients = getClients();
+
+      console.log({ clients });
+
       // Extract start and end times
       const startTime = new Date(event.start.dateTime).toLocaleTimeString([], {
         hour: "numeric",
@@ -111,7 +153,12 @@ function AppointmentCalendar({ from }) {
       });
 
       // Extract summary and description
-      const clientTopic = event.summary || ""; // If summary is not present, set to empty string
+      const clientTopic =
+        clients.length > 0
+          ? `${clients[0].first_name} ${
+              clients.length > 1 ? "+ " + clients.length : ""
+            }`
+          : event.meeting_title || "No Title"; // If summary is not present, set to empty string
       const description = event.description || ""; // If description is not present, set to empty string
 
       // Create the transformed object
@@ -131,7 +178,7 @@ function AppointmentCalendar({ from }) {
       };
     });
     setData(data);
-  }, [upcomingEvents]);
+  }, [upcomingEvents, clientOption]);
 
   const columns = useMemo(
     () => [

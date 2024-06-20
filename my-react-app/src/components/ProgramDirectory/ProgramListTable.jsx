@@ -10,6 +10,10 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 
 import ViewPNG from "../images/view.png";
 import EditPNG from "../images/edit.png";
+
+import ActivateIcon from "../images/activate_icon.svg";
+import DeactivateIcon from "../images/deactivate_icon.svg";
+
 import DeactivatePNG from "../images/deactivate.png";
 import MUIDataGridWrapper from "../HOC/MUIDataGridWrapper";
 import PrivateComponent from "../PrivateComponent";
@@ -42,15 +46,17 @@ export default function ProgramListTable() {
       });
   };
 
-  const deactivateRecord = (id) => {
+  const deactivateRecord = (id, isActive) => {
+    let actionPerformed = isActive ? "Deactivate" : "Activate";
+
     axios
       .delete(`/api/resources/program/${id}`)
       .then((response) => {
         fetchData();
-        notifySuccess("Deactivated Successfully");
+        notifySuccess(`${actionPerformed}d Successfully`);
       })
       .catch((error) => {
-        notifyError("Could not deactivate, please try again later");
+        notifyError(`Could not ${actionPerformed}, please try again later`);
         console.error("Error Deactivating:", error);
       })
       .finally(() => {});
@@ -85,6 +91,7 @@ export default function ProgramListTable() {
           Department: item.department_name || "",
           Description: item.description || "",
           Eligibility: item.eligibility || "",
+          SystemStatus: item.is_active || null,
           ManagementAdminContacts:
             item.primary_contact.length > 0
               ? `${item.primary_contact[0].first_name} ${item.primary_contact[0].last_name}`
@@ -139,27 +146,30 @@ export default function ProgramListTable() {
           <MUIDataGridWrapper>
             <DataGrid
               loading={loadingData}
+              onRowClick={(e) => {
+                navigate(`/program-directory/${e.id}`);
+              }}
               rows={rows}
               columns={[
-                {
-                  field: "Link",
-                  headerName: "Link",
-                  flex: 1,
-                  headerClassName: "bg-[#5BC4BF] text-white font-medium",
-                  minWidth: 50,
-                  renderCell: (params) => {
-                    return (
-                      <>
-                        <Link
-                          to={`/program-directory/${params.row.id}`}
-                          className="text-[#5BC4BF]"
-                        >
-                          {params.row.Link}
-                        </Link>
-                      </>
-                    );
-                  },
-                },
+                // {
+                //   field: "Link",
+                //   headerName: "Link",
+                //   flex: 1,
+                //   headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                //   minWidth: 50,
+                //   renderCell: (params) => {
+                //     return (
+                //       <>
+                //         <Link
+                //           to={`/program-directory/${params.row.id}`}
+                //           className="text-[#5BC4BF]"
+                //         >
+                //           {params.row.Link}
+                //         </Link>
+                //       </>
+                //     );
+                //   },
+                // },
                 {
                   field: "ProgramName",
                   headerName: "Program Name",
@@ -190,6 +200,43 @@ export default function ProgramListTable() {
                   headerClassName: "bg-[#5BC4BF] text-white font-medium",
                   minWidth: 200,
                 },
+                {
+                  field: "SystemStatus",
+                  headerName: "Status",
+                  flex: 1,
+                  align: "center",
+                  headerAlign: "center",
+
+                  headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                  minWidth: 150,
+                  renderCell: (params) => {
+                    const {
+                      row: { SystemStatus },
+                    } = params;
+
+                    let classToApply = SystemStatus
+                      ? "text-[#2F9384] bg-[#DAFCE7]"
+                      : "text-[#E0382D] bg-[#FFC7C7]";
+
+                    // if (SystemStatus === "Active") {
+                    //   classToApply = "text-[#2F9384] bg-[#DAFCE7]";
+                    // }
+                    // if (SystemStatus === "Deactivated") {
+                    //   classToApply = "text-[#E0382D] bg-[#FFC7C7]";
+                    // }
+
+                    return (
+                      <>
+                        <div className="h-100 w-100">
+                          <span className={`m-2 p-1 px-2 ${classToApply}`}>
+                            {SystemStatus ? "Active" : "Deactivated"}
+                          </span>
+                        </div>
+                      </>
+                    );
+                  },
+                },
+
                 {
                   field: "Action",
                   headerName: "Action",
@@ -222,7 +269,8 @@ export default function ProgramListTable() {
                             <button
                               className="p-1 hover:bg-teal-400 bg-opacity-50 hover:rounded"
                               title="Edit"
-                              onClick={() => {
+                              onClick={(e) => {
+                                e.stopPropagation();
                                 navigate(
                                   `/update-program-directory/${params.row.id}`
                                 );
@@ -237,14 +285,28 @@ export default function ProgramListTable() {
                           </PrivateComponent>
                           <PrivateComponent permission="delete_programs">
                             <button
-                              className="p-1 hover:bg-red-400 bg-opacity-50 hover:rounded"
-                              title="Deactivate"
-                              onClick={() => {
-                                deactivateRecord(params.row.id);
+                              className={`p-1 hover:bg-${
+                                params.row.SystemStatus ? "red-400" : "teal-400"
+                              } bg-opacity-50 hover:rounded`}
+                              title={
+                                params.row.SystemStatus
+                                  ? "Deactivate"
+                                  : "Activate"
+                              }
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                deactivateRecord(
+                                  params.row.id,
+                                  params.row.SystemStatus
+                                );
                               }}
                             >
                               <img
-                                src={DeactivatePNG}
+                                src={
+                                  params.row.SystemStatus
+                                    ? DeactivateIcon
+                                    : ActivateIcon
+                                }
                                 className="w-4 h-4"
                                 style={{ display: "block", margin: "0 auto" }}
                               />

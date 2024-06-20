@@ -44,8 +44,6 @@ export default function StaffRecord() {
       });
   };
 
-  console.log({ usersData });
-
   const fetchUser = async () => {
     try {
       const { data } = await axios.get("/api/users");
@@ -88,7 +86,8 @@ export default function StaffRecord() {
     usersData?.profile?.supervisor_last_name || ""
   }`;
 
-  const deactivateRecord = () => {
+  const deactivateRecord = (isActive) => {
+    let actionPerformed = isActive ? "Deactivate" : "Activate";
     setIsDeactivating(true);
     axios
       .delete(`/api/users/${recordid}`)
@@ -96,11 +95,11 @@ export default function StaffRecord() {
         // navigate(-1);
         fetchData();
         fetchUser();
-        notifySuccess("Deactivated Successfully");
+        notifySuccess(`${actionPerformed}d Successfully`);
       })
       .catch((error) => {
-        notifyError("Could not deactivate, please try again later");
-        console.error("Error deactivating:", error);
+        notifyError(`Could not ${actionPerformed}, please try again later`);
+        console.error("Error" + actionPerformed + ":", error);
       })
       .finally(() => {
         setIsDeactivating(false);
@@ -131,9 +130,9 @@ export default function StaffRecord() {
               usersData.is_active ? "red" : "teal"
             }-400 hover:text-white bg-opacity-50 hover:rounded flex justify-center items-center gap-2`}
             onClick={() => {
-              deactivateRecord();
+              deactivateRecord(usersData?.is_active);
             }}
-          >
+          > 
             <span>{usersData?.is_active ? "Deactivate" : "Activate"}</span>
             <img
               src={usersData?.is_active ? DeactivateIcon : ActivateIcon}
@@ -143,7 +142,7 @@ export default function StaffRecord() {
           </button>
         </PrivateComponent>
       </div>
-      <div class="container mx-auto sm:grid-cols-12 md:grid-cols-7 shadow p-0">
+      <div className="container mx-auto sm:grid-cols-12 md:grid-cols-7 shadow p-0">
         <div className="w-100 bg-[#5BC4BF] text-white p-2.5 px-4">
           {staffName}
         </div>

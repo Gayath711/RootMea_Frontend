@@ -1,34 +1,56 @@
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import apiURL from "../../apiConfig";
+import { FiUpload, FiDownload } from "react-icons/fi";
+import { ProgressBar, Tooltip, Spinner } from "react-bootstrap";
 
 function BulkUploadComponent() {
   const [file, setFile] = useState(null);
   const [message, setMessage] = useState("");
   const [errorReport, setErrorReport] = useState(null);
-  const { tableName } = useParams();
+  const [tableNames, setTableNames] = useState([]);
+  const [selectedTableName, setSelectedTableName] = useState("");
+
+  useEffect(() => {
+    const fetchTableNames = async () => {
+      try {
+        const response = await axios.get(
+          `${apiURL}/get_upload_matching_tables/`
+        );
+        setTableNames(response.data.matching_tables);
+      } catch (error) {
+        console.error("Error fetching table names:", error);
+      }
+    };
+
+    fetchTableNames();
+  }, []);
 
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
   };
 
+  const handleTableNameChange = (event) => {
+    setSelectedTableName(event.target.value);
+  };
+
   const handleUpload = () => {
-    if (!tableName || !file) {
-      setMessage("Table name and CSV file are required");
+    if (!selectedTableName || !file) {
+      setMessage("Table name and XLS file are required");
       setErrorReport(null);
       return;
     }
 
-    setMessage("Uploading CSV file...");
+    setMessage("Uploading XLS file...");
     setErrorReport(null);
 
     const formData = new FormData();
-    formData.append("table_name", tableName);
-    formData.append("csv_file", file);
+    formData.append("table_name", selectedTableName);
+    formData.append("xls_file", file); // Change 'csv_file' to 'xls_file'
 
     axios
       .post(`${apiURL}/upload_csv_to_table/`, formData, {
+        // Change the endpoint URL
         responseType: "blob",
       })
       .then((response) => {
@@ -39,12 +61,17 @@ function BulkUploadComponent() {
           const errorMessage = response.data.message;
           setMessage(errorMessage);
           setErrorReport(null);
-        } else if (response.headers["content-type"] === "text/csv") {
-          const blob = new Blob([response.data], { type: "text/csv" });
+        } else if (
+          response.headers["content-type"] ===
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        ) {
+          const blob = new Blob([response.data], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          });
           const url = window.URL.createObjectURL(blob);
           setErrorReport(url);
           setMessage(
-            "Errors occurred during upload. Click the button below to download the error report."
+            "Some rows contained errors and were not processed. The valid rows have been uploaded successfully. Click the button below to download a report of the errors."
           );
         } else {
           setMessage("An unexpected error occurred");
@@ -68,7 +95,7 @@ function BulkUploadComponent() {
     if (errorReport) {
       const link = document.createElement("a");
       link.href = errorReport;
-      link.setAttribute("download", "error_report.csv");
+      link.setAttribute("download", "error_report.xlsx"); // Change the file extension
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -80,7 +107,7 @@ function BulkUploadComponent() {
   const handleformdownload = async () => {
     try {
       const response = await fetch(
-        `${apiURL}/download_table_column_data/${tableName}/`
+        `${apiURL}/download_table_column_data/${selectedTableName}/`
       );
 
       if (!response.ok) {
@@ -92,7 +119,7 @@ function BulkUploadComponent() {
 
       const link = document.createElement("a");
       link.href = url;
-      link.download = `${tableName}.csv`;
+      link.download = `${selectedTableName}.xlsx`; // Change the file extension
       document.body.appendChild(link);
       link.click();
 
@@ -104,7 +131,34 @@ function BulkUploadComponent() {
     }
   };
 
-  const cleanedTableName = tableName.replace("roots", "");
+  const handleInstructionsDownload = async () => {
+    try {
+      const response = await fetch(
+        `${apiURL}/download_instructions/${selectedTableName}/`
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to download instructions");
+      }
+      const blob = await response.blob();
+
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${selectedTableName}_instructions.xlsx`;
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading instructions:", error);
+      alert("Failed to download instructions. Please try again later.");
+    }
+  };
+
+  const cleanedTableName = selectedTableName.replace("roots", "");
   const cleanedTableName1 =
     cleanedTableName.charAt(0).toUpperCase() + cleanedTableName.slice(1);
 
@@ -113,7 +167,7 @@ function BulkUploadComponent() {
       {/* Header */}
       <header className="bg-94cfcf text-white py-4">
         <div className="container mx-auto text-center">
-          <h1 className="text-3xl font-semibold">CSV Bulk Upload</h1>
+          <h1 className="text-3xl font-semibold">XLS Bulk Upload</h1>
         </div>
       </header>
 
@@ -121,7 +175,6 @@ function BulkUploadComponent() {
       <main className="flex-grow bg-f6f6f6">
         <div className="container mx-auto py-8">
           <div className="max-w-md mx-auto bg-white p-8 rounded-lg shadow-lg">
-            {/* cleanedTableName = matchedTableName.replace("roots", ""); */}
             <h2
               className="text-3xl font-semibold mb-6 text-center"
               style={{ color: "#5ac2be" }}
@@ -130,10 +183,32 @@ function BulkUploadComponent() {
             </h2>
             <div className="mb-6">
               <label
+                htmlFor="table"
+                className="block mb-2 text-lg text-gray-700 font-semibold"
+              >
+                Select Table:
+              </label>
+              <select
+                id="table"
+                value={selectedTableName}
+                onChange={handleTableNameChange}
+                className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              >
+                <option value="">Select a table</option>
+                {tableNames.map((tableName) => (
+                  <option key={tableName} value={tableName}>
+                    {tableName.replace("roots", "").charAt(0).toUpperCase() +
+                      tableName.replace("roots", "").slice(1)}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="mb-6">
+              <label
                 htmlFor="file"
                 className="block mb-2 text-lg text-gray-700 font-semibold"
               >
-                Select CSV File:
+                Select XLS File:
               </label>
               <div className="relative border border-gray-300 rounded-lg px-4 py-2 w-full flex items-center justify-between focus-within:border-blue-500">
                 <input
@@ -141,7 +216,7 @@ function BulkUploadComponent() {
                   id="file"
                   onChange={handleFileChange}
                   className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
-                  accept=".csv"
+                  accept=".xls, .xlsx" // Update this line
                 />
                 <span className="text-gray-600 mr-2">Upload your file</span>
                 <svg
@@ -169,12 +244,20 @@ function BulkUploadComponent() {
                 Upload
               </button>
             </div>
-            <div className="flex justify-center">
+            <div className="flex justify-center space-x-4">
+              {" "}
+              {/* Added space-x-4 for spacing */}
               <button
                 onClick={handleformdownload}
                 className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 focus:outline-none focus:bg-green-600"
               >
                 Download Form Structure
+              </button>
+              <button
+                onClick={handleInstructionsDownload}
+                className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+              >
+                Download Instructions
               </button>
             </div>
             {message && (

@@ -20,7 +20,10 @@ export default function ProgramRecord() {
 
   const [recordData, setRecordData] = useState({});
   const [loadingData, setLoadingData] = useState(true);
-  const [isDeactivating, setIsDeactivating] = useState(false);
+  const [isDeactivating, setIsDeactivating] = useState({
+    state: false,
+    label: "",
+  });
 
   useEffect(() => {
     fetchData();
@@ -90,20 +93,28 @@ export default function ProgramRecord() {
     });
   }, [recordData, loadingData]);
 
-  const deactivateRecord = () => {
-    setIsDeactivating(true);
+  const deactivateRecord = (isActive) => {
+    let actionPerformed = isActive ? "Deactivate" : "Activate";
+    setIsDeactivating({
+      state: true,
+      label: isActive ? "Deactivating" : "Activating",
+    });
     axios
       .delete(`/api/resources/program/${recordid}`)
       .then((response) => {
         // navigate(-1);
         fetchData();
-        notifySuccess("Deactivated Successfully");
+        notifySuccess(`${actionPerformed}d Successfully`);
       })
       .catch((error) => {
-        notifyError("Could not deactivate, please try again later");
-        console.error("Error Deactivating:", error);
+        notifyError(`Could not ${actionPerformed}, please try again later`);
+        console.error("Error" + actionPerformed + ":", error);
       })
       .finally(() => {
+        setIsDeactivating({
+          state: false,
+          label: isActive ? "Deactivated" : "Activated",
+        });
         setIsDeactivating(false);
       });
   };
@@ -132,7 +143,7 @@ export default function ProgramRecord() {
               recordData.is_active ? "red" : "teal"
             }-400 hover:text-white bg-opacity-50 hover:rounded flex justify-center items-center gap-2`}
             onClick={() => {
-              deactivateRecord();
+              deactivateRecord(recordData?.is_active);
             }}
           >
             <span>{recordData?.is_active ? "Deactivate" : "Activate"}</span>
@@ -144,8 +155,8 @@ export default function ProgramRecord() {
           </button>
         </PrivateComponent>
       </div>
-      <div class="container mx-auto sm:grid-cols-12 md:grid-cols-7 shadow p-0">
-        {isDeactivating && (
+      <div className="container mx-auto sm:grid-cols-12 md:grid-cols-7 shadow p-0">
+        {isDeactivating.state && (
           <div className="flex flex-column absolute top-0 left-0 items-center justify-center gap-2 w-100 h-100 bg-gray-100/80">
             <svg
               className="animate-spin -ml-1 mr-3 h-8 w-8 text-teal-500"
@@ -167,9 +178,7 @@ export default function ProgramRecord() {
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
               ></path>
             </svg>
-            <p className="text-base">
-              {isDeactivating ? "Deactivating..." : ""}
-            </p>
+            <p className="text-base">{isDeactivating.label}</p>
           </div>
         )}
 
