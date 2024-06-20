@@ -658,12 +658,21 @@ function NewPage() {
       <head>
         <meta charset="UTF-8">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Form Data</title>
         <style>${styles}</style>
       </head>
       <body>${formContainerHtml}</body>
       <script>
+        document.addEventListener('DOMContentLoaded', function() {
+                    // Initialize flatpickr on all elements with id="dateInput"
+                    flatpickr("#dateInput", {
+                        dateFormat: "m/d/Y"
+                    });
+                });
 
         var formData = [];
         var columnData = []
@@ -697,7 +706,7 @@ function NewPage() {
         //     return date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day;
         // }
         saveButton.onclick = function() {
-            let divs = document.querySelectorAll('form div div');
+            let divs = document.querySelectorAll('form div div div');
             let formdata1 = []
             let columnData1 = []
             divs.forEach(div => {
