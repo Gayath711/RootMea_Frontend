@@ -21,8 +21,16 @@ const DataViewTransferList = ({setSaveSuccess, saveSuccess}) => {
     }));
   };
 
+  const [state, setState] = useState({
+    columns: [],
+    data: []
+});
+
   const handleSaveChanges = () => {
-    console.log("Clicked button");
+      const requestBody = {
+          "dataview": "Admin",
+     
+        }
     const token = localStorage.getItem("access_token");
     // Extract the names of the selected items
     const selectedItemsNames = selectedItems.map((item) => item.name);
