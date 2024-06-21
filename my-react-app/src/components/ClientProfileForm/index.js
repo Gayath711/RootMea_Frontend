@@ -619,15 +619,21 @@ const ClientProfile = ({ isNew }) => {
             isEditable={isEditable}
           />
           <div className="w-full px-2 space-y-4">
-            <div>
-              <GeneralInformation
-                id={1}
-                badge={badge}
-                isEdittable={isEditable}
-                clientData={clientData}
-                handleFieldChange={handleFieldChange}
-              />
-            </div>
+            {
+              /*
+              {!isNew && (
+              <div>
+                <GeneralInformation
+                  id={1}
+                  badge={badge}
+                  isEdittable={isEditable}
+                  clientData={clientData}
+                  handleFieldChange={handleFieldChange}
+                />
+              </div>
+            )}
+              */
+            }
             <div>
               <ContactInformation
                 id={2}

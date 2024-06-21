@@ -1,5 +1,3 @@
-
-
 import { useEffect, useMemo, useState } from "react";
 
 import DnDCustomFields from "../DnDCustomFields";
@@ -18,12 +16,12 @@ const CustomFieldsForEncounter = ({
   mode,
   refresh,
   setMode,
+  encounterViewItems,
   tableColumns
 }) => {
-    console.log(dndItems, "dndItems");
-    
+  
+  
   const [isOpen, setIsOpen] = useState(false);
-
   const [isLoading, setIsLoading] = useState(false);
 
   const toggleAccordion = () => {
@@ -31,7 +29,7 @@ const CustomFieldsForEncounter = ({
   };
 
   useEffect(() => {
-    setMode("encounterMode");
+    
     if (dndItems.length > 0) {
       if (!isOpen) {
         setIsOpen(true);
@@ -41,7 +39,7 @@ const CustomFieldsForEncounter = ({
 
   let customFieldsTags = useMemo(() => {
     return dndItems.map((field) => {
-        console.log(field, "field")
+      
       let cf = {
         datatype: "text",
         question: field.column_fullname,
@@ -66,32 +64,6 @@ const CustomFieldsForEncounter = ({
 
   const handleCreatePayload = () => {
     const formDataPayload = new FormData();
-
-    // DND Custom Fields
-
-    // let tags = customFields.map((field) => {
-    //   console.log({ xx_field: field });
-    //   let answer = "";
-    //   if (field.type === "imageupload" || field.type === "fileupload") {
-    //     answer = field.props.base64;
-    //   } else {
-    //     answer = field.props.value;
-    //   }
-
-    //   console.log({
-    //     xx_rEle: {
-    //       datatype: field.type,
-    //       question: field.props.label,
-    //       answer: answer,
-    //     },
-    //   });
-    //   return {
-    //     datatype: field.type,
-    //     question: field.props.label,
-    //     answer: answer,
-    //   };
-    // });
-
     formDataPayload.append("tags", JSON.stringify(customFieldsTags || []));
     return formDataPayload;
   };
@@ -115,126 +87,107 @@ const CustomFieldsForEncounter = ({
     }
   };
 
-      const convertToSample = (input) => {
-        
-        return input.map(item => {
-          console.log(item)
-            return {
-                "type": item?.type,
-                "props": {
-                    "label": item?.column_fullname,
-                    "value": "",
-                    "width": item.width,
-                    "type": item?.type,
-                    "disabled": true
-                },
-                "answer": "",
-                "datatype": item?.type,
-                "question": item?.column_fullname
-            };
-        });
-    };
-
-    dndItems = convertToSample(dndItems);
-
-    let convertedDndItems = dndItems;
-console.log(convertedDndItems);
-
-    
-
-    function convertData(array) {
-    // Mapping through the array and applying transformations
-    return array.map(item => {
-        switch (item.type) {
-            case "character":
-                return {
-                    ...item,
-                    type: "header",
-                    datatype: "character"
-                };
-            case "line":
-                return {
-                    ...item,
-                    type: "divider",
-                    datatype: "line"
-                };
-            case "character varying":
-                return {
-                    ...item,
-                    type: "text",
-                    datatype: "character varying"
-                };
-            case "timestamp without time zone":
-                return {
-                    ...item,
-                    type: "datetime",
-                    datatype: "timestamp without time zone",
-                    props: {
-                        ...item.props,
-                        width: "1/3" // Update width to "1/2" only for dateandtime type
-                    }
-                };
-                case "json":
-                return {
-                    ...item,
-                    type: "subheader",
-                    datatype: "json"
-                };
-            case "bytea":
-                return {
-                    ...item,
-                    type: "fileupload",
-                    datatype: "bytea"
-                };
-            default:
-                // If type doesn't need conversion, return the item as-is
-                return item;
-        }
-    });
-}
-
-convertedDndItems = convertData(dndItems) 
-console.log("convertedDndItems", convertedDndItems);
-// Example array based on your JSON structure
-const originalArray = [
-    {
-        "type": "character",
+  const convertToSample = (input) => {
+    return input.map(item => {
+      console.log(item);
+      return {
+        "type": item?.type,
         "props": {
-            "label": "My Heading",
-            "value": "",
-            "width": "w-full",
-            "type": "character",
-            "disabled": true
+          "label": item?.column_fullname,
+          "value": "",
+          "width": item.width,
+          "type": item?.type,
+          "disabled": true
         },
         "answer": "",
-        "datatype": "character",
-        "question": "My Heading"
-    },
-    // Add other objects as per your original array here
-];
+        "datatype": item?.type,
+        "question": item?.column_fullname
+      };
+    });
+  };
 
-// Applying the conversion function
-const transformedArray = convertData(originalArray);
+  const convertData = (array) => {
+    return array.map(item => {
+      switch (item.type) {
+        case "character":
+          return {
+            ...item,
+            type: "header",
+            datatype: "character"
+          };
+        case "line":
+          return {
+            ...item,
+            type: "divider",
+            datatype: "line"
+          };
+        case "character varying":
+          return {
+            ...item,
+            type: "text",
+            datatype: "character varying"
+          };
+        case "timestamp without time zone":
+          return {
+            ...item,
+            type: "datetime",
+            datatype: "timestamp without time zone",
+            props: {
+              ...item.props,
+              width: "1/3"
+            }
+          };
+        case "json":
+          return {
+            ...item,
+            type: "subheader",
+            datatype: "json"
+          };
+        case "bytea":
+          return {
+            ...item,
+            type: "fileupload",
+            datatype: "bytea"
+          };
+        default:
+          return item;
+      }
+    });
+  };
 
-console.log(transformedArray);
+  if (encounterViewItems) {
+    // If encounterViewItems is true, handle as object with custom fields
+    dndItems = dndItems.map(item => ({
+      type: item.datatype,
+      props: {
+        label: item.question,
+        value: item.answer,
+        width: "w-full",
+        type: item.datatype,
+        disabled: true
+      },
+      answer: item.answer,
+      datatype: item.datatype,
+      question: item.question
+    }));
+  } else {
+    // If encounterViewItems is false, handle as usual
+    dndItems = convertToSample(dndItems);
+    dndItems = convertData(dndItems);
+  }
 
+  console.log("convertedDndItems", dndItems);
 
   return (
-    <div
-      className="border border-gray-300  bg-gray-50 rounded-md"
-      id={`accordian-${id}`}
-    >
-      
+    <div className="border border-gray-300 bg-gray-50 rounded-md" id={`accordian-${id}`}>
       {isOpen && (
         <>
           <div className="p-4 border-t border-gray-300">
             <div className="flex flex-col justify-between space-y-6">
-            
               <DnDCustomFields
                 onChange={onChange}
-                dndItems={convertedDndItems}
+                dndItems={dndItems}
                 viewMode={viewMode}
-                
               />
             </div>
             <div className="flex justify-end items-center">
@@ -247,7 +200,6 @@ console.log(transformedArray);
               </button>
             </div>
           </div>
-          
         </>
       )}
     </div>
@@ -255,4 +207,3 @@ console.log(transformedArray);
 };
 
 export default CustomFieldsForEncounter;
-

@@ -64,24 +64,18 @@ function PriorityList() {
         Header: "Program",
         accessor: "program_name",
         align: "left",
-        Cell: (props) => (
-          <EditableCell {...props} updateMyData={updateMyData} />
-        ),
+        
       },
       {
         Header: "List Name",
         accessor: "priority_list_name",
         align: "left",
-        Cell: (props) => (
-          <EditableCell {...props} updateMyData={updateMyData} />
-        ),
+        
       },
       {
         Header: "Total Clients",
         accessor: "total_clients",
-        Cell: (props) => (
-          <EditableCell {...props} updateMyData={updateMyData} />
-        ),
+        
       },
       {
         Header: "Latest Edit",

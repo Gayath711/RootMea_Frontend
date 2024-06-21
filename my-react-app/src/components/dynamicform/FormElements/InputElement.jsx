@@ -23,7 +23,7 @@ const InputElement = ({
         };
 
   return (
-    <div className={`${addMargin ? "m-1" : ""} ${width}`}>
+    <div className={`${addMargin ? "mx-1" : ""} ${width}`}>
       {label && <FormLabel required={required}>{label}</FormLabel>}
       <input
         type={type}

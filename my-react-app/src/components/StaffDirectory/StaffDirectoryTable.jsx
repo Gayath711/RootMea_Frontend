@@ -12,6 +12,8 @@ import MUIDataGridWrapper from "../HOC/MUIDataGridWrapper";
 
 import EditPNG from "../images/edit.png";
 import DeactivatePNG from "../images/deactivate.png";
+import ActivateIcon from "../images/activate_icon.svg";
+import DeactivateIcon from "../images/deactivate_icon.svg";
 import PrivateComponent from "../PrivateComponent";
 
 import { notifySuccess, notifyError } from "../../helper/toastNotication";
@@ -53,15 +55,16 @@ export default function StaffDirectoryTable() {
       });
   };
 
-  const deactivateRecord = (id) => {
+  const deactivateRecord = (id, isActive) => {
+    let actionPerformed = isActive ? "Deactivate" : "Activate";
     axios
       .delete(`/api/users/${id}`)
       .then((response) => {
         fetchData();
-        notifySuccess("Deactivated Successfully");
+        notifySuccess(`${actionPerformed}d Successfully`);
       })
       .catch((error) => {
-        notifyError("Could not deactivate, please try again later");
+        notifyError(`Could not ${actionPerformed}, please try again later`);
         console.error("Error deactivating:", error);
       })
       .finally(() => {});
@@ -154,27 +157,30 @@ export default function StaffDirectoryTable() {
           <MUIDataGridWrapper>
             <StyledDataGrid
               loading={loadingData}
+              onRowClick={(e) => {
+                navigate(`/staff-directory/${e.id}`);
+              }}
               rows={rows}
               columns={[
-                {
-                  field: "Link",
-                  headerName: "Link",
-                  flex: 1,
-                  headerClassName: "bg-[#5BC4BF] text-white font-medium",
-                  minWidth: 100,
-                  renderCell: (params) => {
-                    return (
-                      <>
-                        <Link
-                          to={`/staff-directory/${params.row.id}`}
-                          className="text-[#5BC4BF]"
-                        >
-                          {params.row.Link}
-                        </Link>
-                      </>
-                    );
-                  },
-                },
+                // {
+                //   field: "Link",
+                //   headerName: "Link",
+                //   flex: 1,
+                //   headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                //   minWidth: 100,
+                //   renderCell: (params) => {
+                //     return (
+                //       <>
+                //         <Link
+                //           to={`/staff-directory/${params.row.id}`}
+                //           className="text-[#5BC4BF]"
+                //         >
+                //           {params.row.Link}
+                //         </Link>
+                //       </>
+                //     );
+                //   },
+                // },
                 {
                   field: "LastName",
                   headerName: "Last Name",
@@ -345,7 +351,8 @@ export default function StaffDirectoryTable() {
                             <button
                               className="p-1 hover:bg-teal-400 bg-opacity-50 hover:rounded"
                               title="Edit"
-                              onClick={() => {
+                              onClick={(e) => {
+                                e.stopPropagation();
                                 navigate(
                                   `/update-staff-directory/${params.row.id}`
                                 );
@@ -360,14 +367,28 @@ export default function StaffDirectoryTable() {
                           </PrivateComponent>
                           <PrivateComponent permission="delete_customuser">
                             <button
-                              className="p-1 hover:bg-red-400 bg-opacity-50 hover:rounded"
-                              title="Deactivate"
-                              onClick={() => {
-                                deactivateRecord(params.row.id);
+                              className={`p-1 hover:bg-${
+                                params.row.SystemStatus ? "red-400" : "teal-400"
+                              } bg-opacity-50 hover:rounded`}
+                              title={
+                                params.row.SystemStatus
+                                  ? "Deactivate"
+                                  : "Activate"
+                              }
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                deactivateRecord(
+                                  params.row.id,
+                                  params.row.SystemStatus
+                                );
                               }}
                             >
                               <img
-                                src={DeactivatePNG}
+                                src={
+                                  params.row.SystemStatus
+                                    ? DeactivateIcon
+                                    : ActivateIcon
+                                }
                                 className="w-4 h-4"
                                 style={{ display: "block", margin: "0 auto" }}
                               />
