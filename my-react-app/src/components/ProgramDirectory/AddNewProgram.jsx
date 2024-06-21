@@ -1011,6 +1011,11 @@ const AddNewActivity = ({
                     isDisabled={disableEdit}
                     placeholder="Select Sub Activity"
                     className="w-100"
+                    noOptionsMessage={() =>
+                      inputValue === ""
+                        ? "Start Typing..."
+                        : `Press Enter/Tab to Create "${inputValue}"`
+                    }
                     isMulti
                     onInputChange={handleInputChange}
                     onKeyDown={handleKeyDown}
