@@ -15,37 +15,64 @@ function BulkUploadComponent() {
 
   const handleUpload = () => {
     if (!tableName || !file) {
-      setMessage("Table name and CSV file are required");
+      setMessage("Table name and XLSX file are required");
       setErrorReport(null);
       return;
     }
 
-    setMessage("Uploading CSV file...");
+    setMessage("Uploading XLSX file...");
     setErrorReport(null);
 
     const formData = new FormData();
     formData.append("table_name", tableName);
-    formData.append("csv_file", file);
+
+    // Determine correct key based on file type
+    const fileType = file.name.split(".").pop().toLowerCase();
+    if (fileType === "csv") {
+      formData.append("csv_file", file);
+    } else if (fileType === "xlsx" || fileType === "xls") {
+      formData.append("xls_file", file);
+    } else {
+      setMessage("Unsupported file type. Please upload an xlsx or Excel file.");
+      setErrorReport(null);
+      return;
+    }
 
     axios
       .post(`${apiURL}/upload_csv_to_table/`, formData, {
         responseType: "blob",
       })
       .then((response) => {
-        if (response.status === 201) {
-          setMessage(response.data.message);
-          setErrorReport(null);
+        if (response.status === 200 || response.status === 201) {
+          const contentType = response.headers["content-type"];
+
+          if (
+            contentType === "text/plain" ||
+            contentType === "application/json"
+          ) {
+            const responseData = response.data;
+            setMessage(responseData.message); // Display success message to user
+            setErrorReport(null); // Clear any previous error report
+          } else if (
+            contentType ===
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          ) {
+            const blob = new Blob([response.data], {
+              type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            });
+            const url = window.URL.createObjectURL(blob);
+            setErrorReport(url); // Set error report for download
+            setMessage(
+              "Errors occurred during upload. Click the button below to download the error report."
+            );
+          } else {
+            setMessage("An unexpected error occurred");
+            setErrorReport(null);
+          }
         } else if (response.status === 400) {
           const errorMessage = response.data.message;
           setMessage(errorMessage);
           setErrorReport(null);
-        } else if (response.headers["content-type"] === "text/csv") {
-          const blob = new Blob([response.data], { type: "text/csv" });
-          const url = window.URL.createObjectURL(blob);
-          setErrorReport(url);
-          setMessage(
-            "Errors occurred during upload. Click the button below to download the error report."
-          );
         } else {
           setMessage("An unexpected error occurred");
           setErrorReport(null);
@@ -63,12 +90,11 @@ function BulkUploadComponent() {
         }
       });
   };
-
   const downloadErrorReport = () => {
     if (errorReport) {
       const link = document.createElement("a");
       link.href = errorReport;
-      link.setAttribute("download", "error_report.csv");
+      link.setAttribute("download", "error_report.xlsx");
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -92,7 +118,7 @@ function BulkUploadComponent() {
 
       const link = document.createElement("a");
       link.href = url;
-      link.download = `${tableName}.csv`;
+      link.download = `${tableName}.xlsx`;
       document.body.appendChild(link);
       link.click();
 
@@ -113,7 +139,7 @@ function BulkUploadComponent() {
       {/* Header */}
       <header className="bg-94cfcf text-white py-4">
         <div className="container mx-auto text-center">
-          <h1 className="text-3xl font-semibold">CSV Bulk Upload</h1>
+          <h1 className="text-3xl font-semibold">XLSX Bulk Upload</h1>
         </div>
       </header>
 
@@ -126,14 +152,14 @@ function BulkUploadComponent() {
               className="text-3xl font-semibold mb-6 text-center"
               style={{ color: "#5ac2be" }}
             >
-              Bulk Upload CSV for {cleanedTableName1}
+              Bulk Upload XLSX for {cleanedTableName1}
             </h2>
             <div className="mb-6">
               <label
                 htmlFor="file"
                 className="block mb-2 text-lg text-gray-700 font-semibold"
               >
-                Select CSV File:
+                Select XLSX File:
               </label>
               <div className="relative border border-gray-300 rounded-lg px-4 py-2 w-full flex items-center justify-between focus-within:border-blue-500">
                 <input
@@ -141,7 +167,7 @@ function BulkUploadComponent() {
                   id="file"
                   onChange={handleFileChange}
                   className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
-                  accept=".csv"
+                  accept=".csv, .xlsx"
                 />
                 <span className="text-gray-600 mr-2">Upload your file</span>
                 <svg
