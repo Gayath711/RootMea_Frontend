@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { useState, useMemo } from "react";
+import React, { useEffect, useMemo, useCallback } from "react";
+import { useState } from "react";
 import ExternalLinkIcon from "../images/externalLink.svg";
 import BasicTable from "../react-table/BasicTable";
 import DocumentAddIcon from "../images/documentAdd.svg";
@@ -13,134 +13,38 @@ import { Link } from "react-router-dom";
 import axiosInstance from "../../helper/axiosInstance";
 
 function AppointmentCalendar({ from }) {
-  const { eventList, fetchEvents, appointmentsList } = useAppointments(from);
+  const { appointmentsList } = useAppointments(from);
+  const [data, setData] = useState([]);
+  const [clientOptions, setClientOptions] = useState([]);
 
-  // let upcomingEvents = useMemo(() => {
-  //   console.count("upcomingEvents");
-  //   return getUpcomingEvents(eventList);
-  // }, [eventList]);
-  // const data = useMemo(() => {
-  //   console.count("upcomingEvents data");
-
-  //   return upcomingEvents.map((event) => {
-  //     // Extract start and end times
-  //     const startTime = new Date(event.start.dateTime).toLocaleTimeString([], {
-  //       hour: "numeric",
-  //       minute: "2-digit",
-  //       hour12: true,
-  //     });
-  //     const endTime = new Date(event.end.dateTime).toLocaleTimeString([], {
-  //       hour: "numeric",
-  //       minute: "2-digit",
-  //       hour12: true,
-  //     });
-
-  //     // Extract summary and description
-  //     const clientTopic = event.summary || ""; // If summary is not present, set to empty string
-  //     const description = event.description || ""; // If description is not present, set to empty string
-
-  //     // Create the transformed object
-  //     return {
-  //       // date: new Date(event.start.dateTime).toLocaleTimeString([], {
-  //       //   day: "2-digit",
-  //       //   month: "long",
-  //       //   year: "2-digit",
-  //       //   hour: "numeric",
-  //       //   minute: "2-digit",
-  //       //   hour12: true,
-  //       // }),
-  //       time: `${startTime} - ${endTime}`,
-  //       clientTopic: clientTopic,
-  //       description: description,
-  //       encounterMode: "...", // Placeholder for encounter mode
-  //     };
-  //   });
-  // }, [upcomingEvents]);
-
-  const [data, setData] = useState([
-    {
-      time: "9 a.m - 10 a.m",
-      clientTopic: "Team Meeting",
-      descriptions: "Care plan review",
-      encounterMode: "...",
-    },
-    {
-      time: "9 a.m - 10 a.m",
-      clientTopic: "Team Meeting",
-      descriptions: "Care plan review",
-      encounterMode: "...",
-    },
-    {
-      time: "9 a.m - 10 a.m",
-      clientTopic: "Team Meeting",
-      descriptions: "Care plan review",
-      encounterMode: "...",
-    },
-    {
-      time: "9 a.m - 10 a.m",
-      clientTopic: "Team Meeting",
-      descriptions: "Care plan review",
-      encounterMode: "...",
-    },
-    {
-      time: "9 a.m - 10 a.m",
-      clientTopic: "Team Meeting",
-      descriptions: "Care plan review",
-      encounterMode: "...",
-    },
-  ]);
-  const [upcomingEvents, setUpcomingEvents] = useState([]);
-
-  const [clientOption, setClientsOption] = useState([]);
+  const fetchClients = useCallback(async () => {
+    try {
+      const response = await axiosInstance.get("/clientinfo-api");
+      setClientOptions(
+        response.data.map((itm) => ({
+          ...itm,
+          label: `${itm?.first_name || ""} ${itm?.last_name || ""} ${
+            itm?.date_of_birth ? "(" + itm?.date_of_birth + ")" : ""
+          }`,
+          value: itm?.id,
+        }))
+      );
+    } catch (error) {
+      console.error("Error fetching clients:", error);
+    }
+  }, []);
 
   useEffect(() => {
     fetchClients();
-  }, []);
-
-  const fetchClients = async () => {
-    try {
-      const response = await axiosInstance.get("/clientinfo-api");
-      setClientsOption(
-        response.data.map((itm) => {
-          const label = `${itm?.first_name || ""} ${itm?.last_name || ""} ${
-            itm?.date_of_birth ? "(" + itm?.date_of_birth + ")" : ""
-          }`;
-
-          console.log({ label });
-
-          return {
-            ...itm,
-            label,
-            value: itm?.id,
-          };
-        })
-      );
-    } catch (error) {
-      // Handle errors here
-      console.error("Error fetching client:", error);
-    }
-  };
+  }, [fetchClients]);
 
   useEffect(() => {
     const upcomingEvents = getTodayUpcomingEvents(appointmentsList);
-    
-    setUpcomingEvents(upcomingEvents);
-  }, [eventList]);
+    const newData = upcomingEvents.map((event) => {
+      const clients = clientOptions.filter((itm) =>
+        event.clients.includes(itm.value)
+      );
 
-  useEffect(() => {
-    const data = upcomingEvents.map((event) => {
-      const getClients = () => {
-        let foundList = clientOption.filter((itm) =>
-          event.clients.includes(itm.value)
-        );
-        return foundList;
-      };
-
-      const clients = getClients();
-
-      console.log({ clients });
-
-      // Extract start and end times
       const startTime = new Date(event.start.dateTime).toLocaleTimeString([], {
         hour: "numeric",
         minute: "2-digit",
@@ -152,33 +56,22 @@ function AppointmentCalendar({ from }) {
         hour12: true,
       });
 
-      // Extract summary and description
       const clientTopic =
         clients.length > 0
           ? `${clients[0].first_name} ${
-              clients.length > 1 ? "+ " + clients.length : ""
+              clients.length > 1 ? "+ " + (clients.length - 1) : ""
             }`
-          : event.meeting_title || "No Title"; // If summary is not present, set to empty string
-      const description = event.description || ""; // If description is not present, set to empty string
+          : event.meeting_title || "No Title";
 
-      // Create the transformed object
       return {
-        // date: new Date(event.start.dateTime).toLocaleTimeString([], {
-        //   day: "2-digit",
-        //   month: "long",
-        //   year: "2-digit",
-        //   hour: "numeric",
-        //   minute: "2-digit",
-        //   hour12: true,
-        // }),
         time: `${startTime} - ${endTime}`,
-        clientTopic: clientTopic,
-        description: description,
-        encounterMode: "...", // Placeholder for encounter mode
+        clientTopic,
+        description: event.description || "",
+        encounterMode: "...",
       };
     });
-    setData(data);
-  }, [upcomingEvents, clientOption]);
+    setData(newData);
+  }, [appointmentsList, clientOptions]);
 
   const columns = useMemo(
     () => [
@@ -194,7 +87,7 @@ function AppointmentCalendar({ from }) {
       },
       {
         Header: "Descriptions",
-        accessor: "descriptions",
+        accessor: "description",
         align: "left",
       },
       {
@@ -204,7 +97,7 @@ function AppointmentCalendar({ from }) {
       {
         Header: "Encounter Note",
         accessor: "encounterNote",
-        Cell: ({ row }) => (
+        Cell: () => (
           <div className="mx-auto flex justify-around items-center">
             <img src={DocumentAddIcon} alt="add" />
             <img src={EditIcon} alt="edit" />
@@ -215,7 +108,7 @@ function AppointmentCalendar({ from }) {
       {
         Header: "Action",
         accessor: "action",
-        Cell: ({ row }) => (
+        Cell: () => (
           <div className="mx-auto flex justify-around space-x-2 items-center">
             <img src={EditIcon} alt="edit" />
             <img src={EyeIcon} alt="view" />
@@ -228,16 +121,10 @@ function AppointmentCalendar({ from }) {
 
   return (
     <div className="w-full bg-white rounded-md shadow-md flex flex-col">
-      <div
-        id="appointment-calendar-2"
-        className="flex justify-between items-center mx-3 sm:mx-8 mt-6"
-      >
+      <div className="flex justify-between items-center mx-3 sm:mx-8 mt-6">
         <div className="flex items-center space-x-2 sm:space-x-4">
-          <span id="appointment-calendar-3" className="text-lg font-medium">
-            Appointment Calendar
-          </span>
+          <span className="text-lg font-medium">Appointment Calendar</span>
           <img
-            id="appointment-calendar-4"
             src={ExternalLinkIcon}
             className="size-3 sm:size-4"
             alt="link"
@@ -246,17 +133,16 @@ function AppointmentCalendar({ from }) {
         <div>
           <Link
             to="/calendar"
-            id="appointment-calendar-5"
             className="px-3 py-1 border-1 sm:border-2 rounded-sm border-[#EBAC88] text-[#CB6A69] text-[13px] font-medium leading-5"
           >
             Create New
           </Link>
         </div>
       </div>
-      <hr id="appointment-calendar-6" className="w-[98%] mx-auto my-2" />
+      <hr className="w-[98%] mx-auto my-2" />
       <div className="w-full flex-grow flex flex-col">
         <BasicTable
-          type={"appointmentCalendar"}
+          type="appointmentCalendar"
           columns={columns}
           data={data}
         />
@@ -265,4 +151,4 @@ function AppointmentCalendar({ from }) {
   );
 }
 
-export default AppointmentCalendar;
+export default React.memo(AppointmentCalendar);
