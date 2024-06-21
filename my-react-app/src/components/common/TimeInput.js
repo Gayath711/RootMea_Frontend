@@ -36,7 +36,6 @@ const TimeInput = ({
   const [selectedTime, setSelectedTime] = useState(null);
 
   if (!register) {
-    console.log("inside register");
     register = () => {};
   }
 
