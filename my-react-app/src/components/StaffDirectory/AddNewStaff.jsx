@@ -340,7 +340,7 @@ export default function AddNewStaff() {
         let phone_no = formDetail.PhoneNumber || "";
         let position = formDetail.PositionTitle?.id || "";
         let facility = formDetail.PrimaryFaculity?.id || "";
-        let supervisor = formDetail.Supervisor?.id || "";
+        // let supervisor = formDetail.Supervisor?.id || "";
         let program = formDetail.Programs.map((each) => {
           return isEdit ? { id: each.id, program: each.program } : each.id;
         });
@@ -359,9 +359,9 @@ export default function AddNewStaff() {
           profile.facility = facility;
         }
 
-        if (supervisor !== "") {
-          profile.supervisor = supervisor;
-        }
+        // if (supervisor !== "") {
+        //   profile.supervisor = supervisor;
+        // }
 
         if (program.length > 0) {
           profile.program = program;
@@ -641,7 +641,9 @@ export default function AddNewStaff() {
                 </FormField>
               </div>
             </div>
-            <div className="flex flex-wrap">
+
+            {/* -------- Supervisor Input ---------- */}
+            {/* <div className="flex flex-wrap">
               <div className="w-full md:w-1/2 p-4">
                 <FormField label="Supervisor" error={errFields.Supervisor}>
                   <Select
@@ -703,7 +705,8 @@ export default function AddNewStaff() {
                   />
                 </FormField>
               </div>
-            </div>
+            </div> */}
+
             <div className="flex flex-wrap">
               <div className="w-full md:w-1/2 p-4">
                 <FormField label="Programs" error={errFields.Programs}>
