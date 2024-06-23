@@ -447,6 +447,8 @@ const AddAppointment = ({
 
   const [appointmentData, setAppointmentData] = useState({});
 
+  const [LastEncounterNote, setLastEncounterNote] = useState([]);
+
   const handleDateChange = (name, value) => {
     console.log({ name, value });
     if (name === "date") {
@@ -609,6 +611,31 @@ const AddAppointment = ({
     idsNeedToFetch.map((itm) => fetchEncounterNotes(itm.id));
   }, [selectedClients]);
 
+  function findObjectWithHighestID(arr) {
+    let highestIDObject = null;
+    let highestID = Number.NEGATIVE_INFINITY;
+
+    for (const obj of arr) {
+      let id = obj.id;
+
+      // Convert the ID to a number if it is not already
+      if (typeof id === "string") {
+        id = parseFloat(id);
+      }
+
+      // Check if the id is a valid number
+      if (!isNaN(id) && id > highestID) {
+        highestID = id;
+        highestIDObject = obj;
+      }
+    }
+
+    // Return the object with the highest ID found
+    // return highestIDObject;
+
+    return highestID;
+  }
+
   const fetchData = async () => {
     try {
       const { data } = await axiosInstance.get(
@@ -733,7 +760,6 @@ const AddAppointment = ({
   const fetchEncounterNotes = async (id) => {
     try {
       encounterOptionCache.current = [...encounterOptionCache.current, id];
-
       const response = await axiosInstance.get(
         `/encounters-notes-client/${id}/`
       );
@@ -745,16 +771,23 @@ const AddAppointment = ({
           value: itm.id,
         };
       });
+
+      let highestID = findObjectWithHighestID(data);
+      setLastEncounterNote((prev) => {
+        return [...prev, highestID];
+      });
       setEncounterNotesList((prev) => {
         let filtered = prev.filter((item) => item.id !== id);
-        console.log({ prev, filtered });
-        return [
+
+        let newVal = [
           ...filtered,
           {
             id,
             data,
           },
         ];
+
+        return newVal;
       });
       setEncounterNotesOptions((prev) => {
         return [...prev, ...data];
@@ -852,7 +885,7 @@ const AddAppointment = ({
     (item) => item?.data?.length === 0
   );
 
-  console.log({ emptyEncounterClient, encounterNotesList });
+  console.log({ encounterData, LastEncounterNote });
 
   return (
     <Modal
@@ -1243,34 +1276,44 @@ const AddAppointment = ({
                   <div className="flex flex-column gap-3 mt-2">
                     {encounterData && encounterData.length > 0 ? (
                       <div className="flex flex-wrap gap-2 items-center">
-                        {encounterData.map((item) => {
-                          return (
-                            <div className="text-xs my-1">
-                              <a
-                                target="_blank"
-                                href={`/encounter-note/add/${item.client_id}/?encounterId=${item.id}&mode=view`}
-                                className="p-1.5 px-2.5 text-black bg-gray-200 hover:text-slate-50 hover:bg-teal-400"
-                              >
-                                {item.label}
-                              </a>
-                              {isView !== true && (
-                                <span
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    let newValue = encounterData.filter(
-                                      (itm) => itm.id !== item.id
-                                    );
-                                    setValue("linkedEncounterNotes", newValue);
-                                  }}
-                                  className="p-1.5 pr-2 text-black bg-gray-200 hover:bg-red-400 cursor-pointer"
+                        {encounterData
+                          .filter((item) => {
+                            if (isView === true && isUpdate === false) {
+                              return LastEncounterNote.includes(+item.id);
+                            }
+                            return item;
+                          })
+                          .map((item) => {
+                            return (
+                              <div className="text-xs my-1">
+                                <a
+                                  target="_blank"
+                                  href={`/encounter-note/add/${item.client_id}/?encounterId=${item.id}&mode=edit`}
+                                  className="p-1.5 px-2.5 text-black bg-gray-200 hover:text-slate-50 hover:bg-teal-400"
                                 >
-                                  x
-                                </span>
-                              )}
-                            </div>
-                          );
-                        })}
+                                  {item.label}
+                                </a>
+                                {isView !== true && (
+                                  <span
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      let newValue = encounterData.filter(
+                                        (itm) => itm.id !== item.id
+                                      );
+                                      setValue(
+                                        "linkedEncounterNotes",
+                                        newValue
+                                      );
+                                    }}
+                                    className="p-1.5 pr-2 text-black bg-gray-200 hover:bg-red-400 cursor-pointer"
+                                  >
+                                    x
+                                  </span>
+                                )}
+                              </div>
+                            );
+                          })}
                       </div>
                     ) : (
                       "No Linked Encounter Notes"
