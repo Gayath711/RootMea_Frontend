@@ -36,7 +36,6 @@ import CreateTableForm from "./components/dynamicform/createtableform";
 import AlterTable from "./components/dynamicform/altertable";
 import NewPage from "./components/dynamicform/nepage";
 import BulkUploadComponent from "./components/dynamicform/BulkUploadComponent";
-import UserDirectory from "./pages/UserDirectory/Directory";
 import ClientProfileNew from "./components/clientprofilenew/clientprofile";
 import { useWindowSize } from "./components/Utils/windowResize";
 import SocialVitalSignsMain from "./components/SocialVitalSigns/SocialVitalSignsMain";
@@ -252,7 +251,6 @@ function App() {
                     path="/BulkUploadComponent/:tableName"
                     element={<BulkUploadComponent />}
                   />
-                  <Route path="/directory" element={<UserDirectory />} />
                   <Route
                     path="/clientprofilenew"
                     element={<ClientProfile isNew />}
