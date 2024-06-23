@@ -55,7 +55,11 @@ let sidebarLinks = [
   },
   {
     id: "directory-page",
+    to: "/directory",
     title: "Directory",
+    activeImageSrc: DirectoryActive,
+    inactiveImageSrc: DirectoryInActive,
+    isActive: false,
     children: [
       {
         id: "staff-directory",
