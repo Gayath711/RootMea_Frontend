@@ -152,7 +152,14 @@ const Sidebar = () => {
             >
               {/* // Render parent link with dropdown menu */}
               <div>
-                <Link to={link.to} className="hover:text-teal-500">
+                <Link
+                  to={link.to}
+                  className={
+                    link.children && link.children.length > 0
+                      ? "cursor-default"
+                      : "hover:text-teal-500"
+                  }
+                >
                   <div className="flex items-center gap-2 justify-start w-100">
                     <img
                       className={`p-1 bg-[${bgColor}] size-6`}
