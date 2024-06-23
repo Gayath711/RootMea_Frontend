@@ -10,6 +10,7 @@ import ViewPNG from "../../components/images/view.png";
 import EditPNG from "../../components/images/edit.png";
 // import GroupIcon from "../../components/images/group.svg";
 import DeactivatePNG from "../../components/images/deactivate.png";
+import DeletePNG from "../../components/images/delete.png";
 import MUIDataGridWrapper from "../../components/HOC/MUIDataGridWrapper";
 
 import { notifySuccess, notifyError } from "../../helper/toastNotication";
@@ -88,8 +89,6 @@ export default function CreateGroup() {
       });
     }
   }, [paramid, isUpdate, recordData, usersData]);
-
-  console.log({ formDetail });
 
   const fetchGroupPermission = () => {
     axios
@@ -207,6 +206,61 @@ export default function CreateGroup() {
   };
 
   const [permissionsState, setPermissionsState] = useState([]);
+  const [searchText, setSearchText] = useState("");
+
+  let rowData = useMemo(
+    () =>
+      formDetail.users.map((item) => {
+        const programValue =
+          item.profile?.program.length > 0 ? item.profile?.program[0] : "";
+
+        return {
+          id: item.id,
+          Link: `Record ${item.id}`,
+          LastName: item.last_name || "",
+          FirstName: item.first_name || "",
+          PhoneNumber: item.profile?.phone_no || "",
+          RootsEmailAddress: item.email || "",
+          LastActivityDate: item.last_login || "",
+          SystemStatus: item.is_active || null,
+          PositionTitle: item.profile?.position || "",
+          PrimaryFacility: item.profile?.facility || "",
+          Program: programValue,
+          Supervisor: `${item.profile?.supervisor_first_name || " "} ${
+            item.profile?.supervisor_last_name || " "
+          }`,
+
+          SupervisorTitle: item.profile?.supervisor_title || "",
+          SupervisorEmail: item.profile?.supervisor_email || "",
+          Action: "",
+        };
+      }),
+    [formDetail.users]
+  );
+
+  function searchFilter(arrayOfObjects, searchText) {
+    if (!searchText) return arrayOfObjects; // Return the original array if searchText is empty
+
+    const filteredArray = arrayOfObjects.filter((obj) => {
+      // Convert object keys to an array and check if any of them contains the searchText
+      return Object.keys(obj).some((key) => {
+        const value = obj[key];
+        if (typeof value === "string") {
+          // If the value is a string, perform case-insensitive search
+          return value.toLowerCase().includes(searchText.toLowerCase());
+        } else {
+          // If the value is not a string, convert it to string and perform search
+          return String(value).toLowerCase().includes(searchText.toLowerCase());
+        }
+      });
+    });
+
+    return filteredArray;
+  }
+
+  const rows = useMemo(() => {
+    return searchFilter(rowData, searchText);
+  }, [searchText, rowData]);
 
   return (
     <div className="flex flex-column gap-2 items-center">
@@ -234,37 +288,298 @@ export default function CreateGroup() {
 
           <div className="mx-[25px] my-[15px]">
             <FormField label="Users" error={errFields.users}>
-              <Select
-                name={"Users"}
-                options={usersData}
-                placeholder="Select Users"
-                value={formDetail.users}
-                onChange={(selectedOption) => {
-                  handleUsers(selectedOption);
-                }}
-                styles={{
-                  control: (styles) => ({
-                    ...styles,
-                    padding: "5px",
+              <div className="flex flex-column gap-2">
+                <Select
+                  name={"Users"}
+                  options={usersData}
+                  placeholder="Add User"
+                  // value={formDetail.users}
+                  value={[]}
+                  // onChange={(selectedOption) => {
+                  //   handleUsers(selectedOption);
+                  // }}
 
-                    border: `1px solid ${
-                      !errFields.Supervisor ? "#5BC4BF" : "red"
-                    }`,
+                  onChange={(value) => {
+                    let selectedValue = [...value];
+                    if (formDetail.users) {
+                      let dataIDs = formDetail.users.map((item) => item.id);
+                      let filteredSelectedValues = selectedValue.filter(
+                        (item) => !dataIDs.includes(item.id)
+                      );
+                      selectedValue = [
+                        ...formDetail.users,
+                        ...filteredSelectedValues,
+                      ];
+                    }
+                    handleUsers(selectedValue);
+                  }}
+                  styles={{
+                    control: (styles) => ({
+                      ...styles,
+                      padding: "5px",
 
-                    fontSize: "14px",
-                  }),
-                  menu: (styles) => ({
-                    ...styles,
-                    background: "white",
-                    zIndex: 9999,
-                  }),
-                }}
-                isMulti
-                components={{
-                  IndicatorSeparator: () => null,
-                }}
-                menuPortalTarget={document.body}
-              />
+                      border: `1px solid ${
+                        !errFields.Supervisor ? "#5BC4BF" : "red"
+                      }`,
+
+                      fontSize: "14px",
+                    }),
+                    menu: (styles) => ({
+                      ...styles,
+                      background: "white",
+                      zIndex: 9999,
+                    }),
+                  }}
+                  isMulti
+                  components={{
+                    IndicatorSeparator: () => null,
+                  }}
+                  menuPortalTarget={document.body}
+                />
+                <div className="flex flex-column gap-2 w-100">
+                  {/* <TableActions
+                selectorList={selectorList}
+                selectedValue={selectedValue}
+                handleSelectorValue={handleSelectorValue}
+                searchText={searchText}
+                handleSearchText={handleSearchText}
+              /> */}
+                  <MUIDataGridWrapper noDataLabel="No users added, please add user">
+                    <DataGrid
+                      loading={isUpdate && loadingData}
+                      rows={rows}
+                      columns={[
+                        // {
+                        //   field: "Link",
+                        //   headerName: "Link",
+                        //   flex: 1,
+                        //   headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                        //   minWidth: 100,
+                        //   renderCell: (params) => {
+                        //     return (
+                        //       <>
+                        //         <Link
+                        //           to={`/staff-directory/${params.row.id}`}
+                        //           className="text-[#5BC4BF]"
+                        //         >
+                        //           {params.row.Link}
+                        //         </Link>
+                        //       </>
+                        //     );
+                        //   },
+                        // },
+                        {
+                          field: "LastName",
+                          headerName: "Last Name",
+                          flex: 1,
+                          headerClassName:
+                            "bg-[#5BC4BF] text-white font-medium",
+                          minWidth: 150,
+                        },
+                        {
+                          field: "FirstName",
+                          headerName: "First Name",
+                          flex: 1,
+                          headerClassName:
+                            "bg-[#5BC4BF] text-white font-medium",
+                          minWidth: 150,
+                        },
+                        // {
+                        //   field: "PhoneNumber",
+                        //   headerName: "Phone Number",
+                        //   flex: 1,
+                        //   filterable: true,
+                        //   headerClassName: "bg-[#5BC4BF] text-white font-medium",
+                        //   minWidth: 150,
+                        // },
+                        {
+                          field: "RootsEmailAddress",
+                          headerName: "Roots Email Address",
+                          flex: 1,
+                          sortable: true,
+                          headerClassName:
+                            "bg-[#5BC4BF] text-white font-medium",
+                          minWidth: 250,
+                        },
+                        // {
+                        //   field: "LastActivityDate",
+                        //   headerName: "Last Activity Date",
+                        //   align: "center",
+                        //   headerAlign: "center",
+                        //   flex: 1,
+                        //   headerClassName:
+                        //     "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                        //   minWidth: 150,
+                        //   renderCell: (params) => {
+                        //     let date = params.row.LastActivityDate
+                        //       ? new Date(
+                        //           params.row.LastActivityDate
+                        //         ).toLocaleDateString()
+                        //       : "";
+
+                        //     return date;
+                        //   },
+                        // },
+
+                        {
+                          field: "SystemStatus",
+                          headerName: "System Status",
+                          flex: 1,
+                          align: "center",
+                          headerAlign: "center",
+
+                          headerClassName:
+                            "bg-[#5BC4BF] text-white font-medium",
+                          minWidth: 150,
+                          renderCell: (params) => {
+                            const {
+                              row: { SystemStatus },
+                            } = params;
+
+                            let classToApply = SystemStatus
+                              ? "text-[#2F9384] bg-[#DAFCE7]"
+                              : "text-[#E0382D] bg-[#FFC7C7]";
+
+                            // if (SystemStatus === "Active") {
+                            //   classToApply = "text-[#2F9384] bg-[#DAFCE7]";
+                            // }
+                            // if (SystemStatus === "Deactivated") {
+                            //   classToApply = "text-[#E0382D] bg-[#FFC7C7]";
+                            // }
+
+                            return (
+                              <>
+                                <div className="h-100 w-100">
+                                  <span
+                                    className={`m-2 p-1 px-2 ${classToApply}`}
+                                  >
+                                    {SystemStatus ? "Active" : "Deactivated"}
+                                  </span>
+                                </div>
+                              </>
+                            );
+                          },
+                        },
+
+                        // {
+                        //   field: "PositionTitle",
+                        //   headerName: "Position Title",
+                        //   align: "left",
+                        //   headerAlign: "left",
+                        //   flex: 1,
+                        //   headerClassName:
+                        //     "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                        //   minWidth: 200,
+                        // },
+
+                        // {
+                        //   field: "PrimaryFacility",
+                        //   headerName: "Primary Facility",
+                        //   align: "left",
+                        //   headerAlign: "left",
+                        //   flex: 1,
+                        //   headerClassName:
+                        //     "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                        //   minWidth: 150,
+                        // },
+
+                        // {
+                        //   field: "Program",
+                        //   headerName: "Program",
+                        //   align: "left",
+                        //   headerAlign: "left",
+                        //   flex: 1,
+                        //   headerClassName:
+                        //     "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                        //   minWidth: 150,
+                        // },
+
+                        // {
+                        //   field: "Supervisor",
+                        //   headerName: "Supervisor",
+                        //   align: "left",
+                        //   headerAlign: "left",
+                        //   flex: 1,
+                        //   headerClassName:
+                        //     "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                        //   minWidth: 150,
+                        // },
+
+                        // {
+                        //   field: "SupervisorTitle",
+                        //   headerName: "Supervisor Title",
+                        //   align: "left",
+                        //   headerAlign: "left",
+                        //   flex: 1,
+                        //   headerClassName:
+                        //     "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                        //   minWidth: 200,
+                        // },
+
+                        // {
+                        //   field: "SupervisorEmail",
+                        //   headerName: "Supervisor Email",
+                        //   align: "left",
+                        //   headerAlign: "left",
+                        //   flex: 1,
+                        //   headerClassName:
+                        //     "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                        //   minWidth: 250,
+                        // },
+
+                        {
+                          field: "Action",
+                          headerName: "Action",
+                          align: "left",
+                          headerAlign: "center",
+                          flex: 1,
+                          headerClassName:
+                            "bg-[#5BC4BF] text-white font-medium text-center w-100",
+                          minWidth: 150,
+                          renderCell: (params) => {
+                            return (
+                              <>
+                                <div className="h-100 w-100 flex flex-row gap-2 justify-center items-center">
+                                  <button
+                                    className="p-1 hover:bg-red-400 bg-opacity-50 hover:rounded"
+                                    title="Remove"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      let updatedUsers =
+                                        formDetail.users.filter(
+                                          (item) => +item.id !== +params.row.id
+                                        );
+                                      handleUsers(updatedUsers);
+                                    }}
+                                  >
+                                    <img
+                                      src={DeletePNG}
+                                      className="w-4 h-4"
+                                      style={{
+                                        display: "block",
+                                        margin: "0 auto",
+                                      }}
+                                    />
+                                  </button>
+                                </div>
+                              </>
+                            );
+                          },
+                        },
+                      ]}
+                      initialState={{
+                        pagination: {
+                          paginationModel: {
+                            pageSize: 10,
+                          },
+                        },
+                      }}
+                      pageSizeOptions={[3, 5, 10, 25]}
+                      disableRowSelectionOnClick
+                    />
+                  </MUIDataGridWrapper>
+                </div>
+              </div>
             </FormField>
           </div>
 

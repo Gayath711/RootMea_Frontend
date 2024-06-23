@@ -4,6 +4,7 @@ import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import BasicTable from "../react-table/BasicTable";
 import SearchIcon from "@mui/icons-material/Search";
 import EditIcon from "../images/edit.svg";
+import { useNavigate } from "react-router-dom";
 
 const options = {
   Pending: "bg-[#FFE5E5] text-[#E0382D]",
@@ -37,6 +38,7 @@ const Content = ({ data, columns }) => {
 };
 
 function Referrals({ clientId }) {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(true);
   const [data, setData] = useState([
     {
@@ -128,7 +130,7 @@ function Referrals({ clientId }) {
         </div>
         <div className="flex items-center gap-x-10">
           <SearchIcon className="text-[#585A60] hover:cursor-pointer" />
-          <button className="px-3 py-2 text-sm bg-[#FFD9EB] text-[#1A1F25] rounded-sm font-medium">
+          <button onClick={() => navigate(`/assignments-and-referrals/${clientId}?tab=referrals`)} className="px-3 py-2 text-sm bg-[#FFD9EB] text-[#1A1F25] rounded-sm font-medium">
             Add New
           </button>
           <RemoveCircleIcon

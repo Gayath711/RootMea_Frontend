@@ -7,11 +7,12 @@ const TextAreaElement = ({
   required,
   width,
   disabled,
+  addMargin = true,
   ...rest
 }) => {
   return (
-    <div className={`m-1 ${width}`}>
-      <FormLabel required={required}>{label}</FormLabel>
+    <div className={`${addMargin ? "mx-1" : ""} ${width}`}>
+      {label && <FormLabel required={required}>{label}</FormLabel>}
       <textarea
         {...rest}
         disabled={disabled}

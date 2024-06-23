@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import apiURL from ".././apiConfig";
 
@@ -93,13 +93,17 @@ function useAppointments() {
     await Promise.all([fetchGoogleEvents(), fetchInternalEvents()]);
   };
 
+  const combinedEventList = useMemo(() => {
+    return [...internalEvents, ...externalEvents];
+  }, [internalEvents, externalEvents])
+
   return {
     internalEventsLoading,
     externalEventsLoading,
     appointmentsLoading,
     internalEvents,
     externalEvents,
-    eventList: [...internalEvents, ...externalEvents],
+    eventList: combinedEventList,
     appointmentsList: appointments,
     fetchGoogleEvents,
     fetchInternalEvents,

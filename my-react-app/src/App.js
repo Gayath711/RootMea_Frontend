@@ -36,7 +36,6 @@ import CreateTableForm from "./components/dynamicform/createtableform";
 import AlterTable from "./components/dynamicform/altertable";
 import NewPage from "./components/dynamicform/nepage";
 import BulkUploadComponent from "./components/dynamicform/BulkUploadComponent";
-import UserDirectory from "./pages/UserDirectory/Directory";
 import ClientProfileNew from "./components/clientprofilenew/clientprofile";
 import { useWindowSize } from "./components/Utils/windowResize";
 import SocialVitalSignsMain from "./components/SocialVitalSigns/SocialVitalSignsMain";
@@ -65,12 +64,16 @@ import ClientProfile from "./components/ClientProfileForm";
 
 import BulkUpload from "./components/BulkUpload/BulkUpload";
 
- 
+
 import AddDocument from "./pages/AddDocument/AddDocument";
 
 import Master from "./pages/Master";
 import CreateGroup from "./pages/Master/CreateGroup";
 import { fetchPermissionList } from "./store/slices/userInfoSlice";
+import AssignmentAndReferrals from "./pages/AssignmentsAndReferrals/AssignmentAndReferrals";
+import ReferralForm from "./pages/ReferralForm/ReferralForm";
+import ProgramForm from "./pages/ProgramForm/ProgramForm";
+import NavigationForm from "./pages/NavigationForm/NavigationForm";
 
 
 function App() {
@@ -251,7 +254,6 @@ function App() {
                     path="/BulkUploadComponent/:tableName"
                     element={<BulkUploadComponent />}
                   />
-                  <Route path="/directory" element={<UserDirectory />} />
                   <Route
                     path="/clientprofilenew"
                     element={<ClientProfile isNew />}
@@ -324,17 +326,22 @@ function App() {
                     element={<TheNewCarePlan />}
                   />
                   <Route path="/client-referral" element={<ClientReferral />} />
- 
+
                   <Route path="/master" element={<Master />} />
                   <Route path="/create-new-group" element={<CreateGroup />} />
                   <Route
                     path="/update-permission-group/:paramid"
                     element={<CreateGroup />}
                   />
- 
+
                   <Route path="/document/add/:clientId" element={<AddDocument />} />
                   <Route path="/document/add" element={<AddDocument />} />
- 
+
+                  <Route path="/assignments-and-referrals/:clientId" element={<AssignmentAndReferrals />} />
+                  <Route path="/referral/add/:clientId" element={<ReferralForm />} />
+                  <Route path="/program/add/:clientId" element={<ProgramForm />} />
+                  <Route path="/navigation/add/:clientId" element={<NavigationForm />} />
+
                 </Routes>
               </div>
             </div>

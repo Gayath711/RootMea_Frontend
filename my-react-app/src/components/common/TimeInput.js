@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import FormLabel from "../dynamicform/FormElements/FormLabel";
 
 const TimeInput = ({
   name,
@@ -8,12 +9,14 @@ const TimeInput = ({
   placeholder,
   width = "340px",
   height = "7vh",
+  label,
   isEdittable,
   value,
   className,
   handleChange,
   timeIntervals,
   selectedDate,
+  required,
   register,
 }) => {
   // const [selectedTime, setSelectedTime] = useState(value || null);
@@ -86,6 +89,7 @@ const TimeInput = ({
 
   return (
     <div className="relative flex-grow w-full">
+      {label && <FormLabel required={required}>{label}</FormLabel>}
       <DatePicker
         name={name}
         id={id || name}

@@ -1,9 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import PageTitle from "../../components/PageTitle/PageTitle";
 import InputElement from "../../components/dynamicform/FormElements/InputElement";
 import ProfilePicture from "../../image/profile_picture.svg";
@@ -89,7 +84,7 @@ export function FormButtonWrapper({
           ""
         )}
       </div>
-      <div className="px-4 py-3 grid grid-cols-12 gap-x-3">{children}</div>
+      <div className="px-4 py-3 grid grid-cols-12 gap-x-3 gap-y-2">{children}</div>
     </div>
   );
 }
@@ -466,6 +461,7 @@ const TheNewCarePlan = () => {
   useEffect(() => {
     fetchUserInfo()
       .then((userInfoResponse) => {
+        console.log(userInfoResponse);
         setUserInfo(userInfoResponse);
       })
       .catch((error) => {
@@ -515,19 +511,23 @@ const TheNewCarePlan = () => {
   }, []);
 
   const createPayloadData = useCallback(() => {
+    {
+      /* This section is commented temporarily. DON'T REMOVE!!!! */
+    }
     const updatedFormData = {
       ...formData,
-      approver_name: formData?.approver_name?.id,
+      // approver_name: formData?.approver_name?.id,
       request_approval: true,
-      approval_status: formData?.approver_name?.approval_status
-        ? "Pending"
-        : "Pending",
+      // approval_status: formData?.approver_name?.approval_status
+      //   ? "Pending"
+      //   : "Pending",
     };
-    if (!formData?.approver_name) {
-      delete updatedFormData?.approver_name;
-      delete updatedFormData?.approval_status;
-      delete updatedFormData?.request_approval;
-    }
+
+    // if (!formData?.approver_name) {
+    //   delete updatedFormData?.approver_name;
+    //   delete updatedFormData?.approval_status;
+    //   delete updatedFormData?.request_approval;
+    // }
     return updatedFormData;
   }, [formData]);
 
@@ -553,9 +553,7 @@ const TheNewCarePlan = () => {
     try {
       const updatedFormData = createPayloadData();
       updatedFormData.approval_updated =
-        updatedFormData?.approver_name === previousApprover
-          ? false
-          : true;
+        updatedFormData?.approver_name === previousApprover ? false : true;
 
       delete updatedFormData?.care_plan_history;
 
@@ -769,7 +767,7 @@ const TheNewCarePlan = () => {
           <TableMenu
             index={row.index}
             handleClickOpen={handleClickOpen}
-            disabled={mode === "view"}
+            disabled={mode === "view" || mode === "approve"}
             setInterventionUpdateIndex={setInterventionUpdateIndex}
             onRemove={() => {
               handleRemoveIntervention(goalIndex, row.index);
@@ -1000,7 +998,7 @@ const TheNewCarePlan = () => {
               <FormButtonWrapper
                 label={`Goal ${goalIndex + 1}`}
                 button={"Add new"}
-                disabled={mode === "view"}
+                disabled={mode === "view" || mode === "approve"}
                 onclick={handleAddNewGoal}
               >
                 <div className="col-span-6">
@@ -1009,7 +1007,7 @@ const TheNewCarePlan = () => {
                     className="m-1 h-[37.6px] border-keppel rounded-[3px]"
                     height="37.6px"
                     label={"Start Date"}
-                    isEdittable={mode === "view"}
+                    isEdittable={mode === "view" || mode === "approve"}
                     value={
                       formData?.goals?.[goalIndex]?.start_date
                         ? format(
@@ -1029,9 +1027,9 @@ const TheNewCarePlan = () => {
                     type="text"
                     value={formData?.goals?.[goalIndex]?.problem || ""}
                     width={"w-full"}
-                    className="border-keppel rounded-[3px]"
+                    className="border-keppel rounded-[3px] my-1"
                     placeholder="Problem"
-                    disabled={mode === "view"}
+                    disabled={mode === "view" || mode === "approve"}
                     onChange={(e) =>
                       handleGoalDataUpdate(goalIndex, "problem", e.target.value)
                     }
@@ -1040,7 +1038,7 @@ const TheNewCarePlan = () => {
                 <div className="col-span-12">
                   <TextAreaElement
                     className="h-32 border-keppel rounded-[3px]"
-                    disabled={mode === "view"}
+                    disabled={mode === "view" || mode === "approve"}
                     value={
                       formData?.goals?.[goalIndex]?.smart_goal_summary || ""
                     }
@@ -1059,7 +1057,7 @@ const TheNewCarePlan = () => {
                     height="37.6px"
                     fontSize="14px"
                     placeholder="Goal Priority"
-                    isEdittable={mode === "view"}
+                    isEdittable={mode === "view" || mode === "approve"}
                     className="border border-[#5BC4BF] border-keppel text-[#858585] rounded-[7px]"
                     selectedOption={
                       formData?.goals?.[goalIndex]?.goal_priority || ""
@@ -1079,7 +1077,7 @@ const TheNewCarePlan = () => {
                     height="37.6px"
                     fontSize="14px"
                     placeholder="Stage of Readiness"
-                    isEdittable={mode === "view"}
+                    isEdittable={mode === "view" || mode === "approve"}
                     className="border border-[#5BC4BF] border-keppel text-[#858585] rounded-[7px]"
                     selectedOption={
                       formData?.goals?.[goalIndex]?.stage_of_readiness || ""
@@ -1098,7 +1096,7 @@ const TheNewCarePlan = () => {
                   <TextAreaElement
                     className="h-32 border-keppel rounded-[3px]"
                     value={formData?.goals?.[goalIndex]?.client_strengths || ""}
-                    disabled={mode === "view"}
+                    disabled={mode === "view" || mode === "approve"}
                     onChange={(e) =>
                       handleGoalDataUpdate(
                         goalIndex,
@@ -1115,7 +1113,7 @@ const TheNewCarePlan = () => {
                     value={
                       formData?.goals?.[goalIndex]?.potential_barriers || ""
                     }
-                    disabled={mode === "view"}
+                    disabled={mode === "view" || mode === "approve"}
                     onChange={(e) =>
                       handleGoalDataUpdate(
                         goalIndex,
@@ -1131,7 +1129,7 @@ const TheNewCarePlan = () => {
                     <AddNewElement
                       className="border border-keppel rounded-[3px]"
                       label="Interventions"
-                      disabled={mode === "view"}
+                      disabled={mode === "view" || mode === "approve"}
                       button={"Add new"}
                       onclick={handleClickOpen}
                     />
@@ -1141,7 +1139,7 @@ const TheNewCarePlan = () => {
                     <FormButtonWrapper
                       label="Interventions"
                       button={"Add new"}
-                      disabled={mode === "view"}
+                      disabled={mode === "view" || mode === "approve"}
                       className={"mt-6 rounded-[3px]"}
                       onclick={handleClickOpen}
                     >
@@ -1166,7 +1164,7 @@ const TheNewCarePlan = () => {
                     height="37.6px"
                     fontSize="14px"
                     placeholder="Status"
-                    isEdittable={mode === "view"}
+                    isEdittable={mode === "view" || mode === "approve"}
                     className="border border-[#5BC4BF] border-keppel text-[#858585] mt-[3px] rounded-[7px]"
                     selectedOption={
                       formData?.goals?.[goalIndex]?.goal_status || ""
@@ -1187,7 +1185,7 @@ const TheNewCarePlan = () => {
                     dateFormat="MM-dd-yyyy"
                     className="m-1  h-[37.6px] border-keppel rounded-[3px]"
                     height="37.6px"
-                    isEdittable={mode === "view"}
+                    isEdittable={mode === "view" || mode === "approve"}
                     value={
                       formData?.goals?.[goalIndex]?.goal_date
                         ? format(
@@ -1205,7 +1203,7 @@ const TheNewCarePlan = () => {
                   <TextAreaElement
                     className="h-32 border-keppel rounded-[3px]"
                     value={""}
-                    disabled={mode === "view"}
+                    disabled={mode === "view" || mode === "approve"}
                     onChange={() => {}}
                     placeholder="Custom Sections / Fields"
                   />
@@ -1214,7 +1212,7 @@ const TheNewCarePlan = () => {
                   <TextAreaElement
                     className="h-32 border-keppel rounded-[3px]"
                     value={formData?.goals?.[goalIndex]?.comments || ""}
-                    disabled={mode === "view"}
+                    disabled={mode === "view" || mode === "approve"}
                     onChange={(e) =>
                       handleGoalDataUpdate(
                         goalIndex,
@@ -1226,13 +1224,20 @@ const TheNewCarePlan = () => {
                   />
                 </div>
               </FormButtonWrapper>
-              <div className="flex items-center space-x-2 pt-9 pb-6">
+
+              {/* This section is commented temporarily. DON'T REMOVE!!!! */}
+
+              {/* <div className="flex items-center space-x-2 pt-9 pb-6">
                 <input
                   type="checkbox"
                   id="approval"
                   className="w-4 h-4"
                   checked={formData?.approval_status}
-                  disabled={mode === "view" || (mode === "edit" && typeof previousApprover === "number")}
+                  disabled={
+                    mode === "view" ||
+                    mode === "approve" ||
+                    (mode === "edit" && typeof previousApprover === "number")
+                  }
                   onChange={(e) => {
                     setApprovalSelection(e.target.checked);
                     handleFormDataChange("approval_status", e.target.checked);
@@ -1244,8 +1249,8 @@ const TheNewCarePlan = () => {
                 <label htmlFor="approval" className="text-lg">
                   Is approval Needed?
                 </label>
-              </div>
-              {formData?.approver_name && (
+              </div> */}
+              {/* {formData?.approver_name && (
                 <div
                   className={`w-full flex justify-between items-center border rounded-[6px]`}
                 >
@@ -1253,7 +1258,11 @@ const TheNewCarePlan = () => {
                     {formData?.approver_name?.name}
                   </div>
                   <button
-                    disabled={mode === "view" || (mode === "edit" && typeof previousApprover === "number")}
+                    disabled={
+                      mode === "view" ||
+                      mode === "approve" ||
+                      (mode === "edit" && typeof previousApprover === "number")
+                    }
                     onClick={() => {
                       handleFormDataChange("approver_name", null);
                       setApprovalSelection(false);
@@ -1264,23 +1273,45 @@ const TheNewCarePlan = () => {
                     -
                   </button>
                 </div>
-              )}
+              )} */}
               <div className="text-center my-3">
-                <button
-                  onClick={() => navigate(`/clientchart/${clientId}`)}
-                  className="border border-[#5BC4BF] w-[150px] font-normal text-base rounded-sm p-2 mr-3"
-                >
-                  Cancel
-                </button>
-                <button
-                  disabled={disableSubmit}
-                  onClick={
-                    !mode ? handleCreateNewCarePlan : handleUpdateCarePlan
-                  }
-                  className="bg-[#5BC4BF] text-white p-2 w-[150px] font-normal text-base rounded-sm disabled:cursor-not-allowed"
-                >
-                  Save
-                </button>
+                {mode === "approve" ? (
+                  formData?.approver_name?.id &&
+                  userInfo?.user_id === formData?.approver_name?.id && (
+                    <>
+                      <button
+                        // onClick={}
+                        className="border border-[#5BC4BF] w-[150px] font-normal text-base rounded-sm p-2 mr-3"
+                      >
+                        Reject
+                      </button>
+                      <button
+                        // onClick={}
+                        className="bg-[#5BC4BF] text-white p-2 w-[150px] font-normal text-base rounded-sm disabled:cursor-not-allowed"
+                      >
+                        Approve
+                      </button>
+                    </>
+                  )
+                ) : (
+                  <>
+                    <button
+                      onClick={() => navigate(`/clientchart/${clientId}`)}
+                      className="border border-[#5BC4BF] w-[150px] font-normal text-base rounded-sm p-2 mr-3"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      disabled={disableSubmit}
+                      onClick={
+                        !mode ? handleCreateNewCarePlan : handleUpdateCarePlan
+                      }
+                      className="bg-[#5BC4BF] text-white p-2 w-[150px] font-normal text-base rounded-sm disabled:cursor-not-allowed"
+                    >
+                      Save
+                    </button>
+                  </>
+                )}
               </div>
               <ApprovalSelection
                 userOptions={userOptions}
