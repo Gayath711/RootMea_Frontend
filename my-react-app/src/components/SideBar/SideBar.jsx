@@ -71,6 +71,11 @@ let sidebarLinks = [
         to: "/program-directory",
         title: "Program  Directory",
       },
+      {
+        id: "client-directory",
+        to: "/client-directory",
+        title: "Client  Directory",
+      },
     ],
   },
   {

@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../css/Sidebar.css";
@@ -215,6 +215,7 @@ const errorInitialValues = {
 
 const ClientProfile = ({ isNew }) => {
   const { clientId } = useParams();
+  const location = useLocation();
   const [isEditable, setIsEditable] = useState(!isNew);
   const [clientData, setClientData] = useState(initialValues);
   const [errors, setErrors] = useState(errorInitialValues);
@@ -339,6 +340,14 @@ const ClientProfile = ({ isNew }) => {
       fetchBadge();
     }
   }, [clientId, isNew]);
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const mode = queryParams.get("mode");
+    if (mode === "edit") {
+      handleEdit();
+    }
+  }, []);
 
   const handleFieldChange = (field, value) => {
     setClientData((prevData) => ({
