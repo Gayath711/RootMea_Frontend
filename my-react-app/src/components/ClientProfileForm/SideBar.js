@@ -35,8 +35,8 @@ const Sidebar = ({ handleClick, isNew, isEditable }) => {
             <div className="px-0">
               {showSidebar && (
                 <ul className="ml-5 text-md">
-                  {
-                    /*<button onClick={() => handleClick(1)}>
+                   {
+                    <button onClick={() => handleClick(1)}>
                                         <li className=" flex items-center mt-10">
                                           <img
                                             src={GeneralInformationPNG}
@@ -45,7 +45,7 @@ const Sidebar = ({ handleClick, isNew, isEditable }) => {
                                           />
                                           <p className="">General Information</p>
                                         </li>
-                                      </button>*/
+                                      </button>
                   }
 
                   <button onClick={() => handleClick(2)}>

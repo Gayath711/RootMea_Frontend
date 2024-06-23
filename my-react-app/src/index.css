@@ -5,15 +5,15 @@
 
 body {
   margin: 0;
-  /* font-family: "Poppins", sans-serif; */
+  font-family: "Poppins", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
+/* code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
-}
+} */
 
 .custom-modal .modal-content {
   width: 60vw; /* Adjust the width as needed */

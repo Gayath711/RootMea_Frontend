@@ -45,7 +45,7 @@ const TopStats = () => {
         <div id="top-stats-7 clientCount" className="mx-auto my-auto p-3 rounded-md bg-[#D9F0EF] text-[#43B09C]" >
           <span>{clientCount}</span>
         </div>
-        <div id="top-stats-8 programCount" className="mx-auto my-auto p-3 rounded-md bg-[#E6EAED] text-[#1F4B51]">
+        <div id="top-stats-8 programCount" className="mx-auto my-auto px-4 py-3 rounded-md bg-[#E6EAED] text-[#1F4B51]">
           <span>{programCount}</span>
         </div>
       </div>

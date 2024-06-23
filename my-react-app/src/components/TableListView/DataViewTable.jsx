@@ -39,7 +39,7 @@ export default function DataViewTable({ saveSuccess, setSaveSuccess }) {
         // Add a hardcoded client_id to each row if it doesn't exist
         const modifiedData = response.data.data.map((row, index) => ({
           ...row,
-          client_id: row.client_id || `client_${index + 1}`, // Use existing client_id or create a new one
+          client_id: Number(row.id)
         }));
   
         setState({
@@ -51,6 +51,20 @@ export default function DataViewTable({ saveSuccess, setSaveSuccess }) {
         console.error("Error fetching Client Medication Data:", error);
       });
   }, [saveSuccess]);
+
+  const updatedDataApi = async (payload) => {
+    console.log(payload)
+    try {
+      const response = await axios.patch(
+        `${apiURL}/priority_list/mapping/`,
+        payload, // Send updateData as the request payload
+
+      );
+      console.log(response);
+    } catch (error) {
+      console.error('Error updating data:', error);
+    }
+  };
 
   const handleCellEdit = (rowIndex, columnId, newValue) => {
     setState((prevState) => {
@@ -70,6 +84,7 @@ export default function DataViewTable({ saveSuccess, setSaveSuccess }) {
       }
       // Log the edit information
       console.log(data);
+      updatedDataApi(data)
   
       return {
         ...prevState,
@@ -86,21 +101,6 @@ export default function DataViewTable({ saveSuccess, setSaveSuccess }) {
 
   const handleEditCancel = () => {
     setEditingCell(null);
-  };
-
-
-  const updatedDataApi = async (payload) => {
-    console.log(payload)
-    try {
-      const response = await axios.patch(
-        `${apiURL}/priority_list/mapping/`,
-        payload, // Send updateData as the request payload
-
-      );
-      console.log(response);
-    } catch (error) {
-      console.error('Error updating data:', error);
-    }
   };
 
   return (

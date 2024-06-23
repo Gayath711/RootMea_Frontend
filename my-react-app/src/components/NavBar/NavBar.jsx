@@ -19,8 +19,8 @@ import {
 } from "../../store/slices/utilsSlice";
 
 const Navbar = React.memo(({ onLogout, isMinimized }) => {
-  console.log("Navbar re-rendered")
-  const navigate = useNavigate(); // Initialize navigate function
+  console.log("Navbar re-rendered");
+  const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [profileType, setProfileType] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -71,12 +71,26 @@ const Navbar = React.memo(({ onLogout, isMinimized }) => {
   }, []);
 
   const logout = useCallback(() => {
-    localStorage.removeItem("access_token"); // Remove access token
+    localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
-    localStorage.setItem("isLoggedIn", false); // Set isLoggedIn to false
-    onLogout(); // Call the onLogout function passed as a prop (if needed)
-    navigate("/"); // Redirect to the login page
+    localStorage.setItem("isLoggedIn", false);
+    onLogout();
+    navigate("/");
   }, [onLogout, navigate]);
+
+  // Handle click outside dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (anchorEl && !anchorEl.contains(event.target)) {
+        handleClose();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [anchorEl, handleClose]);
 
   return (
     <nav
