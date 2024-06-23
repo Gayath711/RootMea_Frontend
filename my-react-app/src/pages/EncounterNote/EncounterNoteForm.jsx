@@ -1,9 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import PageTitle from "../../components/PageTitle/PageTitle";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import InputElement from "../../components/dynamicform/FormElements/InputElement";
@@ -69,7 +64,6 @@ function FormWrapper({
 }
 
 function convertToTimeString(date) {
-  
   return (
     date?.getHours() +
     ":" +
@@ -372,6 +366,7 @@ function BillingComments({ mode, handleFormDataChange, formData, userInfo }) {
 
 function EncounterNoteForm() {
   const [mode, setMode] = useState("new");
+  const [buttonMode, setButtonMode] = useState("");
 
   const { clientId } = useParams();
   const [clientDetails, setClientDetails] = useState({});
@@ -379,7 +374,7 @@ function EncounterNoteForm() {
   const [carePlanOptions, setCarePlanOptions] = useState([]);
   const [facilityOptions, setFacilityOptions] = useState([]);
   const [programOptions, setProgramOptions] = useState([]);
-  const [ Client_Type, setClient_Type] = useState([]);
+  const [Client_Type, setClient_Type] = useState([]);
   const [userOptions, setUserOptions] = useState([]);
   const [templateOptions, setTemplateOptions] = useState([]);
   const [selectedTemplates, setSelectedTemplates] = useState([]);
@@ -398,11 +393,11 @@ function EncounterNoteForm() {
 
   const [customFields, setCustomFields] = useState([]);
   const [dndItems, setDndItems] = useState([]);
+  const [encounterViewItems, setEncounterViewItems] = useState(false);
   const [deletedCustomFields, setDeletedCustomFields] = useState([]);
 
   let customFieldsTags = useMemo(() => {
     return customFields.map((field) => {
-      
       let cf = {
         datatype: field?.type,
         question: field?.props?.label,
@@ -435,8 +430,6 @@ function EncounterNoteForm() {
       })
       .filter(Boolean);
   }, [deletedCustomFields]);
-
-  
 
   const parseToDnDCustomFields = (items) => {
     return items.map((itm) => {
@@ -490,17 +483,23 @@ function EncounterNoteForm() {
     });
   };
 
-  const [showCutomFields, setShowCustomFields] = useState(false);
+  
 
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  
+  const [prevFormData, setPrevFormData] = useState(null)
+
   const encounterId = queryParams.get("encounterId");
   useEffect(() => {
     const mode = queryParams.get("mode");
-    setMode(mode);
-
+    if (mode) {
+      setMode(mode);
+      setButtonMode(mode);
+    } else {
+      setMode("add");
+      setButtonMode("add");
+    }
     if (
       (mode === "edit" || mode === "view") &&
       queryParams.get("encounterId")
@@ -508,9 +507,14 @@ function EncounterNoteForm() {
       const fetchClientEncounterDetails = async () => {
         try {
           const response = await protectedApi.get(
-            `/encounter-notes/`
+            `/encounter-notes/${encounterId}`
           );
-          const data = response.data;
+          const data = await response.data;
+          console.log(data?.custom_fields);
+          setPrevFormData(data)
+          console.log(data)
+          setEncounterViewItems(true);
+          setDndItems(data?.custom_fields);
           data.custom_fields = JSON.stringify(data.custom_fields);
           setStartTime(
             convertTimeToISOString(data.encounter_date, data.start_time)
@@ -556,7 +560,7 @@ function EncounterNoteForm() {
           if (!data?.billing_comments) {
             data.billing_comments = [];
           }
-          
+
           setFormData(data);
 
           // CustomFields
@@ -572,12 +576,9 @@ function EncounterNoteForm() {
   const [tableNames, setTableName] = useState(null);
   const [tableColumns, setTableColumn] = useState(null);
   const fetchDropdownOptions = async (tableName, tableColumns) => {
-    
     setTableName(tableName);
     const newDroplist = {};
     for (const column of tableColumns) {
-      
-
       if (
         column.type === "USER-DEFINED" ||
         ((column.type === "USER-DEFINED" || column.type === "ARRAY") &&
@@ -594,7 +595,6 @@ function EncounterNoteForm() {
           });
           const dropdownOptions = response.data.enum_labels;
           newDroplist[enumType] = dropdownOptions;
-          
         } catch (error) {
           console.error(
             "Error fetching dropdown options for",
@@ -637,17 +637,21 @@ function EncounterNoteForm() {
         header_response?.data?.columns
       );
       setDndItems(header_response?.data?.columns);
-
+      console.log(header_response?.data?.columns);
       setTableColumn(header_response?.data?.columns);
     } catch (error) {
       console.error("Error fetching table headers:", error);
     }
   };
-  
+
   const handleFormDataChange = useCallback(
     (fieldName, value) => {
+      if (fieldName === "Client_Type") {
+        setEncounterViewItems(false);
+      }
+
       fieldName === "Client_Type" && fetchTableHeaders(value);
-      console.log("callback called", fieldName, value);
+
       setFormData((prevData) => ({ ...prevData, [fieldName]: value }));
     },
 
@@ -758,8 +762,6 @@ function EncounterNoteForm() {
   useEffect(() => {
     fetchClientOptions()
       .then((fetchClientOptions) => {
-        console.log("from_client", fetchClientOptions?.matching_tables);
-
         const convertedFormOptions = fetchClientOptions.matching_tables.map(
           (formName) => ({
             label: formName,
@@ -850,18 +852,19 @@ function EncounterNoteForm() {
   }, []);
 
   const disableSubmit = useMemo(() => {
-    return (
-      !formData?.staff_name ||
-      !formData?.encounter_date ||
-      !formData?.facility ||
-      !formData?.start_time ||
-      !formData?.encounter_type ||
-      !formData?.end_time ||
-      !formData?.encounter_status ||
-      !formData?.program ||
-      !formData?.note_template
-    );
-  }, [formData]);
+  return (
+    !formData?.staff_name ||
+    !formData?.encounter_date ||
+    !formData?.facility ||
+    !formData?.start_time ||
+    !formData?.encounter_type ||
+    !formData?.end_time ||
+    !formData?.encounter_status ||
+    !formData?.program ||
+    (mode !== 'edit' && !formData?.Client_Type)
+  );
+}, [formData, mode]);
+
 
   const handleCreatePayload = () => {
     const {
@@ -874,6 +877,7 @@ function EncounterNoteForm() {
       encounter_type,
       program,
       note_template,
+      Client_Type,
       custom_fields,
       encounter_summary_text_template,
       encounter_summary,
@@ -904,6 +908,7 @@ function EncounterNoteForm() {
     encounter_type && formDataPayload.append("encounter_type", encounter_type);
     program && formDataPayload.append("program", program);
     note_template && formDataPayload.append("note_template", note_template);
+    Client_Type && formDataPayload.append("Client_Type", Client_Type);
     form_completion_date &&
       formDataPayload.append("form_completion_date", form_completion_date);
     // custom_fields !== undefined &&
@@ -989,7 +994,7 @@ function EncounterNoteForm() {
           ) || []
         )
       );
-    console.log(billing_status, billing_comments);
+
     billing_status?.length
       ? formDataPayload.append(
           "billing_status",
@@ -1025,8 +1030,6 @@ function EncounterNoteForm() {
     }
 
     // DND Custom Fields
-
-    
 
     // let tags = customFields.map((field) => {
     //   console.log({ xx_field: field });
@@ -1067,9 +1070,11 @@ function EncounterNoteForm() {
   const handleCreate = async () => {
     try {
       const formDataPayload = await handleCreatePayload();
+          
+
       const response = await protectedApi.post(
         "/encounter-notes/",
-        formDataPayload 
+        formDataPayload
       );
       if (response.status === 201) {
         setFormData({ client_id: clientId, staff_name: "Temporary User" });
@@ -1085,11 +1090,13 @@ function EncounterNoteForm() {
     }
   };
 
+  
+
   const handleUpdate = async () => {
-    
     try {
       const formDataPayload = handleCreatePayload();
-      console.log("formDataPayload", formDataPayload);
+      console.log(formData)
+      console.log(prevFormData)
       const response = await protectedApi.put(
         `/encounter-notes-update/${encounterId}/`,
         formDataPayload
@@ -1103,8 +1110,18 @@ function EncounterNoteForm() {
     }
   };
 
-  const [viewMode, setViewMode] = useState(true)
-  const [editMode, setEditMode] = useState(true)
+  console.log(mode);
+
+  // Combine conditions
+    const isDisabled = useMemo(() => {
+    if (mode === 'edit') {
+      // Additional check for formData === prevFormData when mode is edit
+      return disableSubmit || mode === 'view' || JSON.stringify(formData) === JSON.stringify(prevFormData);
+    } else {
+      // For other modes, use the default disableSubmit condition
+      return disableSubmit || mode === 'view';
+    }
+  }, [disableSubmit, mode, formData, prevFormData]);
 
   return (
     <div className="mx-1" style={{ fontFamily: "poppins" }}>
@@ -1361,6 +1378,8 @@ function EncounterNoteForm() {
                 }
               />
             </div>
+            {
+            /*
             <div className="col-span-6">
               <DropDown
                 name="note_template"
@@ -1387,6 +1406,8 @@ function EncounterNoteForm() {
                 selectedOption={formData?.note_template || ""}
               />
             </div>
+            */
+            }
             <div className="col-span-6">
               <DropDown
                 name="Client_Type"
@@ -1404,29 +1425,25 @@ function EncounterNoteForm() {
               />
             </div>
           </FormWrapper>
-          {tableColumns ? (
-          
+          {tableColumns || encounterId ? (
             <>
-              
-            
-
-
               <CustomFieldsForEncounter
                 id={10}
                 onChange={(dndItms) => {
-                  console.log(dndItms, "inside change")
+                  console.log(dndItms, "inside change");
                   setCustomFields(dndItms);
                 }}
                 dndItems={dndItems}
+                encounterViewItems={encounterViewItems}
                 viewMode={mode === "encounterView"}
                 mode={"edit"}
                 setMode={setMode}
                 tableColumns={tableColumns}
-                
               />
-              
             </>
           ) : (
+            <>
+              {/*
             <FormWrapper
               label="Custom Fields"
               isCollapsable={true}
@@ -1446,7 +1463,8 @@ function EncounterNoteForm() {
                   viewMode={mode === "view"}
                 />
               </div>
-            </FormWrapper>
+            </FormWrapper>*/}
+            </>
           )}
 
           <FormWrapper label="Encounter Summary">
@@ -1643,13 +1661,17 @@ function EncounterNoteForm() {
           >
             Cancel
           </button>
-          <button
-            // disabled={disableSubmit || mode === "view"}
-            onClick={mode === "encounterMode" ? handleCreate :handleUpdate}
-            className="border border-keppel rounded-[3px] disabled:cursor-not-allowed disabled:bg-[#6cd8d3] bg-[#5BC4BF] text-white w-32 py-2"
-          >
-            Save
-          </button>
+          {buttonMode === "edit" || buttonMode === "add" ? (
+            <button
+              disabled={isDisabled}
+              onClick={mode === "edit" ? handleUpdate : handleCreate}
+              className="border border-keppel rounded-[3px] disabled:cursor-not-allowed disabled:bg-[#6cd8d3] bg-[#5BC4BF] text-white w-32 py-2"
+            >
+              Save
+            </button>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </div>
