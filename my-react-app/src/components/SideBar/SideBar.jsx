@@ -74,6 +74,16 @@ const sidebarLinks = [
         to: "/client-directory",
         title: "Client  Directory",
       },
+      {
+        id: "facility",
+        to: "/facility",
+        title: "Facility",
+      },
+      {
+        id: "department",
+        to: "/department",
+        title: "Department",
+      },
     ],
   },
   {

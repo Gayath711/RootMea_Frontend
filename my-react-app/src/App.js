@@ -80,6 +80,8 @@ import TableListView from "./components/TableListView";
 import DataView from "./components/TableListView/DataView";
 
 import ScrollToTop from "./components/ScrollToTop";
+import Facility from "./components/Facility";
+import Department from "./components/Department";
 
 function App() {
   // Retrieve isLoggedIn state from localStorage on initial render
@@ -337,6 +339,9 @@ function App() {
                     path="/client-directory"
                     element={<ClientDirectory />}
                   />
+
+                  <Route path="/facility" element={<Facility />} />
+                  <Route path="/department" element={<Department />} />
                 </Routes>
               </div>
             </div>
