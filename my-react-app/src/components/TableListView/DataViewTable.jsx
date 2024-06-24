@@ -8,6 +8,7 @@ import apiURL from "../../apiConfig";
 import MUIDataGridWrapper from "../HOC/MUIDataGridWrapper";
 import BasicTable from "../react-table/BasicTable";
 import EditableTable from "../react-table/EditTable";
+import { notifySuccess } from "../../helper/toastNotication";
 
 export default function DataViewTable({ saveSuccess, setSaveSuccess }) {
   const token = localStorage.getItem("access_token");
@@ -58,8 +59,8 @@ export default function DataViewTable({ saveSuccess, setSaveSuccess }) {
       const response = await axios.patch(
         `${apiURL}/priority_list/mapping/`,
         payload, // Send updateData as the request payload
-
       );
+      notifySuccess("Changes updated");
       console.log(response);
     } catch (error) {
       console.error('Error updating data:', error);

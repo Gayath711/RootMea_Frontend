@@ -262,7 +262,7 @@ function PriorityListNew() {
             Customize view
           </a>
 
-          <Modal show={show} onHide={handleClose} className="custom-modal">
+          {/* <Modal show={show} onHide={handleClose} className="custom-modal">
             <Modal.Header closeButton className="custom-modal-header">
               <Modal.Title>Available and Selected Items</Modal.Title>
             </Modal.Header>
@@ -370,7 +370,7 @@ function PriorityListNew() {
                 Save Changes
               </button>
             </Modal.Footer>
-          </Modal>
+          </Modal> */}
         </div>
       </div>
       <hr id="priority-list-6" className="w-[98%] mx-auto my-2" />
