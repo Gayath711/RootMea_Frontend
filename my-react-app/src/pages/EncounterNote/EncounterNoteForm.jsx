@@ -376,20 +376,63 @@ function EncounterSummaryPopup({
   setSelectedTemplate,
   selectedTemplates,
   setSelectedTemplates,
-  handleAddTemplate,
-  selectedQuestions,
+  formData,
+  setFormData,
 }) {
-  console.log("popup rendered");
+  const [questionsBackup, setQuestionsBackup] = useState([]);
   const [questions, setQuestions] = useState([]);
+
+  const selectedQuestions = useMemo(() => {
+    let encounterSummary = {};
+    encounterSummary = {};
+    if (formData.encounter_summary !== undefined) {
+      formData.encounter_summary.split("\n").forEach((line) => {
+        const [key, value] = line.split(":");
+        if (key !== undefined && typeof key === "string" && key.trim() !== "") {
+          encounterSummary[key.trim()] = (value || "").trim() + "\n";
+        }
+      });
+    }
+    // }
+    return encounterSummary;
+  }, [formData]);
+
+  useEffect(() => {
+    setQuestionsBackup(
+      selectedTemplate?.questions?.filter(
+        (q) => selectedQuestions[q] !== undefined
+      ) || []
+    );
+  }, []);
+
+  const handleUpdateQuestions = useCallback(
+    ({ addedQuestions, removedQuestions }) => {
+      setFormData((prev) => {
+        const encounterSummary = { ...selectedQuestions };
+        addedQuestions.forEach((q) => {
+          encounterSummary[q] = "\n";
+        });
+        removedQuestions.forEach((q) => {
+          delete encounterSummary[q];
+        });
+        let formattedTemplates = "";
+        Object.keys(encounterSummary).forEach((key) => {
+          formattedTemplates += `${key}: ${encounterSummary[key]}`;
+        });
+
+        return {
+          ...prev,
+          encounter_summary: formattedTemplates,
+        };
+      });
+    },
+    [selectedQuestions]
+  );
 
   const allSelected = useMemo(() => {
     const allChecked = questions.every((q) => q.checked);
     return allChecked;
   }, [questions]);
-
-  useEffect(() => {
-    console.log("allSelected", allSelected);
-  }, [allSelected]);
 
   const allUnselected = useMemo(() => {
     const allUnchecked = questions.every((q) => !q.checked);
@@ -407,15 +450,9 @@ function EncounterSummaryPopup({
     }
   }, [selectedTemplate]);
 
-  const handleDiscard = useCallback(async () => {
-    const prevTemplates = [...selectedTemplates];
-    setSelectedTemplates((prev) => {
-      return prevTemplates.filter(
-        (template) => template.value.id !== selectedTemplate.id
-      );
-    });
+  const handleDiscard = useCallback(() => {
     setSelectedTemplate(null);
-  }, [selectedTemplates]);
+  }, []);
 
   const handleCheckUncheck = useCallback(({ index, value }) => {
     setQuestions((prev) => {
@@ -429,11 +466,28 @@ function EncounterSummaryPopup({
     const selectedQuestions = questions
       .filter((q) => q.checked)
       .map((q) => q.label);
-    if (selectedQuestions.length === 0) {
-      handleDiscard();
-      return;
+
+    const removedQuestions = questionsBackup.filter(
+      (q) => !selectedQuestions.includes(q)
+    );
+    const addedQuestions = selectedQuestions.filter(
+      (q) => !questionsBackup.includes(q)
+    );
+
+    handleUpdateQuestions({ addedQuestions, removedQuestions });
+
+    if (allUnselected) {
+      setSelectedTemplates((prev) =>
+        prev.filter((t) => t.value.id !== selectedTemplate.id)
+      );
+    } else if (
+      !selectedTemplates.find((t) => t.value.id === selectedTemplate.id)
+    ) {
+      setSelectedTemplates((prev) => [
+        ...prev,
+        { label: selectedTemplate.text_template, value: selectedTemplate },
+      ]);
     }
-    handleAddTemplate({ questions: selectedQuestions });
     setSelectedTemplate(null);
   }, [questions]);
 
@@ -454,8 +508,6 @@ function EncounterSummaryPopup({
       maxWidth="sm"
       fullWidth
     >
-      {/* <DialogContent> */}
-      {/* Header */}
       <div className="flex justify-between items-center mx-4 my-2">
         <div>
           <FormControlLabel
@@ -499,52 +551,11 @@ function EncounterSummaryPopup({
         </button>
         <button
           onClick={handleSubmit}
-          disabled={allUnselected}
           className="border border-keppel rounded-[3px] disabled:opacity-70 disabled:cursor-not-allowed disabled:bg-[#6cd8d3] bg-[#5BC4BF] text-white w-32 py-2"
         >
           Confirm
         </button>
       </div>
-
-      {/* Body */}
-      {/* <DialogContentText id="alert-dialog-description">
-            <div className="w-full px-3 py-2.5 text-xl font-medium flex justify-between">
-              Request Approval
-              <img
-                src={CancelRoundedIcon}
-                onClick={handleDiscard}
-                alt="CloseIcon"
-                className="cursor-pointer"
-              />
-            </div>
-            <div className="mt-4 gap-2 flex-col">
-              <BasicTable
-                type={"referralPrograms"}
-                columns={columns}
-                data={userOptions.map((record, index) => ({
-                  ...record,
-                  srNo: `${index}`,
-                }))}
-              />
-              <div className="flex item-center justify-center">
-                <button
-                  onClick={handleDiscard}
-                  className="border border-[#5BC4BF] w-[150px] font-normal text-base text-black rounded-[3px] p-2 mr-3"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-            {openAlert && (
-              <AlertConfirmation
-                open={openAlert}
-                handleClose={closeAlret}
-                onConfirm={onConfirmClick}
-                onDiscard={onDiscardClick}
-              />
-            )}
-          </DialogContentText> */}
-      {/* </DialogContent> */}
     </Dialog>
   );
 }
@@ -841,122 +852,6 @@ function EncounterNoteForm() {
     },
 
     [formData]
-  );
-
-  const selectedQuestions = useMemo(() => {
-    let encounterSummary = {};
-    // try {
-    //   encounterSummary = JSON.parse(formData.encounter_summary || "{}");
-    // } catch (e) {
-    encounterSummary = {};
-    if (formData.encounter_summary !== undefined) {
-      formData.encounter_summary.split("\n").forEach((line) => {
-        const [key, value] = line.split(":");
-        if (key !== undefined && typeof key === "string" && key.trim() !== "") {
-          encounterSummary[key.trim()] = (value || "").trim() + "\n";
-        }
-      });
-    }
-    // }
-    return encounterSummary;
-  }, [formData]);
-
-  const handleRemoveTemplate = useCallback(
-    ({ deletedTemplate }) => {
-      setFormData((prevData) => {
-        // let encounterSummary;
-        // try {
-        //   encounterSummary = JSON.parse(prevData.encounter_summary || "{}");
-        // } catch (e) {
-        //   encounterSummary = {};
-        //   prevData.encounter_summary.split("\n").forEach((line) => {
-        //     const [key, value] = line.split(":");
-        //     if (
-        //       key !== undefined &&
-        //       typeof key === "string" &&
-        //       key.trim() !== ""
-        //     ) {
-        //       encounterSummary[key.trim()] = (value || "").trim() + "\n";
-        //     }
-        //   });
-        // }
-
-        const encounterSummary = { ...selectedQuestions };
-        if (deletedTemplate) {
-          for (const q of deletedTemplate.value.questions) {
-            if (
-              encounterSummary[q] === undefined ||
-              encounterSummary[q] === "\n"
-            ) {
-              delete encounterSummary[q];
-            }
-          }
-        }
-
-        // if (newTemplate) {
-        //   newTemplate.value.questions.forEach((q) => {
-        //     if (encounterSummary[q] === undefined) {
-        //       encounterSummary[q] = "\n";
-        //     }
-        //   });
-        // }
-
-        let formattedTemplates = "";
-
-        Object.keys(encounterSummary).forEach((key) => {
-          formattedTemplates += `${key}: ${encounterSummary[key]}`;
-        });
-
-        return {
-          ...prevData,
-          encounter_summary: formattedTemplates,
-        };
-      });
-    },
-    [selectedQuestions, formData]
-  );
-
-  const handleAddTemplate = useCallback(
-    ({ questions }) => {
-      setFormData((prevData) => {
-        // let encounterSummary;
-        // try {
-        //   encounterSummary = JSON.parse(prevData.encounter_summary || "{}");
-        // } catch (e) {
-        //   encounterSummary = {};
-        //   prevData.encounter_summary.split("\n").forEach((line) => {
-        //     const [key, value] = line.split(":");
-        //     if (
-        //       key !== undefined &&
-        //       typeof key === "string" &&
-        //       key.trim() !== ""
-        //     ) {
-        //       encounterSummary[key.trim()] = (value || "").trim() + "\n";
-        //     }
-        //   });
-        // }
-
-        const encounterSummary = { ...selectedQuestions };
-
-        questions.forEach((q) => {
-          if (encounterSummary[q] === undefined) {
-            encounterSummary[q] = "\n";
-          }
-        });
-
-        let formattedTemplates = "";
-
-        Object.keys(encounterSummary).forEach((key) => {
-          formattedTemplates += `${key}: ${encounterSummary[key]}`;
-        });
-
-        return {
-          ...prevData,
-          encounter_summary: formattedTemplates,
-        };
-      });
-    },
-    [selectedQuestions, formData]
   );
 
   useEffect(() => {
@@ -1350,8 +1245,6 @@ function EncounterNoteForm() {
     }
   };
 
-  console.log(mode);
-
   // Combine conditions
   const isDisabled = useMemo(() => {
     if (mode === "edit") {
@@ -1622,34 +1515,6 @@ function EncounterNoteForm() {
                 }
               />
             </div>
-            {/*
-            <div className="col-span-6">
-              <DropDown
-                name="note_template"
-                placeholder="Note Template *"
-                handleChange={(data) =>
-                  handleFormDataChange("note_template", data.value)
-                }
-                isEdittable={mode === "view"}
-                className="border-keppel m-1 h-[37.6px]"
-                height="37.6px"
-                fontSize="14px"
-                borderColor="#5bc4bf"
-                options={[
-                  {
-                    label: "ECM Enabling Service",
-                    value: "ECM Enabling Service",
-                  },
-                  { label: "Program Intake", value: "Program Intake" },
-                  { label: "Progress Note", value: "Progress Note" },
-                  { label: "Reassessment", value: "Reassessment" },
-                  { label: "A1c Outreach", value: "A1c Outreach" },
-                  { label: "STRIVE Encounter", value: "STRIVE Encounter" },
-                ]}
-                selectedOption={formData?.note_template || ""}
-              />
-            </div>
-            */}
             <div className="col-span-6">
               <DropDown
                 name="Client_Type"
@@ -1719,48 +1584,41 @@ function EncounterNoteForm() {
                 disabled={mode === "view"}
                 onChange={useCallback(
                   (data) => {
-                    setSelectedTemplates((template) => {
-                      let newTemplates = data?.filter(
-                        (d) =>
-                          template?.find((t) => t.value.id === d.value.id) ===
+                    let newTemplates = data?.filter(
+                      (d) =>
+                        selectedTemplates?.find(
+                          (t) => t.value.id === d.value.id
+                        ) === undefined
+                    );
+
+                    let deletedTemplates = [];
+                    if (newTemplates?.length !== 1) {
+                      deletedTemplates = selectedTemplates?.filter(
+                        (t) =>
+                          data?.find((d) => d.value.id === t.value.id) ===
                           undefined
                       );
+                    }
 
-                      let deletedTemplates = [];
-                      if (newTemplates?.length !== 1) {
-                        deletedTemplates = template?.filter(
-                          (t) =>
-                            data?.find((d) => d.value.id === t.value.id) ===
-                            undefined
-                        );
-                      }
+                    if (deletedTemplates?.length !== 1) {
+                      deletedTemplates = null;
+                    } else {
+                      deletedTemplates = deletedTemplates[0];
+                    }
 
-                      if (deletedTemplates?.length !== 1) {
-                        deletedTemplates = null;
-                      } else {
-                        deletedTemplates = deletedTemplates[0];
-                      }
+                    if (newTemplates?.length !== 1) {
+                      newTemplates = null;
+                    } else {
+                      newTemplates = newTemplates[0];
+                    }
 
-                      if (newTemplates?.length !== 1) {
-                        newTemplates = null;
-                      } else {
-                        newTemplates = newTemplates[0];
-                      }
-
-                      if (deletedTemplates) {
-                        handleRemoveTemplate({
-                          deletedTemplate: deletedTemplates,
-                        });
-                      }
-
-                      if (newTemplates) {
-                        setSelectedTemplate(newTemplates?.value);
-                      }
-
-                      return data;
-                    });
+                    if (deletedTemplates) {
+                      setSelectedTemplate(deletedTemplates?.value);
+                    } else {
+                      setSelectedTemplate(newTemplates?.value);
+                    }
                   },
-                  [formData]
+                  [formData, selectedTemplates]
                 )}
                 options={templateOptions}
               />
@@ -1946,12 +1804,13 @@ function EncounterNoteForm() {
 
       {selectedTemplate !== null && (
         <EncounterSummaryPopup
+          formData={formData}
+          setFormData={setFormData}
           selectedTemplate={selectedTemplate}
           setSelectedTemplate={setSelectedTemplate}
           selectedTemplates={selectedTemplates}
           setSelectedTemplates={setSelectedTemplates}
-          handleAddTemplate={handleAddTemplate}
-          selectedQuestions={selectedQuestions}
+          // selectedQuestions={selectedQuestions}
         />
       )}
     </div>
