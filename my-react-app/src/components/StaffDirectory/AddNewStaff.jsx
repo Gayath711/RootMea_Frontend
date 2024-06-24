@@ -187,6 +187,16 @@ export default function AddNewStaff() {
                 })
               : [],
             NavigationClients: "",
+            Navigator: data?.is_navigator || false,
+            PermissionGroup: data?.groups
+              ? data.groups.map((item) => {
+                  return {
+                    ...item,
+                    label: item.name,
+                    value: item.id,
+                  };
+                })
+              : [],
           };
         });
       })
@@ -277,10 +287,10 @@ export default function AddNewStaff() {
 
   const fetchPermissions = async () => {
     try {
-      const { data } = await axios.get("/api/permission-category");
+      const { data } = await axios.get("/api/groups");
       let options = data.map((item) => {
         return {
-          label: item.subcategory_name || item.category_name,
+          label: item.name,
           value: item.id,
           ...item,
         };
@@ -346,6 +356,7 @@ export default function AddNewStaff() {
     if (fieldValidation()) {
       setIsSubmitting(true);
       try {
+        console.log({ formDetail });
         // Concatenate first name and last name, remove spaces, and keep alphanumeric characters
         const username = `${formDetail.FirstName}${formDetail.LastName}`
           .replace(/\s+/g, "") // Remove spaces
@@ -359,13 +370,13 @@ export default function AddNewStaff() {
           groups: formDetail.PermissionGroup.map((each) => {
             return each.id;
           }),
-          navigator: formDetail.Navigator,
+          is_navigator: formDetail.Navigator,
         };
 
         let phone_no = formDetail.PhoneNumber || "";
         let position = formDetail.PositionTitle?.id || "";
 
-        let facility = formDetail.PrimaryFaculity?.id || "";
+        let facility = formDetail.PrimaryFacility?.id || "";
         // let supervisor = formDetail.Supervisor?.id || "";
 
         let program = formDetail.Programs.map((each) => {
@@ -432,7 +443,7 @@ export default function AddNewStaff() {
         notifySuccess(`Staff ${isEdit ? "Updated" : "Added"} successfully`);
         navigate(`/staff-directory/${response.data.id}`, { replace: true });
       } catch (error) {
-        if (error.response.status === 400) {
+        if (error?.response?.status === 400) {
           if (error?.response?.data) {
             Object.keys(error.response.data).map((itm) => {
               error.response.data[itm].map((errMsg) => notifyError(errMsg));
