@@ -363,96 +363,79 @@ function ReactTable({ columns, data, striped, type, top, defaultPageSize, noMarg
   );
 }
 
+
 // ==============================|| REACT TABLE - BASIC ||============================== //
-const BasicTable = React.memo(
-  ({
-    data,
-    striped,
-    title,
-    columns,
-    type,
-    defaultPageSize,
-    noMargin,
-    editingCell,
-    editValue,
-    onEditStart,
-    onEditConfirm,
-    onEditCancel,
-    onEditChange,
+
+const EditableTable = React.memo(
+  ({ 
+    data, 
+    striped, 
+    title, 
+    columns, 
+    type, 
+    defaultPageSize, 
+    noMargin, 
+    editingCell, 
+    editValue, 
+    onEditStart, 
+    onEditConfirm, 
+    onEditCancel, 
+    onEditChange 
   }) => {
-    const enhancedColumns = useMemo(
-      () =>
-        columns.map((column) => ({
-          ...column,
-          Cell: ({ row, value }) => {
-            if (column.editable) {
-              const isEditing =
-                editingCell &&
-                editingCell.rowIndex === row.index &&
-                editingCell.columnId === column.id;
-
-              const handleKeyDown = (e) => {
-                if (e.key === "Enter") {
-                  onEditConfirm(editingCell.rowIndex, editingCell.columnId, editValue);
-                } else if (e.key === "Escape") {
-                  onEditCancel();
-                }
-              };
-
-              if (isEditing) {
-                return (
-                  <div className="bg-yellow-100">
-                    <input
-                      value={editValue}
-                      onChange={(e) => onEditChange(e.target.value)}
-                      onBlur={() =>
-                        onEditConfirm(editingCell.rowIndex, editingCell.columnId, editValue)
-                      }
-                      onKeyDown={handleKeyDown}
-                      autoFocus
-                      className="w-full bg-transparent"
-                    />
-                  </div>
-                );
-              } else {
-                return (
-                  <div
-                    className="bg-yellow-100 cursor-pointer"
-                    onClick={() => onEditStart(row.index, column.id, value)}
-                  >
-                    {value}
-                  </div>
-                );
-              }
+    const editableColumns = columns.map(column => ({
+      ...column,
+      Cell: ({ row, value, column }) => {
+        if (column.editable) {
+          const isEditing = editingCell && editingCell.rowIndex === row.index && editingCell.columnId === column.id;
+          
+          const handleKeyDown = (e) => {
+            if (e.key === 'Enter') {
+              onEditConfirm(editingCell.rowIndex, editingCell.columnId, editValue);
+            } else if (e.key === 'Escape') {
+              onEditCancel();
             }
+          };
 
-            // If the column has a custom Cell renderer, use it
-            if (column.Cell) {
-              return column.Cell({ row, value, column });
-            }
-
-            // Default rendering
-            return <div>{value}</div>;
-          },
-        })),
-      [columns, editingCell, editValue, onEditStart, onEditConfirm, onEditCancel, onEditChange]
-    );
+          if (isEditing) {
+            return (
+              <div className="bg-yellow-100">
+                <input
+                  value={editValue}
+                  onChange={(e) => onEditChange(e.target.value)}
+                  onBlur={() => onEditConfirm(editingCell.rowIndex, editingCell.columnId, editValue)}
+                  onKeyDown={handleKeyDown}
+                  autoFocus
+                  className="w-full bg-transparent"
+                />
+              </div>
+            );
+          } else {
+            return (  
+              <div 
+                className="bg-yellow-100 cursor-pointer" 
+                onClick={() => onEditStart(row.index, column.id, value)}
+              >
+                {value}
+              </div>
+            );
+          }
+        }
+        return <div>{value}</div>;
+      }
+    }));
 
     return (
-      <div>
-        {title && <h3>{title}</h3>}
-        <ReactTable
-          className=""
-          type={type}
-          columns={enhancedColumns}
-          data={data}
-          striped={striped}
-          defaultPageSize={defaultPageSize}
-          noMargin={noMargin}
-        />
-      </div>
+      <ReactTable
+        className=""
+        type={type}
+        columns={editableColumns}
+        data={data}
+        striped={striped}
+        defaultPageSize={defaultPageSize}
+        noMargin={noMargin}
+      />
     );
   }
 );
 
-export default BasicTable;
+export default EditableTable;

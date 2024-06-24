@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
@@ -18,29 +18,31 @@ import {
   selectIsSidebarExpanded,
 } from "../../store/slices/utilsSlice";
 
-const Navbar = ({ onLogout, isMinimized }) => {
-  const navigate = useNavigate(); // Initialize navigate function
+const Navbar = React.memo(({ onLogout, isMinimized }) => {
+  console.log("Navbar re-rendered");
+  const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [profileType, setProfileType] = useState(null);
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
   const isSidebarExpanded = useSelector(selectIsSidebarExpanded);
   const dispatch = useDispatch();
 
-  const handleToggleSidebar = () => {
+  const handleToggleSidebar = useCallback(() => {
     let payload = isSidebarExpanded ? false : true;
     dispatch(toggleSidebar(payload));
-  };
+  }, [isSidebarExpanded, dispatch]);
 
   const { width } = useWindowSize();
 
-  const handleClick = (event) => {
+  const handleClick = useCallback((event) => {
     setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
+  }, []);
+
+  const handleClose = useCallback(() => {
     setAnchorEl(null);
-  };
+  }, []);
 
   useEffect(() => {
     const fetchProfileType = async () => {
@@ -54,7 +56,6 @@ const Navbar = ({ onLogout, isMinimized }) => {
           throw new Error("Failed to fetch profile type");
         }
         const data = await response.json();
-        console.log(data);
         setProfileType(data.user_type);
       } catch (error) {
         console.error("Error fetching profile type:", error);
@@ -64,18 +65,32 @@ const Navbar = ({ onLogout, isMinimized }) => {
     fetchProfileType();
   }, []);
 
-  const handleDropdownToggle = (e) => {
+  const handleDropdownToggle = useCallback((e) => {
     e.preventDefault();
-    setDropdownOpen(!dropdownOpen);
-  };
+    setDropdownOpen((prev) => !prev);
+  }, []);
 
-  const logout = () => {
-    localStorage.removeItem("access_token"); // Remove access token
+  const logout = useCallback(() => {
+    localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
-    localStorage.setItem("isLoggedIn", false); // Set isLoggedIn to false
-    onLogout(); // Call the onLogout function passed as a prop (if needed)
-    navigate("/"); // Redirect to the login page
-  };
+    localStorage.setItem("isLoggedIn", false);
+    onLogout();
+    navigate("/");
+  }, [onLogout, navigate]);
+
+  // Handle click outside dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (anchorEl && !anchorEl.contains(event.target)) {
+        handleClose();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [anchorEl, handleClose]);
 
   return (
     <nav
@@ -156,6 +171,6 @@ const Navbar = ({ onLogout, isMinimized }) => {
       </div>
     </nav>
   );
-};
+});
 
 export default Navbar;

@@ -1,5 +1,7 @@
 import React, { useMemo } from "react";
-
+import axios from "axios";
+import apiURL from "../.././apiConfig";
+// import {state,setState} from "../PriorityListNew/PriorityListNew";
 // material-ui
 import {
   Box,
@@ -27,6 +29,8 @@ import {
 // project import
 import { CSVExport, TablePagination } from "./ReactTable";
 import { useWindowSize } from "../Utils/windowResize";
+import { useState } from 'react';
+import { components } from "react-select";
 
 const styles = {
   myPanel: {
@@ -195,47 +199,15 @@ const styles = {
       },
     },
   },
-  carePlanStatus: {
-    // client chart page
-    header: {
-      classes: "bg-[#41CEBA] border border-[#41CEBA]",
-      styles: {
-        color: "white",
-      },
-    },
-  },
-  intervention: {
-    // client chart page
-    header: {
-      classes: "bg-[#5BC4BF] border border-[#41CEBA]",
-      styles: {
-        color: "white",
-      },
-    },
-  },
-  billing: {
-    // Add document page
-    header: {
-      classes: "bg-[#76818E] border border-[#76818E]",
-      styles: {
-        color: "white",
-      },
-    },
-  },
-  referralsPage: {
-    // referrals page
-    header: {
-      classes: "bg-[#5BC4BF] border border-[#41CEBA]",
-      styles: {
-        color: "white",
-      },
-    },
-  },
 };
 
 // ==============================|| REACT TABLE ||============================== //
 
-function ReactTable({ columns, data, striped, type, top, defaultPageSize, noMargin }) {
+function ReactTable({ columns, data, striped, type, top, defaultPageSize }) {
+  const token = localStorage.getItem("access_token");
+
+  const [sortConfigs, setSortConfigs] = useState([]);
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -255,11 +227,62 @@ function ReactTable({ columns, data, striped, type, top, defaultPageSize, noMarg
     useFilters,
     usePagination
   );
-
+  const handleEdit = (row, header) => {
+    console.log("HANDLE EDIT");
+   console.log("Row", row);
+    console.log("Header", header);
+      
+}
+const handleDoubleClick = (rowId, columnId, value) => {
+  console.log("RowId", rowId);
+  console.log("ColumnId", columnId);
+  console.log("Value", value);
+  // setEditingCell({ rowId, columnId });
+  // setCellValue(value);
+};
   const { width } = useWindowSize();
+  const requestSort = (key) => {
+    const foundConfigIndex = sortConfigs.findIndex(config => config.key === key);
+    let newConfigs = [...sortConfigs];
+
+    if (foundConfigIndex !== -1) {
+      // If the key is already in sortConfigs, toggle its direction
+      const direction = newConfigs[foundConfigIndex].direction === 'ascending' ? 'descending' : 'ascending';
+      newConfigs[foundConfigIndex] = { key, direction };
+    } else {
+      // If the key is not in sortConfigs, add it with default direction
+      newConfigs = [...sortConfigs, { key, direction: 'ascending' }];
+    }
+    
+    setSortConfigs(newConfigs);
+    console.log("newConfigs", newConfigs);
+    const requestBody = {
+      "dataview": "Admin",
+      "sortby": newConfigs,
+    }
+      axios
+        .post(`${apiURL}/priority_list/mapping/`,requestBody, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          // console.log("/priority_list/mapping/");
+          // console.log(",response.data['columns']",response.data['columns'])
+          // console.log("Data",response.data['data'])
+          columns = response.data['columns'];
+          data = response.data['data'];
+            
+          
+        })
+        .catch((error) => {
+          console.error("Error fetching Client Medication Data:", error);
+        });
+
+  };
 
   return (
-    <Stack className={`flex-grow flex flex-col ${!noMargin ? "m-3" : ""}`}>
+    <Stack className="flex-grow flex flex-col m-3">
       {top && (
         <Box sx={{ p: 2 }}>
           <TablePagination
@@ -303,14 +326,26 @@ function ReactTable({ columns, data, striped, type, top, defaultPageSize, noMarg
                       { className: column.className },
                     ])}
                   >
-                    {column.render("Header")}
+                    <span onClick={() => requestSort(column.id)}>
+                      {column.render("Header")}
+                      {sortConfigs.map(config => {
+                        if (config.key === column.id) {
+                          return (
+                            <span key={config.key}>
+                              {config.direction === 'ascending' ? ' 🔼' : ' 🔽'}
+                            </span>
+                          );
+                        }
+                        return null;
+                      })}
+                    </span>
                   </TableCell>
                 ))}
               </TableRow>
             ))}
           </TableHead>
           <TableBody
-            style={{ border: "1px solid #EAECEB" }}
+            style={{ border: "1px solid #EAECEB", borderRadius: "16px" }}
             {...getTableBodyProps()}
             {...(striped && { className: "striped" })}
           >
@@ -323,7 +358,11 @@ function ReactTable({ columns, data, striped, type, top, defaultPageSize, noMarg
                   style={{ borderColor: "#EAECEB" }}
                   {...row.getRowProps()}
                 >
+                  
                   {row.cells.map((cell) => (
+                     
+                    //  console.log("Column", cell.column),
+                    //  console.log("Row", cell.row),
                     <TableCell
                       style={{
                         paddingTop: "8px",
@@ -336,10 +375,21 @@ function ReactTable({ columns, data, striped, type, top, defaultPageSize, noMarg
                       {...cell.getCellProps([
                         { className: cell.column.className },
                       ])}
-                    >
+
+                      
+                      onDoubleClick={() => handleDoubleClick(cell.row.id, cell.column.id, cell.value)}
+                      >
+                    
                       {cell.render("Cell")}
+                      
                     </TableCell>
-                  ))}
+                    
+                  )
+                  
+                  )
+                 
+                  }
+                   
                 </TableRow>
               );
             })}
@@ -347,8 +397,6 @@ function ReactTable({ columns, data, striped, type, top, defaultPageSize, noMarg
         </Table>
       </div>
       {!top && (
-        // <TableRow>
-        //   <TableCell sx={{ p: 2 }} colSpan={columns.length}>
         <TablePagination
           gotoPage={gotoPage}
           rows={rows}
@@ -356,101 +404,25 @@ function ReactTable({ columns, data, striped, type, top, defaultPageSize, noMarg
           pageIndex={pageIndex}
           pageSize={pageSize}
         />
-        //   </TableCell>
-        // </TableRow>
       )}
     </Stack>
   );
 }
 
 // ==============================|| REACT TABLE - BASIC ||============================== //
+
 const BasicTable = React.memo(
-  ({
-    data,
-    striped,
-    title,
-    columns,
-    type,
-    defaultPageSize,
-    noMargin,
-    editingCell,
-    editValue,
-    onEditStart,
-    onEditConfirm,
-    onEditCancel,
-    onEditChange,
-  }) => {
-    const enhancedColumns = useMemo(
-      () =>
-        columns.map((column) => ({
-          ...column,
-          Cell: ({ row, value }) => {
-            if (column.editable) {
-              const isEditing =
-                editingCell &&
-                editingCell.rowIndex === row.index &&
-                editingCell.columnId === column.id;
-
-              const handleKeyDown = (e) => {
-                if (e.key === "Enter") {
-                  onEditConfirm(editingCell.rowIndex, editingCell.columnId, editValue);
-                } else if (e.key === "Escape") {
-                  onEditCancel();
-                }
-              };
-
-              if (isEditing) {
-                return (
-                  <div className="bg-yellow-100">
-                    <input
-                      value={editValue}
-                      onChange={(e) => onEditChange(e.target.value)}
-                      onBlur={() =>
-                        onEditConfirm(editingCell.rowIndex, editingCell.columnId, editValue)
-                      }
-                      onKeyDown={handleKeyDown}
-                      autoFocus
-                      className="w-full bg-transparent"
-                    />
-                  </div>
-                );
-              } else {
-                return (
-                  <div
-                    className="bg-yellow-100 cursor-pointer"
-                    onClick={() => onEditStart(row.index, column.id, value)}
-                  >
-                    {value}
-                  </div>
-                );
-              }
-            }
-
-            // If the column has a custom Cell renderer, use it
-            if (column.Cell) {
-              return column.Cell({ row, value, column });
-            }
-
-            // Default rendering
-            return <div>{value}</div>;
-          },
-        })),
-      [columns, editingCell, editValue, onEditStart, onEditConfirm, onEditCancel, onEditChange]
-    );
-
+  ({ data, striped, title, columns, type, defaultPageSize }) => {
+    console.log(columns)
     return (
-      <div>
-        {title && <h3>{title}</h3>}
-        <ReactTable
-          className=""
-          type={type}
-          columns={enhancedColumns}
-          data={data}
-          striped={striped}
-          defaultPageSize={defaultPageSize}
-          noMargin={noMargin}
-        />
-      </div>
+      <ReactTable
+        className=""
+        type={type}
+        columns={columns}
+        data={data}
+        striped={striped}
+        defaultPageSize={defaultPageSize}
+      />
     );
   }
 );

@@ -1,21 +1,23 @@
+import React, { useState, useEffect, useCallback } from "react";
+import axios from "axios";
 import GreetingImage from "../images/greetingImg.svg";
 import DownArrowIcon from "../images/downArrow.svg";
 import "./GreetingCardStyles.css";
-import axios from "axios";
-import React, { useState, useEffect } from "react";
 import apiURL from '../../apiConfig';
 
 const GreetingCard = () => {
-
   const [username, setUsername] = useState("");
 
   useEffect(() => {
     fetchUsername();
   }, []);
 
-  const fetchUsername = async () => {
+  const fetchUsername = useCallback(async () => {
     try {
       const token = localStorage.getItem("access_token"); // Assuming you store the access token in localStorage
+      if (!token) {
+        throw new Error("No access token found");
+      }
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -26,7 +28,7 @@ const GreetingCard = () => {
     } catch (error) {
       console.error("Error fetching username:", error);
     }
-  };
+  }, []);
 
   return (
     <div id="greeting-card-one" className="flex justify-between items-center shadow-lg p-6 bg-gradient-to-r from-[#D9F0EF] to-[#5BC4BF] rounded-md col-span-5">
@@ -49,4 +51,4 @@ const GreetingCard = () => {
   );
 };
 
-export default GreetingCard;
+export default React.memo(GreetingCard);
