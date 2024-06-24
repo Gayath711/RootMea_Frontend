@@ -131,10 +131,17 @@ export default function PermissionsView({
 
   const tabsLabel = useMemo(() => {
     return permissionsData.map((itm) => {
+      console.log({ itm });
+
+      let displayLabel = itm.category_name;
+
+      if (itm.subcategory_name) {
+        displayLabel = itm.subcategory_name;
+      }
       return {
         id: itm.id,
         category_name: itm.category_name,
-        label: itm.id + ":" + itm.category_name,
+        label: itm.id + ":" + displayLabel,
       };
     });
   }, [permissionsData]);
@@ -158,6 +165,22 @@ export default function PermissionsView({
           aria-label="wrapped label tabs example"
           variant="scrollable"
           scrollButtons="auto"
+          sx={{
+            ".MuiTab-root": {
+              backgroundColor: "#fff",
+              color: "#000",
+              "&.Mui-selected": {
+                backgroundColor: "#5BC4BF",
+                color: "#ffffff",
+                borderBottom: "2px solid #5BC4BF",
+                zIndex: 1,
+              },
+            },
+            ".MuiTabs-indicator": {
+              backgroundColor: "#5BC4BF",
+              height: "100% !important",
+            },
+          }}
         >
           {tabsLabel.map((t) => (
             <Tab value={t.label} label={t.label.split(":")[1]} wrapped />
@@ -192,11 +215,11 @@ export default function PermissionsView({
                         // onChange={(e) => togglePermission(permission)}
                       />
                     </div>
-                    {category.subcategory_name && (
+                    {/* {category.subcategory_name && (
                       <h3 className="text-xs text-teal-600">
                         {category.subcategory_name}
                       </h3>
-                    )}
+                    )} */}
                     {category.permissions.length > 0 ? (
                       <ul className="mt-4">
                         {category.permissions.map((permission) => {
@@ -207,15 +230,33 @@ export default function PermissionsView({
                           return (
                             <li
                               key={permission.id}
-                              className="my-2 flex items-center justify-between"
+                              className="my-2 flex items-center gap-2"
                             >
-                              <span className="text-xs">{permission.name}</span>
-
                               <Switch
                                 size="small"
                                 checked={isActive}
                                 onChange={(e) => togglePermission(permission)}
+                                sx={{
+                                  "& .MuiSwitch-switchBase.Mui-checked": {
+                                    color: "rgb(45, 212, 191)",
+                                    "&:hover": {
+                                      backgroundColor:
+                                        "rgba(45, 212, 191, 0.08)",
+                                    },
+                                  },
+                                  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track":
+                                    {
+                                      backgroundColor: "rgb(45, 212, 191)",
+                                    },
+                                  "& .MuiSwitch-thumb": {
+                                    backgroundColor: "rgb(45, 212, 191)",
+                                  },
+                                  "& .MuiSwitch-track": {
+                                    backgroundColor: "rgba(45, 212, 191, 0.5)", // for unchecked state
+                                  },
+                                }}
                               />
+                              <span className="text-xs">{permission.name}</span>
                             </li>
                           );
                         })}
