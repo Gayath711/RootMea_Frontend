@@ -15,30 +15,16 @@ import Referrals from "../../components/Referrals/Referrals";
 import Diagnoses from "../../components/Diagnoses/Diagnoses";
 import Medications from "../../components/Medications/Medications";
 import LabResults from "../../components/LabResults/LabResults";
-import PrivatePage from "../PrivatePage";
 import PrivateComponent from "../../components/PrivateComponent";
-// import usePermission from "../../hooks/usePermission";
 
 function ClientChart() {
   const { clientId } = useParams();
   const [showDiagnosesModal, setShowDiagnosesModal] = useState(false);
   const [showMedicationsModal, setShowMedicationsModal] = useState(false);
-  // const { isAllowed, isPermissionsLoading } = usePermission();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
-  // if (!isAllowed("view_client_chart")) {
-  //   return (
-  //     <div className="flex flex-col items-center justify-center h-screen">
-  //       <h1 className="text-2xl font-bold mb-4">Access Denied</h1>
-  //       <p className="text-xl">
-  //         You do not have permission to access the client chart.
-  //       </p>
-  //     </div>
-  //   );
-  // }
 
   return (
     <PrivateComponent permission="view_client_chart">
@@ -46,6 +32,7 @@ function ClientChart() {
         <PageTitle clientId={clientId} title={"Client Chart"} />
         <ClientChartTopBar clientId={clientId} />
         <ClientProfile clientId={clientId} />
+
         <div className="grid grid-cols-12 gap-x-4">
           <div className="col-span-5">
             <SocialVitalSigns clientId={clientId} />
@@ -54,6 +41,7 @@ function ClientChart() {
             <EncounterNotes clientId={clientId} />
           </div>
         </div>
+
         <div className="grid grid-cols-12 gap-x-4">
           <div className="col-span-7">
             <PriorityLists clientId={clientId} />
@@ -62,7 +50,9 @@ function ClientChart() {
             <MedicalVitalSigns clientId={clientId} />
           </div>
         </div>
+
         <CarePlan clientId={clientId} />
+
         <div className="grid grid-cols-12 gap-x-4">
           <div className="col-span-7">
             <Documents clientId={clientId} />
@@ -71,6 +61,7 @@ function ClientChart() {
             <Forms clientId={clientId} />
           </div>
         </div>
+
         <div className="grid grid-cols-12 gap-x-4">
           <div className="col-span-7">
             <Appointments clientId={clientId} />
@@ -79,11 +70,13 @@ function ClientChart() {
             <Referrals clientId={clientId} />
           </div>
         </div>
+
         <Diagnoses
           clientId={clientId}
           showModal={showDiagnosesModal}
           setShowModal={setShowDiagnosesModal}
         />
+
         <div className="grid grid-cols-12 gap-x-4">
           <div className="col-span-7">
             <Medications

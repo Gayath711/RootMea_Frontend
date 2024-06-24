@@ -76,6 +76,9 @@ import ProgramForm from "./pages/ProgramForm/ProgramForm";
 import NavigationForm from "./pages/NavigationForm/NavigationForm";
 
 
+import TableListView from "./components/TableListView";
+import DataView from "./components/TableListView/DataView";
+
 function App() {
   // Retrieve isLoggedIn state from localStorage on initial render
   // const [isLoggedIn, setIsLoggedIn] = useState(
@@ -303,6 +306,8 @@ function App() {
                     path="/staff-directory/:recordid"
                     element={<StaffRecord />}
                   />
+                  <Route path="/table-list-view" element={<TableListView />} />
+                  <Route path="/dataview/:dataviewid" element={<DataView />} />
                   <Route
                     path="/add-new-staff-directory/"
                     element={<AddNewStaff />}
@@ -351,7 +356,6 @@ function App() {
           </>
         ) : (
           <Routes>
-            {/* <Route path="/" element={<LoginForm onLogin={handleLogin} />} /> */}
             <Route path="/" element={<LoginForm />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/password/reset" element={<PasswordReset />} />

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
@@ -6,11 +6,12 @@ import dayjs from "dayjs";
 import "./CalendarStyles.css";
 import { useNavigate } from "react-router-dom"; // Import useNavigate hook
 
-const CalendarCard = () => {
+const CalendarCard = React.memo(() => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const navigate = useNavigate(); // Initialize useNavigate hook
 
-  const handleDateChange = (newDate) => {
+  // Memoized event handler using useCallback
+  const handleDateChange = useCallback((newDate) => {
     setSelectedDate(newDate);
     const today = new Date();
     // if (dayjs(newDate).isSame(today, "day")) {
@@ -18,7 +19,7 @@ const CalendarCard = () => {
     //   navigate("/calendar");
     // }
     navigate("/calendar");
-  };
+  }, [navigate]); // Dependency array ensures useCallback memoization
 
   return (
     <>
@@ -33,6 +34,6 @@ const CalendarCard = () => {
       </div>
     </>
   );
-};
+});
 
 export default CalendarCard;

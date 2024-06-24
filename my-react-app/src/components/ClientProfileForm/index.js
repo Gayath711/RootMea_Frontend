@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../css/Sidebar.css";
@@ -226,6 +226,7 @@ const ClientProfile = ({ isNew }) => {
   const [badge, setBadge] = useState({});
 
   const mode = clientId && !isNew ? "edit" : "new";
+  const location = useLocation();
 
   const parseToDnDCustomFields = (items) => {
     return items.map((itm) => {
@@ -324,7 +325,6 @@ const ClientProfile = ({ isNew }) => {
         .get(`/clientinfo-api/${clientId}`)
         .then((response) => {
           setClientData(response.data);
-
           const parsedCF = parseToDnDCustomFields(
             response.data.custom_fields || []
           );
@@ -620,19 +620,18 @@ const ClientProfile = ({ isNew }) => {
           />
           <div className="w-full px-2 space-y-4">
             {
-              /*
-              {!isNew && (
+              location.pathname === "/clientprofilenew" ?
+              <></>
+              :
               <div>
-                <GeneralInformation
-                  id={1}
-                  badge={badge}
-                  isEdittable={isEditable}
-                  clientData={clientData}
-                  handleFieldChange={handleFieldChange}
-                />
-              </div>
-            )}
-              */
+              <GeneralInformation
+                id={1}
+                badge={badge}
+                isEdittable={isEditable}
+                clientData={clientData}
+                handleFieldChange={handleFieldChange}
+              />
+            </div>
             }
             <div>
               <ContactInformation

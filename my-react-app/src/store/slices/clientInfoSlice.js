@@ -7,14 +7,34 @@ const initialState = {
   loading: false,
 };
 
+let controller = new AbortController();
+
 export const fetchClientInfoAsync = createAsyncThunk(
   "clientInfo/fetchClients",
-  async ({clientId}) => {
-    const response = await protectedApi.get(`/clientinfo-api/${clientId}`);
-
-    return response.data;
+  async ({ clientId }, { signal }) => {
+    try {
+      const response = await protectedApi.get(`/clientinfo-api/${clientId}`, { signal });
+      return response.data;
+    } catch (err) {
+      if (err.name === 'AbortError') {
+        console.log('Request aborted');
+        return null;
+      }
+      throw err;
+    }
   }
 );
+
+// Dispatch action with abort signal
+export const fetchClientInfo = (clientId) => async (dispatch) => {
+  controller.abort();
+  controller = new AbortController();
+  try {
+    await dispatch(fetchClientInfoAsync({ clientId, signal: controller.signal }));
+  } catch (err) {
+    console.error('Error fetching client info:', err);
+  }
+};
 
 const clientInfoSlice = createSlice({
   name: "clientInfo",
