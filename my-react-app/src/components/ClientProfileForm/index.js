@@ -227,7 +227,6 @@ const ClientProfile = ({ isNew }) => {
   const [badge, setBadge] = useState({});
 
   const mode = clientId && !isNew ? "edit" : "new";
-  const location = useLocation();
 
   const parseToDnDCustomFields = (items) => {
     return items.map((itm) => {
