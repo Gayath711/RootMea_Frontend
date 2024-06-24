@@ -53,7 +53,11 @@ const sidebarLinks = [
   },
   {
     id: "directory-page",
+    to: "/directory",
     title: "Directory",
+    activeImageSrc: DirectoryActive,
+    inactiveImageSrc: DirectoryInActive,
+    isActive: false,
     children: [
       {
         id: "staff-directory",
@@ -64,6 +68,11 @@ const sidebarLinks = [
         id: "program-directory",
         to: "/program-directory",
         title: "Program  Directory",
+      },
+      {
+        id: "client-directory",
+        to: "/client-directory",
+        title: "Client  Directory",
       },
     ],
   },

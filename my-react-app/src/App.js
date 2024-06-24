@@ -64,7 +64,6 @@ import ClientProfile from "./components/ClientProfileForm";
 
 import BulkUpload from "./components/BulkUpload/BulkUpload";
 
-
 import AddDocument from "./pages/AddDocument/AddDocument";
 
 import Master from "./pages/Master";
@@ -75,6 +74,7 @@ import ReferralForm from "./pages/ReferralForm/ReferralForm";
 import ProgramForm from "./pages/ProgramForm/ProgramForm";
 import NavigationForm from "./pages/NavigationForm/NavigationForm";
 
+import ClientDirectory from "./components/ClientDirectory";
 
 import TableListView from "./components/TableListView";
 import DataView from "./components/TableListView/DataView";
@@ -212,12 +212,10 @@ function App() {
                     element={<ClientProfileInputForm />}
                   />
                   <Route path="/bulk-upload" element={<BulkUpload />} />
-
                   <Route
                     path="/create_form"
                     element={<CreateTableComponent />}
                   />
-
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/admin-dashboard" element={<Admin />} />
                   {/* <Route element={<Authorization user={user} permissions={[PERMISSIONS.CAN_VIEW_ADMIN]} />}>
@@ -235,7 +233,6 @@ function App() {
                   <Route element={<Authorization user={user} permissions={[PERMISSIONS.CAN_VIEW_ENCOUNTER_FORM]} />}>
                     <Route path="/encounter-form" element={<EncounterForm />} />
                   </Route>; */}
-
                   <Route
                     path="/create_table"
                     element={<CreateTableComponent />}
@@ -261,28 +258,22 @@ function App() {
                     path="/clientprofilenew"
                     element={<ClientProfile isNew />}
                   />
-
                   <Route
                     path="/socialvitalsigns/:clientId"
                     element={<SocialVitalSignsMain />}
                   />
-
                   <Route
                     path="/addNewSocialVitalSigns/:clientId"
                     element={<AddNewSocialVitalSigns />}
                   />
-
                   <Route path="/form_builder" element={<FormBuilder />} />
                   <Route path="/form_builder_old" element={<YourComponent />} />
-
                   <Route path="/Preview" element={<Preview />} />
                   <Route
                     path="/care-plan/:clientId"
                     element={<CarePlanView />}
                   />
-
                   {/* Program Directory  */}
-
                   <Route
                     path="/program-directory"
                     element={<ProgramDirectory />}
@@ -295,12 +286,10 @@ function App() {
                     path="/add-new-program-directory/"
                     element={<AddNewProgram />}
                   />
-
                   <Route
                     path="/update-program-directory/:paramid"
                     element={<AddNewProgram />}
                   />
-
                   <Route path="/staff-directory" element={<StaffDirectory />} />
                   <Route
                     path="/staff-directory/:recordid"
@@ -316,7 +305,6 @@ function App() {
                     path="/update-staff-directory/:paramid"
                     element={<AddNewStaff />}
                   />
-
                   {/* Encounter notes */}
                   <Route
                     path="/encounter-note/add/:clientId"
@@ -331,22 +319,21 @@ function App() {
                     element={<TheNewCarePlan />}
                   />
                   <Route path="/client-referral" element={<ClientReferral />} />
-
                   <Route path="/master" element={<Master />} />
                   <Route path="/create-new-group" element={<CreateGroup />} />
                   <Route
                     path="/update-permission-group/:paramid"
                     element={<CreateGroup />}
                   />
-
-                  <Route path="/document/add/:clientId" element={<AddDocument />} />
+                  <Route
+                    path="/document/add/:clientId"
+                    element={<AddDocument />}
+                  />
                   <Route path="/document/add" element={<AddDocument />} />
-
-                  <Route path="/assignments-and-referrals/:clientId" element={<AssignmentAndReferrals />} />
-                  <Route path="/referral/add/:clientId" element={<ReferralForm />} />
-                  <Route path="/program/add/:clientId" element={<ProgramForm />} />
-                  <Route path="/navigation/add/:clientId" element={<NavigationForm />} />
-
+                  <Route
+                    path="/client-directory"
+                    element={<ClientDirectory />}
+                  />
                 </Routes>
               </div>
             </div>

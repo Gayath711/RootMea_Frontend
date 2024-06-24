@@ -26,6 +26,8 @@ export default function AddNewStaff() {
     SupervisorEmail: "",
     Programs: [],
     NavigationClients: "",
+    PermissionGroup: [],
+    Navigator: false,
   });
 
   const [errFields, setErrFields] = useState({});
@@ -35,6 +37,7 @@ export default function AddNewStaff() {
   const [primaryFacilityOptions, setPrimaryFacilityOptions] = useState([]);
   const [supervisorOptions, setSupervisorOptions] = useState([]);
   const [programsOptions, setProgramsOptions] = useState([]);
+  const [permissionsOptions, setPermissionsOption] = useState([]);
   const [loadingData, setLoadingData] = useState(true);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -44,6 +47,7 @@ export default function AddNewStaff() {
     fetchPrimaryFacility();
     fetchSupervisor();
     fetchPrograms();
+    fetchPermissions();
 
     // Clean up effect
     return () => {
@@ -271,6 +275,23 @@ export default function AddNewStaff() {
     }
   };
 
+  const fetchPermissions = async () => {
+    try {
+      const { data } = await axios.get("/api/permission-category");
+      let options = data.map((item) => {
+        return {
+          label: item.subcategory_name || item.category_name,
+          value: item.id,
+          ...item,
+        };
+      });
+      setPermissionsOption(options);
+    } catch (error) {
+      // Handle errors here
+      console.error("Error fetching permission category :", error);
+    }
+  };
+
   const fieldValidation = () => {
     let errorFields = {};
 
@@ -335,12 +356,18 @@ export default function AddNewStaff() {
           last_name: formDetail.LastName,
           email: formDetail.EmailId,
           username: username,
+          groups: formDetail.PermissionGroup.map((each) => {
+            return each.id;
+          }),
+          navigator: formDetail.Navigator,
         };
 
         let phone_no = formDetail.PhoneNumber || "";
         let position = formDetail.PositionTitle?.id || "";
-        let facility = formDetail.PrimaryFacility?.id || "";
-        let supervisor = formDetail.Supervisor?.id || "";
+ 
+        let facility = formDetail.PrimaryFaculity?.id || "";
+        // let supervisor = formDetail.Supervisor?.id || "";
+ 
         let program = formDetail.Programs.map((each) => {
           return isEdit ? { id: each.id, program: each.program } : each.id;
         });
@@ -359,9 +386,9 @@ export default function AddNewStaff() {
           profile.facility = facility;
         }
 
-        if (supervisor !== "") {
-          profile.supervisor = supervisor;
-        }
+        // if (supervisor !== "") {
+        //   profile.supervisor = supervisor;
+        // }
 
         if (program.length > 0) {
           profile.program = program;
@@ -435,11 +462,20 @@ export default function AddNewStaff() {
     }
   };
 
-  const handleMultiSelectChange = (selectedOptions) => {
+  const handleMultiSelectChange = (selectedOptions, key) => {
     setFormDetail((prevDetails) => ({
       ...prevDetails,
-      Programs: selectedOptions,
+      [key]: selectedOptions,
     }));
+  };
+
+  const handleCheckboxChange = () => {
+    setFormDetail((prev) => {
+      return {
+        ...prev,
+        Navigator: !prev.Navigator,
+      };
+    });
   };
 
   return (
@@ -641,7 +677,9 @@ export default function AddNewStaff() {
                 </FormField>
               </div>
             </div>
-            <div className="flex flex-wrap">
+
+            {/* -------- Supervisor Input ---------- */}
+            {/* <div className="flex flex-wrap">
               <div className="w-full md:w-1/2 p-4">
                 <FormField label="Supervisor" error={errFields.Supervisor}>
                   <Select
@@ -703,7 +741,8 @@ export default function AddNewStaff() {
                   />
                 </FormField>
               </div>
-            </div>
+            </div> */}
+
             <div className="flex flex-wrap">
               <div className="w-full md:w-1/2 p-4">
                 <FormField label="Programs" error={errFields.Programs}>
@@ -714,7 +753,9 @@ export default function AddNewStaff() {
                     }
                     placeholder="Programs"
                     value={formDetail.Programs}
-                    onChange={handleMultiSelectChange}
+                    onChange={(selectedOption) =>
+                      handleMultiSelectChange(selectedOption, "Programs")
+                    }
                     isMulti
                     styles={{
                       control: (styles) => ({
@@ -761,6 +802,60 @@ export default function AddNewStaff() {
                     }
                   />
                 </FormField>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap">
+              <div className="w-full md:w-1/2 p-4">
+                <FormField
+                  label="Permission Group"
+                  error={errFields.PermissionGroup}
+                >
+                  <Select
+                    name={"PermissionGroup"}
+                    options={permissionsOptions}
+                    placeholder="Permission Group"
+                    value={formDetail.PermissionGroup}
+                    onChange={(selectedOption) =>
+                      handleMultiSelectChange(selectedOption, "PermissionGroup")
+                    }
+                    styles={{
+                      control: (styles) => ({
+                        ...styles,
+                        padding: "5px",
+
+                        border: `1px solid ${
+                          !errFields.PositionTitle ? "#5BC4BF" : "red"
+                        }`,
+
+                        fontSize: "14px",
+                      }),
+                      menu: (styles) => ({
+                        ...styles,
+                        background: "white",
+                        zIndex: 9999,
+                      }),
+                    }}
+                    components={{
+                      IndicatorSeparator: () => null,
+                    }}
+                    menuPortalTarget={document.body}
+                    isMulti
+                  />
+                </FormField>
+              </div>
+              <div className="w-full md:w-1/2 p-4">
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={formDetail.Navigator}
+                    onChange={handleCheckboxChange}
+                    class="w-4 h-4 text-teal-600 bg-gray-100 border-gray-300 rounded focus:ring-teal-500 dark:focus:ring-teal-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                  <label className="ml-2 text-base text-gray-700">
+                    Set as Navigator
+                  </label>
+                </div>
               </div>
             </div>
           </div>
