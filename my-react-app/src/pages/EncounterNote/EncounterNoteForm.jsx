@@ -14,7 +14,7 @@ import { notifyError, notifySuccess } from "../../helper/toastNotication";
 import DropDown from "../../components/common/Dropdown";
 import BasicTable from "../../components/react-table/BasicTable";
 import DnDCustomFields from "../../components/DnDCustomFields";
-import axios from "axios";
+import axios, { all } from "axios";
 import CollapseOpenSvg from "../../components/images/collpase-open.svg";
 import CollapseCloseSvg from "../../components/images/collapse-close.svg";
 import apiURL from "../../apiConfig";
@@ -22,6 +22,13 @@ import { format } from "date-fns";
 import "./EncounterNoteFormStyles.css";
 import CustomFieldEncounter from "../../components/dynamicform/CustomFieldEncounter";
 import CustomFieldsForEncounter from "../../components/ClientProfileForm/CustomFieldsForEncounter";
+import {
+  Checkbox,
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  FormControlLabel,
+} from "@mui/material";
 
 function FormWrapper({
   children,
@@ -364,6 +371,195 @@ function BillingComments({ mode, handleFormDataChange, formData, userInfo }) {
   );
 }
 
+function EncounterSummaryPopup({
+  selectedTemplate,
+  setSelectedTemplate,
+  selectedTemplates,
+  setSelectedTemplates,
+  formData,
+  setFormData,
+}) {
+  const [questionsBackup, setQuestionsBackup] = useState([]);
+  const [questions, setQuestions] = useState([]);
+
+  const selectedQuestions = useMemo(() => {
+    let encounterSummary = {};
+    encounterSummary = {};
+    if (formData.encounter_summary !== undefined) {
+      formData.encounter_summary.split("\n").forEach((line) => {
+        const [key, value] = line.split(":");
+        if (key !== undefined && typeof key === "string" && key.trim() !== "") {
+          encounterSummary[key.trim()] = (value || "").trim() + "\n";
+        }
+      });
+    }
+    // }
+    return encounterSummary;
+  }, [formData]);
+
+  useEffect(() => {
+    setQuestionsBackup(
+      selectedTemplate?.questions?.filter(
+        (q) => selectedQuestions[q] !== undefined
+      ) || []
+    );
+  }, []);
+
+  const handleUpdateQuestions = useCallback(
+    ({ addedQuestions, removedQuestions }) => {
+      setFormData((prev) => {
+        const encounterSummary = { ...selectedQuestions };
+        addedQuestions.forEach((q) => {
+          encounterSummary[q] = "\n";
+        });
+        removedQuestions.forEach((q) => {
+          delete encounterSummary[q];
+        });
+        let formattedTemplates = "";
+        Object.keys(encounterSummary).forEach((key) => {
+          formattedTemplates += `${key}: ${encounterSummary[key]}`;
+        });
+
+        return {
+          ...prev,
+          encounter_summary: formattedTemplates,
+        };
+      });
+    },
+    [selectedQuestions]
+  );
+
+  const allSelected = useMemo(() => {
+    const allChecked = questions.every((q) => q.checked);
+    return allChecked;
+  }, [questions]);
+
+  const allUnselected = useMemo(() => {
+    const allUnchecked = questions.every((q) => !q.checked);
+    return allUnchecked;
+  }, [questions]);
+
+  useEffect(() => {
+    if (selectedTemplate) {
+      setQuestions(
+        selectedTemplate?.questions?.map((q) => ({
+          label: q,
+          checked: selectedQuestions?.[q] !== undefined,
+        })) || []
+      );
+    }
+  }, [selectedTemplate]);
+
+  const handleDiscard = useCallback(() => {
+    setSelectedTemplate(null);
+  }, []);
+
+  const handleCheckUncheck = useCallback(({ index, value }) => {
+    setQuestions((prev) => {
+      const newQuestions = [...prev];
+      newQuestions[index].checked = !newQuestions[index].checked;
+      return newQuestions;
+    });
+  }, []);
+
+  const handleSubmit = useCallback(() => {
+    const selectedQuestions = questions
+      .filter((q) => q.checked)
+      .map((q) => q.label);
+
+    const removedQuestions = questionsBackup.filter(
+      (q) => !selectedQuestions.includes(q)
+    );
+    const addedQuestions = selectedQuestions.filter(
+      (q) => !questionsBackup.includes(q)
+    );
+
+    handleUpdateQuestions({ addedQuestions, removedQuestions });
+
+    if (allUnselected) {
+      setSelectedTemplates((prev) =>
+        prev.filter((t) => t.value.id !== selectedTemplate.id)
+      );
+    } else if (
+      !selectedTemplates.find((t) => t.value.id === selectedTemplate.id)
+    ) {
+      setSelectedTemplates((prev) => [
+        ...prev,
+        { label: selectedTemplate.text_template, value: selectedTemplate },
+      ]);
+    }
+    setSelectedTemplate(null);
+  }, [questions]);
+
+  const toggleAllQuestions = useCallback((e, checked) => {
+    if (checked) {
+      setQuestions((prev) => prev.map((q) => ({ ...q, checked: true })));
+    } else {
+      setQuestions((prev) => prev.map((q) => ({ ...q, checked: false })));
+    }
+  }, []);
+
+  return (
+    <Dialog
+      open={selectedTemplate !== null}
+      // onClose={handleClose}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+      maxWidth="sm"
+      fullWidth
+    >
+      <div className="flex justify-between items-center mx-4 my-2">
+        <div>
+          <FormControlLabel
+            control={
+              <Checkbox
+                color="default"
+                checked={allSelected ? true : false}
+                onChange={toggleAllQuestions}
+              />
+            }
+            label={selectedTemplate?.text_template}
+          />
+        </div>
+
+        <button onClick={handleDiscard}>
+          <img src="/close.svg" className="size-6" alt="" />
+        </button>
+      </div>
+
+      <hr className="text-[#d8d8d8]" />
+
+      <div className="mx-4 my-2 grid">
+        {questions.map((q, index) => (
+          <FormControlLabel
+            control={<Checkbox color="default" />}
+            checked={q.checked}
+            label={q.label}
+            onChange={(e) =>
+              handleCheckUncheck({ index, value: e.target.value })
+            }
+          />
+        ))}
+      </div>
+
+      <div className="mx-auto flex justify-center items-center gap-x-4 my-8">
+        <button
+          onClick={handleDiscard}
+          className="border border-keppel rounded-[3px] text-[#5BC4BF] w-32 py-2"
+        >
+          Discard
+        </button>
+        <button
+          onClick={handleSubmit}
+          className="border border-keppel rounded-[3px] disabled:opacity-70 disabled:cursor-not-allowed disabled:bg-[#6cd8d3] bg-[#5BC4BF] text-white w-32 py-2"
+        >
+          Confirm
+        </button>
+      </div>
+    </Dialog>
+  );
+}
+
 function EncounterNoteForm() {
   const [mode, setMode] = useState("new");
   const [buttonMode, setButtonMode] = useState("");
@@ -388,13 +584,15 @@ function EncounterNoteForm() {
   const [signedByBackup, setSignedByBackup] = useState([]);
   const [formData, setFormData] = useState({
     client_id: clientId,
-    staff_name: 2,
   });
 
   const [customFields, setCustomFields] = useState([]);
   const [dndItems, setDndItems] = useState([]);
   const [encounterViewItems, setEncounterViewItems] = useState(false);
   const [deletedCustomFields, setDeletedCustomFields] = useState([]);
+
+  // encounter summary
+  const [selectedTemplate, setSelectedTemplate] = useState(null); // when user selects a template from the dropdown this state handles the popup logic
 
   let customFieldsTags = useMemo(() => {
     return customFields.map((field) => {
@@ -483,12 +681,10 @@ function EncounterNoteForm() {
     });
   };
 
-  
-
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const [prevFormData, setPrevFormData] = useState(null)
+  const [prevFormData, setPrevFormData] = useState(null);
 
   const encounterId = queryParams.get("encounterId");
   useEffect(() => {
@@ -511,8 +707,8 @@ function EncounterNoteForm() {
           );
           const data = await response.data;
           console.log(data?.custom_fields);
-          setPrevFormData(data)
-          console.log(data)
+          setPrevFormData(data);
+          console.log(data);
           setEncounterViewItems(true);
           setDndItems(data?.custom_fields);
           data.custom_fields = JSON.stringify(data.custom_fields);
@@ -658,75 +854,23 @@ function EncounterNoteForm() {
     [formData]
   );
 
-  const handleUpdateTemplate = useCallback(
-    ({ newTemplates, deletedTemplates }) => {
-      setFormData((prevData) => {
-        let encounterSummary;
-        try {
-          encounterSummary = JSON.parse(prevData.encounter_summary || "{}");
-        } catch (e) {
-          encounterSummary = {};
-          prevData.encounter_summary.split("\n").forEach((line) => {
-            const [key, value] = line.split(":");
-            if (
-              key !== undefined &&
-              typeof key === "string" &&
-              key.trim() !== ""
-            ) {
-              encounterSummary[key.trim()] = (value || "").trim() + "\n";
-            }
-          });
-        }
-        deletedTemplates?.forEach((t) => {
-          for (const q of t.value.questions) {
-            if (
-              encounterSummary[q] === undefined ||
-              encounterSummary[q] === "\n"
-            ) {
-              delete encounterSummary[q];
-            }
-          }
-        });
-
-        newTemplates?.forEach((t) => {
-          t.value.questions.forEach((q) => {
-            if (encounterSummary[q] === undefined) {
-              encounterSummary[q] = "\n";
-            }
-          });
-        });
-
-        let formattedTemplates = "";
-
-        Object.keys(encounterSummary).forEach((key) => {
-          formattedTemplates += `${key}: ${encounterSummary[key]}`;
-        });
-
-        return {
-          ...prevData,
-          encounter_summary: formattedTemplates,
-        };
-      });
-    },
-    []
-  );
-
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  useEffect(() => {
-    console.log(formData);
-  }, [formData]);
+  // useEffect(() => {
+  //   console.log(formData);
+  // }, [formData]);
 
   useEffect(() => {
-    if (!mode)
+    if (mode === "add") {
       setFormData((prev) => ({
         ...prev,
         staff_name: userOptions?.find(
           (user) => user.value === userInfo?.user_id
         )?.value,
       }));
+    }
   }, [userOptions, userInfo]);
 
   useEffect(() => {
@@ -852,19 +996,18 @@ function EncounterNoteForm() {
   }, []);
 
   const disableSubmit = useMemo(() => {
-  return (
-    !formData?.staff_name ||
-    !formData?.encounter_date ||
-    !formData?.facility ||
-    !formData?.start_time ||
-    !formData?.encounter_type ||
-    !formData?.end_time ||
-    !formData?.encounter_status ||
-    !formData?.program ||
-    (mode !== 'edit' && !formData?.Client_Type)
-  );
-}, [formData, mode]);
-
+    return (
+      !formData?.staff_name ||
+      !formData?.encounter_date ||
+      !formData?.facility ||
+      !formData?.start_time ||
+      !formData?.encounter_type ||
+      !formData?.end_time ||
+      !formData?.encounter_status ||
+      !formData?.program ||
+      (mode !== "edit" && !formData?.Client_Type)
+    );
+  }, [formData, mode]);
 
   const handleCreatePayload = () => {
     const {
@@ -1070,18 +1213,12 @@ function EncounterNoteForm() {
   const handleCreate = async () => {
     try {
       const formDataPayload = await handleCreatePayload();
-          
 
       const response = await protectedApi.post(
         "/encounter-notes/",
         formDataPayload
       );
       if (response.status === 201) {
-        setFormData({ client_id: clientId, staff_name: "Temporary User" });
-        setCarePlans([]);
-        setForms([]);
-        setStartTime(null);
-        setEndTime(null);
         notifySuccess("Encounter Note created successfully");
         navigate(`/clientchart/${clientId}`);
       }
@@ -1090,13 +1227,11 @@ function EncounterNoteForm() {
     }
   };
 
-  
-
   const handleUpdate = async () => {
     try {
       const formDataPayload = handleCreatePayload();
-      console.log(formData)
-      console.log(prevFormData)
+      console.log(formData);
+      console.log(prevFormData);
       const response = await protectedApi.put(
         `/encounter-notes-update/${encounterId}/`,
         formDataPayload
@@ -1110,16 +1245,18 @@ function EncounterNoteForm() {
     }
   };
 
-  console.log(mode);
-
   // Combine conditions
-    const isDisabled = useMemo(() => {
-    if (mode === 'edit') {
+  const isDisabled = useMemo(() => {
+    if (mode === "edit") {
       // Additional check for formData === prevFormData when mode is edit
-      return disableSubmit || mode === 'view' || JSON.stringify(formData) === JSON.stringify(prevFormData);
+      return (
+        disableSubmit ||
+        mode === "view" ||
+        JSON.stringify(formData) === JSON.stringify(prevFormData)
+      );
     } else {
       // For other modes, use the default disableSubmit condition
-      return disableSubmit || mode === 'view';
+      return disableSubmit || mode === "view";
     }
   }, [disableSubmit, mode, formData, prevFormData]);
 
@@ -1378,36 +1515,6 @@ function EncounterNoteForm() {
                 }
               />
             </div>
-            {
-            /*
-            <div className="col-span-6">
-              <DropDown
-                name="note_template"
-                placeholder="Note Template *"
-                handleChange={(data) =>
-                  handleFormDataChange("note_template", data.value)
-                }
-                isEdittable={mode === "view"}
-                className="border-keppel m-1 h-[37.6px]"
-                height="37.6px"
-                fontSize="14px"
-                borderColor="#5bc4bf"
-                options={[
-                  {
-                    label: "ECM Enabling Service",
-                    value: "ECM Enabling Service",
-                  },
-                  { label: "Program Intake", value: "Program Intake" },
-                  { label: "Progress Note", value: "Progress Note" },
-                  { label: "Reassessment", value: "Reassessment" },
-                  { label: "A1c Outreach", value: "A1c Outreach" },
-                  { label: "STRIVE Encounter", value: "STRIVE Encounter" },
-                ]}
-                selectedOption={formData?.note_template || ""}
-              />
-            </div>
-            */
-            }
             <div className="col-span-6">
               <DropDown
                 name="Client_Type"
@@ -1475,24 +1582,44 @@ function EncounterNoteForm() {
                 placeholder="encounter_summary_text_template"
                 value={selectedTemplates || []}
                 disabled={mode === "view"}
-                onChange={useCallback((data) => {
-                  setSelectedTemplates((template) => {
-                    const deletedTemplates = template?.filter(
-                      (t) =>
-                        data?.find((d) => d.value.id === t.value.id) ===
-                        undefined
-                    );
-                    const newTemplates = data?.filter(
+                onChange={useCallback(
+                  (data) => {
+                    let newTemplates = data?.filter(
                       (d) =>
-                        template?.find((t) => t.value.id === d.value.id) ===
-                        undefined
+                        selectedTemplates?.find(
+                          (t) => t.value.id === d.value.id
+                        ) === undefined
                     );
 
-                    handleUpdateTemplate({ newTemplates, deletedTemplates });
+                    let deletedTemplates = [];
+                    if (newTemplates?.length !== 1) {
+                      deletedTemplates = selectedTemplates?.filter(
+                        (t) =>
+                          data?.find((d) => d.value.id === t.value.id) ===
+                          undefined
+                      );
+                    }
 
-                    return data;
-                  });
-                }, [])}
+                    if (deletedTemplates?.length !== 1) {
+                      deletedTemplates = null;
+                    } else {
+                      deletedTemplates = deletedTemplates[0];
+                    }
+
+                    if (newTemplates?.length !== 1) {
+                      newTemplates = null;
+                    } else {
+                      newTemplates = newTemplates[0];
+                    }
+
+                    if (deletedTemplates) {
+                      setSelectedTemplate(deletedTemplates?.value);
+                    } else {
+                      setSelectedTemplate(newTemplates?.value);
+                    }
+                  },
+                  [formData, selectedTemplates]
+                )}
                 options={templateOptions}
               />
             </div>
@@ -1674,6 +1801,18 @@ function EncounterNoteForm() {
           )}
         </div>
       </div>
+
+      {selectedTemplate !== null && (
+        <EncounterSummaryPopup
+          formData={formData}
+          setFormData={setFormData}
+          selectedTemplate={selectedTemplate}
+          setSelectedTemplate={setSelectedTemplate}
+          selectedTemplates={selectedTemplates}
+          setSelectedTemplates={setSelectedTemplates}
+          // selectedQuestions={selectedQuestions}
+        />
+      )}
     </div>
   );
 }

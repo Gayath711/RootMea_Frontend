@@ -44,7 +44,7 @@ protectedApi.interceptors.request.use(async (req) => {
     const user = jwtDecode(access_token);
     // console.log(new Date(user.exp * 1000));
     const isAccessTokenExpired = dayjs.unix(user?.exp).diff(dayjs()) < 1;
-    console.log("Access token expired: ", isAccessTokenExpired);
+
     try {
       // eslint-disable-next-line
       if (!isAccessTokenExpired) return req;
