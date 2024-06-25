@@ -598,7 +598,12 @@ export default function AddNewProgram() {
             </div>
           </div>
           <div className="flex gap-2 items-center justify-center mb-[35px]">
-            <button className="px-3 py-1 border-1 sm:border-2 rounded-sm border-[#2F9384] text-[13px] font-medium leading-5 text-[#2F9384] hover:bg-[#2F9384] hover:text-white focus:outline-none focus:ring-2 focus:ring-[#2F9384] focus:ring-opacity-50 transition-colors duration-300">
+            <button
+              onClick={() => {
+                navigate(-1);
+              }}
+              className="px-3 py-1 border-1 sm:border-2 rounded-sm border-[#2F9384] text-[13px] font-medium leading-5 text-[#2F9384] hover:bg-[#2F9384] hover:text-white focus:outline-none focus:ring-2 focus:ring-[#2F9384] focus:ring-opacity-50 transition-colors duration-300"
+            >
               Cancel
             </button>
 

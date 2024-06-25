@@ -163,9 +163,9 @@ const LoginForm = () => {
                       pattern: {
                         // value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                         // message: "Invalid email address",
-                        value: /^[A-Z0-9._%+-]+@rootsclinic\.org$/i,
+                        value: /^[A-Z0-9._%+-]+@rootscommunityhealth\.org$/i,
                         message:
-                          "Email must be from the rootsclinic.org domain",
+                          "Email must be from the rootscommunityhealth.org domain",
                       },
                     })}
                   />

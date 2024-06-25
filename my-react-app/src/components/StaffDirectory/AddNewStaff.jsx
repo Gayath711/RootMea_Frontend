@@ -8,6 +8,7 @@ import {
   notifyError,
   notifySuccess,
 } from "../../helper/toastNotication";
+import Swal from "sweetalert2";
 
 export default function AddNewStaff() {
   const navigate = useNavigate();
@@ -187,6 +188,16 @@ export default function AddNewStaff() {
                 })
               : [],
             NavigationClients: "",
+            Navigator: data?.is_navigator || false,
+            PermissionGroup: data?.groups
+              ? data.groups.map((item) => {
+                  return {
+                    ...item,
+                    label: item.name,
+                    value: item.id,
+                  };
+                })
+              : [],
           };
         });
       })
@@ -277,10 +288,10 @@ export default function AddNewStaff() {
 
   const fetchPermissions = async () => {
     try {
-      const { data } = await axios.get("/api/permission-category");
+      const { data } = await axios.get("/api/groups");
       let options = data.map((item) => {
         return {
-          label: item.subcategory_name || item.category_name,
+          label: item.name,
           value: item.id,
           ...item,
         };
@@ -346,6 +357,7 @@ export default function AddNewStaff() {
     if (fieldValidation()) {
       setIsSubmitting(true);
       try {
+        console.log({ formDetail });
         // Concatenate first name and last name, remove spaces, and keep alphanumeric characters
         const username = `${formDetail.FirstName}${formDetail.LastName}`
           .replace(/\s+/g, "") // Remove spaces
@@ -359,15 +371,15 @@ export default function AddNewStaff() {
           groups: formDetail.PermissionGroup.map((each) => {
             return each.id;
           }),
-          navigator: formDetail.Navigator,
+          is_navigator: formDetail.Navigator,
         };
 
         let phone_no = formDetail.PhoneNumber || "";
         let position = formDetail.PositionTitle?.id || "";
- 
-        let facility = formDetail.PrimaryFaculity?.id || "";
+
+        let facility = formDetail.PrimaryFacility?.id || "";
         // let supervisor = formDetail.Supervisor?.id || "";
- 
+
         let program = formDetail.Programs.map((each) => {
           return isEdit ? { id: each.id, program: each.program } : each.id;
         });
@@ -432,7 +444,7 @@ export default function AddNewStaff() {
         notifySuccess(`Staff ${isEdit ? "Updated" : "Added"} successfully`);
         navigate(`/staff-directory/${response.data.id}`, { replace: true });
       } catch (error) {
-        if (error.response.status === 400) {
+        if (error?.response?.status === 400) {
           if (error?.response?.data) {
             Object.keys(error.response.data).map((itm) => {
               error.response.data[itm].map((errMsg) => notifyError(errMsg));
@@ -476,6 +488,75 @@ export default function AddNewStaff() {
         Navigator: !prev.Navigator,
       };
     });
+  };
+
+  const [inputValue, setInputValue] = useState("");
+  const [postingPositionTitle, setPostingPositionTitle] = useState(false);
+
+  const handlePositionInputChange = (value) => {
+    setInputValue(value);
+  };
+
+  const handleKeyDown = (event) => {
+    const isNoOptionFound = () => {
+      let isAnyFound = positionTitleOptions.filter((itm) =>
+        itm.label.includes(inputValue)
+      );
+
+      return isAnyFound.length > 0 ? false : true;
+    };
+
+    if (!inputValue) return;
+
+    switch (event.key) {
+      case "Enter":
+      case "Tab":
+        {
+          if (isNoOptionFound()) {
+            Swal.fire({
+              title: "Are you sure?",
+              text: `Do you want to Create New Position "${inputValue}" ?`,
+              icon: "info",
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: "Create",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                postPositionTitle();
+              }
+            });
+            event.preventDefault();
+          }
+        }
+        break;
+      default:
+        break;
+    }
+  };
+
+  const postPositionTitle = async () => {
+    try {
+      setPostingPositionTitle(true);
+      const response = await axios.post("/api/resources/position", {
+        name: inputValue,
+      });
+      if (response.status === 201) {
+        let newSetOpt = {
+          ...response.data,
+          value: response.data?.id,
+          label: response.data?.name,
+        };
+        handleInputChange("PositionTitle", newSetOpt);
+        setInputValue("");
+        fetchPositionTitles();
+      }
+    } catch (error) {
+      // Handle errors here
+      console.error("Error posting new sub_activity :", error);
+    } finally {
+      setPostingPositionTitle(false);
+    }
   };
 
   return (
@@ -609,9 +690,17 @@ export default function AddNewStaff() {
                 >
                   <Select
                     name={"PositionTitle"}
+                    isLoading={postingPositionTitle}
                     options={positionTitleOptions}
                     placeholder="Position Title"
                     value={formDetail.PositionTitle}
+                    noOptionsMessage={() =>
+                      inputValue === ""
+                        ? "Start Typing..."
+                        : `Press Enter/Tab to Create "${inputValue}"`
+                    }
+                    onInputChange={handlePositionInputChange}
+                    onKeyDown={handleKeyDown}
                     onChange={(selectedOption) =>
                       handleInputChange("PositionTitle", selectedOption)
                     }
@@ -860,7 +949,12 @@ export default function AddNewStaff() {
             </div>
           </div>
           <div className="flex gap-2 items-center justify-center mb-[35px]">
-            <button className="px-3 py-1 border-1 sm:border-2 rounded-sm border-[#2F9384] text-[13px] font-medium leading-5 text-[#2F9384] hover:bg-[#2F9384] hover:text-white focus:outline-none focus:ring-2 focus:ring-[#2F9384] focus:ring-opacity-50 transition-colors duration-300">
+            <button
+              onClick={() => {
+                navigate(-1);
+              }}
+              className="px-3 py-1 border-1 sm:border-2 rounded-sm border-[#2F9384] text-[13px] font-medium leading-5 text-[#2F9384] hover:bg-[#2F9384] hover:text-white focus:outline-none focus:ring-2 focus:ring-[#2F9384] focus:ring-opacity-50 transition-colors duration-300"
+            >
               Cancel
             </button>
 

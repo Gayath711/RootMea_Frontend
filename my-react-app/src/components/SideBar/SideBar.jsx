@@ -53,7 +53,7 @@ const sidebarLinks = [
   },
   {
     id: "directory-page",
-    to: "/directory",
+    to: "#",
     title: "Directory",
     activeImageSrc: DirectoryActive,
     inactiveImageSrc: DirectoryInActive,
@@ -73,6 +73,16 @@ const sidebarLinks = [
         id: "client-directory",
         to: "/client-directory",
         title: "Client  Directory",
+      },
+      {
+        id: "facility",
+        to: "/facility",
+        title: "Facility",
+      },
+      {
+        id: "department",
+        to: "/department",
+        title: "Department",
       },
     ],
   },
@@ -94,7 +104,7 @@ const sidebarLinks = [
 ];
 
 const Sidebar = () => {
-  console.log("SideBar re-rendered")
+  console.log("SideBar re-rendered");
   const location = useLocation();
   const [showNested, setShowNested] = useState([]);
   const isSidebarExpanded = useSelector(selectIsSidebarExpanded);
@@ -115,24 +125,18 @@ const Sidebar = () => {
     handleToggleSidebar(false);
   }, [handleToggleSidebar]);
 
-  const handleMouseEnterLink = useCallback(
-    (index) => {
-      setShowNested((prev) => {
-        if (!prev.includes(index)) {
-          return [...prev, index];
-        }
-        return prev;
-      });
-    },
-    []
-  );
+  const handleMouseEnterLink = useCallback((index) => {
+    setShowNested((prev) => {
+      if (!prev.includes(index)) {
+        return [...prev, index];
+      }
+      return prev;
+    });
+  }, []);
 
-  const handleMouseLeaveLink = useCallback(
-    (index) => {
-      setShowNested((prev) => prev.filter((idx) => idx !== index));
-    },
-    []
-  );
+  const handleMouseLeaveLink = useCallback((index) => {
+    setShowNested((prev) => prev.filter((idx) => idx !== index));
+  }, []);
 
   const renderedLinks = useMemo(() => {
     return sidebarLinks.map((link, index) => {
@@ -146,7 +150,14 @@ const Sidebar = () => {
           onMouseLeave={() => handleMouseLeaveLink(index)}
         >
           <div>
-            <Link to={link.to} className="hover:text-teal-500">
+            <Link
+              to={link.to}
+              className={
+                link.children && link.children.length > 0
+                  ? "cursor-default"
+                  : "hover:text-teal-500"
+              }
+            >
               <div className="flex items-center gap-2 justify-start w-100">
                 <img
                   className={`p-1 bg-[${bgColor}] size-6`}
@@ -183,7 +194,13 @@ const Sidebar = () => {
         </div>
       );
     });
-  }, [location.pathname, isSidebarExpanded, showNested, handleMouseEnterLink, handleMouseLeaveLink]);
+  }, [
+    location.pathname,
+    isSidebarExpanded,
+    showNested,
+    handleMouseEnterLink,
+    handleMouseLeaveLink,
+  ]);
 
   return (
     <div
