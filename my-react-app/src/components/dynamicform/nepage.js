@@ -226,7 +226,7 @@ function NewPage() {
     switch (column.type) {
       case "character varying":
         return (
-          <div key={column.name} className={`mb-3 ${column.width}`}>
+          <div key={column.name} type="character varying" className={`mb-3 ${column.width} character-varying`}>
             {/* <label className="block mb-1">{label}</label>
             <input
               type="text"
@@ -245,7 +245,7 @@ function NewPage() {
         );
       case "integer":
         return (
-          <div key={column.name} className={`mb-3 ${column.width}`}>
+          <div key={column.name} type="integer" className={`mb-3 ${column.width} integer`}>
             {/* <label className="block mb-1">{label}</label>
             <input
               type="number"
@@ -264,7 +264,7 @@ function NewPage() {
         );
       case "text":
         return (
-          <div key={column.name} className={`mb-3 ${column.width}`}>
+          <div key={column.name} type="text" className={`mb-3 ${column.width} text`}>
             {/* <label className="block mb-1">{label}</label>
             <textarea
               value={formData[column.name] || ""}
@@ -281,7 +281,7 @@ function NewPage() {
         );
       case "double precision":
         return (
-          <div key={column.name} className={`mb-3 ${column.width}`}>
+          <div key={column.name} type="double precision"  className={`mb-3 ${column.width} double-precision`}>
             {/* <label className="block mb-1">{label}</label>
             <input
               type="number" // Use type "number" for input validation
@@ -303,7 +303,7 @@ function NewPage() {
         );
       case "boolean":
         return (
-          <div key={column.name} className={`mb-3 ${column.width}`}>
+          <div key={column.name} type="boolean" className={`mb-3 ${column.width} boolean`}>
             {/* <label className="block mb-1">{label}</label>
             <select
               value={formData[column.name] || ""}
@@ -335,7 +335,7 @@ function NewPage() {
         );
       case "bytea":
         return (
-          <div key={column.name} className={`mb-3 ${column.width}`}>
+          <div key={column.name} type="bytea" className={`mb-3 ${column.width} bytea`}>
             {/* <label className="block mb-1">{label}</label>
             <input
               type="file"
@@ -354,26 +354,26 @@ function NewPage() {
         );
       case "character":
         return (
-          <div key={column.name} className={`mb-0 ${column.width}`}>
+          <div key={column.name}  type="character"  className={`mb-0 ${column.width} character`}>
             <HeaderElement type="header" label={label} />
           </div>
         );
       case "json":
         return (
-          <div key={column.name} className={`mb-1 ${column.width}`}>
+          <div key={column.name} type="json" className={`mb-1 ${column.width} json`}>
             <HeaderElement label={label} />
           </div>
         );
       case "line":
         return (
-          <div key={column.name} className={`mb-4 ${column.width}`}>
+          <div key={column.name} type="line" className={`mb-4 ${column.width} line`}>
             <DividerElement />
           </div>
         );
 
       case "timestamp without time zone":
         return (
-          <div key={column.name} className={`mb-2 ${column.width}`}>
+          <div key={column.name} type="timestamp without time zone" className={`mb-2 ${column.width} timestamp-without-time-zone`}>
             <DateInput
               label={label}
               required={column.is_nullable === "NO"}
@@ -401,7 +401,7 @@ function NewPage() {
         if (key.endsWith("multiple_enum_type")) {
           console.log("qdwewwwwwwwwwwwwwww", droplist, droplist[key]);
           return (
-            <div key={column.name} className={`mb-3 ${column.width}`}>
+            <div key={column.name} type="multiple_enum_type" className={`mb-3 ${column.width} multiple_enum_type`}>
               {/* <label className="block mb-1">{label} xxx</label>
               <Select
                 options={
@@ -519,7 +519,7 @@ function NewPage() {
           console.log("checkbox_enum_type okkk");
           // console.log(droplist[key])
           return (
-            <div key={column.name} className={`mb-3 ${column.width}`}>
+            <div key={column.name} type="checkbox_enum_type" className={`mb-3 ${column.width} checkbox_enum_type`}>
               {/* <label className="block mb-1">{label}</label>
               {droplist[key] &&
                 droplist[key].map((option) => (
@@ -596,7 +596,7 @@ function NewPage() {
           console.log("droplist", droplist);
 
           return (
-            <div key={column.name} className={`mb-3 ${column.width}`}>
+            <div key={column.name} type="select" className={`mb-3 ${column.width} select`}>
               {/* <label className="block mb-1">{label}</label>
               <select
                 value={formData[column.name] || ""}
@@ -650,6 +650,7 @@ function NewPage() {
 
   const downloadHTML = () => {
     console.log("downloadHTML");
+    console.log('table Name',tableName);
     const formContainerHtml = formRef.current.outerHTML;
     const styles = getStylesheetContent();
     const htmlContent = `
@@ -662,8 +663,183 @@ function NewPage() {
         <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Form Data</title>
+        <title>${tableName}</title>
         <style>${styles}</style>
+        <style>
+
+            button {
+                margin: 20px;
+                padding: 10px 20px;
+                font-size: 16px;
+            }
+
+            .popup {
+                display: none;
+                position: fixed;
+                z-index: 1;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                overflow: auto;
+                background-color: rgba(0, 0, 0, 0.5);
+            }
+
+
+            .close {
+                color: #aaa;
+                float: right;
+                font-size: 28px;
+                font-weight: bold;
+            }
+
+            .close:hover,
+            .close:focus {
+                color: black;
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+            ul {
+                list-style: none;
+                padding: 0;
+            }
+
+            ul li {
+                margin: 10px 0;
+            }
+
+            ul li button {
+                width: 100%;
+                padding: 10px;
+                font-size: 16px;
+            }
+
+        </style>
+        <style>
+
+
+          button {
+              padding: 12px 24px;
+              font-size: 16px;
+              cursor: pointer;
+              border: none;
+              background-color: #007bff;
+              color: white;
+              border-radius: 5px;
+              transition: background-color 0.3s, transform 0.2s;
+              box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          }
+
+          button:hover {
+              background-color: #0056b3;
+              transform: scale(1.05);
+          }
+
+          button:active {
+              background-color: #004080;
+          }
+          #openPopup{
+            display: none;
+
+          }
+          .openPopup {
+              display: none;
+              position: fixed;
+              z-index: 1;
+              left: 0;
+              top: 0;
+              width: 100%;
+              height: 100%;
+              background-color: rgba(0, 0, 0, 0.5);
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              animation: fadeIn 0.3s;
+          }
+
+          .popup-content {
+            background: linear-gradient(135deg, #ffffff, #f0f0f0);
+              padding: 20px;
+              border-radius: 10px;
+              box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+              width: 300px;
+              text-align: center;
+              animation: slideIn 0.3s;
+              position: relative;
+              top: 30%;
+              left: 30%;
+
+          }
+          .popup-content ul {
+              padding-right: 30px;
+
+          }
+  
+
+          .close {
+              color: #aaa;
+              float: right;
+              font-size: 28px;
+              font-weight: bold;
+              cursor: pointer;
+              transition: color 0.3s;
+          }
+
+          .close:hover,
+          .close:focus {
+              color: #333;
+          }
+
+          h2 {
+              font-size: 24px;
+              margin-bottom: 20px;
+              color: #333;
+          }
+
+          ul {
+              list-style: none;
+              padding: 0;
+          }
+
+          ul li {
+              margin: 10px 0;
+          }
+
+          ul li button {
+              width: 100%;
+              padding: 12px;
+              font-size: 16px;
+              border-radius: 5px;
+              border: none;
+              background-color: #007bff;
+              color: white;
+              cursor: pointer;
+              transition: background-color 0.3s, transform 0.2s;
+              box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          }
+
+          ul li button:hover {
+              background-color: #0056b3;
+              transform: scale(1.05);
+          }
+
+          ul li button:active {
+              background-color: #004080;
+          }
+
+          @keyframes fadeIn {
+              from { opacity: 0; }
+              to { opacity: 1; }
+          }
+
+          @keyframes slideIn {
+              from { transform: translateY(-20px); }
+              to { transform: translateY(0); }
+          }
+
+        </style>
+
       </head>
       <body>${formContainerHtml}</body>
       <script>
@@ -674,30 +850,145 @@ function NewPage() {
                     });
                 });
 
-        var formData = [];
-        var columnData = []
-        const saveButton = document.createElement('button');
-        saveButton.textContent = 'Save';
-        saveButton.type = 'button';
-        saveButton.setAttribute('class','bg-[#5BC4BF] text-white hover:bg-teal-700 font-bold mt-2.5 p-2 px-4 rounded transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500  text-xs')
-        document.querySelector('form .text-center').insertAdjacentElement('afterbegin', saveButton);
-        button_div = document.querySelector('form .text-center')
-        button_div.style.display = 'flex'
-        button_div.style.justifyContent = 'space-around' 
-        document.querySelector('form [type="submit"]').style.display = 'none'
+        
+        const popup = document.createElement('div');
+        popup.id = 'openPopup';
+        popup.className = 'openPopup';
 
+        // Create the popup content div
+        const popupContent = document.createElement('div');
+        popupContent.className = 'popup-content';
+
+        // Create the close button
+        const closeButton = document.createElement('span');
+        closeButton.id = 'closePopup';
+        closeButton.className = 'close';
+        closeButton.innerHTML = '&times;';
+
+        // Create the heading
+        const heading = document.createElement('h2');
+        heading.textContent = 'Data got updated into Database';
+
+        // Create the list
+        const list = document.createElement('ul');
+
+        // Create the list items and buttons
+        // const actions = [
+        //     { id: 'addClientInfo', text: 'Add Client Info' },
+        //     { id: 'addPriorityList', text: 'Add Priority List' },
+        //     { id: 'addEncounterNotes', text: 'Add Encounter Notes' }
+        // ];
+
+        // actions.forEach(action => {
+        //     const listItem = document.createElement('li');
+        //     const button = document.createElement('button');
+        //     button.id = action.id;
+        //     button.textContent = action.text;
+        //     listItem.appendChild(button);
+        //     list.appendChild(listItem);
+        // });
+
+        // Append all elements to their respective parents
+        popupContent.appendChild(closeButton);
+        popupContent.appendChild(heading);
+        popupContent.appendChild(list);
+        popup.appendChild(popupContent);
+        document.body.appendChild(popup);
+
+        // document.getElementById('addClientInfo').addEventListener('click', () => {
+        //       console.log('need to call the api for addClientInfo');
+        //       console.log(formData);
+        // });
+
+        // document.getElementById('addPriorityList').addEventListener('click', () => {
+        //   console.log('need to call the api for addPriorityList');
+        // });
+
+        // document.getElementById('addEncounterNotes').addEventListener('click', () => {
+        //   console.log('need to call the api for addEncounterNotes');
+        // });
+
+        // document.getElementById('openPopup').addEventListener('click', () => {
+            
+        // });
         function getRandomInt(min, max) {
             min = Math.ceil(min);
             max = Math.floor(max);
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
+        var randomIntegerInRange = localStorage.getItem("randomIntegerInRange")
+        if (!randomIntegerInRange){
+          randomIntegerInRange = getRandomInt(1, 1000);
+          localStorage.setItem('randomIntegerInRange',randomIntegerInRange)
+        }else if(randomIntegerInRange == null){
+          randomIntegerInRange = getRandomInt(1, 1000);
 
-        let randomIntegerInRange = getRandomInt(1, 1000);
+          localStorage.setItem('randomIntegerInRange',randomIntegerInRange)
+        }
+        
         console.log("randomIntegerInRange")
         console.log(randomIntegerInRange)
 
+
+        var formData = [];
+        var columnData = []
+        var dict_data = []
+
+        if (localStorage.getItem('dict_data'+randomIntegerInRange)){
+          dict_data = JSON.parse(localStorage.getItem('dict_data'+randomIntegerInRange))
+        }
+        if (localStorage.getItem('columnData'+randomIntegerInRange)){
+          columnData = JSON.parse(localStorage.getItem('columnData'+randomIntegerInRange))
+        }
+        if (localStorage.getItem('formData'+randomIntegerInRange)){
+          formData = JSON.parse(localStorage.getItem('formData'+randomIntegerInRange))
+        }
+
+        console.log("formData");
+        console.log(formData);
+        console.log("columnData");
+        console.log(columnData);
+        console.log("dict_data");
+        console.log(dict_data);
+
+        const saveButton = document.createElement('button');
+        saveButton.textContent = 'Save in Local';
+        saveButton.type = 'button';
+        saveButton.setAttribute('class','bg-[#5BC4BF] text-white hover:bg-teal-700 font-bold mt-2.5 p-2 px-4 rounded transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500  text-xs')
+        saveButton.setAttribute('id','save')
+
+        document.querySelector('form .text-center').insertAdjacentElement('afterbegin', saveButton);
+
+        const uploadButton = document.createElement('button');
+        uploadButton.textContent = 'Upload to Database';
+        uploadButton.type = 'button';
+        uploadButton.setAttribute('class','bg-[#5BC4BF] text-white hover:bg-teal-700 font-bold mt-2.5 p-2 px-4 rounded transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500  text-xs')
+        uploadButton.setAttribute('id','upload')
+        document.querySelector('form #save').insertAdjacentElement('afterend', uploadButton);
+
+
+        document.getElementById('closePopup').addEventListener('click', () => {
+          document.getElementById('openPopup').style.display = 'none';
+        });
+
+        function updateNetworkStatus() {
+            if (!navigator.onLine) {
+                alert('There is no internet connection');
+                return false 
+            }else{
+              return true 
+            }
+        }
+        
+
+        button_div = document.querySelector('form .text-center')
+        button_div.style.display = 'flex'
+        button_div.style.justifyContent = 'space-around' 
+        document.querySelector('form [type="submit"]').style.display = 'none'
+
+        
         // function isValidDateFormat(dateString) {
-        //     const regex = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/;
+        //     const regex = /^(0[1-9]|1[0-2])/(0[1-9]|[12][0-9]|3[01])/d{4}$/;
         //     if (!regex.test(dateString)) {
         //         return false;
         //     }
@@ -706,66 +997,257 @@ function NewPage() {
         //     return date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day;
         // }
         saveButton.onclick = function() {
-            let divs = document.querySelectorAll('form div div div');
+            let divs = document.querySelectorAll('form div div');
             let formdata1 = []
             let columnData1 = []
+            let count = 0
+            let dict_values = {}
+
             divs.forEach(div => {
-                let label = div.querySelector('label span');
-                let input = div.querySelector('input');
-                let textarea = div.querySelector('textarea');
-                let select = div.querySelector('select');
-                let checkbox = div.querySelector('[type="checkbox"]');
-                let files = div.querySelector('[type="file"]');
-                if (label){
-                    let label_data = label.textContent.trim()
-                    columnData1.push(label_data)
-                    console.log('Label:',label_data );
+              parent_type = div.getAttribute('type')
+              type_character = parent_type
+              if (type_character === 'character varying'){
+                console.log('character varying')
+
+                label_data = div.querySelector('label span').textContent.trim()
+                input_data = div.querySelector('input[type="text"]').value.trim()
+                columnData1.push(label_data)
+                formdata1.push(input_data)
+                console.log("formdata1");
+                console.log(formdata1);
+                console.log("columnData1");
+                console.log(columnData1);
+                if (input_data){
+                  dict_values['col_'+count] = input_data
+
                 }
-                
-                if (label && input) {
-                  if (input.getAttribute('id')=='dateInput'){
-                        console.log('inside date field')
-                        // if (!isValidDateFormat(input)){
-                        //     alert('Enter Valid Date')
-                        //     return 
-                        // }
-                    }
-                  let input_data = input.value.trim()
+                count++
+                console.log(count);
+              }
+              if (type_character === 'character' || type_character === 'json'){
+                  console.log('character')
+                  label_data = div.querySelector('h1').textContent.trim()
+                  // columnData1.push(label_data)
+                  // formdata1.push('')
+                  console.log("columnData1");
+                  console.log(columnData1);
+                  count++
+                // dict_values['col_'+count] = input_data
+
+              }
+              else if (type_character === 'integer' || type_character === 'double precision'){
+                  console.log('integer')
+                  label_data = div.querySelector('label span').textContent.trim()
+                  input_data = div.querySelector('input[type="number"]').value.trim()
+                  columnData1.push(label_data)
                   formdata1.push(input_data)
-                  console.log('Input Value:',input_data );
-                }
-                else if (label && textarea){
-                  let textarea_data = textarea.value.trim()
-                  formdata1.push(textarea_data)
-                  console.log('Textarea Value:',textarea_data );
-                }
-                else if (label && select){
-                  let select_data = select.value.trim()
-                  formdata1.push(select_data)
-                  console.log('select Value:',select_data );
-                }
-                  else if (files){
-                    let files_data = files.files[0]
-                    formdata1.push(files_data)
-                    console.log('file Value:',files_data );
+                  console.log("formdata1");
+                  console.log(formdata1);
+                  console.log("columnData1");
+                  console.log(columnData1);
+                  if (input_data){
+                    dict_values['col_'+count] = input_data
+
                   }
-                else if(!input && label){
-                  formdata1.push('')
-                }
+
+                  count++
+                console.log(count);
+
+
+              }
+              else if (type_character === 'text'){
+                  console.log('text')
+                  label_data = div.querySelector('label span').textContent.trim()
+                  input_data = div.querySelector('textarea').value.trim()
+                  columnData1.push(label_data)
+                  formdata1.push(input_data)
+                  console.log("formdata1");
+                  console.log(formdata1);
+                  console.log("columnData1");
+                  console.log(columnData1);
+                  if (input_data){
+                    dict_values['col_'+count] = input_data
+
+                  }
+
+                  count++
+                  console.log(count);
+
+                
+
+              }
+              
+              else if (type_character === 'boolean' || type_character === 'select'){
+                  console.log('integer')
+                  label_data = div.querySelector('label span').textContent.trim()
+                  input_data = div.querySelector('select').value.trim()
+                  columnData1.push(label_data)
+                  formdata1.push(input_data)
+                  console.log("formdata1");
+                  console.log(formdata1);
+                  console.log("columnData1");
+                  console.log(columnData1);
+                  if (input_data){
+                    dict_values['col_'+count] = input_data
+
+                  }
+                count++
+
+                console.log(count);
+
+                
+
+              }
+              else if (type_character === 'bytea'){
+                  console.log('bytea')
+                  label_data = div.querySelector('label span').textContent.trim()
+                  columnData1.push(label_data)
+                  input_data = div.querySelector('[type="file"]')
+                  formdata1.push("")
+                  if (input_data){
+                    dict_values['col_'+count] = ''
+                  }
+
+                  count++
+                  console.log(count);
+
+              }
+              
+              else if (type_character === 'line'){
+                  console.log('line')
+                  label_data = div.querySelector('div').textContent.trim()
+                  // columnData1.push(label_data)
+                  // formdata1.push('')
+                  // console.log("columnData1");
+                  // console.log(columnData1);
+                  count++
+                // dict_values['col_'+count] = input_data
+
+              }
+              else if (type_character === 'timestamp without time zone'){
+                  console.log('timestamp without time zone')
+                  label_data = div.querySelector('label span').textContent.trim()
+                  input_data = div.querySelector('#dateInput').value.trim()
+                  columnData1.push(label_data)
+                  formdata1.push(input_data)
+                  console.log("formdata1");
+                  console.log(formdata1);
+                  console.log("columnData1");
+                  console.log(columnData1);
+                  if (input_data){
+                    dict_values['col_'+count] = input_data
+                  }
+
+                  count++
+                  console.log(count);
+
+
+              }
+              else if (type_character === 'multiple_enum_type'){
+                  console.log('multiple_enum_type')
+                  label_data = div.querySelector('label span').textContent.trim()
+                  // input_data = div.querySelector('input [type="checkbox"]').value.trim()
+                  columnData1.push(label_data)
+                  // formdata1.push(input_data)
+                  formdata1.push("")
+                  console.log("formdata1");
+                  console.log(formdata1);
+                  console.log("columnData1");
+                  console.log(columnData1);
+                  // if (input_data){
+                  //   dict_values['col_'+count+'_multiple'] = ['option-1']
+                  // }
+
+                  count++
+                  console.log(count);
+
+
+              }
+              else if (type_character === 'checkbox_enum_type'){
+                  console.log('multiple_enum_type')
+                  label_data = div.querySelector('label span').textContent.trim()
+                  input_data = div.querySelectorAll('input[type="checkbox"]')
+                  data = []
+                  for (let i of input_data){
+                      if (i.checked){
+                          data.push(i.value)
+                      }
+                  }
+                  console.log(data)
+                  if (data){
+                    dict_values['col_'+count+'_checkbox'] = data
+                  }
+                  count++
+                  console.log(count);
+              }
+            
             });
+            dict_data.push(dict_values)
+
+            
             formData.push(formdata1)
             columnData.push(columnData1)
-            localStorage.setItem('formdata'+randomIntegerInRange, JSON.stringify(formData));
+            console.log("count");
+            console.log(count);
+            console.log("dict_data");
+            console.log(dict_data);
+            localStorage.setItem('formData'+randomIntegerInRange, JSON.stringify(formData));
+            localStorage.setItem('dict_data'+randomIntegerInRange, JSON.stringify(dict_data));
             localStorage.setItem('columnData'+randomIntegerInRange, JSON.stringify(columnData));
 
 
 
-            alert('Data saved!');
+            alert('You are saving this document to the current device in offline mode. Any forms collected in offline mode must be uploaded from this device to the application once you regain internet connectivity. Check with your administrator if you need assistance.');
+            window.location.reload()
         };
         
+
+        uploadButton.addEventListener('click',(e)=>{
+          console.log('button clicked');
+          var url = 'https://backend.dataterrain-dev.net/get_table_structure/${tableName}/';
+
+          if (updateNetworkStatus()){
+            var dictData = JSON.parse(localStorage.getItem('dict_data'+randomIntegerInRange))
+            // console.log("dictData");
+            // console.log(dictData);
+
+            for (let data of dictData){
+              console.log('fetch data');
+              console.log(JSON.stringify(data));
+              fetch(url, {
+                method: 'POST', // or 'PUT'
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+              })
+              .then(response => response.json())
+              .then(data => {
+                  console.log('Success:', data);
+
+                  formData = [];
+                  columnData = []
+                  dict_data = []
+                  console.log('clicking reset button');
+                  localStorage.clear()
+              })
+              .catch((error) => {
+                  console.error('Error:', error);
+              });
+            }
+            
+            console.log("formData");
+            console.log(formData);
+            console.log("columnData");
+            console.log(columnData);
+            document.getElementById('openPopup').style.display = 'block';
+            
+          }
+        })
+
         document.querySelector('form').onsubmit = function(event) {
             event.preventDefault(); 
-            let formData1 = JSON.parse(localStorage.getItem('formdata'+randomIntegerInRange));
+            let formData1 = JSON.parse(localStorage.getItem('formData'+randomIntegerInRange));
             let columnData1 = JSON.parse(localStorage.getItem('columnData'+randomIntegerInRange));
             console.log("columnData")
             console.log(columnData)
@@ -790,20 +1272,18 @@ function NewPage() {
             const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
-            a.download = 'formData.xlsx';
+            a.download = '${tableName}.xlsx';
             a.click();
             URL.revokeObjectURL(a.href);
 
-            // Reset the form and data array
-            formData = [];
-            document.getElementById('myForm').reset();
+            
         };
       </script>
       </html>
 
     `;
     const blob = new Blob([htmlContent], { type: "text/html" });
-    saveAs(blob, "form.html");
+    saveAs(blob, `${tableName}.html`);
   };
 
 
@@ -851,7 +1331,7 @@ function NewPage() {
               <button
                 type="submit"
                 onClick={handleSubmitPost}
-                className="bg-[#5BC4BF] text-white hover:bg-teal-700 font-bold mt-2.5 p-2 px-4 rounded transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500  text-xs"
+                className="bg-[#5BC4BF] text-white hover:bg-teal-700 font-bold mt-2.5 p-2 px-4 rounded transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500  text-xs" id="download-btn"
               >
                 Submit
               </button>
@@ -859,7 +1339,7 @@ function NewPage() {
                 onClick={downloadHTML} 
                 className="bg-[#5BC4BF] text-white hover:bg-teal-700 font-bold mt-2.5 p-2 px-4 rounded transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-teal-500  text-xs"
               >
-                Download
+                Download & View
               </button>
             </div>
             </div>
