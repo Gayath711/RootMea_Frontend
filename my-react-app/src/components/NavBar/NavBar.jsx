@@ -17,6 +17,7 @@ import {
   toggleSidebar,
   selectIsSidebarExpanded,
 } from "../../store/slices/utilsSlice";
+import HorizontalSidebar from "../SideBar/HorizontalSidebar";
 
 const Navbar = React.memo(({ onLogout, isMinimized }) => {
   console.log("Navbar re-rendered");
@@ -95,9 +96,9 @@ const Navbar = React.memo(({ onLogout, isMinimized }) => {
   return (
     <nav
       id="navBar"
-      className="px-4 shadow-md bg-white z-20 relative w-full z-[50]"
+      className="px-4  relative w-full z-[50] rounded-md"
     >
-      <div className="flex justify-between">
+      <div className="flex justify-between shadow-xl bg-white ">
         <div className="flex justify-center items-center">
           <Link to="/">
             <img src={Logo} className="w-28 h-100 py-2" alt="logo" />
@@ -169,8 +170,12 @@ const Navbar = React.memo(({ onLogout, isMinimized }) => {
           </Menu>
         </div>
       </div>
+      
+      <div className="bg-slate-100">
+      <HorizontalSidebar/>
+      </div>
     </nav>
   );
-});
+}); 
 
 export default Navbar;

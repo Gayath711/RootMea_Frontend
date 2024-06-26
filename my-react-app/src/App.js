@@ -156,11 +156,18 @@ function App() {
             {/* <Sidebar isMinimized={isMinimized} toggleSidebar={toggleSidebar} /> */}
             {/* <div className='flex-1'> */}
             <div className="flex w-100">
+            {
+              /*
+               <>
               {width > 640 && (
                 <div id="sideBarX" style={{ zIndex: 40 }} className="">
                   <SideBar />
                 </div>
               )}
+              </>
+              */
+            }
+           
               <div
                 id="app-container"
                 data-expand={isSidebarExpanded ? "true" : "false"}

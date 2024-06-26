@@ -99,7 +99,8 @@ async function fetchClientDetails({ clientId }) {
 
 async function fetchFormOptions() {
   try {
-    const response = await protectedApi.get("/encounter-note-form-options/");
+    // const response = await protectedApi.get("/encounter-note-form-options/");
+    const response = await protectedApi.get("/get_matching_tables/");
     return response.data;
   } catch (error) {
     console.error(error.message);
@@ -817,9 +818,8 @@ function EncounterNoteForm() {
       ];
 
       // Use Promise.all to fetch all data simultaneously
-      const [header_response, profile_type_Response] = await Promise.all(
-        promises
-      );
+      const [header_response, profile_type_Response] =
+        await Promise.all(promises);
 
       // Log the responses
       console.log(
@@ -892,10 +892,13 @@ function EncounterNoteForm() {
   useEffect(() => {
     fetchFormOptions()
       .then((formOptionsResponse) => {
-        const convertedFormOptions = formOptionsResponse.map((form) => ({
-          label: form.form_name,
-          value: form.id,
+        console.log(formOptionsResponse);
+        const matchingTables = formOptionsResponse.matching_tables; // Extract the array
+        const convertedFormOptions = matchingTables.map((table) => ({
+          label: table,
+          value: table,
         }));
+        
         setFormOptions(convertedFormOptions);
       })
       .catch((error) => {
