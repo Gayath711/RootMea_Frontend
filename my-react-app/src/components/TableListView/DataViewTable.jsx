@@ -32,9 +32,9 @@ export default function DataViewTable({ saveSuccess, setSaveSuccess }) {
         },
       })
       .then((response) => {
+        
         const modifiedColumns = response.data.columns.map((column, index) => ({
           ...column,
-          editable: index % 3 === 0, // Make every third column editable
         }));
   
         // Add a hardcoded client_id to each row if it doesn't exist
@@ -42,7 +42,6 @@ export default function DataViewTable({ saveSuccess, setSaveSuccess }) {
           ...row,
           client_id: Number(row.id)
         }));
-  
         setState({
           columns: modifiedColumns,
           data: modifiedData,
