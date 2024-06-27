@@ -382,10 +382,25 @@ const EditableTable = React.memo(
     onEditCancel, 
     onEditChange 
   }) => {
+    console.log(columns)
     const editableColumns = columns.map(column => ({
       ...column,
       Cell: ({ row, value, column }) => {
-        if (column.editable) {
+        if (column.options) {
+          return (
+            <div className="bg-yellow-100 w-full">
+              <select
+                value={value}
+                onChange={(e) => onEditConfirm(row.index, column.id, e.target.value)}
+                className="w-full bg-transparent outline-none"
+              >
+                {column.options.map(option => (
+                  <option key={option} value={option}>{option}</option>
+                ))}
+              </select>
+            </div>
+          );
+        } else if (column.editable) {
           const isEditing = editingCell && editingCell.rowIndex === row.index && editingCell.columnId === column.id;
           
           const handleKeyDown = (e) => {
