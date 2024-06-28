@@ -1,5 +1,5 @@
 const currentURL = window.location.href;
-let baseURL;
+let baseURL, AMD_baseURL;
 
 // if (currentURL === "http://52.34.62.96:3000/") {
 //   // If it matches, use the development backend URL
@@ -18,6 +18,7 @@ let baseURL;
 
 // baseURL = "http://192.168.3.24:8000";
 baseURL = "https://backend.dataterrain-dev.net";
+AMD_baseURL = "https://amd-backend.dataterrain-demo.net"
 
 export default baseURL;
 
