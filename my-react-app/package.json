@@ -13,7 +13,8 @@
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "@mui/icons-material": "^5.15.19",
+    "@material-ui/core": "^4.12.4",
+    "@mui/icons-material": "^5.15.20",
     "@mui/lab": "^5.0.0-alpha.170",
     "@mui/material": "^5.15.19",
     "@mui/x-charts": "^6.19.8",
@@ -66,7 +67,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "set PORT=3000 && react-scripts start",
+    "start": "react-scripts start",
     "jest": "jest",
     "build": "react-scripts build",
     "test": "npm run jest",

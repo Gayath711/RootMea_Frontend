@@ -340,7 +340,7 @@ const ClientProfile = () => {
             {/* <Link to={`/clientchart/${clientId}`}>
               <p className='text-green-700 font-medium'>Client Chart</p>
             </Link> */}
-            <p className="text-green-700 font-medium">AMD Profile</p>
+            <p className="text-green-700 font-medium">AMD Profile Test</p>
             <p className="text-green-700 font-medium pr-8">Manage Program</p>
           </div>
         </div>

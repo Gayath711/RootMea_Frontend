@@ -82,6 +82,8 @@ import DataView from "./components/TableListView/DataView";
 import ScrollToTop from "./components/ScrollToTop";
 import Facility from "./components/Facility";
 import Department from "./components/Department";
+import DataFetchComponent from './components/Amd/amdProfile'
+
 
 function App() {
   // Retrieve isLoggedIn state from localStorage on initial render
@@ -156,18 +158,18 @@ function App() {
             {/* <Sidebar isMinimized={isMinimized} toggleSidebar={toggleSidebar} /> */}
             {/* <div className='flex-1'> */}
             <div className="flex w-100">
-            {
-              /*
-               <>
-              {width > 640 && (
-                <div id="sideBarX" style={{ zIndex: 40 }} className="">
-                  <SideBar />
-                </div>
-              )}
-              </>
-              */
-            }
-           
+              {
+                /*
+                 <>
+                {width > 640 && (
+                  <div id="sideBarX" style={{ zIndex: 40 }} className="">
+                    <SideBar />
+                  </div>
+                )}
+                </>
+                */
+              }
+
               <div
                 id="app-container"
                 data-expand={isSidebarExpanded ? "true" : "false"}
@@ -177,6 +179,7 @@ function App() {
                   <Route path="/" element={<Dashboard />} />
                   {/* <Route path="/clientprofile" element={<Dashboard />} /> */}
                   <Route path="/clientprofile/" element={<ClientProfile />} />
+                  <Route path="/amd" element={<DataFetchComponent />} />
                   <Route
                     path="/clientprofile/:clientId"
                     element={<ClientProfile />}

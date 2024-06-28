@@ -555,7 +555,9 @@ const ClientProfile = ({ isNew }) => {
               {/* <Link to={`/clientchart/${clientId}`}>
               <p className='text-green-700 font-medium'>Client Chart</p>
             </Link> */}
-              <p className="text-green-700 font-medium">AMD Profile</p>
+              <Link to={"/amd"}>
+                <p className="text-green-700 font-medium">AMD Profile</p>
+              </Link>
               <p className="text-green-700 font-medium pr-8">Manage Program</p>
             </div>
           </div>
@@ -614,7 +616,7 @@ const ClientProfile = ({ isNew }) => {
               <Link to={`/clientchart/${clientId}`}>
                 <p className="text-green-700 font-medium">Client Chart</p>
               </Link>
-              <p className="text-green-700 font-medium">AMD Profile</p>
+              <p className="text-green-700 font-medium">AMD Profile Test</p>
               <p className="text-green-700 font-medium pr-8">Manage Program</p>
             </div>
           </div>
@@ -629,17 +631,17 @@ const ClientProfile = ({ isNew }) => {
           <div className="w-full px-2 space-y-4">
             {
               location.pathname === "/clientprofilenew" ?
-              <></>
-              :
-              <div>
-              <GeneralInformation
-                id={1}
-                badge={badge}
-                isEdittable={isEditable}
-                clientData={clientData}
-                handleFieldChange={handleFieldChange}
-              />
-            </div>
+                <></>
+                :
+                <div>
+                  <GeneralInformation
+                    id={1}
+                    badge={badge}
+                    isEdittable={isEditable}
+                    clientData={clientData}
+                    handleFieldChange={handleFieldChange}
+                  />
+                </div>
             }
             <div>
               <ContactInformation
