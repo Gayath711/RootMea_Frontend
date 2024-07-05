@@ -84,7 +84,6 @@ import Facility from "./components/Facility";
 import Department from "./components/Department";
 import DataFetchComponent from './components/Amd/amdProfile'
 
-
 function App() {
   // Retrieve isLoggedIn state from localStorage on initial render
   // const [isLoggedIn, setIsLoggedIn] = useState(
@@ -179,7 +178,7 @@ function App() {
                   <Route path="/" element={<Dashboard />} />
                   {/* <Route path="/clientprofile" element={<Dashboard />} /> */}
                   <Route path="/clientprofile/" element={<ClientProfile />} />
-                  <Route path="/amd" element={<DataFetchComponent />} />
+                  <Route path="/amd/:clientId/" element={<DataFetchComponent />} />
                   <Route
                     path="/clientprofile/:clientId"
                     element={<ClientProfile />}

@@ -156,7 +156,9 @@ function ClientChart() {
             <Link to={"/"}>
               <p className="text-green-700 font-medium">Dashboard</p>
             </Link>
-            <p className="text-green-700 font-medium">AMD Profile</p>
+            <a href={`/amd/${clientId}`} target="_blank">
+
+              <p className="text-green-700 font-medium">AMD Profile</p> </a>
             <p className="text-green-700 font-medium pr-8">Manage Program</p>
           </div>
         </div>
