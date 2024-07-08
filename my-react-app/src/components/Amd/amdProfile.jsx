@@ -204,7 +204,9 @@ const PatientList = ({ isNew }) => {
                 {(
                     <div className="flex justify-between mb-0 mt-4 pl-4">
                         <div className="flex space-x-12">
-
+                            <h2 className="text-gray-800 text-2xl font-medium">
+                                AMD Profile: {patientData.Name}
+                            </h2>
                         </div>
                         <div className="flex space-x-8">
                             <Link to={"/"}>
@@ -217,6 +219,7 @@ const PatientList = ({ isNew }) => {
                         </div>
                     </div>
                 )}
+
                 <div className="border-b border-green-800 mt-2 mb-4"></div>
                 <div className="flex">
                     <Sidebar
